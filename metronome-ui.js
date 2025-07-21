@@ -95,10 +95,12 @@ function handleBPMSliderChange(e) {
 
 // Set BPM value
 function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = true) {
+    console.log('setBPM called with:', bpm, source, shouldUpdateInput);
     currentBPM = bpm;
     updateBPMDisplay(bpm, source);
     
     if (shouldUpdateInput) {
+        console.log('Calling updateInputField with:', bpm);
         updateInputField(bpm);
     }
     updateSlider(bpm);
@@ -121,9 +123,16 @@ function updateBPMDisplay(bpm, source) {
 
 // Update input field
 function updateInputField(bpm) {
+    console.log('updateInputField called with:', bpm);
     if (bpmInput && document.activeElement !== bpmInput) {
         bpmInput.value = bpm;
     }
+}
+
+// Legacy function name for backward compatibility
+function updateInput(bpm) {
+    console.log('Legacy updateInput called, redirecting to updateInputField');
+    updateInputField(bpm);
 }
 
 // Update slider
@@ -182,6 +191,7 @@ function updateMetronomeButton(isActive) {
 
 // Public API for updating BPM from external sources (like Firebase)
 export function updateBPMFromSong(bpm) {
+    console.log('updateBPMFromSong called with:', bpm);
     if (bpm && !isNaN(bpm) && bpm > 0) {
         originalBPM = bpm;
         setBPM(bpm, 'из песни');
