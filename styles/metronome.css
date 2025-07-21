@@ -8,12 +8,11 @@
     gap: 12px;
     background: var(--container-background-color);
     border: 1px solid var(--border-color);
-    border-radius: 8px 8px 0 0;
-    padding: 16px 16px 0 16px;
-    margin: 12px 0 0 0;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
     box-shadow: 0 2px 8px var(--shadow-color);
     position: relative;
-    overflow: visible;
 }
 
 /* Top Controls */
@@ -110,7 +109,7 @@
     height: 80px;
     cursor: grab;
     user-select: none;
-    margin-bottom: -10px; /* Pull knob up to sit on panel border */
+    margin: 0;
 }
 
 .bpm-knob:active {
@@ -122,7 +121,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 160px;
+    height: 80px;
     overflow: hidden;
 }
 
@@ -131,7 +130,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 200%;
     border-radius: 50%;
     background: conic-gradient(
         from 225deg,
@@ -159,7 +158,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 200%;
     border-radius: 50%;
     background: conic-gradient(
         from 225deg,
@@ -173,21 +172,18 @@
 
 .knob-handle {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     background: linear-gradient(145deg, 
         color-mix(in srgb, var(--container-background-color) 90%, white),
         color-mix(in srgb, var(--container-background-color) 90%, black)
     );
-    border: 4px solid var(--border-color);
+    border: 3px solid var(--border-color);
     border-radius: 50%;
-    transform: translate(-50%, -50%);
     box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.15),
-        inset 0 2px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
     z-index: 3;
     cursor: grab;
@@ -195,9 +191,9 @@
 
 .knob-handle:hover {
     box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.2),
-        inset 0 2px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+        0 6px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 }
 
 .knob-handle:active {
@@ -207,14 +203,14 @@
 
 .knob-indicator {
     position: absolute;
-    top: 12px;
+    top: 6px;
     left: 50%;
-    width: 4px;
-    height: 28px;
+    width: 3px;
+    height: 18px;
     background: var(--primary-color);
     border-radius: 2px;
     transform: translateX(-50%);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Dark theme adjustments */

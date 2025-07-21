@@ -214,8 +214,17 @@ function updateKnob(bpm) {
         transparent ${angle}deg
     )`;
     
-    // Update handle rotation
+    // Update handle position on semicircle
     const rotationAngle = -90 + angle; // Start from -90° (left) to 90° (right)
+    const radius = 40; // Distance from center
+    const centerX = 70; // Half of knob width (140px)
+    const centerY = 40; // Bottom of semicircle
+    
+    const handleX = centerX + radius * Math.cos(rotationAngle * Math.PI / 180);
+    const handleY = centerY + radius * Math.sin(rotationAngle * Math.PI / 180);
+    
+    knobHandle.style.left = `${handleX}px`;
+    knobHandle.style.top = `${handleY}px`;
     knobHandle.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
 }
 
