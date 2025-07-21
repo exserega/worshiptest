@@ -386,6 +386,16 @@ body[data-theme="light"] .repertoire-view-button.active {
 
 .legend-icon-btn i {
     pointer-events: none;
+    color: inherit; /* Наследуем цвет от родительской кнопки */
+}
+
+/* Убеждаемся что иконки правильно отображаются в обеих темах */
+.legend-icon-btn {
+    color: var(--text-color);
+}
+
+body[data-theme="light"] .legend-icon-btn {
+    color: var(--text-color);
 }
 
 /* Цветовые состояния для активных кнопок */
