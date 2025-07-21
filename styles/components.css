@@ -337,30 +337,18 @@ body[data-theme="light"] .repertoire-view-button.active {
     /* Цвет определяется для каждой кнопки индивидуально ниже */
 }
 
-/* Специфические цвета для каждой кнопки */
-.legend-icon-btn.heart {
-    color: #c53030 !important; /* Неяркий красный для сердца */
-}
-
-.legend-icon-btn.setlist {
-    color: #38a169 !important; /* Зеленый для плюса */
-}
-
+/* Единый цвет для всех кнопок в зависимости от темы */
+.legend-icon-btn.heart,
+.legend-icon-btn.setlist,
 .legend-icon-btn.mic {
-    color: #805ad5 !important; /* Фиолетовый для микрофона */
+    color: #e5e7eb !important; /* Светлые иконки для темной темы */
 }
 
 /* Темные иконки для светлой темы */
-body[data-theme="light"] .legend-icon-btn.heart {
-    color: #c53030 !important;
-}
-
-body[data-theme="light"] .legend-icon-btn.setlist {
-    color: #38a169 !important;
-}
-
+body[data-theme="light"] .legend-icon-btn.heart,
+body[data-theme="light"] .legend-icon-btn.setlist,
 body[data-theme="light"] .legend-icon-btn.mic {
-    color: #805ad5 !important;
+    color: #1e293b !important; /* Темные иконки для светлой темы */
 }
 
 /* Fallback цвет для кнопок без специфичного класса */
@@ -373,16 +361,10 @@ body[data-theme="light"] .legend-icon-btn:not(.heart):not(.setlist):not(.mic) {
 }
 
 /* Правила для иконок в светлой теме */
-body[data-theme="light"] .legend-icon-btn.heart i {
-    color: #c53030 !important;
-}
-
-body[data-theme="light"] .legend-icon-btn.setlist i {
-    color: #38a169 !important;
-}
-
+body[data-theme="light"] .legend-icon-btn.heart i,
+body[data-theme="light"] .legend-icon-btn.setlist i,
 body[data-theme="light"] .legend-icon-btn.mic i {
-    color: #805ad5 !important;
+    color: #1e293b !important; /* Темные иконки для светлой темы */
 }
 
 /* Legend как часть границы - фон контейнера для закрытия границы */
@@ -438,63 +420,35 @@ body[data-theme="light"] .legend-icon-btn.mic i {
 }
 
 /* Дополнительные правила для обеспечения правильных цветов */
-.legend-icon-btn.heart i {
-    color: #c53030 !important;
-}
-
-.legend-icon-btn.setlist i {
-    color: #38a169 !important;
-}
-
+.legend-icon-btn.heart i,
+.legend-icon-btn.setlist i,
 .legend-icon-btn.mic i {
-    color: #805ad5 !important;
+    color: #e5e7eb !important; /* Светлые иконки для темной темы */
 }
 
 
 
 /* Цветовые состояния для активных кнопок */
-.legend-icon-btn.heart.active {
-    color: #e53e3e !important; /* Более яркий красный для активного состояния */
-    border-color: #e53e3e;
-    background: color-mix(in srgb, #e53e3e 10%, transparent);
-}
-
-.legend-icon-btn.setlist.active {
-    color: #48bb78 !important; /* Более яркий зеленый для активного состояния */
-    border-color: #48bb78;
-    background: color-mix(in srgb, #48bb78 10%, transparent);
-}
-
+.legend-icon-btn.heart.active,
+.legend-icon-btn.setlist.active,
 .legend-icon-btn.mic.active {
-    color: #9f7aea !important; /* Более яркий фиолетовый для активного состояния */
-    border-color: #9f7aea;
-    background: color-mix(in srgb, #9f7aea 10%, transparent);
+    color: var(--primary-color) !important; /* Цвет акцента для активного состояния */
+    border-color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
 }
 
 /* Активные состояния для иконок */
-.legend-icon-btn.heart.active i {
-    color: #e53e3e !important;
-}
-
-.legend-icon-btn.setlist.active i {
-    color: #48bb78 !important;
-}
-
+.legend-icon-btn.heart.active i,
+.legend-icon-btn.setlist.active i,
 .legend-icon-btn.mic.active i {
-    color: #9f7aea !important;
+    color: var(--primary-color) !important; /* Цвет акцента для активных иконок */
 }
 
 /* Активные состояния для legend */
-.song-legend-action.heart.active::before {
-    color: #e53e3e;
-}
-
-.song-legend-action.setlist.active::before {
-    color: #48bb78;
-}
-
+.song-legend-action.heart.active::before,
+.song-legend-action.setlist.active::before,
 .song-legend-action.mic.active::before {
-    color: #9f7aea;
+    color: var(--primary-color); /* Цвет акцента для активных подписей */
 }
 
 @media (max-width: 768px) {
