@@ -7,6 +7,7 @@ import { MIN_FONT_SIZE, SWIPE_THRESHOLD, SWIPE_VERTICAL_LIMIT } from './constant
 import * as api from './api.js';
 import * as core from './core.js';
 import * as ui from './ui.js';
+import * as metronomeUI from './metronome-ui.js';
 
 // --- HANDLERS ---
 
@@ -448,22 +449,7 @@ function setupEventListeners() {
         ui.applyTheme(newTheme);
     });
 
-    // --- Метроном ---
-    ui.metronomeButton.addEventListener('click', async () => {
-        const bpmText = ui.bpmDisplay?.textContent;
-        const bpmValue = parseInt(bpmText, 10);
-        const beats = parseInt(ui.timeSignatureSelect.value, 10);
-        
-        const metronomeState = core.getMetronomeState();
-        
-        if (metronomeState.isActive || (bpmValue > 0)) {
-            const { isActive, error } = await core.toggleMetronome(bpmValue, beats);
-            if(error) alert(error);
-            ui.updateMetronomeButton(isActive);
-        } else {
-            alert('Не указан или некорректный BPM для запуска метронома.');
-        }
-    });
+    // --- Метроном обрабатывается в metronome-ui.js ---
 
     // --- Боковые панели ---
     ui.toggleSetlistsButton.addEventListener('click', async () => {
@@ -764,6 +750,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     setupSwipeToClose();
     ui.updateFontSize();
+    metronomeUI.initMetronomeUI();
+    
+    // Make metronome UI available globally for backward compatibility
+    window.metronomeUI = metronomeUI;
     
     // Устанавливаем двухколоночный режим по умолчанию
     ui.songContent.classList.add('split-columns');

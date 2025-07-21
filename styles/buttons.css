@@ -78,9 +78,4 @@ body[data-theme="light"] button.icon-button.simple:active:not(:disabled) { backg
 
 /* Нижний ряд управления */
 .controls-footer { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding-top: 0;}
-.bpm-controls { display: flex; align-items: center; gap: 8px; }
-.bpm-controls span:not(#bpm-display) { font-size: 0.8rem; color: var(--label-color); text-transform: uppercase; transition: color 0.3s ease;}
-.bpm-controls #time-signature { padding: 8px 10px; font-size: 0.85rem; min-width: 65px; height: 38px; }
-.bpm-controls #bpm-display { padding: 8px 10px; min-width: 55px; font-size: 0.9rem; cursor: text; border: 1px solid var(--border-color); background-color: var(--input-bg-color); border-radius: var(--radius); text-align: center; color: var(--text-color); height: 38px; line-height: normal; display: inline-block; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
-#metronome-button { padding: 0 12px; min-width: auto; height: 38px; flex-shrink: 0; font-size: 0.85rem; }
-#metronome-button i { margin-right: 6px; font-size: 0.9em; }
+/* Old BPM controls moved to metronome.css */

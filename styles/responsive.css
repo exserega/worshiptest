@@ -483,11 +483,7 @@
     /* Footer */
     .controls-footer { align-items: stretch; flex-direction: column; gap: 8px; margin-top: 12px; } /* Уменьшили gap с 10px до 8px, margin с 15px до 12px */
     .controls-footer > * { width: auto; margin-bottom: 6px; align-self: center; } /* Уменьшили с 8px */
-    .controls-footer .bpm-controls { justify-content: center; width: 100%; }
-    .bpm-controls #time-signature, .bpm-controls #bpm-display { height: 36px; }
-    #metronome-button { width: 42px; height: 42px; padding: 0; margin: 4px auto; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; } /* Уменьшили margin с 5px */
-    #metronome-button > i { font-size: 1.1rem; margin: 0; }
-    #metronome-button .button-text { display: none; }
+    /* Old metronome responsive styles moved to metronome.css */
     #holychords-button { padding: 6px 12px; height: 36px; } /* Уменьшили padding с 8px 15px */
     
 

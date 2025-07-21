@@ -170,20 +170,49 @@
      </section>
 
     <div class="controls-footer">
-        <div class="bpm-controls">
-            <span>Размер: </span>
-            <select id="time-signature">
-                <option value="4">4/4</option>
-                <option value="3">3/4</option>
-                <option value="6">6/8</option>
-                <option value="2">2/4</option>
-            </select>
-            <span>BPM: </span>
-            <span id="bpm-display" contenteditable="true">N/A</span>
-            <button id="metronome-button" aria-label="Включить метроном">
-                <i class="fas fa-play"></i>
-                <span class="button-text">Метроном</span>
-            </button>
+        <div class="metronome-panel">
+            <!-- BPM Display Section -->
+            <div class="bpm-display-section">
+                <div class="bpm-label">BPM</div>
+                <div class="bpm-value" id="bpm-display">120</div>
+                <div class="bpm-source" id="bpm-source">из песни</div>
+            </div>
+            
+            <!-- BPM Controls -->
+            <div class="bpm-controls">
+                <button class="bpm-btn bpm-decrease" id="bpm-decrease" title="Уменьшить BPM">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <div class="bpm-input-group">
+                    <input type="number" id="bpm-input" class="bpm-input" min="40" max="200" step="1" value="120">
+                    <div class="bpm-slider-container">
+                        <input type="range" id="bpm-slider" class="bpm-slider" min="40" max="200" step="1" value="120">
+                    </div>
+                </div>
+                <button class="bpm-btn bpm-increase" id="bpm-increase" title="Увеличить BPM">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <!-- Time Signature & Metronome -->
+            <div class="metronome-controls">
+                <div class="time-signature-group">
+                    <label for="time-signature">Размер:</label>
+                    <select id="time-signature" class="time-signature-select">
+                        <option value="4">4/4</option>
+                        <option value="3">3/4</option>
+                        <option value="6">6/8</option>
+                        <option value="2">2/4</option>
+                    </select>
+                </div>
+                
+                <button id="metronome-button" class="metronome-button" aria-label="Включить метроном">
+                    <div class="metronome-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <span class="metronome-text">Метроном</span>
+                </button>
+            </div>
         </div>
         <a id="holychords-button" href="#" target="_blank">Holychords</a>
     </div>

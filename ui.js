@@ -207,7 +207,13 @@ export function displaySongDetails(songData, keyToSelect) {
     keySelect.value = currentSelectedKey;
     keySelect.dataset.songId = songData.id;
 
-    if (bpmDisplay) updateBPM(bpm);
+    if (bpmDisplay) {
+        updateBPM(bpm);
+        // Also update the new metronome UI if available
+        if (window.metronomeUI && window.metronomeUI.updateBPMFromSong) {
+            window.metronomeUI.updateBPMFromSong(bpm === 'N/A' ? null : bpm);
+        }
+    }
     if (holychordsButton) {
         if (srcUrl && srcUrl.trim() !== '' && srcUrl.trim() !== '#') {
             holychordsButton.href = srcUrl;

@@ -1,0 +1,313 @@
+/* ======================================== */
+/* Modern Metronome UI Styles              */
+/* ======================================== */
+
+.metronome-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* BPM Display Section */
+.bpm-display-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.bpm-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--label-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bpm-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+    min-width: 80px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
+.bpm-source {
+    font-size: 0.7rem;
+    color: var(--secondary-text-color);
+    font-style: italic;
+}
+
+/* BPM Controls */
+.bpm-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+.bpm-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--border-color);
+    background: var(--button-background-color);
+    color: var(--text-color);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.bpm-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--hover-color);
+    transform: scale(1.05);
+}
+
+.bpm-btn:active {
+    transform: scale(0.95);
+}
+
+.bpm-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 200px;
+}
+
+.bpm-input {
+    width: 80px;
+    height: 36px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 2px solid var(--border-color);
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-family: 'Courier New', monospace;
+}
+
+.bpm-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+.bpm-slider-container {
+    width: 100%;
+    position: relative;
+}
+
+.bpm-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border-color);
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.bpm-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.bpm-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.bpm-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+/* Metronome Controls */
+.metronome-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.time-signature-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.time-signature-group label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--label-color);
+}
+
+.time-signature-select {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border: 2px solid var(--border-color);
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-signature-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Metronome Button */
+.metronome-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--primary-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.metronome-button:hover {
+    background: color-mix(in srgb, var(--primary-color) 90%, black);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 30%, transparent);
+}
+
+.metronome-button:active {
+    transform: translateY(0);
+}
+
+.metronome-button.active {
+    background: #e74c3c;
+    animation: pulse 1s infinite;
+}
+
+.metronome-button.active:hover {
+    background: color-mix(in srgb, #e74c3c 90%, black);
+}
+
+.metronome-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.metronome-text {
+    font-weight: 600;
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        box-shadow: 0 0 0 0 color-mix(in srgb, #e74c3c 50%, transparent);
+    }
+    50% { 
+        box-shadow: 0 0 0 8px color-mix(in srgb, #e74c3c 0%, transparent);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .metronome-panel {
+        padding: 16px;
+        gap: 12px;
+    }
+    
+    .bpm-value {
+        font-size: 2rem;
+    }
+    
+    .bpm-controls {
+        gap: 8px;
+    }
+    
+    .bpm-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    
+    .bpm-input-group {
+        max-width: 150px;
+    }
+    
+    .metronome-controls {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .metronome-button {
+        width: 100%;
+        padding: 14px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .metronome-panel {
+        padding: 12px;
+        margin: 12px 0;
+    }
+    
+    .bpm-value {
+        font-size: 1.8rem;
+    }
+    
+    .bpm-controls {
+        gap: 6px;
+    }
+    
+    .bpm-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+    
+    .bpm-input {
+        width: 70px;
+        height: 32px;
+        font-size: 1rem;
+    }
+    
+    .bpm-input-group {
+        max-width: 120px;
+    }
+}
