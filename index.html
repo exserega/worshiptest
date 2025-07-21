@@ -171,43 +171,8 @@
 
     <div class="controls-footer">
         <div class="metronome-panel">
-            <!-- BPM Display Section -->
-            <div class="bpm-display-section">
-                <div class="bpm-label">BPM</div>
-                <div class="bpm-value" id="bpm-display">N/A</div>
-                <div class="bpm-source" id="bpm-source">по умолчанию</div>
-            </div>
-            
-            <!-- BPM Controls -->
-            <div class="bpm-controls">
-                <button class="bpm-btn bpm-decrease" id="bpm-decrease" title="Уменьшить BPM">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <div class="bpm-input-group">
-                    <input type="number" id="bpm-input" class="bpm-input" min="40" max="200" step="1" value="120">
-                    <div class="bpm-knob-container">
-                        <div class="bpm-knob" id="bpm-knob">
-                            <div class="knob-base">
-                                <div class="knob-track"></div>
-                                <div class="knob-progress" id="knob-progress"></div>
-                            </div>
-                            <div class="knob-handle" id="knob-handle">
-                                <div class="knob-indicator"></div>
-                            </div>
-                        </div>
-                        <div class="knob-labels">
-                            <span class="knob-label-min">40</span>
-                            <span class="knob-label-max">200</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="bpm-btn bpm-increase" id="bpm-increase" title="Увеличить BPM">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-            
-            <!-- Time Signature & Metronome -->
-            <div class="metronome-controls">
+            <!-- Top Controls -->
+            <div class="metronome-top-controls">
                 <div class="time-signature-group">
                     <label for="time-signature">Размер:</label>
                     <select id="time-signature" class="time-signature-select">
@@ -223,6 +188,34 @@
                         <i class="fas fa-play"></i>
                     </div>
                     <span class="metronome-text">Метроном</span>
+                </button>
+            </div>
+            
+            <!-- BPM Display -->
+            <div class="bpm-display">
+                <input type="number" id="bpm-input" class="bpm-input" min="40" max="200" step="1" value="120">
+            </div>
+            
+            <!-- BPM Controls at Bottom -->
+            <div class="bpm-controls-bottom">
+                <button class="bpm-btn bpm-decrease" id="bpm-decrease" title="Уменьшить BPM">
+                    <i class="fas fa-minus"></i>
+                </button>
+                
+                <div class="bpm-knob-container">
+                    <div class="bpm-knob" id="bpm-knob">
+                        <div class="knob-base">
+                            <div class="knob-track"></div>
+                            <div class="knob-progress" id="knob-progress"></div>
+                        </div>
+                        <div class="knob-handle" id="knob-handle">
+                            <div class="knob-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="bpm-btn bpm-increase" id="bpm-increase" title="Увеличить BPM">
+                    <i class="fas fa-plus"></i>
                 </button>
             </div>
         </div>

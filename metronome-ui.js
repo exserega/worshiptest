@@ -2,8 +2,6 @@
 import * as core from './core.js';
 
 // DOM Elements
-const bpmDisplay = document.getElementById('bpm-display');
-const bpmSource = document.getElementById('bpm-source');
 const bpmInput = document.getElementById('bpm-input');
 const bpmKnob = document.getElementById('bpm-knob');
 const knobProgress = document.getElementById('knob-progress');
@@ -171,7 +169,6 @@ function setupKnobInteraction() {
 // Set BPM value
 function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = true) {
     currentBPM = bpm;
-    updateBPMDisplay(bpm, source);
     
     if (shouldUpdateInput) {
         updateInputField(bpm);
@@ -184,14 +181,9 @@ function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = tru
     }
 }
 
-// Update BPM display
+// Update BPM display (simplified)
 function updateBPMDisplay(bpm, source) {
-    if (bpmDisplay) {
-        bpmDisplay.textContent = bpm;
-    }
-    if (bpmSource) {
-        bpmSource.textContent = source;
-    }
+    // Display is now handled by the input field directly
 }
 
 // Update input field

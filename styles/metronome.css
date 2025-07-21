@@ -8,104 +8,91 @@
     gap: 12px;
     background: var(--container-background-color);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 16px;
-    margin: 12px 0;
+    border-radius: 8px 8px 0 0;
+    padding: 16px 16px 0 16px;
+    margin: 12px 0 0 0;
     box-shadow: 0 2px 8px var(--shadow-color);
+    position: relative;
+    overflow: visible;
 }
 
-/* BPM Display Section */
-.bpm-display-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.bpm-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--label-color);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.bpm-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    line-height: 1;
-    min-width: 80px;
-    text-align: center;
-    font-family: 'Courier New', monospace;
-}
-
-.bpm-source {
-    font-size: 0.7rem;
-    color: var(--secondary-text-color);
-    font-style: italic;
-}
-
-/* BPM Controls */
-.bpm-controls {
+/* Top Controls */
+.metronome-top-controls {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+/* BPM Display */
+.bpm-display {
+    display: flex;
     justify-content: center;
-}
-
-.bpm-btn {
-    width: 40px;
-    height: 40px;
-    border: 2px solid var(--border-color);
-    background: var(--button-background-color);
-    color: var(--text-color);
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
-
-.bpm-btn:hover {
-    border-color: var(--primary-color);
-    background: var(--hover-color);
-    transform: scale(1.05);
-}
-
-.bpm-btn:active {
-    transform: scale(0.95);
-}
-
-.bpm-input-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    max-width: 200px;
+    margin: 8px 0;
 }
 
 .bpm-input {
-    width: 80px;
-    height: 36px;
+    width: 120px;
+    padding: 12px 16px;
+    font-size: 2rem;
+    font-weight: 700;
     text-align: center;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border: 2px solid var(--border-color);
-    background: var(--input-bg-color);
-    color: var(--text-color);
+    border: 2px solid var(--primary-color);
     border-radius: 8px;
-    transition: all 0.2s ease;
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    color: var(--primary-color);
     font-family: 'Courier New', monospace;
+    transition: all 0.2s ease;
 }
 
 .bpm-input:focus {
     outline: none;
     border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+    background: color-mix(in srgb, var(--primary-color) 15%, transparent);
+}
+
+/* Bottom BPM Controls */
+.bpm-controls-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.bpm-btn {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--border-color);
+    border-radius: 50%;
+    background: var(--button-background-color);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.bpm-btn:hover {
+    background: var(--button-hover-background-color);
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.bpm-btn:active {
+    transform: scale(0.95);
+    background: var(--primary-color);
+    color: white;
+}
+
+.bpm-btn:focus {
+    outline: none;
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
 }
 
@@ -114,17 +101,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    width: 100%;
+    position: relative;
 }
 
 .bpm-knob {
     position: relative;
     width: 140px;
-    height: 80px; /* Half height for semicircle */
+    height: 80px;
     cursor: grab;
     user-select: none;
-    margin-bottom: 10px;
+    margin-bottom: -10px; /* Pull knob up to sit on panel border */
 }
 
 .bpm-knob:active {
@@ -136,7 +122,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 160px; /* Full circle height but clipped */
+    height: 160px;
     overflow: hidden;
 }
 
@@ -231,24 +217,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.knob-labels {
-    display: flex;
-    justify-content: space-between;
-    width: 140px;
-    font-size: 0.75rem;
-    color: var(--secondary-text-color);
-    font-weight: 600;
-    margin-top: -5px;
-}
-
-.knob-label-min,
-.knob-label-max {
-    font-family: 'Courier New', monospace;
-    padding: 2px 4px;
-    background: color-mix(in srgb, var(--border-color) 20%, transparent);
-    border-radius: 3px;
-}
-
 /* Dark theme adjustments */
 body[data-theme="dark"] .knob-handle {
     background: linear-gradient(145deg, 
@@ -265,14 +233,7 @@ body[data-theme="light"] .knob-handle {
     );
 }
 
-/* Metronome Controls */
-.metronome-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-}
-
+/* Time Signature Group */
 .time-signature-group {
     display: flex;
     align-items: center;
@@ -280,18 +241,20 @@ body[data-theme="light"] .knob-handle {
 }
 
 .time-signature-group label {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--label-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
 }
 
 .time-signature-select {
-    padding: 8px 12px;
-    font-size: 0.9rem;
+    padding: 6px 12px;
     border: 2px solid var(--border-color);
-    background: var(--input-bg-color);
+    border-radius: 6px;
+    background: var(--input-background-color);
     color: var(--text-color);
-    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -299,6 +262,7 @@ body[data-theme="light"] .knob-handle {
 .time-signature-select:focus {
     outline: none;
     border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
 }
 
 /* Metronome Button */
@@ -306,23 +270,21 @@ body[data-theme="light"] .knob-handle {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 20px;
-    background: var(--primary-color);
-    color: var(--button-text-color);
-    border: none;
-    border-radius: 25px;
+    padding: 10px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--button-background-color);
+    color: var(--text-color);
     cursor: pointer;
+    transition: all 0.2s ease;
     font-size: 0.9rem;
     font-weight: 600;
-    transition: all 0.2s ease;
-    min-width: 120px;
-    justify-content: center;
 }
 
 .metronome-button:hover {
-    background: color-mix(in srgb, var(--primary-color) 90%, black);
+    background: var(--button-hover-background-color);
+    border-color: var(--primary-color);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 30%, transparent);
 }
 
 .metronome-button:active {
@@ -330,97 +292,75 @@ body[data-theme="light"] .knob-handle {
 }
 
 .metronome-button.active {
-    background: #e74c3c;
-    animation: pulse 1s infinite;
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
 }
 
 .metronome-button.active:hover {
-    background: color-mix(in srgb, #e74c3c 90%, black);
+    background: color-mix(in srgb, var(--primary-color) 90%, black);
 }
 
 .metronome-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    width: 20px;
+    height: 20px;
 }
 
 .metronome-text {
-    font-weight: 600;
-}
-
-@keyframes pulse {
-    0%, 100% { 
-        box-shadow: 0 0 0 0 color-mix(in srgb, #e74c3c 50%, transparent);
-    }
-    50% { 
-        box-shadow: 0 0 0 8px color-mix(in srgb, #e74c3c 0%, transparent);
-    }
+    white-space: nowrap;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .metronome-panel {
-        padding: 16px;
+        padding: 12px 12px 0 12px;
+        gap: 10px;
+    }
+    
+    .metronome-top-controls {
         gap: 12px;
-    }
-    
-    .bpm-value {
-        font-size: 2rem;
-    }
-    
-    .bpm-controls {
-        gap: 8px;
-    }
-    
-    .bpm-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 0.9rem;
-    }
-    
-    .bpm-input-group {
-        max-width: 150px;
-    }
-    
-    .metronome-controls {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .metronome-button {
-        width: 100%;
-        padding: 14px 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .metronome-panel {
-        padding: 12px;
-        margin: 12px 0;
-    }
-    
-    .bpm-value {
-        font-size: 1.8rem;
-    }
-    
-    .bpm-controls {
-        gap: 6px;
-    }
-    
-    .bpm-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 0.8rem;
     }
     
     .bpm-input {
-        width: 70px;
-        height: 32px;
-        font-size: 1rem;
+        width: 100px;
+        font-size: 1.8rem;
+        padding: 10px 12px;
     }
     
-    .bpm-input-group {
-        max-width: 120px;
+    .bpm-knob {
+        width: 120px;
+        height: 70px;
+    }
+    
+    .knob-base {
+        height: 140px;
+    }
+    
+    .knob-handle {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .bpm-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+    
+    .bpm-controls-bottom {
+        gap: 15px;
+    }
+    
+    .metronome-button {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .time-signature-select {
+        padding: 4px 8px;
+        font-size: 0.85rem;
     }
 }
