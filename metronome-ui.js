@@ -20,7 +20,8 @@ let isMetronomeActive = false;
 // Initialize metronome UI
 export function initMetronomeUI() {
     setupEventListeners();
-    updateBPMDisplay(currentBPM, 'по умолчанию');
+    // Don't set initial BPM, wait for song to load
+    updateBPMDisplay('N/A', 'по умолчанию');
 }
 
 // Setup event listeners
