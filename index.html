@@ -187,10 +187,13 @@
                     <input type="number" id="bpm-input" class="bpm-input" min="40" max="200" step="1" value="120">
                     <div class="bpm-knob-container">
                         <div class="bpm-knob" id="bpm-knob">
-                            <div class="knob-track"></div>
-                            <div class="knob-progress" id="knob-progress"></div>
-                            <div class="knob-handle" id="knob-handle"></div>
-                            <div class="knob-center"></div>
+                            <div class="knob-base">
+                                <div class="knob-track"></div>
+                                <div class="knob-progress" id="knob-progress"></div>
+                            </div>
+                            <div class="knob-handle" id="knob-handle">
+                                <div class="knob-indicator"></div>
+                            </div>
                         </div>
                         <div class="knob-labels">
                             <span class="knob-label-min">40</span>

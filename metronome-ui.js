@@ -92,22 +92,38 @@ function handleBPMInputKeydown(e) {
 // Setup knob interaction
 function setupKnobInteraction() {
     let isDragging = false;
+    let startAngle = 0;
+    let startBPM = 120;
     
     // Mouse events
-    bpmKnob.addEventListener('mousedown', startDrag);
+    knobHandle.addEventListener('mousedown', startDrag);
     document.addEventListener('mousemove', handleDrag);
     document.addEventListener('mouseup', endDrag);
     
     // Touch events for mobile
-    bpmKnob.addEventListener('touchstart', startDrag, { passive: false });
+    knobHandle.addEventListener('touchstart', startDrag, { passive: false });
     document.addEventListener('touchmove', handleDrag, { passive: false });
     document.addEventListener('touchend', endDrag);
     
     function startDrag(e) {
         e.preventDefault();
         isDragging = true;
-        bpmKnob.style.cursor = 'grabbing';
-        handleDrag(e);
+        startBPM = currentBPM;
+        
+        const rect = bpmKnob.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height;
+        
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        
+        if (clientX && clientY) {
+            const deltaX = clientX - centerX;
+            const deltaY = clientY - centerY;
+            startAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+        }
+        
+        document.body.style.cursor = 'grabbing';
     }
     
     function handleDrag(e) {
@@ -116,7 +132,7 @@ function setupKnobInteraction() {
         
         const rect = bpmKnob.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+        const centerY = rect.top + rect.height; // Bottom center for semicircle
         
         const clientX = e.clientX || (e.touches && e.touches[0].clientX);
         const clientY = e.clientY || (e.touches && e.touches[0].clientY);
@@ -126,32 +142,29 @@ function setupKnobInteraction() {
         const deltaX = clientX - centerX;
         const deltaY = clientY - centerY;
         
-        // Calculate angle (0 to 360 degrees)
-        let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-        angle = (angle + 360) % 360;
+        // Calculate current angle
+        let currentAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
         
-        // Convert to knob range (135° to 405° = 270° total range)
-        // Knob starts at 135° (bottom-left) and goes to 405° (bottom-right)
-        let knobAngle;
-        if (angle >= 135 && angle <= 360) {
-            knobAngle = angle - 135; // 0° to 225°
-        } else if (angle >= 0 && angle < 135) {
-            knobAngle = angle + 225; // 225° to 360°
-        } else {
-            return; // Invalid angle
-        }
+        // Calculate angle difference
+        let angleDiff = currentAngle - startAngle;
         
-        // Limit to 270° range
-        knobAngle = Math.max(0, Math.min(270, knobAngle));
+        // Normalize angle difference to -180 to 180
+        while (angleDiff > 180) angleDiff -= 360;
+        while (angleDiff < -180) angleDiff += 360;
         
-        // Convert angle to BPM value (40-200)
-        const bpmValue = Math.round(40 + (knobAngle / 270) * 160);
-        setBPM(bpmValue, 'изменено');
+        // Convert angle change to BPM change (more sensitive)
+        const bpmChange = (angleDiff / 180) * 80; // 180° = 80 BPM change
+        let newBPM = Math.round(startBPM + bpmChange);
+        
+        // Clamp to valid range
+        newBPM = Math.max(40, Math.min(200, newBPM));
+        
+        setBPM(newBPM, 'изменено');
     }
     
     function endDrag() {
         isDragging = false;
-        bpmKnob.style.cursor = 'pointer';
+        document.body.style.cursor = '';
     }
 }
 
@@ -197,29 +210,21 @@ function updateInput(bpm) {
 function updateKnob(bpm) {
     if (!knobProgress || !knobHandle || isNaN(bpm)) return;
     
-    // Convert BPM (40-200) to angle (0-270 degrees)
+    // Convert BPM (40-200) to angle (0-180 degrees for semicircle)
     const normalizedValue = (bpm - 40) / 160; // 0 to 1
-    const angle = normalizedValue * 270; // 0 to 270 degrees
+    const angle = normalizedValue * 180; // 0 to 180 degrees
     
-    // Update progress arc
+    // Update progress arc (semicircle from 180° to 0°)
     knobProgress.style.background = `conic-gradient(
-        from 135deg,
+        from 225deg,
         var(--primary-color) 0deg,
         var(--primary-color) ${angle}deg,
         transparent ${angle}deg
     )`;
     
-    // Update handle position
-    const handleAngle = 135 + angle; // Start from 135 degrees
-    const radius = 32; // Distance from center to handle
-    const centerX = 40; // Half of knob width
-    const centerY = 40; // Half of knob height
-    
-    const handleX = centerX + radius * Math.cos((handleAngle - 90) * Math.PI / 180);
-    const handleY = centerY + radius * Math.sin((handleAngle - 90) * Math.PI / 180);
-    
-    knobHandle.style.left = `${handleX - 8}px`; // 8px = half of handle width
-    knobHandle.style.top = `${handleY - 8}px`; // 8px = half of handle height
+    // Update handle rotation
+    const rotationAngle = -90 + angle; // Start from -90° (left) to 90° (right)
+    knobHandle.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
 }
 
 // Legacy function name for backward compatibility  
