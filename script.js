@@ -454,44 +454,69 @@ function setupEventListeners() {
     });
 
     // --- Боковые панели ---
-    ui.toggleFavoritesButton.addEventListener('click', () => {
+    ui.toggleSetlistsButton.addEventListener('click', async () => {
         const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
         ui.closeAllSidePanels();
         if (!isAlreadyOpen) {
-            ui.setlistsPanel.classList.add('open');
-            refreshSetlists();
+            ui.toggleSetlistsButton.classList.add('loading');
+            try {
+                ui.setlistsPanel.classList.add('open');
+                await refreshSetlists();
+            } catch (error) {
+                console.error('Ошибка загрузки сет-листов:', error);
+            } finally {
+                ui.toggleSetlistsButton.classList.remove('loading');
+            }
         }
     });
 
-    ui.toggleMyListButton.addEventListener('click', () => {
+    ui.toggleMyListButton.addEventListener('click', async () => {
         const isAlreadyOpen = ui.myListPanel.classList.contains('open');
         ui.closeAllSidePanels();
         if (!isAlreadyOpen) {
-            ui.myListPanel.classList.add('open');
-            // Logic to load and render favorites
-            const favoriteSongs = state.allSongs.filter(song => 
-                state.favorites.some(fav => fav.songId === song.id)
-            ).map(song => {
-                const fav = state.favorites.find(f => f.songId === song.id);
-                return { ...song, preferredKey: fav.preferredKey };
-            });
-            ui.renderFavorites(favoriteSongs, handleFavoriteOrRepertoireSelect, async (songId) => {
-                if(confirm("Удалить песню из 'Моего списка'?")) {
-                    await api.removeFromFavorites(songId);
-                    // Manually refresh list after deletion
-                    ui.toggleMyListButton.click(); 
-                    ui.toggleMyListButton.click();
-                }
-            });
+            ui.toggleMyListButton.classList.add('loading');
+            try {
+                ui.myListPanel.classList.add('open');
+                // Logic to load and render favorites
+                const favoriteSongs = state.allSongs.filter(song => 
+                    state.favorites.some(fav => fav.songId === song.id)
+                ).map(song => {
+                    const fav = state.favorites.find(f => f.songId === song.id);
+                    return { ...song, preferredKey: fav.preferredKey };
+                });
+                ui.renderFavorites(favoriteSongs, handleFavoriteOrRepertoireSelect, async (songId) => {
+                    if(confirm("Удалить песню из 'Моего списка'?")) {
+                        try {
+                            await api.removeFromFavorites(songId);
+                            // Refresh list after deletion
+                            ui.toggleMyListButton.click();
+                        } catch (error) {
+                            console.error('Ошибка удаления из избранного:', error);
+                            alert('Не удалось удалить песню из списка');
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Ошибка загрузки избранного:', error);
+            } finally {
+                ui.toggleMyListButton.classList.remove('loading');
+            }
         }
     });
 
-    ui.toggleRepertoireButton.addEventListener('click', () => {
+    ui.toggleRepertoireButton.addEventListener('click', async () => {
         const isAlreadyOpen = ui.repertoirePanel.classList.contains('open');
         ui.closeAllSidePanels();
         if (!isAlreadyOpen) {
-            ui.repertoirePanel.classList.add('open');
-            api.loadRepertoire(state.currentVocalistId, handleRepertoireUpdate);
+            ui.toggleRepertoireButton.classList.add('loading');
+            try {
+                ui.repertoirePanel.classList.add('open');
+                api.loadRepertoire(state.currentVocalistId, handleRepertoireUpdate);
+            } catch (error) {
+                console.error('Ошибка загрузки репертуара:', error);
+            } finally {
+                ui.toggleRepertoireButton.classList.remove('loading');
+            }
         }
     });
 

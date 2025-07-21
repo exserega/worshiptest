@@ -41,7 +41,7 @@ export const chordsOnlyButton = document.getElementById('chords-only-button');
 export const favoriteButton = document.getElementById('favorite-button');
 export const addToSetlistButton = document.getElementById('add-to-setlist-button');
 export const addToRepertoireButton = document.getElementById('add-to-repertoire-button');
-export const toggleFavoritesButton = document.getElementById('toggle-favorites');
+export const toggleSetlistsButton = document.getElementById('toggle-setlists');
 export const setlistsPanel = document.getElementById('setlists-panel');
 export const toggleMyListButton = document.getElementById('toggle-my-list');
 export const myListPanel = document.getElementById('my-list-panel');
@@ -96,7 +96,7 @@ export function closeAllSidePanels() {
     if (repertoirePanel) repertoirePanel.classList.remove('open');
 
     // Также убираем класс active у всех кнопок мобильной навигации
-    if (toggleFavoritesButton) toggleFavoritesButton.classList.remove('active');
+    if (toggleSetlistsButton) toggleSetlistsButton.classList.remove('active');
     if (toggleMyListButton) toggleMyListButton.classList.remove('active');
     if (toggleRepertoireButton) toggleRepertoireButton.classList.remove('active');
 }
@@ -121,7 +121,7 @@ export function togglePanel(panel, onOpenCallback) {
         // Активируем соответствующую кнопку в мобильной навигации
         let mobileButton;
         if (panel.id === 'setlists-panel') {
-            mobileButton = toggleFavoritesButton;
+            mobileButton = toggleSetlistsButton;
         } else if (panel.id === 'my-list-panel') {
             mobileButton = toggleMyListButton;
         } else if (panel.id === 'repertoire-panel') {
