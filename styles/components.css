@@ -392,7 +392,12 @@ body[data-theme="light"] .legend-icon-btn {
 
 .legend-icon-btn i {
     pointer-events: none;
-    color: inherit; /* Наследуем цвет от родительской кнопки */
+    color: #e5e7eb !important; /* Светлые иконки для темной темы */
+}
+
+/* Темные иконки для светлой темы */
+body[data-theme="light"] .legend-icon-btn i {
+    color: #1e293b !important; /* Темные иконки для светлой темы */
 }
 
 
