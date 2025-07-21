@@ -670,7 +670,7 @@ export function renderFavorites(onSelect, onRemove) {
     const favorites = state.favorites;
 
     if (favorites.length === 0) {
-        favoritesList.innerHTML = '<div class="empty-message">В "Моем списке" пока нет песен.</div>';
+        favoritesList.innerHTML = '<div class="empty-message">В "Моих" пока нет песен.</div>';
         return;
     }
     

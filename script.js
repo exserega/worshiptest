@@ -497,7 +497,7 @@ function setupEventListeners() {
                     return { ...song, preferredKey: fav.preferredKey };
                 });
                 ui.renderFavorites(favoriteSongs, handleFavoriteOrRepertoireSelect, async (songId) => {
-                    if(confirm("Удалить песню из 'Моего списка'?")) {
+                    if(confirm("Удалить песню из 'Моих'?")) {
                         try {
                             await api.removeFromFavorites(songId);
                             // Refresh list after deletion
@@ -735,11 +735,11 @@ function setupEventListeners() {
         const result = await api.addToFavorites(songId, key);
         
         if (result.status === 'added') {
-            alert(`Песня "${songName}" (${result.key}) добавлена в 'Мой список'.`);
+            alert(`Песня "${songName}" (${result.key}) добавлена в 'Мои'.`);
         } else if (result.status === 'updated') {
-            alert(`Тональность песни "${songName}" в 'Моем списке' обновлена на ${result.key}.`);
+            alert(`Тональность песни "${songName}" в 'Моих' обновлена на ${result.key}.`);
         } else if (result.status === 'exists') {
-            alert(`Песня "${songName}" уже есть в 'Моем списке' с той же тональностью.`);
+            alert(`Песня "${songName}" уже есть в 'Моих' с той же тональностью.`);
         }
     });
 
