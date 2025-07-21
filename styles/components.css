@@ -334,8 +334,7 @@ body[data-theme="light"] .repertoire-view-button.active {
     padding: 0;
     margin: 0;
     margin-top: 8px; /* Уменьшили с 12px */
-    /* Правильные цвета для видимости */
-    color: #e5e7eb; /* Светлые иконки для темной темы */
+    /* Цвет определяется для каждой кнопки индивидуально ниже */
 }
 
 /* Специфические цвета для каждой кнопки */
@@ -362,6 +361,15 @@ body[data-theme="light"] .legend-icon-btn.setlist {
 
 body[data-theme="light"] .legend-icon-btn.mic {
     color: #805ad5 !important;
+}
+
+/* Fallback цвет для кнопок без специфичного класса */
+.legend-icon-btn:not(.heart):not(.setlist):not(.mic) {
+    color: #e5e7eb; /* Светлые иконки для темной темы */
+}
+
+body[data-theme="light"] .legend-icon-btn:not(.heart):not(.setlist):not(.mic) {
+    color: #1e293b !important;
 }
 
 /* Legend как часть границы - фон контейнера для закрытия границы */
