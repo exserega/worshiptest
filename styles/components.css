@@ -323,7 +323,7 @@ body[data-theme="light"] .repertoire-view-button.active {
     height: 40px; /* Уменьшили с 50px */
     border: 1.5px solid var(--border-color);
     background: transparent;
-    color: var(--text-color);
+    /* color: var(--text-color); - Убрали, чтобы не перекрывать специфичные цвета для тем */
     display: flex;
     align-items: center;
     justify-content: center;
