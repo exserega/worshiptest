@@ -470,14 +470,13 @@
         color: var(--button-text-color) !important;
         border-color: var(--accent-color) !important;
     }
-         /* Кнопка Копировать на мобильных - теперь в legend */
+         /* Кнопка Копировать на мобильных */
      #copy-text-button {
-         width: 26px;    /* Еще компактнее на мобильных */
-         height: 26px;
-         font-size: 0.75rem;
-         background: var(--container-background-color) !important;
-         border: 1px solid var(--border-color) !important;
-         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+         width: 28px;    /* Компактнее на мобильных */
+         height: 28px;
+         font-size: 0.8rem;
+         top: 8px;       /* Меньший отступ сверху на мобильных */
+         right: 8px;     /* Меньший отступ справа на мобильных */
      }
      /* --- Конец мобильных стилей для новых кнопок --- */
 

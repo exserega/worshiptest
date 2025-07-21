@@ -25,13 +25,7 @@
     text-align: center; /* Центрируем текст */
 }
 
-.legend-buttons {
-    /* Контейнер для кнопок в legend */
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Отступ между кнопками */
-    flex-shrink: 0; /* Не сжимается */
-}
+
 
 .legend-button {
     /* Специальные стили для кнопки в legend */
