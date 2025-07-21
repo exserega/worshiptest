@@ -323,7 +323,6 @@ body[data-theme="light"] .repertoire-view-button.active {
     height: 40px; /* Уменьшили с 50px */
     border: 1.5px solid var(--border-color);
     background: transparent;
-    /* color: var(--text-color); - Убрали, чтобы не перекрывать специфичные цвета для тем */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -335,6 +334,13 @@ body[data-theme="light"] .repertoire-view-button.active {
     padding: 0;
     margin: 0;
     margin-top: 8px; /* Уменьшили с 12px */
+    /* Правильные цвета для видимости */
+    color: #e5e7eb; /* Светлые иконки для темной темы */
+}
+
+/* Темные иконки для светлой темы */
+body[data-theme="light"] .legend-icon-btn {
+    color: #1e293b !important;
 }
 
 /* Legend как часть границы - фон контейнера для закрытия границы */
@@ -389,14 +395,7 @@ body[data-theme="light"] .repertoire-view-button.active {
     color: inherit; /* Наследуем цвет от родительской кнопки */
 }
 
-/* Правильные цвета иконок для видимости в обеих темах - ПРИНУДИТЕЛЬНО */
-.legend-icon-btn {
-    color: #e5e7eb !important; /* Светлые иконки для темной темы */
-}
 
-body[data-theme="light"] .legend-icon-btn {
-    color: #1e293b !important; /* Темные иконки для светлой темы */
-}
 
 /* Цветовые состояния для активных кнопок */
 .legend-icon-btn.heart.active {
