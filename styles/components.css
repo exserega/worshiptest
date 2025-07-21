@@ -338,9 +338,30 @@ body[data-theme="light"] .repertoire-view-button.active {
     color: #e5e7eb; /* Светлые иконки для темной темы */
 }
 
+/* Специфические цвета для каждой кнопки */
+.legend-icon-btn.heart {
+    color: #c53030; /* Неяркий красный для сердца */
+}
+
+.legend-icon-btn.setlist {
+    color: #38a169; /* Зеленый для плюса */
+}
+
+.legend-icon-btn.mic {
+    color: #805ad5; /* Фиолетовый для микрофона */
+}
+
 /* Темные иконки для светлой темы */
-body[data-theme="light"] .legend-icon-btn {
-    color: #1e293b !important;
+body[data-theme="light"] .legend-icon-btn.heart {
+    color: #c53030 !important;
+}
+
+body[data-theme="light"] .legend-icon-btn.setlist {
+    color: #38a169 !important;
+}
+
+body[data-theme="light"] .legend-icon-btn.mic {
+    color: #805ad5 !important;
 }
 
 /* Legend как часть границы - фон контейнера для закрытия границы */
@@ -399,34 +420,34 @@ body[data-theme="light"] .legend-icon-btn {
 
 /* Цветовые состояния для активных кнопок */
 .legend-icon-btn.heart.active {
-    color: #e74c3c;
-    border-color: #e74c3c;
-    background: color-mix(in srgb, #e74c3c 10%, transparent);
+    color: #e53e3e; /* Более яркий красный для активного состояния */
+    border-color: #e53e3e;
+    background: color-mix(in srgb, #e53e3e 10%, transparent);
 }
 
 .legend-icon-btn.setlist.active {
-    color: #27ae60;
-    border-color: #27ae60;
-    background: color-mix(in srgb, #27ae60 10%, transparent);
+    color: #48bb78; /* Более яркий зеленый для активного состояния */
+    border-color: #48bb78;
+    background: color-mix(in srgb, #48bb78 10%, transparent);
 }
 
 .legend-icon-btn.mic.active {
-    color: #7c4dff;
-    border-color: #7c4dff;
-    background: color-mix(in srgb, #7c4dff 10%, transparent);
+    color: #9f7aea; /* Более яркий фиолетовый для активного состояния */
+    border-color: #9f7aea;
+    background: color-mix(in srgb, #9f7aea 10%, transparent);
 }
 
 /* Активные состояния для legend */
 .song-legend-action.heart.active::before {
-    color: #e74c3c;
+    color: #e53e3e;
 }
 
 .song-legend-action.setlist.active::before {
-    color: #27ae60;
+    color: #48bb78;
 }
 
 .song-legend-action.mic.active::before {
-    color: #7c4dff;
+    color: #9f7aea;
 }
 
 @media (max-width: 768px) {
