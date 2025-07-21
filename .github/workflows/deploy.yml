@@ -1,10 +1,11 @@
 name: Deploy to GitHub Pages
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+# Временно отключено - используем встроенный GitHub Pages
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
 
 permissions:
   contents: read
