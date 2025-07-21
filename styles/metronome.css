@@ -109,47 +109,110 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
 }
 
-.bpm-slider-container {
+/* Circular BPM Knob */
+.bpm-knob-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
     width: 100%;
+}
+
+.bpm-knob {
     position: relative;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    user-select: none;
 }
 
-.bpm-slider {
+.knob-track {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--border-color);
-    outline: none;
-    appearance: none;
-    cursor: pointer;
-}
-
-.bpm-slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
+    height: 100%;
     border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease;
+    background: conic-gradient(
+        from 135deg,
+        var(--border-color) 0deg,
+        var(--border-color) 270deg,
+        transparent 270deg
+    );
+    padding: 4px;
 }
 
-.bpm-slider::-webkit-slider-thumb:hover {
+.knob-track::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border-radius: 50%;
+    background: var(--container-background-color);
+}
+
+.knob-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 135deg,
+        var(--primary-color) 0deg,
+        var(--primary-color) 0deg,
+        transparent 0deg
+    );
+    transition: all 0.2s ease;
+    z-index: 1;
+}
+
+.knob-handle {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: var(--primary-color);
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+    z-index: 3;
+    transform-origin: center;
+}
+
+.knob-handle:hover {
     transform: scale(1.1);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
 }
 
-.bpm-slider::-moz-range-thumb {
+.knob-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 20px;
     height: 20px;
+    background: var(--container-background-color);
+    border: 2px solid var(--border-color);
     border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.knob-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 80px;
+    font-size: 0.7rem;
+    color: var(--secondary-text-color);
+    font-weight: 500;
+}
+
+.knob-label-min,
+.knob-label-max {
+    font-family: 'Courier New', monospace;
 }
 
 /* Metronome Controls */

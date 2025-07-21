@@ -185,8 +185,17 @@
                 </button>
                 <div class="bpm-input-group">
                     <input type="number" id="bpm-input" class="bpm-input" min="40" max="200" step="1" value="120">
-                    <div class="bpm-slider-container">
-                        <input type="range" id="bpm-slider" class="bpm-slider" min="40" max="200" step="1" value="120">
+                    <div class="bpm-knob-container">
+                        <div class="bpm-knob" id="bpm-knob">
+                            <div class="knob-track"></div>
+                            <div class="knob-progress" id="knob-progress"></div>
+                            <div class="knob-handle" id="knob-handle"></div>
+                            <div class="knob-center"></div>
+                        </div>
+                        <div class="knob-labels">
+                            <span class="knob-label-min">40</span>
+                            <span class="knob-label-max">200</span>
+                        </div>
                     </div>
                 </div>
                 <button class="bpm-btn bpm-increase" id="bpm-increase" title="Увеличить BPM">

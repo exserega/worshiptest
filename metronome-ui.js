@@ -5,7 +5,9 @@ import * as core from './core.js';
 const bpmDisplay = document.getElementById('bpm-display');
 const bpmSource = document.getElementById('bpm-source');
 const bpmInput = document.getElementById('bpm-input');
-const bpmSlider = document.getElementById('bpm-slider');
+const bpmKnob = document.getElementById('bpm-knob');
+const knobProgress = document.getElementById('knob-progress');
+const knobHandle = document.getElementById('knob-handle');
 const bpmDecrease = document.getElementById('bpm-decrease');
 const bpmIncrease = document.getElementById('bpm-increase');
 const metronomeButton = document.getElementById('metronome-button');
@@ -41,8 +43,8 @@ function setupEventListeners() {
         bpmInput.addEventListener('keydown', handleBPMInputKeydown);
     }
     
-    if (bpmSlider) {
-        bpmSlider.addEventListener('input', handleBPMSliderChange);
+    if (bpmKnob) {
+        setupKnobInteraction();
     }
     
     // Metronome button
@@ -87,23 +89,81 @@ function handleBPMInputKeydown(e) {
     }
 }
 
-// Handle BPM slider change
-function handleBPMSliderChange(e) {
-    const value = parseInt(e.target.value, 10);
-    setBPM(value, 'изменено');
+// Setup knob interaction
+function setupKnobInteraction() {
+    let isDragging = false;
+    
+    // Mouse events
+    bpmKnob.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', handleDrag);
+    document.addEventListener('mouseup', endDrag);
+    
+    // Touch events for mobile
+    bpmKnob.addEventListener('touchstart', startDrag, { passive: false });
+    document.addEventListener('touchmove', handleDrag, { passive: false });
+    document.addEventListener('touchend', endDrag);
+    
+    function startDrag(e) {
+        e.preventDefault();
+        isDragging = true;
+        bpmKnob.style.cursor = 'grabbing';
+        handleDrag(e);
+    }
+    
+    function handleDrag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        
+        const rect = bpmKnob.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        
+        if (!clientX || !clientY) return;
+        
+        const deltaX = clientX - centerX;
+        const deltaY = clientY - centerY;
+        
+        // Calculate angle (0 to 360 degrees)
+        let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+        angle = (angle + 360) % 360;
+        
+        // Convert to knob range (135° to 405° = 270° total range)
+        // Knob starts at 135° (bottom-left) and goes to 405° (bottom-right)
+        let knobAngle;
+        if (angle >= 135 && angle <= 360) {
+            knobAngle = angle - 135; // 0° to 225°
+        } else if (angle >= 0 && angle < 135) {
+            knobAngle = angle + 225; // 225° to 360°
+        } else {
+            return; // Invalid angle
+        }
+        
+        // Limit to 270° range
+        knobAngle = Math.max(0, Math.min(270, knobAngle));
+        
+        // Convert angle to BPM value (40-200)
+        const bpmValue = Math.round(40 + (knobAngle / 270) * 160);
+        setBPM(bpmValue, 'изменено');
+    }
+    
+    function endDrag() {
+        isDragging = false;
+        bpmKnob.style.cursor = 'pointer';
+    }
 }
 
 // Set BPM value
 function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = true) {
-    console.log('setBPM called with:', bpm, source, shouldUpdateInput);
     currentBPM = bpm;
     updateBPMDisplay(bpm, source);
     
     if (shouldUpdateInput) {
-        console.log('Calling updateInputField with:', bpm);
         updateInputField(bpm);
     }
-    updateSlider(bpm);
+    updateKnob(bpm);
     
     // If metronome is active, restart with new BPM
     if (isMetronomeActive) {
@@ -123,7 +183,6 @@ function updateBPMDisplay(bpm, source) {
 
 // Update input field
 function updateInputField(bpm) {
-    console.log('updateInputField called with:', bpm);
     if (bpmInput && document.activeElement !== bpmInput) {
         bpmInput.value = bpm;
     }
@@ -131,15 +190,41 @@ function updateInputField(bpm) {
 
 // Legacy function name for backward compatibility
 function updateInput(bpm) {
-    console.log('Legacy updateInput called, redirecting to updateInputField');
     updateInputField(bpm);
 }
 
-// Update slider
+// Update knob position
+function updateKnob(bpm) {
+    if (!knobProgress || !knobHandle || isNaN(bpm)) return;
+    
+    // Convert BPM (40-200) to angle (0-270 degrees)
+    const normalizedValue = (bpm - 40) / 160; // 0 to 1
+    const angle = normalizedValue * 270; // 0 to 270 degrees
+    
+    // Update progress arc
+    knobProgress.style.background = `conic-gradient(
+        from 135deg,
+        var(--primary-color) 0deg,
+        var(--primary-color) ${angle}deg,
+        transparent ${angle}deg
+    )`;
+    
+    // Update handle position
+    const handleAngle = 135 + angle; // Start from 135 degrees
+    const radius = 32; // Distance from center to handle
+    const centerX = 40; // Half of knob width
+    const centerY = 40; // Half of knob height
+    
+    const handleX = centerX + radius * Math.cos((handleAngle - 90) * Math.PI / 180);
+    const handleY = centerY + radius * Math.sin((handleAngle - 90) * Math.PI / 180);
+    
+    knobHandle.style.left = `${handleX - 8}px`; // 8px = half of handle width
+    knobHandle.style.top = `${handleY - 8}px`; // 8px = half of handle height
+}
+
+// Legacy function name for backward compatibility  
 function updateSlider(bpm) {
-    if (bpmSlider) {
-        bpmSlider.value = bpm;
-    }
+    updateKnob(bpm);
 }
 
 // Toggle metronome
@@ -191,7 +276,6 @@ function updateMetronomeButton(isActive) {
 
 // Public API for updating BPM from external sources (like Firebase)
 export function updateBPMFromSong(bpm) {
-    console.log('updateBPMFromSong called with:', bpm);
     if (bpm && !isNaN(bpm) && bpm > 0) {
         originalBPM = bpm;
         setBPM(bpm, 'из песни');
