@@ -163,7 +163,6 @@ export function applyTheme(themeName) {
 
 /** Отображает детали выбранной песни */
 export function displaySongDetails(songData, keyToSelect) {
-    console.log('displaySongDetails called with:', songData);
     const keyDisplay = document.getElementById('youtube-video-key-display');
 
     if (!songData) {

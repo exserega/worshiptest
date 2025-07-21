@@ -94,12 +94,12 @@ function handleBPMSliderChange(e) {
 }
 
 // Set BPM value
-function setBPM(bpm, source = 'по умолчанию', updateInput = true) {
+function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = true) {
     currentBPM = bpm;
     updateBPMDisplay(bpm, source);
     
-    if (updateInput) {
-        updateInput(bpm);
+    if (shouldUpdateInput) {
+        updateInputField(bpm);
     }
     updateSlider(bpm);
     
@@ -120,7 +120,7 @@ function updateBPMDisplay(bpm, source) {
 }
 
 // Update input field
-function updateInput(bpm) {
+function updateInputField(bpm) {
     if (bpmInput && document.activeElement !== bpmInput) {
         bpmInput.value = bpm;
     }
