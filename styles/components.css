@@ -339,15 +339,15 @@ body[data-theme="light"] .repertoire-view-button.active {
 
 /* Специфические цвета для каждой кнопки */
 .legend-icon-btn.heart {
-    color: #c53030; /* Неяркий красный для сердца */
+    color: #c53030 !important; /* Неяркий красный для сердца */
 }
 
 .legend-icon-btn.setlist {
-    color: #38a169; /* Зеленый для плюса */
+    color: #38a169 !important; /* Зеленый для плюса */
 }
 
 .legend-icon-btn.mic {
-    color: #805ad5; /* Фиолетовый для микрофона */
+    color: #805ad5 !important; /* Фиолетовый для микрофона */
 }
 
 /* Темные иконки для светлой темы */
@@ -370,6 +370,19 @@ body[data-theme="light"] .legend-icon-btn.mic {
 
 body[data-theme="light"] .legend-icon-btn:not(.heart):not(.setlist):not(.mic) {
     color: #1e293b !important;
+}
+
+/* Правила для иконок в светлой теме */
+body[data-theme="light"] .legend-icon-btn.heart i {
+    color: #c53030 !important;
+}
+
+body[data-theme="light"] .legend-icon-btn.setlist i {
+    color: #38a169 !important;
+}
+
+body[data-theme="light"] .legend-icon-btn.mic i {
+    color: #805ad5 !important;
 }
 
 /* Legend как часть границы - фон контейнера для закрытия границы */
@@ -421,28 +434,54 @@ body[data-theme="light"] .legend-icon-btn:not(.heart):not(.setlist):not(.mic) {
 
 .legend-icon-btn i {
     pointer-events: none;
-    color: inherit; /* Наследуем цвет от родительской кнопки */
+    color: inherit !important; /* Наследуем цвет от родительской кнопки */
+}
+
+/* Дополнительные правила для обеспечения правильных цветов */
+.legend-icon-btn.heart i {
+    color: #c53030 !important;
+}
+
+.legend-icon-btn.setlist i {
+    color: #38a169 !important;
+}
+
+.legend-icon-btn.mic i {
+    color: #805ad5 !important;
 }
 
 
 
 /* Цветовые состояния для активных кнопок */
 .legend-icon-btn.heart.active {
-    color: #e53e3e; /* Более яркий красный для активного состояния */
+    color: #e53e3e !important; /* Более яркий красный для активного состояния */
     border-color: #e53e3e;
     background: color-mix(in srgb, #e53e3e 10%, transparent);
 }
 
 .legend-icon-btn.setlist.active {
-    color: #48bb78; /* Более яркий зеленый для активного состояния */
+    color: #48bb78 !important; /* Более яркий зеленый для активного состояния */
     border-color: #48bb78;
     background: color-mix(in srgb, #48bb78 10%, transparent);
 }
 
 .legend-icon-btn.mic.active {
-    color: #9f7aea; /* Более яркий фиолетовый для активного состояния */
+    color: #9f7aea !important; /* Более яркий фиолетовый для активного состояния */
     border-color: #9f7aea;
     background: color-mix(in srgb, #9f7aea 10%, transparent);
+}
+
+/* Активные состояния для иконок */
+.legend-icon-btn.heart.active i {
+    color: #e53e3e !important;
+}
+
+.legend-icon-btn.setlist.active i {
+    color: #48bb78 !important;
+}
+
+.legend-icon-btn.mic.active i {
+    color: #9f7aea !important;
 }
 
 /* Активные состояния для legend */
