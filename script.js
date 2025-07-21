@@ -28,6 +28,15 @@ function handleRepertoireUpdate({ data, error }) {
         state.setCurrentRepertoireSongsData(data);
     }
     ui.renderRepertoire(handleFavoriteOrRepertoireSelect);
+    
+    // Обновляем состояние кнопки репертуара для текущей песни
+    const currentSongId = ui.songSelect.value;
+    if (currentSongId) {
+        const currentSong = state.allSongs.find(s => s.id === currentSongId);
+        if (currentSong) {
+            ui.updateRepertoireButton(currentSong);
+        }
+    }
 }
 
 /** Обработчик сохранения заметки */
@@ -210,6 +219,9 @@ async function handleAddToRepertoire() {
         } else if (result.status === 'exists') {
             alert(`Песня "${song.name}" уже есть в репертуаре для "${vocalistName}" с той же тональностью.`);
         }
+        
+        // Обновляем состояние кнопки репертуара
+        ui.updateRepertoireButton(song);
     } catch (error) {
         console.error("Ошибка при добавлении в репертуар:", error);
         alert("Не удалось добавить песню в репертуар.");
@@ -733,7 +745,7 @@ function setupEventListeners() {
 
     ui.addToSetlistButton.addEventListener('click', handleAddSongToSetlist);
 
-    ui.addToRepertoireButton.addEventListener('click', handleAddToRepertoire);
+    ui.repertoireButton.addEventListener('click', handleAddToRepertoire);
 }
 
 

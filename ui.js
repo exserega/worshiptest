@@ -40,7 +40,7 @@ export const toggleChordsButton = document.getElementById('toggle-chords-button'
 export const chordsOnlyButton = document.getElementById('chords-only-button');
 export const favoriteButton = document.getElementById('favorite-button');
 export const addToSetlistButton = document.getElementById('add-to-setlist-button');
-export const addToRepertoireButton = document.getElementById('add-to-repertoire-button');
+export const repertoireButton = document.getElementById('repertoire-button');
 export const toggleSetlistsButton = document.getElementById('toggle-setlists');
 export const setlistsPanel = document.getElementById('setlists-panel');
 export const toggleMyListButton = document.getElementById('toggle-my-list');
@@ -182,7 +182,7 @@ export function displaySongDetails(songData, keyToSelect) {
         if (keyDisplay) keyDisplay.style.display = 'none';
         favoriteButton.disabled = true;
         addToSetlistButton.disabled = true;
-        addToRepertoireButton.disabled = true;
+        repertoireButton.disabled = true;
         toggleChordsButton.disabled = true;
         songContent.classList.remove('chords-hidden');
         const copyBtn = songContent.querySelector('#copy-text-button');
@@ -274,11 +274,12 @@ export function displaySongDetails(songData, keyToSelect) {
 
     favoriteButton.disabled = false;
     addToSetlistButton.disabled = false;
-    addToRepertoireButton.disabled = false;
+    repertoireButton.disabled = false;
     toggleChordsButton.disabled = false;
     chordsOnlyButton.disabled = false;
     updateToggleChordsButton();
     updateChordsOnlyButton();
+    updateRepertoireButton(songData);
 }
 
 /** Обновление размера шрифта текста песни */
@@ -289,6 +290,32 @@ export function updateFontSize() {
 /** Обновление отображения и логики BPM */
 export function updateBPM(newBPM) {
     if (bpmDisplay) bpmDisplay.textContent = newBPM;
+}
+
+/** Обновление состояния кнопки репертуара */
+export function updateRepertoireButton(songData) {
+    if (!songData || !state.currentVocalistId) {
+        repertoireButton.classList.remove('active');
+        repertoireButton.parentElement.classList.remove('active');
+        return;
+    }
+    
+    // Проверяем, есть ли песня в репертуаре текущего вокалиста
+    const isInRepertoire = state.repertoire && state.repertoire.some(item => 
+        item.songId === songData.id
+    );
+    
+    if (isInRepertoire) {
+        repertoireButton.classList.add('active');
+        repertoireButton.parentElement.classList.add('active');
+        repertoireButton.title = 'Песня в репертуаре';
+        repertoireButton.setAttribute('aria-label', 'Песня в репертуаре');
+    } else {
+        repertoireButton.classList.remove('active');
+        repertoireButton.parentElement.classList.remove('active');
+        repertoireButton.title = 'Добавить в репертуар';
+        repertoireButton.setAttribute('aria-label', 'Добавить в репертуар');
+    }
 }
 
 /** Обновление кнопки скрытия/показа аккордов */

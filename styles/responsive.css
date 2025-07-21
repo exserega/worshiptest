@@ -489,7 +489,7 @@
     #metronome-button > i { font-size: 1.1rem; margin: 0; }
     #metronome-button .button-text { display: none; }
     #holychords-button { padding: 6px 12px; height: 36px; } /* Уменьшили padding с 8px 15px */
-    #add-to-repertoire-button { padding: 8px 12px; height: 40px; } /* Уменьшили padding с 10px 15px */
+    
 
     /* ===== САМАЯ ВАЖНАЯ ЧАСТЬ - ОБЛАСТЬ ТЕКСТА ===== */
     #song-content { 
