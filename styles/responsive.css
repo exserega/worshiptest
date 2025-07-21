@@ -470,14 +470,11 @@
         color: var(--button-text-color) !important;
         border-color: var(--accent-color) !important;
     }
-         /* Кнопка Копировать на мобильных */
+         /* Кнопка Копировать на мобильных - теперь в legend */
      #copy-text-button {
-         /* Абсолютное позиционирование внутри контейнера песни */
          width: 26px;    /* Еще компактнее на мобильных */
          height: 26px;
          font-size: 0.75rem;
-         opacity: 0.9;   /* Максимально видимая на мобильных */
-         /* Добавляем границу на мобильных */
          background: var(--container-background-color) !important;
          border: 1px solid var(--border-color) !important;
          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;

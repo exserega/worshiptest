@@ -235,10 +235,10 @@ export function displaySongDetails(songData, keyToSelect) {
     const cleanTitle = title.includes('(') ? title.split('(')[0].trim() : title;
     if (songTitleText) songTitleText.textContent = cleanTitle;
     if (songPre) songPre.innerHTML = finalHighlightedLyrics;
-    if (copyBtn) {
-        copyBtn.style.display = 'block';
-        positionCopyButton(); // Позиционируем кнопку относительно #song-content
-    }
+            if (copyBtn) {
+            copyBtn.style.display = 'block';
+            // Позиционирование больше не нужно - кнопка в legend
+        }
     if (editBtn) {
         editBtn.style.display = 'block';
     }
@@ -785,23 +785,8 @@ export function renderSetlists(setlists, onSelect, onDelete) {
     });
 }
 
-/** Позиционирование кнопки копирования относительно #song-content */
-export function positionCopyButton() {
-    const copyBtn = document.getElementById('copy-text-button');
-    const songContent = document.getElementById('song-content');
-    
-    if (!copyBtn || !songContent) return;
-    
-    const rect = songContent.getBoundingClientRect();
-    
-    // Позиционируем кнопку в правом верхнем углу контейнера с отступом
-    copyBtn.style.left = `${rect.right - 30}px`; // 30px слева от правого края
-    copyBtn.style.top = `${rect.top}px`;         // На уровне верхнего края (было -12px)
-}
-
-// Обновляем позицию при изменении размера окна и прокрутке
-window.addEventListener('resize', positionCopyButton);
-window.addEventListener('scroll', positionCopyButton);
+// Функция позиционирования кнопки копирования удалена - 
+// кнопка теперь находится в legend и позиционируется через CSS
 
 // --- ФУНКЦИИ ДЛЯ РАБОТЫ С БЛОКАМИ СОДЕРЖАЩИМИ ТОЛЬКО АККОРДЫ ---
 
