@@ -152,8 +152,8 @@ function setupKnobInteraction() {
         while (angleDiff > 180) angleDiff -= 360;
         while (angleDiff < -180) angleDiff += 360;
         
-        // Convert angle change to BPM change (more sensitive)
-        const bpmChange = (angleDiff / 180) * 80; // 180° = 80 BPM change
+        // Convert angle change to BPM change (low sensitivity for precision)
+        const bpmChange = (angleDiff / 540) * 80; // 540° = 80 BPM change (1/3 sensitivity)
         let newBPM = Math.round(startBPM + bpmChange);
         
         // Clamp to valid range

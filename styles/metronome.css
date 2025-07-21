@@ -120,8 +120,8 @@
 
 .bpm-knob {
     position: relative;
-    width: 100px;
-    height: 60px; /* Half height for semicircle */
+    width: 140px;
+    height: 80px; /* Half height for semicircle */
     cursor: grab;
     user-select: none;
     margin-bottom: 10px;
@@ -136,7 +136,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 120px; /* Full circle height but clipped */
+    height: 160px; /* Full circle height but clipped */
     overflow: hidden;
 }
 
@@ -189,19 +189,19 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     background: linear-gradient(145deg, 
         color-mix(in srgb, var(--container-background-color) 90%, white),
         color-mix(in srgb, var(--container-background-color) 90%, black)
     );
-    border: 3px solid var(--border-color);
+    border: 4px solid var(--border-color);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+        0 6px 12px rgba(0, 0, 0, 0.15),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
     z-index: 3;
     cursor: grab;
@@ -209,9 +209,9 @@
 
 .knob-handle:hover {
     box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.15);
 }
 
 .knob-handle:active {
@@ -221,20 +221,20 @@
 
 .knob-indicator {
     position: absolute;
-    top: 8px;
+    top: 12px;
     left: 50%;
-    width: 3px;
-    height: 20px;
+    width: 4px;
+    height: 28px;
     background: var(--primary-color);
     border-radius: 2px;
     transform: translateX(-50%);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .knob-labels {
     display: flex;
     justify-content: space-between;
-    width: 100px;
+    width: 140px;
     font-size: 0.75rem;
     color: var(--secondary-text-color);
     font-weight: 600;
