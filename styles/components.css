@@ -389,13 +389,13 @@ body[data-theme="light"] .repertoire-view-button.active {
     color: inherit; /* Наследуем цвет от родительской кнопки */
 }
 
-/* Убеждаемся что иконки правильно отображаются в обеих темах */
+/* Правильные цвета иконок для видимости в обеих темах */
 .legend-icon-btn {
-    color: var(--text-color);
+    color: #e5e7eb; /* Светлые иконки для темной темы */
 }
 
 body[data-theme="light"] .legend-icon-btn {
-    color: var(--text-color);
+    color: #1e293b; /* Темные иконки для светлой темы */
 }
 
 /* Цветовые состояния для активных кнопок */
