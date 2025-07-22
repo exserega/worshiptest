@@ -3,13 +3,13 @@ import * as core from './core.js';
 
 // DOM Elements
 const bpmInput = document.getElementById('bpm-input');
-const bpmKnob = document.getElementById('bpm-knob');
-const knobProgress = document.getElementById('knob-progress');
-const knobHandle = document.getElementById('knob-handle');
+const bpmSlider = document.getElementById('bpm-slider');
+const sliderProgress = document.getElementById('slider-progress');
+const sliderHandle = document.getElementById('slider-handle');
 const bpmDecrease = document.getElementById('bpm-decrease');
 const bpmIncrease = document.getElementById('bpm-increase');
 const metronomeButton = document.getElementById('metronome-button');
-const metronomeIcon = metronomeButton?.querySelector('.metronome-icon i');
+const metronomeIcon = metronomeButton?.querySelector('i');
 const timeSignature = document.getElementById('time-signature');
 
 // State
@@ -41,8 +41,8 @@ function setupEventListeners() {
         bpmInput.addEventListener('keydown', handleBPMInputKeydown);
     }
     
-    if (bpmKnob) {
-        setupKnobInteraction();
+    if (bpmSlider) {
+        setupSliderInteraction();
     }
     
     // Metronome button
@@ -87,19 +87,19 @@ function handleBPMInputKeydown(e) {
     }
 }
 
-// Setup knob interaction
-function setupKnobInteraction() {
+// Setup slider interaction
+function setupSliderInteraction() {
     let isDragging = false;
     let startAngle = 0;
     let startBPM = 120;
     
     // Mouse events
-    knobHandle.addEventListener('mousedown', startDrag);
+    sliderHandle.addEventListener('mousedown', startDrag);
     document.addEventListener('mousemove', handleDrag);
     document.addEventListener('mouseup', endDrag);
     
     // Touch events for mobile
-    knobHandle.addEventListener('touchstart', startDrag, { passive: false });
+    sliderHandle.addEventListener('touchstart', startDrag, { passive: false });
     document.addEventListener('touchmove', handleDrag, { passive: false });
     document.addEventListener('touchend', endDrag);
     
@@ -108,7 +108,7 @@ function setupKnobInteraction() {
         isDragging = true;
         startBPM = currentBPM;
         
-        const rect = bpmKnob.getBoundingClientRect();
+        const rect = bpmSlider.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height;
         
@@ -128,7 +128,7 @@ function setupKnobInteraction() {
         if (!isDragging) return;
         e.preventDefault();
         
-        const rect = bpmKnob.getBoundingClientRect();
+        const rect = bpmSlider.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height; // Bottom center for semicircle
         
@@ -173,7 +173,7 @@ function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = tru
     if (shouldUpdateInput) {
         updateInputField(bpm);
     }
-    updateKnob(bpm);
+    updateSlider(bpm);
     
     // If metronome is active, restart with new BPM
     if (isMetronomeActive) {
@@ -198,16 +198,16 @@ function updateInput(bpm) {
     updateInputField(bpm);
 }
 
-// Update knob position
-function updateKnob(bpm) {
-    if (!knobProgress || !knobHandle || isNaN(bpm)) return;
+// Update slider position
+function updateSlider(bpm) {
+    if (!sliderProgress || !sliderHandle || isNaN(bpm)) return;
     
     // Convert BPM (40-200) to angle (0-180 degrees for semicircle)
     const normalizedValue = (bpm - 40) / 160; // 0 to 1
     const angle = normalizedValue * 180; // 0 to 180 degrees
     
     // Update progress arc (semicircle from 180° to 0°)
-    knobProgress.style.background = `conic-gradient(
+    sliderProgress.style.background = `conic-gradient(
         from 225deg,
         var(--primary-color) 0deg,
         var(--primary-color) ${angle}deg,
@@ -216,21 +216,20 @@ function updateKnob(bpm) {
     
     // Update handle position on semicircle
     const rotationAngle = -90 + angle; // Start from -90° (left) to 90° (right)
-    const radius = 40; // Distance from center
-    const centerX = 70; // Half of knob width (140px)
-    const centerY = 40; // Bottom of semicircle
+    const radius = 68; // Distance from center (adjusted for new slider size)
+    const centerX = 80; // Half of slider width (160px)
+    const centerY = 80; // Bottom of semicircle
     
     const handleX = centerX + radius * Math.cos(rotationAngle * Math.PI / 180);
     const handleY = centerY + radius * Math.sin(rotationAngle * Math.PI / 180);
     
-    knobHandle.style.left = `${handleX}px`;
-    knobHandle.style.top = `${handleY}px`;
-    knobHandle.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
+    sliderHandle.style.left = `${handleX}px`;
+    sliderHandle.style.top = `${handleY}px`;
 }
 
 // Legacy function name for backward compatibility  
-function updateSlider(bpm) {
-    updateKnob(bpm);
+function updateKnob(bpm) {
+    updateSlider(bpm);
 }
 
 // Toggle metronome
