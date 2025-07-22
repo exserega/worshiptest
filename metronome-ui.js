@@ -1,264 +1,242 @@
-// Modern Metronome UI Controller
+// New Metronome Module with roundSlider
 import * as core from './core.js';
 
-// DOM Elements
-const bpmInput = document.getElementById('bpm-input');
-const bpmDecrease = document.getElementById('bpm-decrease');
-const bpmIncrease = document.getElementById('bpm-increase');
-const metronomeButton = document.getElementById('metronome-button');
-const metronomeIcon = metronomeButton?.querySelector('i');
-const timeSignature = document.getElementById('time-signature');
-
-// Round Slider instance
-let roundSliderInstance = null;
-
-// State
-let currentBPM = 120;
-let originalBPM = null; // BPM from Firebase
-let isMetronomeActive = false;
-
-// Initialize metronome UI
-export async function initMetronomeUI() {
-    // Wait for libraries to be loaded
-    if (window.librariesLoaded) {
-        await window.librariesLoaded;
-    } else {
-        // Fallback if promise not available
-        while (typeof $ === 'undefined' || !$.fn.roundSlider) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-    }
-    
-    setupRoundSlider();
-    setupEventListeners();
-    // Don't set initial BPM, wait for song to load
-    updateBPMDisplay('N/A', 'по умолчанию');
-}
-
-// Setup round slider
-function setupRoundSlider() {
-    if (typeof $ === 'undefined' || !$.fn.roundSlider) {
-        console.error('jQuery or roundSlider not available');
-        return;
-    }
-    
-    try {
-        roundSliderInstance = $("#bpm-round-slider").roundSlider({
-            radius: 80,
-            circleShape: "half-top",
-            sliderType: "min-range",
-            showTooltip: false,
-            value: 120,
-            min: 40,
-            max: 200,
-            step: 1,
-            width: 8,
-            handleSize: 24,
-            animation: true,
-            change: function(e) {
-                const newBPM = Math.round(e.value);
-                if (newBPM !== currentBPM) {
-                    setBPM(newBPM, 'изменено', true, false); // Don't update slider to avoid loop
-                }
-            }
-        });
-        console.log('RoundSlider initialized successfully');
-    } catch (error) {
-        console.error('Error initializing roundSlider:', error);
-    }
-}
-
-// Setup event listeners
-function setupEventListeners() {
-    // BPM Controls
-    if (bpmDecrease) {
-        bpmDecrease.addEventListener('click', () => adjustBPM(-1));
-    }
-    
-    if (bpmIncrease) {
-        bpmIncrease.addEventListener('click', () => adjustBPM(1));
-    }
-    
-    if (bpmInput) {
-        bpmInput.addEventListener('input', handleBPMInputChange);
-        bpmInput.addEventListener('blur', handleBPMInputBlur);
-        bpmInput.addEventListener('keydown', handleBPMInputKeydown);
-    }
-    
-    // Round slider is already set up in setupRoundSlider()
-    
-    // Metronome button
-    if (metronomeButton) {
-        metronomeButton.addEventListener('click', toggleMetronome);
-    }
-}
-
-// Adjust BPM by increment
-function adjustBPM(increment) {
-    const newBPM = Math.max(40, Math.min(200, currentBPM + increment));
-    setBPM(newBPM, 'изменено', true, true);
-}
-
-// Handle BPM input change
-function handleBPMInputChange(e) {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value >= 40 && value <= 200) {
-        setBPM(value, 'изменено', false, true); // Don't update input to avoid cursor issues, but update slider
-    }
-}
-
-// Handle BPM input blur
-function handleBPMInputBlur(e) {
-    const value = parseInt(e.target.value, 10);
-    if (isNaN(value) || value < 40 || value > 200) {
-        e.target.value = currentBPM; // Reset to current valid value
-    }
-}
-
-// Handle BPM input keydown
-function handleBPMInputKeydown(e) {
-    if (e.key === 'Enter') {
-        e.target.blur();
-    } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        adjustBPM(1);
-    } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        adjustBPM(-1);
-    }
-}
-
-
-
-// Set BPM value
-function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = true, shouldUpdateSlider = true) {
-    currentBPM = bpm;
-    
-    if (shouldUpdateInput) {
-        updateInputField(bpm);
-    }
-    if (shouldUpdateSlider && roundSliderInstance && typeof roundSliderInstance.roundSlider === 'function') {
-        try {
-            roundSliderInstance.roundSlider("option", "value", bpm);
-        } catch (error) {
-            console.error('Error updating roundSlider value:', error);
-        }
-    }
-    
-    // If metronome is active, restart with new BPM
-    if (isMetronomeActive) {
-        restartMetronome();
-    }
-}
-
-// Update BPM display (simplified)
-function updateBPMDisplay(bpm, source) {
-    // Display is now handled by the input field directly
-}
-
-// Update input field
-function updateInputField(bpm) {
-    if (bpmInput && document.activeElement !== bpmInput) {
-        bpmInput.value = bpm;
-    }
-}
-
-// Legacy function name for backward compatibility
-function updateInput(bpm) {
-    updateInputField(bpm);
-}
-
-// Legacy function name for backward compatibility  
-function updateKnob(bpm) {
-    // Now handled by roundSlider
-}
-
-function updateSlider(bpm) {
-    // Now handled by roundSlider
-}
-
-// Toggle metronome
-async function toggleMetronome() {
-    try {
-        const beats = parseInt(timeSignature?.value || '4', 10);
-        const { isActive, error } = await core.toggleMetronome(currentBPM, beats);
+class MetronomeController {
+    constructor() {
+        this.currentBPM = 120;
+        this.originalBPM = null;
+        this.isActive = false;
+        this.slider = null;
         
-        if (error) {
-            alert(`Ошибка метронома: ${error}`);
+        // DOM elements
+        this.elements = {
+            bpmInput: document.getElementById('bpm-input'),
+            decreaseBtn: document.getElementById('bpm-decrease'),
+            increaseBtn: document.getElementById('bpm-increase'),
+            playButton: document.getElementById('metronome-button'),
+            playIcon: document.querySelector('#metronome-button i'),
+            timeSignature: document.getElementById('time-signature'),
+            sliderContainer: document.getElementById('bpm-round-slider')
+        };
+    }
+
+    async init() {
+        console.log('Initializing new metronome...');
+        
+        // Wait for libraries
+        await this.waitForLibraries();
+        
+        // Initialize components
+        this.initRoundSlider();
+        this.setupEventListeners();
+        this.updateDisplay();
+        
+        console.log('Metronome initialized successfully');
+    }
+
+    async waitForLibraries() {
+        return new Promise((resolve) => {
+            const checkLibraries = () => {
+                if (typeof $ !== 'undefined' && $.fn && $.fn.roundSlider) {
+                    console.log('Libraries loaded successfully');
+                    resolve();
+                } else {
+                    console.log('Waiting for libraries...');
+                    setTimeout(checkLibraries, 100);
+                }
+            };
+            checkLibraries();
+        });
+    }
+
+    initRoundSlider() {
+        if (!this.elements.sliderContainer) {
+            console.error('Slider container not found');
             return;
         }
+
+        console.log('Initializing roundSlider...');
         
-        isMetronomeActive = isActive;
-        updateMetronomeButton(isActive);
+        try {
+            this.slider = $(this.elements.sliderContainer).roundSlider({
+                radius: 70,
+                width: 10,
+                handleSize: 20,
+                circleShape: "half-top",
+                sliderType: "min-range",
+                showTooltip: false,
+                editableTooltip: false,
+                min: 40,
+                max: 200,
+                step: 1,
+                value: this.currentBPM,
+                animation: true,
+                
+                change: (e) => {
+                    const newBPM = Math.round(e.value);
+                    this.setBPM(newBPM, true, false);
+                }
+            });
+            
+            console.log('RoundSlider created successfully');
+        } catch (error) {
+            console.error('Failed to create roundSlider:', error);
+        }
+    }
+
+    setupEventListeners() {
+        // BPM Input
+        if (this.elements.bpmInput) {
+            this.elements.bpmInput.addEventListener('input', (e) => {
+                const value = parseInt(e.target.value, 10);
+                if (!isNaN(value) && value >= 40 && value <= 200) {
+                    this.setBPM(value, false, true);
+                }
+            });
+        }
+
+        // Decrease/Increase buttons
+        if (this.elements.decreaseBtn) {
+            this.elements.decreaseBtn.addEventListener('click', () => {
+                this.adjustBPM(-1);
+            });
+        }
+
+        if (this.elements.increaseBtn) {
+            this.elements.increaseBtn.addEventListener('click', () => {
+                this.adjustBPM(1);
+            });
+        }
+
+        // Play button
+        if (this.elements.playButton) {
+            this.elements.playButton.addEventListener('click', () => {
+                this.toggleMetronome();
+            });
+        }
+    }
+
+    setBPM(bpm, updateInput = true, updateSlider = true) {
+        this.currentBPM = Math.max(40, Math.min(200, bpm));
         
-    } catch (error) {
-        console.error('Metronome toggle error:', error);
-        alert('Не удалось переключить метроном');
+        if (updateInput && this.elements.bpmInput) {
+            this.elements.bpmInput.value = this.currentBPM;
+        }
+        
+        if (updateSlider && this.slider) {
+            try {
+                this.slider.roundSlider('option', 'value', this.currentBPM);
+            } catch (error) {
+                console.error('Error updating slider:', error);
+            }
+        }
+
+        if (this.isActive) {
+            this.restartMetronome();
+        }
+    }
+
+    adjustBPM(increment) {
+        this.setBPM(this.currentBPM + increment, true, true);
+    }
+
+    async toggleMetronome() {
+        try {
+            const beats = parseInt(this.elements.timeSignature?.value || '4', 10);
+            const result = await core.toggleMetronome(this.currentBPM, beats);
+            
+            if (result.error) {
+                alert(`Ошибка метронома: ${result.error}`);
+                return;
+            }
+            
+            this.isActive = result.isActive;
+            this.updatePlayButton();
+            
+        } catch (error) {
+            console.error('Metronome toggle error:', error);
+            alert('Не удалось переключить метроном');
+        }
+    }
+
+    async restartMetronome() {
+        if (this.isActive) {
+            await core.toggleMetronome(0, 4);
+            const beats = parseInt(this.elements.timeSignature?.value || '4', 10);
+            const result = await core.toggleMetronome(this.currentBPM, beats);
+            this.isActive = result.isActive;
+        }
+    }
+
+    updatePlayButton() {
+        if (!this.elements.playButton || !this.elements.playIcon) return;
+        
+        if (this.isActive) {
+            this.elements.playButton.classList.add('active');
+            this.elements.playIcon.className = 'fas fa-stop';
+        } else {
+            this.elements.playButton.classList.remove('active');
+            this.elements.playIcon.className = 'fas fa-play';
+        }
+    }
+
+    updateDisplay() {
+        this.setBPM(this.currentBPM, true, true);
+        this.updatePlayButton();
+    }
+
+    updateBPMFromSong(bpm) {
+        if (bpm && !isNaN(bpm) && bpm > 0) {
+            this.originalBPM = bpm;
+            this.setBPM(bpm, true, true);
+        } else {
+            this.originalBPM = null;
+            this.setBPM(120, true, true);
+        }
+    }
+
+    getCurrentBPM() {
+        return this.currentBPM;
+    }
+
+    stopMetronome() {
+        if (this.isActive) {
+            this.toggleMetronome();
+        }
     }
 }
 
-// Restart metronome with current settings
-async function restartMetronome() {
-    if (isMetronomeActive) {
-        // Stop current metronome
-        await core.toggleMetronome(0, 4);
-        // Start with new BPM
-        const beats = parseInt(timeSignature?.value || '4', 10);
-        const { isActive } = await core.toggleMetronome(currentBPM, beats);
-        isMetronomeActive = isActive;
-    }
+// Create singleton
+const metronome = new MetronomeController();
+
+// Export API
+export function initMetronomeUI() {
+    return metronome.init();
 }
 
-// Update metronome button appearance
-function updateMetronomeButton(isActive) {
-    if (!metronomeButton || !metronomeIcon) return;
-    
-    if (isActive) {
-        metronomeButton.classList.add('active');
-        metronomeIcon.className = 'fas fa-stop';
-        metronomeButton.setAttribute('aria-label', 'Выключить метроном');
-    } else {
-        metronomeButton.classList.remove('active');
-        metronomeIcon.className = 'fas fa-play';
-        metronomeButton.setAttribute('aria-label', 'Включить метроном');
-    }
-}
-
-// Public API for updating BPM from external sources (like Firebase)
 export function updateBPMFromSong(bpm) {
-    if (bpm && !isNaN(bpm) && bpm > 0) {
-        originalBPM = bpm;
-        setBPM(bpm, 'из песни', true, true);
-    } else {
-        originalBPM = null;
-        setBPM(120, 'по умолчанию', true, true);
-    }
+    metronome.updateBPMFromSong(bpm);
 }
 
-// Reset BPM to original from song
-export function resetBPMToOriginal() {
-    if (originalBPM) {
-        setBPM(originalBPM, 'из песни', true, true);
-    }
-}
-
-// Get current BPM
 export function getCurrentBPM() {
-    return currentBPM;
+    return metronome.getCurrentBPM();
 }
 
-// Stop metronome (for external use)
 export function stopMetronome() {
-    if (isMetronomeActive) {
-        toggleMetronome();
-    }
+    metronome.stopMetronome();
 }
 
-// Export for backward compatibility
 export function updateBPM(newBPM) {
-    updateBPMFromSong(newBPM);
+    metronome.updateBPMFromSong(newBPM);
 }
 
 export function updateMetronomeButtonState(isActive) {
-    updateMetronomeButton(isActive);
+    metronome.isActive = isActive;
+    metronome.updatePlayButton();
+}
+
+export function resetBPMToOriginal() {
+    if (metronome.originalBPM) {
+        metronome.setBPM(metronome.originalBPM, true, true);
+    }
 }
