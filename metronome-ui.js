@@ -56,8 +56,27 @@ class MetronomeController {
         }
 
         console.log('Initializing roundSlider...');
+        console.log('jQuery available:', typeof $ !== 'undefined');
+        console.log('roundSlider available:', typeof $.fn.roundSlider !== 'undefined');
+        
+        // Double check jQuery and roundSlider are available
+        if (typeof $ === 'undefined') {
+            console.error('jQuery not available');
+            this.createFallbackSlider();
+            return;
+        }
+        
+        if (typeof $.fn.roundSlider === 'undefined') {
+            console.error('roundSlider plugin not available');
+            this.createFallbackSlider();
+            return;
+        }
         
         try {
+            // Clear any existing content
+            $(this.elements.sliderContainer).empty();
+            
+            // Initialize roundSlider
             this.slider = $(this.elements.sliderContainer).roundSlider({
                 radius: 70,
                 width: 10,
@@ -73,15 +92,48 @@ class MetronomeController {
                 animation: true,
                 
                 change: (e) => {
+                    console.log('Slider changed to:', e.value);
                     const newBPM = Math.round(e.value);
                     this.setBPM(newBPM, true, false);
                 }
             });
             
             console.log('RoundSlider created successfully');
+            console.log('Slider instance:', this.slider);
+            
         } catch (error) {
             console.error('Failed to create roundSlider:', error);
+            this.createFallbackSlider();
         }
+    }
+
+    createFallbackSlider() {
+        console.log('Creating fallback HTML5 range slider');
+        
+        const fallbackHTML = `
+            <div class="fallback-slider-container">
+                <input type="range" 
+                       id="bpm-fallback-slider" 
+                       class="fallback-slider" 
+                       min="40" 
+                       max="200" 
+                       step="1" 
+                       value="${this.currentBPM}">
+                <div class="fallback-slider-track"></div>
+            </div>
+        `;
+        
+        this.elements.sliderContainer.innerHTML = fallbackHTML;
+        
+        const fallbackSlider = document.getElementById('bpm-fallback-slider');
+        if (fallbackSlider) {
+            fallbackSlider.addEventListener('input', (e) => {
+                const newBPM = parseInt(e.target.value, 10);
+                this.setBPM(newBPM, true, false);
+            });
+        }
+        
+        this.slider = { isFallback: true, element: fallbackSlider };
     }
 
     setupEventListeners() {
@@ -125,7 +177,15 @@ class MetronomeController {
         
         if (updateSlider && this.slider) {
             try {
-                this.slider.roundSlider('option', 'value', this.currentBPM);
+                if (this.slider.isFallback) {
+                    // Update fallback HTML5 slider
+                    if (this.slider.element) {
+                        this.slider.element.value = this.currentBPM;
+                    }
+                } else {
+                    // Update roundSlider
+                    this.slider.roundSlider('option', 'value', this.currentBPM);
+                }
             } catch (error) {
                 console.error('Error updating slider:', error);
             }

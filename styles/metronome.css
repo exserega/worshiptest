@@ -235,6 +235,85 @@ body[data-theme="light"] #bpm-round-slider .rs-handle {
     stroke: #ffffff !important;
 }
 
+/* Fallback HTML5 Slider Styles */
+.fallback-slider-container {
+    position: relative;
+    width: 160px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.fallback-slider {
+    width: 140px;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--border-color);
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.fallback-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--primary-color);
+    border: 3px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 3px 6px var(--glow-color);
+}
+
+.fallback-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: var(--primary-color);
+    border: 3px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 3px 6px var(--glow-color);
+    -moz-appearance: none;
+}
+
+.fallback-slider::-webkit-slider-track {
+    background: linear-gradient(to right, 
+        var(--primary-color) 0%, 
+        var(--primary-color) var(--progress, 50%), 
+        var(--border-color) var(--progress, 50%), 
+        var(--border-color) 100%);
+    border-radius: 10px;
+    height: 8px;
+}
+
+.fallback-slider:hover::-webkit-slider-thumb {
+    box-shadow: 0 4px 8px var(--glow-color);
+    transform: scale(1.1);
+}
+
+/* Dark theme adjustments for fallback slider */
+body[data-theme="dark"] .fallback-slider::-webkit-slider-thumb {
+    border: 3px solid #e5e7eb;
+}
+
+body[data-theme="dark"] .fallback-slider::-moz-range-thumb {
+    border: 3px solid #e5e7eb;
+}
+
+/* Light theme adjustments for fallback slider */
+body[data-theme="light"] .fallback-slider::-webkit-slider-thumb {
+    border: 3px solid #ffffff;
+}
+
+body[data-theme="light"] .fallback-slider::-moz-range-thumb {
+    border: 3px solid #ffffff;
+}
+
 /* ======================================== */
 /* Responsive Design                        */
 /* ======================================== */
