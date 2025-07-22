@@ -98,7 +98,7 @@ class MetronomeController {
             // Clear any existing content
             $(this.elements.sliderContainer).empty();
             
-            // Initialize roundSlider
+            // Initialize roundSlider with correct v1.6.1 syntax
             this.slider = $(this.elements.sliderContainer).roundSlider({
                 radius: 70,
                 width: 10,
@@ -113,15 +113,30 @@ class MetronomeController {
                 value: this.currentBPM,
                 animation: true,
                 
-                change: (e) => {
+                change: function(e) {
                     console.log('Slider changed to:', e.value);
                     const newBPM = Math.round(e.value);
-                    this.setBPM(newBPM, true, false);
+                    // Use a timeout to prevent circular updates
+                    setTimeout(() => {
+                        if (window.metronomeInstance) {
+                            window.metronomeInstance.setBPM(newBPM, true, false);
+                        }
+                    }, 0);
                 }
             });
             
             console.log('RoundSlider created successfully');
             console.log('Slider instance:', this.slider);
+            
+            // Test if roundSlider is working
+            setTimeout(() => {
+                try {
+                    const currentValue = this.slider.roundSlider("option", "value");
+                    console.log('RoundSlider current value:', currentValue);
+                } catch (e) {
+                    console.error('RoundSlider test failed:', e);
+                }
+            }, 100);
             
         } catch (error) {
             console.error('Failed to create roundSlider:', error);
@@ -205,8 +220,8 @@ class MetronomeController {
                         this.slider.element.value = this.currentBPM;
                     }
                 } else {
-                    // Update roundSlider
-                    this.slider.roundSlider('option', 'value', this.currentBPM);
+                    // Update roundSlider using correct v1.6.1 syntax
+                    this.slider.roundSlider("option", "value", this.currentBPM);
                 }
             } catch (error) {
                 console.error('Error updating slider:', error);
@@ -290,6 +305,9 @@ class MetronomeController {
 
 // Create singleton
 const metronome = new MetronomeController();
+
+// Make metronome instance globally accessible for roundSlider callback
+window.metronomeInstance = metronome;
 
 // Export API
 export function initMetronomeUI() {
