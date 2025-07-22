@@ -18,11 +18,15 @@ let originalBPM = null; // BPM from Firebase
 let isMetronomeActive = false;
 
 // Initialize metronome UI
-export function initMetronomeUI() {
-    // Wait for jQuery to be available
-    if (typeof $ === 'undefined') {
-        setTimeout(initMetronomeUI, 100);
-        return;
+export async function initMetronomeUI() {
+    // Wait for libraries to be loaded
+    if (window.librariesLoaded) {
+        await window.librariesLoaded;
+    } else {
+        // Fallback if promise not available
+        while (typeof $ === 'undefined' || !$.fn.roundSlider) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
     }
     
     setupRoundSlider();
@@ -33,25 +37,35 @@ export function initMetronomeUI() {
 
 // Setup round slider
 function setupRoundSlider() {
-    roundSliderInstance = $("#bpm-round-slider").roundSlider({
-        radius: 80,
-        circleShape: "half-top",
-        sliderType: "min-range",
-        showTooltip: false,
-        value: 120,
-        min: 40,
-        max: 200,
-        step: 1,
-        width: 8,
-        handleSize: 24,
-        animation: true,
-        change: function(e) {
-            const newBPM = Math.round(e.value);
-            if (newBPM !== currentBPM) {
-                setBPM(newBPM, 'изменено', true, false); // Don't update slider to avoid loop
+    if (typeof $ === 'undefined' || !$.fn.roundSlider) {
+        console.error('jQuery or roundSlider not available');
+        return;
+    }
+    
+    try {
+        roundSliderInstance = $("#bpm-round-slider").roundSlider({
+            radius: 80,
+            circleShape: "half-top",
+            sliderType: "min-range",
+            showTooltip: false,
+            value: 120,
+            min: 40,
+            max: 200,
+            step: 1,
+            width: 8,
+            handleSize: 24,
+            animation: true,
+            change: function(e) {
+                const newBPM = Math.round(e.value);
+                if (newBPM !== currentBPM) {
+                    setBPM(newBPM, 'изменено', true, false); // Don't update slider to avoid loop
+                }
             }
-        }
-    });
+        });
+        console.log('RoundSlider initialized successfully');
+    } catch (error) {
+        console.error('Error initializing roundSlider:', error);
+    }
 }
 
 // Setup event listeners
@@ -123,8 +137,12 @@ function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = tru
     if (shouldUpdateInput) {
         updateInputField(bpm);
     }
-    if (shouldUpdateSlider && roundSliderInstance) {
-        roundSliderInstance.roundSlider("option", "value", bpm);
+    if (shouldUpdateSlider && roundSliderInstance && typeof roundSliderInstance.roundSlider === 'function') {
+        try {
+            roundSliderInstance.roundSlider("option", "value", bpm);
+        } catch (error) {
+            console.error('Error updating roundSlider value:', error);
+        }
     }
     
     // If metronome is active, restart with new BPM

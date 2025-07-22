@@ -313,9 +313,27 @@
     </button>
 </nav>
 
-  <!-- jQuery and Round Slider JS -->
+  <!-- jQuery and Round Slider JS - Load before modules -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/soundar24/roundSlider@5.0.7/dist/roundslider.min.js"></script>
+  
+  <!-- Wait for libraries to load before initializing modules -->
+  <script>
+    window.librariesLoaded = new Promise((resolve) => {
+      if (typeof $ !== 'undefined' && $.fn.roundSlider) {
+        resolve();
+      } else {
+        const checkLibraries = () => {
+          if (typeof $ !== 'undefined' && $.fn.roundSlider) {
+            resolve();
+          } else {
+            setTimeout(checkLibraries, 50);
+          }
+        };
+        checkLibraries();
+      }
+    });
+  </script>
   
   <script type="module" src="script.js"></script>
 

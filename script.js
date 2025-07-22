@@ -750,7 +750,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     setupSwipeToClose();
     ui.updateFontSize();
-    metronomeUI.initMetronomeUI();
+    metronomeUI.initMetronomeUI().catch(console.error);
     
     // Make metronome UI available globally for backward compatibility
     window.metronomeUI = metronomeUI;
