@@ -184,82 +184,38 @@
     max-width: 200px;
 }
 
-/* Professional SVG Knob */
-.professional-knob {
+/* Snap.svg Knob Container */
+.snap-knob-container {
     margin: 0 auto;
     width: 160px;
     height: 80px;
     position: relative;
     user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Professional Knob SVG Styles */
-.professional-knob svg {
-    width: 100%;
-    height: 100%;
+/* Snap.svg Knob Styles */
+.snap-knob-container svg {
+    width: 160px;
+    height: 80px;
     overflow: visible;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
 }
 
-/* Background arc - dark groove */
-#knob-background {
-    stroke: #2a2a2a;
-    stroke-width: 8;
-    stroke-linecap: round;
-    fill: none;
+/* Snap.svg elements get styled via JavaScript, but we can add hover effects */
+.snap-knob-container svg circle:hover {
+    filter: drop-shadow(0 4px 12px var(--glow-color)) !important;
 }
 
-/* Progress arc - bright with glow */
-#knob-progress {
-    stroke: var(--primary-color);
-    stroke-width: 8;
-    stroke-linecap: round;
-    fill: none;
-    filter: drop-shadow(0 0 6px var(--glow-color));
+/* Theme adjustments for Snap.svg elements */
+body[data-theme="dark"] .snap-knob-container svg {
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
 }
 
-/* Center knob handle */
-#knob-handle {
-    fill: var(--container-background-color);
-    stroke: var(--primary-color);
-    stroke-width: 3;
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
-    cursor: grab;
-    transition: all 0.2s ease;
-}
-
-#knob-handle:hover {
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)) drop-shadow(0 0 8px var(--glow-color));
-    transform: scale(1.05);
-}
-
-#knob-handle:active {
-    cursor: grabbing;
-    transform: scale(0.98);
-}
-
-/* Knob indicator line */
-#knob-indicator {
-    stroke: var(--primary-color);
-    stroke-width: 3;
-    stroke-linecap: round;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-}
-
-/* Theme adjustments */
-body[data-theme="dark"] #knob-background {
-    stroke: #1a1a1a;
-}
-
-body[data-theme="dark"] #knob-handle {
-    fill: #2a2a2a;
-}
-
-body[data-theme="light"] #knob-background {
-    stroke: #e0e0e0;
-}
-
-body[data-theme="light"] #knob-handle {
-    fill: #f0f0f0;
+body[data-theme="light"] .snap-knob-container svg {
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
 }
 
 /* Fallback HTML5 Slider Styles */
@@ -387,18 +343,14 @@ body[data-theme="light"] .fallback-slider::-moz-range-thumb {
         margin-bottom: 8px;
     }
     
-    .professional-knob {
+    .snap-knob-container {
         width: 140px;
         height: 70px;
     }
     
-    #knob-background,
-    #knob-progress {
-        stroke-width: 6;
-    }
-    
-    #knob-handle {
-        r: 18;
+    .snap-knob-container svg {
+        width: 140px;
+        height: 70px;
     }
 }
 
@@ -442,17 +394,13 @@ body[data-theme="light"] .fallback-slider::-moz-range-thumb {
         margin-bottom: 6px;
     }
     
-    .professional-knob {
+    .snap-knob-container {
         width: 120px;
         height: 60px;
     }
     
-    #knob-background,
-    #knob-progress {
-        stroke-width: 5;
-    }
-    
-    #knob-handle {
-        r: 15;
+    .snap-knob-container svg {
+        width: 120px;
+        height: 60px;
     }
 }

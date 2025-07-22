@@ -200,45 +200,8 @@
                 </button>
                 
                 <div class="bpm-slider-container">
-                    <div class="professional-knob" id="professional-knob">
-                        <svg width="160" height="80" viewBox="0 0 160 80">
-                            <!-- Background arc -->
-                            <path id="knob-background" 
-                                  d="M 20 60 A 40 40 0 0 1 140 60" 
-                                  stroke="var(--border-color)" 
-                                  stroke-width="8" 
-                                  stroke-linecap="round" 
-                                  fill="none"/>
-                            
-                            <!-- Progress arc -->
-                            <path id="knob-progress" 
-                                  d="M 20 60 A 40 40 0 0 1 80 20" 
-                                  stroke="var(--primary-color)" 
-                                  stroke-width="8" 
-                                  stroke-linecap="round" 
-                                  fill="none"
-                                  filter="drop-shadow(0 0 6px var(--glow-color))"/>
-                            
-                            <!-- Center knob -->
-                            <circle id="knob-handle" 
-                                    cx="80" 
-                                    cy="60" 
-                                    r="20" 
-                                    fill="var(--container-background-color)" 
-                                    stroke="var(--primary-color)" 
-                                    stroke-width="3"
-                                    filter="drop-shadow(0 3px 6px rgba(0,0,0,0.3))"/>
-                            
-                            <!-- Knob indicator -->
-                            <line id="knob-indicator" 
-                                  x1="80" 
-                                  y1="45" 
-                                  x2="80" 
-                                  y2="35" 
-                                  stroke="var(--primary-color)" 
-                                  stroke-width="3" 
-                                  stroke-linecap="round"/>
-                        </svg>
+                    <div class="snap-knob-container" id="snap-knob-container">
+                        <!-- Snap.svg will create the knob here -->
                     </div>
                 </div>
                 
@@ -352,35 +315,33 @@
     </button>
 </nav>
 
-  <!-- jQuery and Round Slider JS - Load before modules -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
+  <!-- Snap.svg for professional knob -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
   
   <!-- Simple library check -->
   <script>
-    console.log('Checking initial library state...');
-    console.log('jQuery loaded:', typeof $ !== 'undefined');
+    console.log('Checking Snap.svg library...');
     
     // Simple flag for library readiness
     window.librariesReady = false;
     
-    // Check libraries periodically
+    // Check Snap.svg periodically
     const checkLibrariesInterval = setInterval(() => {
-      if (typeof $ !== 'undefined' && $.fn && $.fn.roundSlider) {
-        console.log('All libraries ready!');
+      if (typeof Snap !== 'undefined') {
+        console.log('Snap.svg ready!');
         window.librariesReady = true;
         clearInterval(checkLibrariesInterval);
       }
     }, 100);
     
-    // Stop checking after 10 seconds
+    // Stop checking after 5 seconds
     setTimeout(() => {
       clearInterval(checkLibrariesInterval);
       if (!window.librariesReady) {
-        console.warn('Libraries check timeout, proceeding anyway');
+        console.warn('Snap.svg check timeout, proceeding anyway');
         window.librariesReady = true;
       }
-    }, 10000);
+    }, 5000);
   </script>
   
   <script type="module" src="script.js"></script>

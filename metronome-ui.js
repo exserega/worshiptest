@@ -16,10 +16,16 @@ class MetronomeController {
             playButton: document.getElementById('metronome-button'),
             playIcon: document.querySelector('#metronome-button i'),
             timeSignature: document.getElementById('time-signature'),
-            knobContainer: document.getElementById('professional-knob'),
-            knobHandle: document.getElementById('knob-handle'),
-            knobProgress: document.getElementById('knob-progress'),
-            knobIndicator: document.getElementById('knob-indicator')
+            knobContainer: document.getElementById('snap-knob-container')
+        };
+        
+        // Snap.svg elements
+        this.snap = null;
+        this.knobElements = {
+            backgroundArc: null,
+            progressArc: null,
+            knobHandle: null,
+            indicator: null
         };
     }
 
@@ -34,7 +40,7 @@ class MetronomeController {
         }
         
         // Initialize components
-        this.initProfessionalKnob();
+        this.initSnapKnob();
         this.setupEventListeners();
         this.updateDisplay();
         
@@ -44,25 +50,25 @@ class MetronomeController {
     async waitForLibraries() {
         return new Promise((resolve) => {
             let attempts = 0;
-            const maxAttempts = 30; // 3 seconds maximum wait
+            const maxAttempts = 20; // 2 seconds maximum wait
             
             const checkLibraries = () => {
                 attempts++;
-                console.log(`Metronome: Checking libraries... attempt ${attempts}/${maxAttempts}`);
+                console.log(`Metronome: Checking Snap.svg... attempt ${attempts}/${maxAttempts}`);
                 
                 // Check if global flag is set
                 if (window.librariesReady) {
-                    console.log('Libraries ready via global flag');
+                    console.log('Snap.svg ready via global flag');
                     resolve();
                     return;
                 }
                 
                 // Direct check
-                if (typeof $ !== 'undefined' && $.fn && $.fn.roundSlider) {
-                    console.log('Libraries loaded successfully via direct check');
+                if (typeof Snap !== 'undefined') {
+                    console.log('Snap.svg loaded successfully via direct check');
                     resolve();
                 } else if (attempts >= maxAttempts) {
-                    console.warn('Libraries failed to load within timeout, proceeding with fallback');
+                    console.warn('Snap.svg failed to load within timeout, proceeding anyway');
                     resolve();
                 } else {
                     setTimeout(checkLibraries, 100);
@@ -74,23 +80,181 @@ class MetronomeController {
         });
     }
 
-    initProfessionalKnob() {
+    initSnapKnob() {
         if (!this.elements.knobContainer) {
-            console.error('Professional knob container not found');
+            console.error('Snap knob container not found');
             return;
         }
 
-        console.log('Initializing professional knob...');
+        console.log('Initializing Snap.svg knob...');
+        
+        if (typeof Snap === 'undefined') {
+            console.error('Snap.svg not available, creating fallback');
+            this.createFallbackSlider();
+            return;
+        }
+        
+        try {
+            // Create Snap.svg instance
+            this.snap = Snap(160, 80);
+            this.elements.knobContainer.appendChild(this.snap.node);
+            
+            // Create knob elements
+            this.createKnobElements();
+            this.setupSnapKnobEvents();
+            this.updateSnapKnobVisuals();
+            
+            console.log('Snap.svg knob initialized successfully');
+        } catch (error) {
+            console.error('Failed to create Snap.svg knob:', error);
+            this.createFallbackSlider();
+        }
+    }
+
+    createKnobElements() {
+        // Background arc (inactive track)
+        this.knobElements.backgroundArc = this.snap.path("M 20,60 A 40,40 0 0,1 140,60")
+            .attr({
+                stroke: "#2a2a2a",
+                strokeWidth: 8,
+                strokeLinecap: "round",
+                fill: "none"
+            });
+
+        // Progress arc (active part)
+        this.knobElements.progressArc = this.snap.path("M 20,60 A 40,40 0 0,1 80,20")
+            .attr({
+                stroke: "var(--primary-color)",
+                strokeWidth: 8,
+                strokeLinecap: "round",
+                fill: "none",
+                filter: "drop-shadow(0 0 6px var(--glow-color))"
+            });
+
+        // Center knob handle
+        this.knobElements.knobHandle = this.snap.circle(80, 60, 20)
+            .attr({
+                fill: "var(--container-background-color)",
+                stroke: "var(--primary-color)",
+                strokeWidth: 3,
+                cursor: "grab",
+                filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.3))"
+            });
+
+        // Indicator line
+        this.knobElements.indicator = this.snap.line(80, 45, 80, 35)
+            .attr({
+                stroke: "var(--primary-color)",
+                strokeWidth: 3,
+                strokeLinecap: "round"
+            });
+    }
+
+    setupSnapKnobEvents() {
+        if (!this.knobElements.knobHandle) return;
         
         this.isDragging = false;
         this.startX = 0;
         this.startBPM = this.currentBPM;
+
+        // Mouse events
+        this.knobElements.knobHandle.mousedown(this.startSnapDrag.bind(this));
         
-        // Setup mouse/touch events for professional knob interaction
-        this.setupKnobEvents();
-        this.updateKnobVisuals();
+        // Touch events
+        this.knobElements.knobHandle.touchstart(this.startSnapDrag.bind(this));
         
-        console.log('Professional knob initialized successfully');
+        // Global events
+        Snap(document).mousemove(this.handleSnapDrag.bind(this));
+        Snap(document).mouseup(this.endSnapDrag.bind(this));
+        Snap(document).touchmove(this.handleSnapDrag.bind(this));
+        Snap(document).touchend(this.endSnapDrag.bind(this));
+    }
+
+    startSnapDrag(e) {
+        e.preventDefault();
+        this.isDragging = true;
+        this.startBPM = this.currentBPM;
+        
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        this.startX = clientX;
+        
+        this.knobElements.knobHandle.attr({ cursor: "grabbing" });
+        document.body.style.cursor = 'grabbing';
+        
+        console.log('Started dragging Snap knob at BPM:', this.startBPM);
+    }
+
+    handleSnapDrag(e) {
+        if (!this.isDragging) return;
+        e.preventDefault();
+        
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const deltaX = clientX - this.startX;
+        
+        // Convert horizontal movement to BPM change
+        const sensitivity = 1; // 1px = 1 BPM
+        const bpmChange = deltaX * sensitivity;
+        let newBPM = Math.round(this.startBPM + bpmChange);
+        
+        // Clamp to valid range
+        newBPM = Math.max(40, Math.min(200, newBPM));
+        
+        // Update display in real-time
+        this.updateBPMDisplay(newBPM);
+        this.updateSnapKnobVisuals();
+    }
+
+    endSnapDrag() {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        this.knobElements.knobHandle.attr({ cursor: "grab" });
+        document.body.style.cursor = '';
+        
+        // Final BPM update with metronome restart if needed
+        this.setBPM(this.currentBPM, true, false);
+        
+        console.log('Finished dragging Snap knob at BPM:', this.currentBPM);
+    }
+
+    updateSnapKnobVisuals() {
+        if (!this.knobElements.progressArc || !this.knobElements.indicator) return;
+        
+        // Calculate angle based on BPM (0-180 degrees for semicircle)
+        const normalizedValue = (this.currentBPM - 40) / 160; // 0 to 1
+        const angle = normalizedValue * 180; // 0 to 180 degrees
+        
+        // Update progress arc
+        const centerX = 80;
+        const centerY = 60;
+        const radius = 40;
+        
+        const startAngle = 180; // Start from left
+        const endAngle = startAngle - angle; // Sweep clockwise
+        
+        const startX = centerX + radius * Math.cos((startAngle * Math.PI) / 180);
+        const startY = centerY + radius * Math.sin((startAngle * Math.PI) / 180);
+        const endX = centerX + radius * Math.cos((endAngle * Math.PI) / 180);
+        const endY = centerY + radius * Math.sin((endAngle * Math.PI) / 180);
+        
+        const largeArc = angle > 90 ? 1 : 0;
+        const pathData = `M ${startX},${startY} A ${radius},${radius} 0 ${largeArc},0 ${endX},${endY}`;
+        
+        this.knobElements.progressArc.attr({ d: pathData });
+        
+        // Update indicator line rotation
+        const indicatorAngle = -90 + angle; // Start from top (-90°) and rotate
+        const indicatorX1 = centerX + 15 * Math.cos((indicatorAngle * Math.PI) / 180);
+        const indicatorY1 = centerY + 15 * Math.sin((indicatorAngle * Math.PI) / 180);
+        const indicatorX2 = centerX + 10 * Math.cos((indicatorAngle * Math.PI) / 180);
+        const indicatorY2 = centerY + 10 * Math.sin((indicatorAngle * Math.PI) / 180);
+        
+        this.knobElements.indicator.attr({
+            x1: indicatorX1,
+            y1: indicatorY1,
+            x2: indicatorX2,
+            y2: indicatorY2
+        });
     }
 
     setupKnobEvents() {
@@ -273,8 +437,8 @@ class MetronomeController {
         }
         
         if (updateSlider) {
-            // Update our professional knob visuals
-            this.updateKnobVisuals();
+            // Update our Snap.svg knob visuals
+            this.updateSnapKnobVisuals();
         }
 
         if (this.isActive) {
