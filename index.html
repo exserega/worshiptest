@@ -200,8 +200,40 @@
                 </button>
                 
                 <div class="bpm-slider-container">
-                    <div class="snap-knob-container" id="snap-knob-container">
-                        <!-- Snap.svg will create the knob here -->
+                    <div class="professional-knob-container" id="professional-knob-container">
+                        <svg class="professional-knob-svg" width="160" height="80" viewBox="0 0 160 80">
+                            <!-- Background track -->
+                            <path id="knob-track" 
+                                  d="M 20 60 A 40 40 0 0 1 140 60" 
+                                  stroke="#2a2a2a" 
+                                  stroke-width="8" 
+                                  stroke-linecap="round" 
+                                  fill="none"/>
+                            
+                            <!-- Progress arc -->
+                            <path id="knob-progress" 
+                                  d="M 20 60 A 40 40 0 0 1 80 20" 
+                                  stroke="var(--primary-color)" 
+                                  stroke-width="8" 
+                                  stroke-linecap="round" 
+                                  fill="none"/>
+                            
+                            <!-- Center knob -->
+                            <circle id="knob-center" 
+                                    cx="80" 
+                                    cy="60" 
+                                    r="18" 
+                                    fill="var(--container-background-color)" 
+                                    stroke="var(--primary-color)" 
+                                    stroke-width="2"/>
+                            
+                            <!-- Indicator dot -->
+                            <circle id="knob-indicator" 
+                                    cx="80" 
+                                    cy="45" 
+                                    r="3" 
+                                    fill="var(--primary-color)"/>
+                        </svg>
                     </div>
                 </div>
                 
@@ -315,33 +347,12 @@
     </button>
 </nav>
 
-  <!-- Snap.svg for professional knob -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+  <!-- No external libraries needed for professional knob -->
   
-  <!-- Simple library check -->
+  <!-- Ready flag for metronome -->
   <script>
-    console.log('Checking Snap.svg library...');
-    
-    // Simple flag for library readiness
-    window.librariesReady = false;
-    
-    // Check Snap.svg periodically
-    const checkLibrariesInterval = setInterval(() => {
-      if (typeof Snap !== 'undefined') {
-        console.log('Snap.svg ready!');
-        window.librariesReady = true;
-        clearInterval(checkLibrariesInterval);
-      }
-    }, 100);
-    
-    // Stop checking after 5 seconds
-    setTimeout(() => {
-      clearInterval(checkLibrariesInterval);
-      if (!window.librariesReady) {
-        console.warn('Snap.svg check timeout, proceeding anyway');
-        window.librariesReady = true;
-      }
-    }, 5000);
+    console.log('Professional knob ready to initialize...');
+    window.librariesReady = true; // No external libraries needed
   </script>
   
   <script type="module" src="script.js"></script>

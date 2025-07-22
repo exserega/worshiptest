@@ -16,16 +16,11 @@ class MetronomeController {
             playButton: document.getElementById('metronome-button'),
             playIcon: document.querySelector('#metronome-button i'),
             timeSignature: document.getElementById('time-signature'),
-            knobContainer: document.getElementById('snap-knob-container')
-        };
-        
-        // Snap.svg elements
-        this.snap = null;
-        this.knobElements = {
-            backgroundArc: null,
-            progressArc: null,
-            knobHandle: null,
-            indicator: null
+            knobContainer: document.getElementById('professional-knob-container'),
+            knobTrack: document.getElementById('knob-track'),
+            knobProgress: document.getElementById('knob-progress'),
+            knobCenter: document.getElementById('knob-center'),
+            knobIndicator: document.getElementById('knob-indicator')
         };
     }
 
@@ -40,7 +35,7 @@ class MetronomeController {
         }
         
         // Initialize components
-        this.initSnapKnob();
+        this.initProfessionalKnob();
         this.setupEventListeners();
         this.updateDisplay();
         
@@ -48,238 +43,46 @@ class MetronomeController {
     }
 
     async waitForLibraries() {
-        return new Promise((resolve) => {
-            let attempts = 0;
-            const maxAttempts = 20; // 2 seconds maximum wait
-            
-            const checkLibraries = () => {
-                attempts++;
-                console.log(`Metronome: Checking Snap.svg... attempt ${attempts}/${maxAttempts}`);
-                
-                // Check if global flag is set
-                if (window.librariesReady) {
-                    console.log('Snap.svg ready via global flag');
-                    resolve();
-                    return;
-                }
-                
-                // Direct check
-                if (typeof Snap !== 'undefined') {
-                    console.log('Snap.svg loaded successfully via direct check');
-                    resolve();
-                } else if (attempts >= maxAttempts) {
-                    console.warn('Snap.svg failed to load within timeout, proceeding anyway');
-                    resolve();
-                } else {
-                    setTimeout(checkLibraries, 100);
-                }
-            };
-            
-            // Start checking immediately
-            checkLibraries();
-        });
+        // No libraries needed anymore, just resolve immediately
+        return Promise.resolve();
     }
 
-    initSnapKnob() {
-        if (!this.elements.knobContainer) {
-            console.error('Snap knob container not found');
+    initProfessionalKnob() {
+        if (!this.elements.knobContainer || !this.elements.knobCenter) {
+            console.error('Professional knob elements not found');
             return;
         }
 
-        console.log('Initializing Snap.svg knob...');
+        console.log('Initializing professional knob...');
         
-        if (typeof Snap === 'undefined') {
-            console.error('Snap.svg not available, creating fallback');
-            this.createFallbackSlider();
-            return;
-        }
-        
-        try {
-            // Create Snap.svg instance
-            this.snap = Snap(160, 80);
-            this.elements.knobContainer.appendChild(this.snap.node);
-            
-            // Create knob elements
-            this.createKnobElements();
-            this.setupSnapKnobEvents();
-            this.updateSnapKnobVisuals();
-            
-            console.log('Snap.svg knob initialized successfully');
-        } catch (error) {
-            console.error('Failed to create Snap.svg knob:', error);
-            this.createFallbackSlider();
-        }
-    }
-
-    createKnobElements() {
-        // Background arc (inactive track)
-        this.knobElements.backgroundArc = this.snap.path("M 20,60 A 40,40 0 0,1 140,60")
-            .attr({
-                stroke: "#2a2a2a",
-                strokeWidth: 8,
-                strokeLinecap: "round",
-                fill: "none"
-            });
-
-        // Progress arc (active part)
-        this.knobElements.progressArc = this.snap.path("M 20,60 A 40,40 0 0,1 80,20")
-            .attr({
-                stroke: "var(--primary-color)",
-                strokeWidth: 8,
-                strokeLinecap: "round",
-                fill: "none",
-                filter: "drop-shadow(0 0 6px var(--glow-color))"
-            });
-
-        // Center knob handle
-        this.knobElements.knobHandle = this.snap.circle(80, 60, 20)
-            .attr({
-                fill: "var(--container-background-color)",
-                stroke: "var(--primary-color)",
-                strokeWidth: 3,
-                cursor: "grab",
-                filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.3))"
-            });
-
-        // Indicator line
-        this.knobElements.indicator = this.snap.line(80, 45, 80, 35)
-            .attr({
-                stroke: "var(--primary-color)",
-                strokeWidth: 3,
-                strokeLinecap: "round"
-            });
-    }
-
-    setupSnapKnobEvents() {
-        if (!this.knobElements.knobHandle) return;
-        
+        // Initialize drag state
         this.isDragging = false;
         this.startX = 0;
         this.startBPM = this.currentBPM;
-
-        // Mouse events
-        this.knobElements.knobHandle.mousedown(this.startSnapDrag.bind(this));
         
-        // Touch events
-        this.knobElements.knobHandle.touchstart(this.startSnapDrag.bind(this));
+        // Setup events
+        this.setupKnobEvents();
+        this.updateKnobVisuals();
         
-        // Global events
-        Snap(document).mousemove(this.handleSnapDrag.bind(this));
-        Snap(document).mouseup(this.endSnapDrag.bind(this));
-        Snap(document).touchmove(this.handleSnapDrag.bind(this));
-        Snap(document).touchend(this.endSnapDrag.bind(this));
-    }
-
-    startSnapDrag(e) {
-        e.preventDefault();
-        this.isDragging = true;
-        this.startBPM = this.currentBPM;
-        
-        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        this.startX = clientX;
-        
-        this.knobElements.knobHandle.attr({ cursor: "grabbing" });
-        document.body.style.cursor = 'grabbing';
-        
-        console.log('Started dragging Snap knob at BPM:', this.startBPM);
-    }
-
-    handleSnapDrag(e) {
-        if (!this.isDragging) return;
-        e.preventDefault();
-        
-        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        const deltaX = clientX - this.startX;
-        
-        // Convert horizontal movement to BPM change
-        const sensitivity = 1; // 1px = 1 BPM
-        const bpmChange = deltaX * sensitivity;
-        let newBPM = Math.round(this.startBPM + bpmChange);
-        
-        // Clamp to valid range
-        newBPM = Math.max(40, Math.min(200, newBPM));
-        
-        // Update display in real-time
-        this.updateBPMDisplay(newBPM);
-        this.updateSnapKnobVisuals();
-    }
-
-    endSnapDrag() {
-        if (!this.isDragging) return;
-        
-        this.isDragging = false;
-        this.knobElements.knobHandle.attr({ cursor: "grab" });
-        document.body.style.cursor = '';
-        
-        // Final BPM update with metronome restart if needed
-        this.setBPM(this.currentBPM, true, false);
-        
-        console.log('Finished dragging Snap knob at BPM:', this.currentBPM);
-    }
-
-    updateSnapKnobVisuals() {
-        if (!this.knobElements.progressArc || !this.knobElements.indicator) return;
-        
-        // Calculate angle based on BPM (0-180 degrees for semicircle)
-        const normalizedValue = (this.currentBPM - 40) / 160; // 0 to 1
-        const angle = normalizedValue * 180; // 0 to 180 degrees
-        
-        // Update progress arc
-        const centerX = 80;
-        const centerY = 60;
-        const radius = 40;
-        
-        const startAngle = 180; // Start from left
-        const endAngle = startAngle - angle; // Sweep clockwise
-        
-        const startX = centerX + radius * Math.cos((startAngle * Math.PI) / 180);
-        const startY = centerY + radius * Math.sin((startAngle * Math.PI) / 180);
-        const endX = centerX + radius * Math.cos((endAngle * Math.PI) / 180);
-        const endY = centerY + radius * Math.sin((endAngle * Math.PI) / 180);
-        
-        const largeArc = angle > 90 ? 1 : 0;
-        const pathData = `M ${startX},${startY} A ${radius},${radius} 0 ${largeArc},0 ${endX},${endY}`;
-        
-        this.knobElements.progressArc.attr({ d: pathData });
-        
-        // Update indicator line rotation
-        const indicatorAngle = -90 + angle; // Start from top (-90°) and rotate
-        const indicatorX1 = centerX + 15 * Math.cos((indicatorAngle * Math.PI) / 180);
-        const indicatorY1 = centerY + 15 * Math.sin((indicatorAngle * Math.PI) / 180);
-        const indicatorX2 = centerX + 10 * Math.cos((indicatorAngle * Math.PI) / 180);
-        const indicatorY2 = centerY + 10 * Math.sin((indicatorAngle * Math.PI) / 180);
-        
-        this.knobElements.indicator.attr({
-            x1: indicatorX1,
-            y1: indicatorY1,
-            x2: indicatorX2,
-            y2: indicatorY2
-        });
+        console.log('Professional knob initialized successfully');
     }
 
     setupKnobEvents() {
-        const knob = this.elements.knobHandle;
-        
-        if (!knob) {
-            console.error('Knob handle not found');
-            return;
-        }
+        const knobCenter = this.elements.knobCenter;
+        if (!knobCenter) return;
 
         // Mouse events
-        knob.addEventListener('mousedown', this.startDrag.bind(this));
+        knobCenter.addEventListener('mousedown', this.startDrag.bind(this));
         document.addEventListener('mousemove', this.handleDrag.bind(this));
         document.addEventListener('mouseup', this.endDrag.bind(this));
 
-        // Touch events for mobile
-        knob.addEventListener('touchstart', this.startDrag.bind(this), { passive: false });
-        document.addEventListener('touchmove', this.handleDrag.bind(this), { passive: false });
+        // Touch events
+        knobCenter.addEventListener('touchstart', this.startDrag.bind(this));
+        document.addEventListener('touchmove', this.handleDrag.bind(this));
         document.addEventListener('touchend', this.endDrag.bind(this));
-
-        // Prevent context menu
-        knob.addEventListener('contextmenu', (e) => e.preventDefault());
         
-        // Set cursor
-        knob.style.cursor = 'grab';
+        // Prevent context menu on knob
+        knobCenter.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 
     startDrag(e) {
@@ -290,8 +93,10 @@ class MetronomeController {
         const clientX = e.clientX || (e.touches && e.touches[0].clientX);
         this.startX = clientX;
         
+        // Visual feedback
+        this.elements.knobCenter.style.cursor = 'grabbing';
         document.body.style.cursor = 'grabbing';
-        this.elements.knobHandle.style.cursor = 'grabbing';
+        this.elements.knobCenter.style.transform = 'scale(0.95)';
         
         console.log('Started dragging knob at BPM:', this.startBPM);
     }
@@ -303,16 +108,15 @@ class MetronomeController {
         const clientX = e.clientX || (e.touches && e.touches[0].clientX);
         const deltaX = clientX - this.startX;
         
-        // Convert horizontal movement to BPM change
-        // 160 pixels = full range (200-40 = 160 BPM)
-        const sensitivity = 1; // 1px = 1 BPM
+        // Convert horizontal movement to BPM change (1px = 1 BPM)
+        const sensitivity = 1;
         const bpmChange = deltaX * sensitivity;
         let newBPM = Math.round(this.startBPM + bpmChange);
         
         // Clamp to valid range
         newBPM = Math.max(40, Math.min(200, newBPM));
         
-        // Update display in real-time
+        // Update display and visuals in real-time
         this.updateBPMDisplay(newBPM);
         this.updateKnobVisuals();
     }
@@ -321,10 +125,13 @@ class MetronomeController {
         if (!this.isDragging) return;
         
         this.isDragging = false;
-        document.body.style.cursor = '';
-        this.elements.knobHandle.style.cursor = 'grab';
         
-        // Final BPM update with metronome restart if needed
+        // Reset visual feedback
+        this.elements.knobCenter.style.cursor = 'grab';
+        document.body.style.cursor = '';
+        this.elements.knobCenter.style.transform = 'scale(1)';
+        
+        // Final BPM update
         this.setBPM(this.currentBPM, true, false);
         
         console.log('Finished dragging knob at BPM:', this.currentBPM);
@@ -338,12 +145,12 @@ class MetronomeController {
         const angle = normalizedValue * 180; // 0 to 180 degrees
         
         // Update progress arc
-        const startAngle = 180; // Start from left (180 degrees)
-        const endAngle = startAngle - angle; // Sweep clockwise
-        
         const centerX = 80;
         const centerY = 60;
         const radius = 40;
+        
+        const startAngle = 180; // Start from left (180°)
+        const endAngle = startAngle - angle; // Sweep clockwise
         
         const startX = centerX + radius * Math.cos((startAngle * Math.PI) / 180);
         const startY = centerY + radius * Math.sin((startAngle * Math.PI) / 180);
@@ -351,22 +158,21 @@ class MetronomeController {
         const endY = centerY + radius * Math.sin((endAngle * Math.PI) / 180);
         
         const largeArc = angle > 90 ? 1 : 0;
+        const pathData = `M ${startX},${startY} A ${radius},${radius} 0 ${largeArc},0 ${endX},${endY}`;
         
-        const pathData = `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArc} 0 ${endX} ${endY}`;
         this.elements.knobProgress.setAttribute('d', pathData);
         
-        // Update indicator line rotation
+        // Update indicator dot position
         const indicatorAngle = -90 + angle; // Start from top (-90°) and rotate
-        const indicatorX1 = centerX + 15 * Math.cos((indicatorAngle * Math.PI) / 180);
-        const indicatorY1 = centerY + 15 * Math.sin((indicatorAngle * Math.PI) / 180);
-        const indicatorX2 = centerX + 10 * Math.cos((indicatorAngle * Math.PI) / 180);
-        const indicatorY2 = centerY + 10 * Math.sin((indicatorAngle * Math.PI) / 180);
+        const indicatorRadius = 15; // Distance from center
+        const indicatorX = centerX + indicatorRadius * Math.cos((indicatorAngle * Math.PI) / 180);
+        const indicatorY = centerY + indicatorRadius * Math.sin((indicatorAngle * Math.PI) / 180);
         
-        this.elements.knobIndicator.setAttribute('x1', indicatorX1);
-        this.elements.knobIndicator.setAttribute('y1', indicatorY1);
-        this.elements.knobIndicator.setAttribute('x2', indicatorX2);
-        this.elements.knobIndicator.setAttribute('y2', indicatorY2);
+        this.elements.knobIndicator.setAttribute('cx', indicatorX);
+        this.elements.knobIndicator.setAttribute('cy', indicatorY);
     }
+
+
 
     createFallbackSlider() {
         console.log('Creating fallback HTML5 range slider');
@@ -437,8 +243,8 @@ class MetronomeController {
         }
         
         if (updateSlider) {
-            // Update our Snap.svg knob visuals
-            this.updateSnapKnobVisuals();
+            // Update our knob visuals
+            this.updateKnobVisuals();
         }
 
         if (this.isActive) {
