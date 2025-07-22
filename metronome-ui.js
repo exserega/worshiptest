@@ -100,9 +100,9 @@ class MetronomeController {
             
             // Initialize roundSlider with correct v1.6.1 syntax
             this.slider = $(this.elements.sliderContainer).roundSlider({
-                radius: 70,
-                width: 10,
-                handleSize: 20,
+                radius: 80,
+                width: 12,
+                handleSize: 24,
                 circleShape: "half-top",
                 sliderType: "min-range",
                 showTooltip: false,
@@ -111,12 +111,20 @@ class MetronomeController {
                 max: 200,
                 step: 1,
                 value: this.currentBPM,
-                animation: true,
+                animation: false, // Disable animation for smooth dragging
                 
+                // Live update during dragging
+                drag: function(e) {
+                    const newBPM = Math.round(e.value);
+                    if (window.metronomeInstance) {
+                        window.metronomeInstance.updateBPMDisplay(newBPM);
+                    }
+                },
+                
+                // Final update when dragging stops
                 change: function(e) {
                     console.log('Slider changed to:', e.value);
                     const newBPM = Math.round(e.value);
-                    // Use a timeout to prevent circular updates
                     setTimeout(() => {
                         if (window.metronomeInstance) {
                             window.metronomeInstance.setBPM(newBPM, true, false);
@@ -280,6 +288,15 @@ class MetronomeController {
     updateDisplay() {
         this.setBPM(this.currentBPM, true, true);
         this.updatePlayButton();
+    }
+
+    // Update only BPM display without restarting metronome (for live drag updates)
+    updateBPMDisplay(bpm) {
+        this.currentBPM = Math.max(40, Math.min(200, bpm));
+        
+        if (this.elements.bpmInput && document.activeElement !== this.elements.bpmInput) {
+            this.elements.bpmInput.value = this.currentBPM;
+        }
     }
 
     updateBPMFromSong(bpm) {

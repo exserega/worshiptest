@@ -184,55 +184,109 @@
     max-width: 200px;
 }
 
-/* Round Slider Customization */
+/* Professional Audio Knob Style Round Slider */
 #bpm-round-slider {
     margin: 0 auto;
-    width: 160px;
-    height: 80px;
+    width: 180px;
+    height: 90px;
+    position: relative;
 }
 
-/* Override roundSlider default styles */
+/* Background Track - Dark groove like on audio equipment */
 #bpm-round-slider .rs-path-color {
-    stroke: var(--border-color) !important;
-    stroke-width: 10 !important;
+    stroke: #2a2a2a !important;
+    stroke-width: 14 !important;
+    stroke-linecap: round !important;
 }
 
+/* Active Range - Bright primary color with glow */
 #bpm-round-slider .rs-range-color {
     stroke: var(--primary-color) !important;
-    stroke-width: 10 !important;
-    filter: drop-shadow(0 0 6px var(--glow-color)) !important;
+    stroke-width: 14 !important;
+    stroke-linecap: round !important;
+    filter: drop-shadow(0 0 8px var(--glow-color)) drop-shadow(0 0 4px var(--primary-color)) !important;
 }
 
+/* Professional Knob Handle */
 #bpm-round-slider .rs-handle {
-    fill: var(--primary-color) !important;
-    stroke: white !important;
+    fill: url(#knobGradient) !important;
+    stroke: var(--primary-color) !important;
     stroke-width: 3 !important;
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)) !important;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)) drop-shadow(0 0 6px var(--glow-color)) !important;
+    r: 14 !important;
 }
 
 #bpm-round-slider .rs-handle:hover {
-    filter: drop-shadow(0 4px 8px var(--glow-color)) !important;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 10px var(--glow-color)) !important;
+    transform: scale(1.05) !important;
 }
 
-/* Ensure proper sizing */
+/* Add indicator dot on handle */
+#bpm-round-slider .rs-handle::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Container sizing */
 #bpm-round-slider .rs-container {
-    width: 160px !important;
-    height: 80px !important;
+    width: 180px !important;
+    height: 90px !important;
 }
 
 #bpm-round-slider svg {
-    width: 160px !important;
-    height: 80px !important;
+    width: 180px !important;
+    height: 90px !important;
     overflow: visible !important;
 }
 
-/* Dark/Light theme adjustments */
+/* Add gradient definition for knob */
+#bpm-round-slider svg defs,
+#bmp-round-slider svg defs {
+    display: block;
+}
+
+/* Professional knob gradient styles */
+body[data-theme="dark"] #bpm-round-slider .rs-path-color {
+    stroke: #1a1a1a !important;
+}
+
 body[data-theme="dark"] #bpm-round-slider .rs-handle {
-    stroke: #e5e7eb !important;
+    fill: linear-gradient(145deg, #4a4a4a, #2a2a2a) !important;
+    stroke: var(--primary-color) !important;
+}
+
+body[data-theme="light"] #bpm-round-slider .rs-path-color {
+    stroke: #e0e0e0 !important;
 }
 
 body[data-theme="light"] #bpm-round-slider .rs-handle {
-    stroke: #ffffff !important;
+    fill: linear-gradient(145deg, #f0f0f0, #d0d0d0) !important;
+    stroke: var(--primary-color) !important;
+}
+
+/* Add tick marks around the slider */
+#bpm-round-slider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20px 80px, transparent 78px, var(--text-color) 78px, var(--text-color) 80px, transparent 80px),
+        radial-gradient(circle at 40px 70px, transparent 78px, var(--text-color) 78px, var(--text-color) 80px, transparent 80px),
+        radial-gradient(circle at 90px 60px, transparent 78px, var(--text-color) 78px, var(--text-color) 80px, transparent 80px),
+        radial-gradient(circle at 140px 70px, transparent 78px, var(--text-color) 78px, var(--text-color) 80px, transparent 80px),
+        radial-gradient(circle at 160px 80px, transparent 78px, var(--text-color) 78px, var(--text-color) 80px, transparent 80px);
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 /* Fallback HTML5 Slider Styles */
@@ -361,23 +415,27 @@ body[data-theme="light"] .fallback-slider::-moz-range-thumb {
     }
     
     #bpm-round-slider {
-        width: 140px !important;
-        height: 70px !important;
+        width: 160px !important;
+        height: 80px !important;
     }
     
     #bpm-round-slider .rs-container {
-        width: 140px !important;
-        height: 70px !important;
+        width: 160px !important;
+        height: 80px !important;
     }
     
     #bpm-round-slider svg {
-        width: 140px !important;
-        height: 70px !important;
+        width: 160px !important;
+        height: 80px !important;
     }
     
     #bpm-round-slider .rs-path-color,
     #bpm-round-slider .rs-range-color {
-        stroke-width: 8 !important;
+        stroke-width: 12 !important;
+    }
+    
+    #bpm-round-slider .rs-handle {
+        r: 12 !important;
     }
 }
 
@@ -422,22 +480,26 @@ body[data-theme="light"] .fallback-slider::-moz-range-thumb {
     }
     
     #bpm-round-slider {
-        width: 120px !important;
-        height: 60px !important;
+        width: 140px !important;
+        height: 70px !important;
     }
     
     #bpm-round-slider .rs-container {
-        width: 120px !important;
-        height: 60px !important;
+        width: 140px !important;
+        height: 70px !important;
     }
     
     #bpm-round-slider svg {
-        width: 120px !important;
-        height: 60px !important;
+        width: 140px !important;
+        height: 70px !important;
     }
     
     #bpm-round-slider .rs-path-color,
     #bpm-round-slider .rs-range-color {
-        stroke-width: 6 !important;
+        stroke-width: 10 !important;
+    }
+    
+    #bpm-round-slider .rs-handle {
+        r: 10 !important;
     }
 }
