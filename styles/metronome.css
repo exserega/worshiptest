@@ -174,7 +174,7 @@
     transform: scale(0.95);
 }
 
-/* Semicircle Slider Container */
+/* Round Slider Container */
 .bpm-slider-container {
     display: flex;
     flex-direction: column;
@@ -184,104 +184,50 @@
     max-width: 200px;
 }
 
-.bpm-slider {
-    position: relative;
-    width: 160px;
-    height: 80px;
-    cursor: grab;
-    user-select: none;
+/* Round Slider Customization */
+#bpm-round-slider {
     margin: 0 auto;
 }
 
-.bpm-slider:active {
-    cursor: grabbing;
+/* Round Slider Theme Customization */
+#bpm-round-slider .rs-container {
+    margin: 0 auto;
 }
 
-/* Slider Track (Semicircle Background) */
-.slider-track {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 160px;
-    border-radius: 50%;
-    background: conic-gradient(
-        from 225deg,
-        var(--border-color) 0deg,
-        var(--border-color) 90deg,
-        transparent 90deg
-    );
-    overflow: hidden;
+#bpm-round-slider .rs-path-color {
+    stroke: var(--border-color) !important;
+    stroke-width: 8 !important;
 }
 
-.slider-track::before {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    border-radius: 50%;
-    background: var(--container-background-color);
+#bpm-round-slider .rs-range-color {
+    stroke: var(--primary-color) !important;
+    stroke-width: 8 !important;
+    filter: drop-shadow(0 0 8px var(--glow-color));
 }
 
-/* Slider Progress (Active Part) */
-.slider-progress {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 160px;
-    border-radius: 50%;
-    background: conic-gradient(
-        from 225deg,
-        var(--primary-color) 0deg,
-        var(--primary-color) 0deg,
-        transparent 0deg
-    );
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1;
-    overflow: hidden;
+#bpm-round-slider .rs-handle {
+    fill: var(--primary-color) !important;
+    stroke: white !important;
+    stroke-width: 3 !important;
+    filter: drop-shadow(0 4px 8px var(--glow-color));
+    r: 12 !important;
 }
 
-/* Slider Handle */
-.slider-handle {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    background: linear-gradient(145deg, 
-        white,
-        color-mix(in srgb, var(--primary-color) 20%, white)
-    );
-    border: 3px solid var(--primary-color);
-    border-radius: 50%;
-    box-shadow: 
-        0 4px 12px var(--glow-color),
-        0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-    z-index: 3;
-    cursor: grab;
-    transform: translate(-50%, -50%);
+#bpm-round-slider .rs-handle:hover {
+    filter: drop-shadow(0 6px 12px var(--glow-color));
+    transform: scale(1.1);
 }
 
-.slider-handle:hover {
-    box-shadow: 
-        0 6px 20px var(--glow-color),
-        0 4px 8px rgba(0, 0, 0, 0.15);
-    transform: translate(-50%, -50%) scale(1.1);
+/* Dark theme adjustments for round slider */
+body[data-theme="dark"] #bpm-round-slider .rs-handle {
+    fill: var(--primary-color) !important;
+    stroke: color-mix(in srgb, var(--container-background-color) 90%, white) !important;
 }
 
-.slider-handle:active {
-    cursor: grabbing;
-    transform: translate(-50%, -50%) scale(0.95);
-}
-
-/* Dark theme handle adjustments */
-body[data-theme="dark"] .slider-handle {
-    background: linear-gradient(145deg, 
-        color-mix(in srgb, var(--container-background-color) 90%, white),
-        color-mix(in srgb, var(--container-background-color) 70%, white)
-    );
+/* Light theme adjustments for round slider */
+body[data-theme="light"] #bpm-round-slider .rs-handle {
+    fill: var(--primary-color) !important;
+    stroke: white !important;
 }
 
 /* ======================================== */
@@ -330,19 +276,13 @@ body[data-theme="dark"] .slider-handle {
         margin-bottom: 8px;
     }
     
-    .bpm-slider {
-        width: 140px;
-        height: 70px;
+    #bpm-round-slider .rs-handle {
+        r: 10 !important;
     }
     
-    .slider-track,
-    .slider-progress {
-        height: 140px;
-    }
-    
-    .slider-handle {
-        width: 20px;
-        height: 20px;
+    #bpm-round-slider .rs-path-color,
+    #bpm-round-slider .rs-range-color {
+        stroke-width: 6 !important;
     }
 }
 
@@ -386,18 +326,12 @@ body[data-theme="dark"] .slider-handle {
         margin-bottom: 6px;
     }
     
-    .bpm-slider {
-        width: 120px;
-        height: 60px;
+    #bpm-round-slider .rs-handle {
+        r: 8 !important;
     }
     
-    .slider-track,
-    .slider-progress {
-        height: 120px;
-    }
-    
-    .slider-handle {
-        width: 18px;
-        height: 18px;
+    #bpm-round-slider .rs-path-color,
+    #bpm-round-slider .rs-range-color {
+        stroke-width: 5 !important;
     }
 }

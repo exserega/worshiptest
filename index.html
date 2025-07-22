@@ -6,6 +6,8 @@
     <title>Agape Worship</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Round Slider CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/soundar24/roundSlider@5.0.7/dist/roundslider.min.css">
   <link rel="manifest" href="manifest.json">  </head>
 <body>
 
@@ -198,11 +200,7 @@
                 </button>
                 
                 <div class="bpm-slider-container">
-                    <div class="bpm-slider" id="bpm-slider">
-                        <div class="slider-track"></div>
-                        <div class="slider-progress" id="slider-progress"></div>
-                        <div class="slider-handle" id="slider-handle"></div>
-                    </div>
+                    <div id="bpm-round-slider"></div>
                 </div>
                 
                 <button class="bpm-control-btn bpm-increase" id="bpm-increase" title="Увеличить BPM">
@@ -315,6 +313,10 @@
     </button>
 </nav>
 
+  <!-- jQuery and Round Slider JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/soundar24/roundSlider@5.0.7/dist/roundslider.min.js"></script>
+  
   <script type="module" src="script.js"></script>
 
     <script>

@@ -3,14 +3,14 @@ import * as core from './core.js';
 
 // DOM Elements
 const bpmInput = document.getElementById('bpm-input');
-const bpmSlider = document.getElementById('bpm-slider');
-const sliderProgress = document.getElementById('slider-progress');
-const sliderHandle = document.getElementById('slider-handle');
 const bpmDecrease = document.getElementById('bpm-decrease');
 const bpmIncrease = document.getElementById('bpm-increase');
 const metronomeButton = document.getElementById('metronome-button');
 const metronomeIcon = metronomeButton?.querySelector('i');
 const timeSignature = document.getElementById('time-signature');
+
+// Round Slider instance
+let roundSliderInstance = null;
 
 // State
 let currentBPM = 120;
@@ -19,9 +19,39 @@ let isMetronomeActive = false;
 
 // Initialize metronome UI
 export function initMetronomeUI() {
+    // Wait for jQuery to be available
+    if (typeof $ === 'undefined') {
+        setTimeout(initMetronomeUI, 100);
+        return;
+    }
+    
+    setupRoundSlider();
     setupEventListeners();
     // Don't set initial BPM, wait for song to load
     updateBPMDisplay('N/A', 'по умолчанию');
+}
+
+// Setup round slider
+function setupRoundSlider() {
+    roundSliderInstance = $("#bpm-round-slider").roundSlider({
+        radius: 80,
+        circleShape: "half-top",
+        sliderType: "min-range",
+        showTooltip: false,
+        value: 120,
+        min: 40,
+        max: 200,
+        step: 1,
+        width: 8,
+        handleSize: 24,
+        animation: true,
+        change: function(e) {
+            const newBPM = Math.round(e.value);
+            if (newBPM !== currentBPM) {
+                setBPM(newBPM, 'изменено', true, false); // Don't update slider to avoid loop
+            }
+        }
+    });
 }
 
 // Setup event listeners
@@ -41,9 +71,7 @@ function setupEventListeners() {
         bpmInput.addEventListener('keydown', handleBPMInputKeydown);
     }
     
-    if (bpmSlider) {
-        setupSliderInteraction();
-    }
+    // Round slider is already set up in setupRoundSlider()
     
     // Metronome button
     if (metronomeButton) {
@@ -54,15 +82,14 @@ function setupEventListeners() {
 // Adjust BPM by increment
 function adjustBPM(increment) {
     const newBPM = Math.max(40, Math.min(200, currentBPM + increment));
-    setBPM(newBPM, 'изменено');
+    setBPM(newBPM, 'изменено', true, true);
 }
 
 // Handle BPM input change
 function handleBPMInputChange(e) {
     const value = parseInt(e.target.value, 10);
     if (!isNaN(value) && value >= 40 && value <= 200) {
-        setBPM(value, 'изменено', false); // Don't update input to avoid cursor issues
-        updateSlider(value);
+        setBPM(value, 'изменено', false, true); // Don't update input to avoid cursor issues, but update slider
     }
 }
 
@@ -87,93 +114,18 @@ function handleBPMInputKeydown(e) {
     }
 }
 
-// Setup slider interaction
-function setupSliderInteraction() {
-    let isDragging = false;
-    let startAngle = 0;
-    let startBPM = 120;
-    
-    // Mouse events
-    sliderHandle.addEventListener('mousedown', startDrag);
-    document.addEventListener('mousemove', handleDrag);
-    document.addEventListener('mouseup', endDrag);
-    
-    // Touch events for mobile
-    sliderHandle.addEventListener('touchstart', startDrag, { passive: false });
-    document.addEventListener('touchmove', handleDrag, { passive: false });
-    document.addEventListener('touchend', endDrag);
-    
-    function startDrag(e) {
-        e.preventDefault();
-        isDragging = true;
-        startBPM = currentBPM;
-        
-        const rect = bpmSlider.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height;
-        
-        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-        
-        if (clientX && clientY) {
-            const deltaX = clientX - centerX;
-            const deltaY = clientY - centerY;
-            startAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-        }
-        
-        document.body.style.cursor = 'grabbing';
-    }
-    
-    function handleDrag(e) {
-        if (!isDragging) return;
-        e.preventDefault();
-        
-        const rect = bpmSlider.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height; // Bottom center for semicircle
-        
-        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-        
-        if (!clientX || !clientY) return;
-        
-        const deltaX = clientX - centerX;
-        const deltaY = clientY - centerY;
-        
-        // Calculate current angle
-        let currentAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-        
-        // Calculate angle difference
-        let angleDiff = currentAngle - startAngle;
-        
-        // Normalize angle difference to -180 to 180
-        while (angleDiff > 180) angleDiff -= 360;
-        while (angleDiff < -180) angleDiff += 360;
-        
-        // Convert angle change to BPM change (low sensitivity for precision)
-        const bpmChange = (angleDiff / 540) * 80; // 540° = 80 BPM change (1/3 sensitivity)
-        let newBPM = Math.round(startBPM + bpmChange);
-        
-        // Clamp to valid range
-        newBPM = Math.max(40, Math.min(200, newBPM));
-        
-        setBPM(newBPM, 'изменено');
-    }
-    
-    function endDrag() {
-        isDragging = false;
-        document.body.style.cursor = '';
-    }
-}
+
 
 // Set BPM value
-function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = true) {
+function setBPM(bpm, source = 'по умолчанию', shouldUpdateInput = true, shouldUpdateSlider = true) {
     currentBPM = bpm;
     
     if (shouldUpdateInput) {
         updateInputField(bpm);
     }
-    updateSlider(bpm);
+    if (shouldUpdateSlider && roundSliderInstance) {
+        roundSliderInstance.roundSlider("option", "value", bpm);
+    }
     
     // If metronome is active, restart with new BPM
     if (isMetronomeActive) {
@@ -198,38 +150,13 @@ function updateInput(bpm) {
     updateInputField(bpm);
 }
 
-// Update slider position
-function updateSlider(bpm) {
-    if (!sliderProgress || !sliderHandle || isNaN(bpm)) return;
-    
-    // Convert BPM (40-200) to angle (0-180 degrees for semicircle)
-    const normalizedValue = (bpm - 40) / 160; // 0 to 1
-    const angle = normalizedValue * 180; // 0 to 180 degrees
-    
-    // Update progress arc (semicircle from 180° to 0°)
-    sliderProgress.style.background = `conic-gradient(
-        from 225deg,
-        var(--primary-color) 0deg,
-        var(--primary-color) ${angle}deg,
-        transparent ${angle}deg
-    )`;
-    
-    // Update handle position on semicircle
-    const rotationAngle = -90 + angle; // Start from -90° (left) to 90° (right)
-    const radius = 68; // Distance from center (adjusted for new slider size)
-    const centerX = 80; // Half of slider width (160px)
-    const centerY = 80; // Bottom of semicircle
-    
-    const handleX = centerX + radius * Math.cos(rotationAngle * Math.PI / 180);
-    const handleY = centerY + radius * Math.sin(rotationAngle * Math.PI / 180);
-    
-    sliderHandle.style.left = `${handleX}px`;
-    sliderHandle.style.top = `${handleY}px`;
-}
-
 // Legacy function name for backward compatibility  
 function updateKnob(bpm) {
-    updateSlider(bpm);
+    // Now handled by roundSlider
+}
+
+function updateSlider(bpm) {
+    // Now handled by roundSlider
 }
 
 // Toggle metronome
@@ -283,17 +210,17 @@ function updateMetronomeButton(isActive) {
 export function updateBPMFromSong(bpm) {
     if (bpm && !isNaN(bpm) && bpm > 0) {
         originalBPM = bpm;
-        setBPM(bpm, 'из песни');
+        setBPM(bpm, 'из песни', true, true);
     } else {
         originalBPM = null;
-        setBPM(120, 'по умолчанию');
+        setBPM(120, 'по умолчанию', true, true);
     }
 }
 
 // Reset BPM to original from song
 export function resetBPMToOriginal() {
     if (originalBPM) {
-        setBPM(originalBPM, 'из песни');
+        setBPM(originalBPM, 'из песни', true, true);
     }
 }
 
