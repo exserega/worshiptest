@@ -23,8 +23,12 @@ class MetronomeController {
     async init() {
         console.log('Initializing new metronome...');
         
-        // Wait for libraries
-        await this.waitForLibraries();
+        // Wait for libraries with timeout
+        try {
+            await this.waitForLibraries();
+        } catch (error) {
+            console.error('Error waiting for libraries:', error);
+        }
         
         // Initialize components
         this.initRoundSlider();
@@ -36,15 +40,33 @@ class MetronomeController {
 
     async waitForLibraries() {
         return new Promise((resolve) => {
+            let attempts = 0;
+            const maxAttempts = 30; // 3 seconds maximum wait
+            
             const checkLibraries = () => {
+                attempts++;
+                console.log(`Metronome: Checking libraries... attempt ${attempts}/${maxAttempts}`);
+                
+                // Check if global flag is set
+                if (window.librariesReady) {
+                    console.log('Libraries ready via global flag');
+                    resolve();
+                    return;
+                }
+                
+                // Direct check
                 if (typeof $ !== 'undefined' && $.fn && $.fn.roundSlider) {
-                    console.log('Libraries loaded successfully');
+                    console.log('Libraries loaded successfully via direct check');
+                    resolve();
+                } else if (attempts >= maxAttempts) {
+                    console.warn('Libraries failed to load within timeout, proceeding with fallback');
                     resolve();
                 } else {
-                    console.log('Waiting for libraries...');
                     setTimeout(checkLibraries, 100);
                 }
             };
+            
+            // Start checking immediately
             checkLibraries();
         });
     }
