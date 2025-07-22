@@ -200,11 +200,45 @@
                 </button>
                 
                 <div class="bpm-slider-container">
-                    <div id="bpm-round-slider">
-                        <!-- Slider will be initialized here -->
-                        <div style="color: var(--text-color); font-size: 0.8rem; text-align: center; padding: 20px;">
-                            Загрузка слайдера...
-                        </div>
+                    <div class="professional-knob" id="professional-knob">
+                        <svg width="160" height="80" viewBox="0 0 160 80">
+                            <!-- Background arc -->
+                            <path id="knob-background" 
+                                  d="M 20 60 A 40 40 0 0 1 140 60" 
+                                  stroke="var(--border-color)" 
+                                  stroke-width="8" 
+                                  stroke-linecap="round" 
+                                  fill="none"/>
+                            
+                            <!-- Progress arc -->
+                            <path id="knob-progress" 
+                                  d="M 20 60 A 40 40 0 0 1 80 20" 
+                                  stroke="var(--primary-color)" 
+                                  stroke-width="8" 
+                                  stroke-linecap="round" 
+                                  fill="none"
+                                  filter="drop-shadow(0 0 6px var(--glow-color))"/>
+                            
+                            <!-- Center knob -->
+                            <circle id="knob-handle" 
+                                    cx="80" 
+                                    cy="60" 
+                                    r="20" 
+                                    fill="var(--container-background-color)" 
+                                    stroke="var(--primary-color)" 
+                                    stroke-width="3"
+                                    filter="drop-shadow(0 3px 6px rgba(0,0,0,0.3))"/>
+                            
+                            <!-- Knob indicator -->
+                            <line id="knob-indicator" 
+                                  x1="80" 
+                                  y1="45" 
+                                  x2="80" 
+                                  y2="35" 
+                                  stroke="var(--primary-color)" 
+                                  stroke-width="3" 
+                                  stroke-linecap="round"/>
+                        </svg>
                     </div>
                 </div>
                 

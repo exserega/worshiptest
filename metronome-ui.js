@@ -16,7 +16,10 @@ class MetronomeController {
             playButton: document.getElementById('metronome-button'),
             playIcon: document.querySelector('#metronome-button i'),
             timeSignature: document.getElementById('time-signature'),
-            sliderContainer: document.getElementById('bpm-round-slider')
+            knobContainer: document.getElementById('professional-knob'),
+            knobHandle: document.getElementById('knob-handle'),
+            knobProgress: document.getElementById('knob-progress'),
+            knobIndicator: document.getElementById('knob-indicator')
         };
     }
 
@@ -31,7 +34,7 @@ class MetronomeController {
         }
         
         // Initialize components
-        this.initRoundSlider();
+        this.initProfessionalKnob();
         this.setupEventListeners();
         this.updateDisplay();
         
@@ -71,85 +74,134 @@ class MetronomeController {
         });
     }
 
-    initRoundSlider() {
-        if (!this.elements.sliderContainer) {
-            console.error('Slider container not found');
+    initProfessionalKnob() {
+        if (!this.elements.knobContainer) {
+            console.error('Professional knob container not found');
             return;
         }
 
-        console.log('Initializing roundSlider...');
-        console.log('jQuery available:', typeof $ !== 'undefined');
-        console.log('roundSlider available:', typeof $.fn.roundSlider !== 'undefined');
+        console.log('Initializing professional knob...');
         
-        // Double check jQuery and roundSlider are available
-        if (typeof $ === 'undefined') {
-            console.error('jQuery not available');
-            this.createFallbackSlider();
+        this.isDragging = false;
+        this.startX = 0;
+        this.startBPM = this.currentBPM;
+        
+        // Setup mouse/touch events for professional knob interaction
+        this.setupKnobEvents();
+        this.updateKnobVisuals();
+        
+        console.log('Professional knob initialized successfully');
+    }
+
+    setupKnobEvents() {
+        const knob = this.elements.knobHandle;
+        
+        if (!knob) {
+            console.error('Knob handle not found');
             return;
         }
+
+        // Mouse events
+        knob.addEventListener('mousedown', this.startDrag.bind(this));
+        document.addEventListener('mousemove', this.handleDrag.bind(this));
+        document.addEventListener('mouseup', this.endDrag.bind(this));
+
+        // Touch events for mobile
+        knob.addEventListener('touchstart', this.startDrag.bind(this), { passive: false });
+        document.addEventListener('touchmove', this.handleDrag.bind(this), { passive: false });
+        document.addEventListener('touchend', this.endDrag.bind(this));
+
+        // Prevent context menu
+        knob.addEventListener('contextmenu', (e) => e.preventDefault());
         
-        if (typeof $.fn.roundSlider === 'undefined') {
-            console.error('roundSlider plugin not available');
-            this.createFallbackSlider();
-            return;
-        }
+        // Set cursor
+        knob.style.cursor = 'grab';
+    }
+
+    startDrag(e) {
+        e.preventDefault();
+        this.isDragging = true;
+        this.startBPM = this.currentBPM;
         
-        try {
-            // Clear any existing content
-            $(this.elements.sliderContainer).empty();
-            
-            // Initialize roundSlider with correct v1.6.1 syntax
-            this.slider = $(this.elements.sliderContainer).roundSlider({
-                radius: 80,
-                width: 12,
-                handleSize: 24,
-                circleShape: "half-top",
-                sliderType: "min-range",
-                showTooltip: false,
-                editableTooltip: false,
-                min: 40,
-                max: 200,
-                step: 1,
-                value: this.currentBPM,
-                animation: false, // Disable animation for smooth dragging
-                
-                // Live update during dragging
-                drag: function(e) {
-                    const newBPM = Math.round(e.value);
-                    if (window.metronomeInstance) {
-                        window.metronomeInstance.updateBPMDisplay(newBPM);
-                    }
-                },
-                
-                // Final update when dragging stops
-                change: function(e) {
-                    console.log('Slider changed to:', e.value);
-                    const newBPM = Math.round(e.value);
-                    setTimeout(() => {
-                        if (window.metronomeInstance) {
-                            window.metronomeInstance.setBPM(newBPM, true, false);
-                        }
-                    }, 0);
-                }
-            });
-            
-            console.log('RoundSlider created successfully');
-            console.log('Slider instance:', this.slider);
-            
-            // Test if roundSlider is working
-            setTimeout(() => {
-                try {
-                    const currentValue = this.slider.roundSlider("option", "value");
-                    console.log('RoundSlider current value:', currentValue);
-                } catch (e) {
-                    console.error('RoundSlider test failed:', e);
-                }
-            }, 100);
-            
-        } catch (error) {
-            console.error('Failed to create roundSlider:', error);
-            this.createFallbackSlider();
-        }
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        this.startX = clientX;
+        
+        document.body.style.cursor = 'grabbing';
+        this.elements.knobHandle.style.cursor = 'grabbing';
+        
+        console.log('Started dragging knob at BPM:', this.startBPM);
+    }
+
+    handleDrag(e) {
+        if (!this.isDragging) return;
+        e.preventDefault();
+        
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const deltaX = clientX - this.startX;
+        
+        // Convert horizontal movement to BPM change
+        // 160 pixels = full range (200-40 = 160 BPM)
+        const sensitivity = 1; // 1px = 1 BPM
+        const bpmChange = deltaX * sensitivity;
+        let newBPM = Math.round(this.startBPM + bpmChange);
+        
+        // Clamp to valid range
+        newBPM = Math.max(40, Math.min(200, newBPM));
+        
+        // Update display in real-time
+        this.updateBPMDisplay(newBPM);
+        this.updateKnobVisuals();
+    }
+
+    endDrag() {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        document.body.style.cursor = '';
+        this.elements.knobHandle.style.cursor = 'grab';
+        
+        // Final BPM update with metronome restart if needed
+        this.setBPM(this.currentBPM, true, false);
+        
+        console.log('Finished dragging knob at BPM:', this.currentBPM);
+    }
+
+    updateKnobVisuals() {
+        if (!this.elements.knobProgress || !this.elements.knobIndicator) return;
+        
+        // Calculate angle based on BPM (0-180 degrees for semicircle)
+        const normalizedValue = (this.currentBPM - 40) / 160; // 0 to 1
+        const angle = normalizedValue * 180; // 0 to 180 degrees
+        
+        // Update progress arc
+        const startAngle = 180; // Start from left (180 degrees)
+        const endAngle = startAngle - angle; // Sweep clockwise
+        
+        const centerX = 80;
+        const centerY = 60;
+        const radius = 40;
+        
+        const startX = centerX + radius * Math.cos((startAngle * Math.PI) / 180);
+        const startY = centerY + radius * Math.sin((startAngle * Math.PI) / 180);
+        const endX = centerX + radius * Math.cos((endAngle * Math.PI) / 180);
+        const endY = centerY + radius * Math.sin((endAngle * Math.PI) / 180);
+        
+        const largeArc = angle > 90 ? 1 : 0;
+        
+        const pathData = `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArc} 0 ${endX} ${endY}`;
+        this.elements.knobProgress.setAttribute('d', pathData);
+        
+        // Update indicator line rotation
+        const indicatorAngle = -90 + angle; // Start from top (-90°) and rotate
+        const indicatorX1 = centerX + 15 * Math.cos((indicatorAngle * Math.PI) / 180);
+        const indicatorY1 = centerY + 15 * Math.sin((indicatorAngle * Math.PI) / 180);
+        const indicatorX2 = centerX + 10 * Math.cos((indicatorAngle * Math.PI) / 180);
+        const indicatorY2 = centerY + 10 * Math.sin((indicatorAngle * Math.PI) / 180);
+        
+        this.elements.knobIndicator.setAttribute('x1', indicatorX1);
+        this.elements.knobIndicator.setAttribute('y1', indicatorY1);
+        this.elements.knobIndicator.setAttribute('x2', indicatorX2);
+        this.elements.knobIndicator.setAttribute('y2', indicatorY2);
     }
 
     createFallbackSlider() {
@@ -220,20 +272,9 @@ class MetronomeController {
             this.elements.bpmInput.value = this.currentBPM;
         }
         
-        if (updateSlider && this.slider) {
-            try {
-                if (this.slider.isFallback) {
-                    // Update fallback HTML5 slider
-                    if (this.slider.element) {
-                        this.slider.element.value = this.currentBPM;
-                    }
-                } else {
-                    // Update roundSlider using correct v1.6.1 syntax
-                    this.slider.roundSlider("option", "value", this.currentBPM);
-                }
-            } catch (error) {
-                console.error('Error updating slider:', error);
-            }
+        if (updateSlider) {
+            // Update our professional knob visuals
+            this.updateKnobVisuals();
         }
 
         if (this.isActive) {
