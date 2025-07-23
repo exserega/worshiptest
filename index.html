@@ -124,6 +124,24 @@
         <pre id="song-display"></pre>
     </fieldset>
 
+    <!-- Metronome Control Bar - Under Song -->
+    <div class="metronome-control-bar">
+        <button id="open-metronome-overlay" class="metronome-button" aria-label="Открыть метроном" title="Метроном">
+            <i class="fas fa-drum" aria-hidden="true"></i>
+            <span>Метроном</span>
+        </button>
+        
+        <div class="current-bpm-display">
+            <span id="current-bpm-value" class="bpm-value">NA</span>
+            <span class="bpm-unit">BPM</span>
+        </div>
+        
+        <button id="metronome-play-toggle" class="metronome-play-toggle" aria-label="Включить/выключить метроном" title="Play/Stop">
+            <i class="fas fa-play"></i>
+            <span class="play-text">Play</span>
+        </button>
+    </div>
+
     <!-- Модальное окно редактора -->
     <div id="song-editor-overlay" class="song-editor-overlay">
         <div class="song-editor-modal">
@@ -328,18 +346,6 @@
         <i class="fas fa-microphone" aria-hidden="true"></i>
         <span>Репертуар</span>
     </button>
-    <div class="metronome-nav-section">
-        <button id="open-metronome-overlay" class="metronome-nav-button" aria-label="Открыть метроном" title="Метроном">
-            <i class="fas fa-drum" aria-hidden="true"></i>
-            <span>Метроном</span>
-        </button>
-        <div class="metronome-nav-info">
-            <span id="nav-bpm-display" class="nav-bpm-value">NA</span>
-            <button id="nav-metronome-toggle" class="nav-metronome-play" aria-label="Включить/выключить метроном" title="Включить/выключить метроном">
-                <i class="fas fa-play"></i>
-            </button>
-        </div>
-    </div>
 </nav>
 
   <!-- New Metronome Module - No external libraries needed -->

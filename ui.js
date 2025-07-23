@@ -178,6 +178,12 @@ export function displaySongDetails(songData, keyToSelect) {
         if (bpmDisplay) bpmDisplay.textContent = 'N/A';
         if (holychordsButton) holychordsButton.style.display = 'none';
         keySelect.value = "C";
+        
+        // Reset metronome when no song selected
+        if (window.metronomeUI && window.metronomeUI.updateBPMFromSong) {
+            console.log('Clearing metronome BPM - no song selected');
+            window.metronomeUI.updateBPMFromSong(null);
+        }
         keySelect.dataset.songId = '';
         if (keyDisplay) keyDisplay.style.display = 'none';
         favoriteButton.disabled = true;
@@ -207,12 +213,11 @@ export function displaySongDetails(songData, keyToSelect) {
     keySelect.value = currentSelectedKey;
     keySelect.dataset.songId = songData.id;
 
-    if (bpmDisplay) {
-        updateBPM(bpm);
-        // Also update the new metronome UI if available
-        if (window.metronomeUI && window.metronomeUI.updateBPMFromSong) {
-            window.metronomeUI.updateBPMFromSong(bpm === 'N/A' ? null : bpm);
-        }
+    // Update metronome with BPM from Firebase
+    if (window.metronomeUI && window.metronomeUI.updateBPMFromSong) {
+        const bpmValue = (bpm === 'N/A' || bpm === null || bpm === undefined) ? null : parseInt(bpm, 10);
+        console.log('Updating metronome with BPM from song:', bpmValue);
+        window.metronomeUI.updateBPMFromSong(bpmValue);
     }
     if (holychordsButton) {
         if (srcUrl && srcUrl.trim() !== '' && srcUrl.trim() !== '#') {

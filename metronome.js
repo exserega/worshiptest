@@ -1,5 +1,5 @@
 // =====================================================================
-// New Metronome Module - Overlay Interface
+// New Metronome Module - v4.0 - Correct Implementation
 // =====================================================================
 
 import * as core from './core.js';
@@ -14,6 +14,14 @@ class MetronomeController {
         
         // DOM elements
         this.elements = {
+            // Control bar elements (under song)
+            controlBar: document.querySelector('.metronome-control-bar'),
+            openBtn: document.getElementById('open-metronome-overlay'),
+            currentBpmValue: document.getElementById('current-bpm-value'),
+            playToggle: document.getElementById('metronome-play-toggle'),
+            playToggleIcon: document.querySelector('#metronome-play-toggle i'),
+            playToggleText: document.querySelector('#metronome-play-toggle .play-text'),
+            
             // Overlay elements
             overlay: document.getElementById('metronome-overlay'),
             closeBtn: document.getElementById('close-metronome-overlay'),
@@ -27,20 +35,14 @@ class MetronomeController {
             // Slider elements
             sliderTrack: document.querySelector('.bpm-slider-track'),
             sliderProgress: document.getElementById('bpm-slider-progress'),
-            sliderHandle: document.getElementById('bpm-slider-handle'),
-            
-            // Navigation elements
-            openBtn: document.getElementById('open-metronome-overlay'),
-            navBpmDisplay: document.getElementById('nav-bpm-display'),
-            navToggleBtn: document.getElementById('nav-metronome-toggle'),
-            navToggleIcon: document.querySelector('#nav-metronome-toggle i')
+            sliderHandle: document.getElementById('bpm-slider-handle')
         };
         
         this.init();
     }
 
     init() {
-        console.log('Initializing new metronome...');
+        console.log('Initializing new metronome v4.0...');
         this.setupEventListeners();
         this.updateDisplay();
         this.updateSliderVisuals();
@@ -48,11 +50,16 @@ class MetronomeController {
     }
 
     setupEventListeners() {
-        // Overlay controls
+        // Control bar events
         if (this.elements.openBtn) {
             this.elements.openBtn.addEventListener('click', () => this.openOverlay());
         }
         
+        if (this.elements.playToggle) {
+            this.elements.playToggle.addEventListener('click', () => this.toggleMetronome());
+        }
+        
+        // Overlay controls
         if (this.elements.closeBtn) {
             this.elements.closeBtn.addEventListener('click', () => this.closeOverlay());
         }
@@ -71,7 +78,7 @@ class MetronomeController {
             this.elements.bpmInput.addEventListener('input', (e) => {
                 const value = parseInt(e.target.value, 10);
                 if (!isNaN(value) && value >= 40 && value <= 200) {
-                    this.setBPM(value, false, true);
+                    this.setBPM(value, false, true, true);
                 }
             });
             
@@ -94,15 +101,9 @@ class MetronomeController {
             });
         }
 
-        // Play buttons (both overlay and navigation)
+        // Overlay play button
         if (this.elements.playButton) {
             this.elements.playButton.addEventListener('click', () => {
-                this.toggleMetronome();
-            });
-        }
-        
-        if (this.elements.navToggleBtn) {
-            this.elements.navToggleBtn.addEventListener('click', () => {
                 this.toggleMetronome();
             });
         }
@@ -160,7 +161,7 @@ class MetronomeController {
         this.startX = clientX - rect.left;
         
         // Visual feedback
-        this.elements.sliderHandle.style.transform = 'scale(1.1)';
+        this.elements.sliderHandle.style.transform = 'translateY(-50%) scale(1.1)';
         document.body.style.cursor = 'grabbing';
         
         console.log('Started dragging slider at BPM:', this.startBPM);
@@ -178,7 +179,7 @@ class MetronomeController {
         const percentage = Math.max(0, Math.min(1, clickX / trackWidth));
         const newBPM = Math.round(40 + (160 * percentage));
         
-        this.setBPM(newBPM, true, true);
+        this.setBPM(newBPM, true, true, true);
     }
 
     handleDrag(e) {
@@ -195,7 +196,7 @@ class MetronomeController {
         const newBPM = Math.round(40 + (160 * percentage));
         
         // Update display in real-time
-        this.updateBPMDisplay(newBPM);
+        this.updateBPMDisplay(newBPM, true);
         this.updateSliderVisuals();
     }
 
@@ -205,11 +206,11 @@ class MetronomeController {
         this.isDragging = false;
         
         // Reset visual feedback
-        this.elements.sliderHandle.style.transform = 'scale(1)';
+        this.elements.sliderHandle.style.transform = 'translateY(-50%) scale(1)';
         document.body.style.cursor = '';
         
         // Final BPM update
-        this.setBPM(this.currentBPM, true, false);
+        this.setBPM(this.currentBPM, true, false, true);
         
         console.log('Finished dragging slider at BPM:', this.currentBPM);
     }
@@ -240,7 +241,7 @@ class MetronomeController {
         }
     }
 
-    setBPM(bpm, updateInput = true, updateSlider = true) {
+    setBPM(bpm, updateInput = true, updateSlider = true, updateControlBar = true) {
         this.currentBPM = Math.max(40, Math.min(200, bpm));
         
         if (updateInput && this.elements.bpmInput) {
@@ -251,8 +252,9 @@ class MetronomeController {
             this.updateSliderVisuals();
         }
         
-        // Update navigation display
-        this.updateNavigationDisplay();
+        if (updateControlBar) {
+            this.updateControlBarDisplay();
+        }
 
         if (this.isActive) {
             this.restartMetronome();
@@ -260,7 +262,7 @@ class MetronomeController {
     }
 
     adjustBPM(increment) {
-        this.setBPM(this.currentBPM + increment, true, true);
+        this.setBPM(this.currentBPM + increment, true, true, true);
     }
 
     async toggleMetronome() {
@@ -303,14 +305,16 @@ class MetronomeController {
             }
         }
         
-        // Update navigation play button
-        if (this.elements.navToggleBtn && this.elements.navToggleIcon) {
+        // Update control bar play button
+        if (this.elements.playToggle && this.elements.playToggleIcon && this.elements.playToggleText) {
             if (this.isActive) {
-                this.elements.navToggleBtn.classList.add('active');
-                this.elements.navToggleIcon.className = 'fas fa-stop';
+                this.elements.playToggle.classList.add('active');
+                this.elements.playToggleIcon.className = 'fas fa-stop';
+                this.elements.playToggleText.textContent = 'Stop';
             } else {
-                this.elements.navToggleBtn.classList.remove('active');
-                this.elements.navToggleIcon.className = 'fas fa-play';
+                this.elements.playToggle.classList.remove('active');
+                this.elements.playToggleIcon.className = 'fas fa-play';
+                this.elements.playToggleText.textContent = 'Play';
             }
         }
     }
@@ -329,42 +333,49 @@ class MetronomeController {
         this.elements.sliderHandle.style.left = percentageStr;
     }
 
-    updateNavigationDisplay() {
-        if (this.elements.navBpmDisplay) {
+    updateControlBarDisplay() {
+        if (this.elements.currentBpmValue) {
             if (this.currentSongBPM !== null) {
-                this.elements.navBpmDisplay.textContent = this.currentBPM.toString();
+                this.elements.currentBpmValue.textContent = this.currentBPM.toString();
             } else {
-                this.elements.navBpmDisplay.textContent = 'NA';
+                this.elements.currentBpmValue.textContent = 'NA';
             }
         }
     }
 
     updateDisplay() {
-        this.setBPM(this.currentBPM, true, true);
+        this.setBPM(this.currentBPM, true, true, true);
         this.updatePlayButtons();
-        this.updateNavigationDisplay();
     }
 
     // Update only BPM display without restarting metronome (for live drag updates)
-    updateBPMDisplay(bpm) {
+    updateBPMDisplay(bpm, updateControlBar = true) {
         this.currentBPM = Math.max(40, Math.min(200, bpm));
         
         if (this.elements.bpmInput && document.activeElement !== this.elements.bpmInput) {
             this.elements.bpmInput.value = this.currentBPM;
         }
         
-        this.updateNavigationDisplay();
+        if (updateControlBar) {
+            this.updateControlBarDisplay();
+        }
     }
 
+    // CRITICAL: This method is called when a song is selected
     updateBPMFromSong(bpm) {
+        console.log('Updating BPM from song:', bpm);
+        
         if (bpm && !isNaN(bpm) && bpm > 0) {
             this.originalBPM = bpm;
             this.currentSongBPM = bpm;
-            this.setBPM(bpm, true, true);
+            this.setBPM(bpm, true, true, true);
+            console.log('BPM set from song:', bpm);
         } else {
             this.originalBPM = null;
             this.currentSongBPM = null;
-            this.setBPM(120, true, true);
+            // Don't change current BPM, just update display
+            this.updateControlBarDisplay();
+            console.log('No BPM from song, showing NA');
         }
     }
 
@@ -410,6 +421,6 @@ export function updateMetronomeButtonState(isActive) {
 
 export function resetBPMToOriginal() {
     if (metronome.originalBPM) {
-        metronome.setBPM(metronome.originalBPM, true, true);
+        metronome.setBPM(metronome.originalBPM, true, true, true);
     }
 }
