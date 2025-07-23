@@ -231,27 +231,39 @@
 }
 
 .bpm-input-large {
-    width: 120px;
-    padding: 16px 20px;
-    font-size: 3rem;
-    font-weight: 900;
+    width: 180px;
+    padding: 12px 20px;
+    font-size: 2.2rem;
+    font-weight: 700;
     text-align: center;
-    border: 3px solid var(--primary-color);
-    border-radius: 16px;
-    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--primary-color) 8%, transparent);
     color: var(--primary-color);
     font-family: 'Segoe UI', system-ui, sans-serif;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 16px var(--glow-color);
+    box-shadow: 0 2px 8px var(--glow-color);
     margin-bottom: 8px;
+    line-height: 1;
+    /* Remove spinner arrows */
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+/* Remove spinner arrows for all browsers */
+.bpm-input-large::-webkit-outer-spin-button,
+.bpm-input-large::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .bpm-input-large:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px var(--glow-color), 0 6px 20px var(--glow-color);
-    background: color-mix(in srgb, var(--primary-color) 15%, transparent);
-    transform: scale(1.02);
+    box-shadow: 0 0 0 3px var(--glow-color), 0 4px 12px var(--glow-color);
+    background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+    transform: scale(1.01);
 }
 
 .bpm-label {
@@ -565,9 +577,9 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .bpm-input-large {
-        width: 120px;
-        font-size: 2.8rem;
-        padding: 12px 16px;
+        width: 160px;
+        font-size: 2rem;
+        padding: 10px 16px;
     }
     
     .metronome-main-controls {
@@ -678,9 +690,9 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .bpm-input-large {
-        width: 110px;
-        font-size: 2.5rem;
-        padding: 10px 12px;
+        width: 140px;
+        font-size: 1.8rem;
+        padding: 8px 12px;
     }
     
     .metronome-main-controls {
