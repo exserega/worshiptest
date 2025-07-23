@@ -45,8 +45,8 @@
 #setlists-panel.horizontal-layout {
     display: flex;
     flex-direction: column;
-    width: 90vw;
-    max-width: 1200px;
+    width: calc(100vw - 60px);
+    max-width: none;
     height: 80vh;
     max-height: 800px;
     left: 0 !important;
@@ -62,7 +62,7 @@
 }
 
 #setlists-panel.horizontal-layout.open {
-    transform: translateY(-50%) translateX(5%) !important;
+    transform: translateY(-50%) translateX(0) !important;
 }
 
 /* Кнопка закрытия для горизонтальной панели */
@@ -171,7 +171,7 @@
 
 /* Левая панель - список сет-листов */
 .setlists-left-panel {
-    flex: 0 0 300px;
+    flex: 0 0 350px;
     display: flex;
     flex-direction: column;
     background: var(--background-color);
@@ -631,17 +631,17 @@
 /* Адаптивность для планшетов */
 @media (max-width: 1024px) and (min-width: 769px) {
     #setlists-panel.horizontal-layout {
-        width: 92vw;
+        width: calc(100vw - 40px);
         height: 82vh;
         transform: translateY(-50%) translateX(-100%) !important;
     }
     
     #setlists-panel.horizontal-layout.open {
-        transform: translateY(-50%) translateX(4%) !important;
+        transform: translateY(-50%) translateX(0) !important;
     }
     
     .setlists-left-panel {
-        flex: 0 0 250px;
+        flex: 0 0 280px;
     }
     
     .create-setlist-btn {
@@ -653,14 +653,14 @@
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     #setlists-panel.horizontal-layout {
-        width: 95vw;
+        width: calc(100vw - 20px);
         height: 85vh;
         border-radius: 8px;
         transform: translateY(-50%) translateX(-100%) !important;
     }
     
     #setlists-panel.horizontal-layout.open {
-        transform: translateY(-50%) translateX(2.5%) !important;
+        transform: translateY(-50%) translateX(0) !important;
     }
     
     /* Сохраняем горизонтальный макет даже на мобильных */
