@@ -140,6 +140,8 @@
     z-index: 2000;
     opacity: 0;
     transition: all 0.3s ease;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .metronome-overlay.active {
@@ -150,10 +152,10 @@
     background: var(--container-background-color);
     border: 2px solid var(--border-color);
     border-radius: 16px;
-    padding: 30px;
-    max-width: 90vw;
-    width: 500px;
-    max-height: 90vh;
+    padding: 40px 30px;
+    max-width: 500px;
+    width: 100%;
+    max-height: calc(100vh - 40px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     transform: scale(0.9);
     transition: transform 0.3s ease;
@@ -161,6 +163,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow-y: auto;
 }
 
 .metronome-overlay.active .metronome-modal {
@@ -174,33 +179,37 @@
 .metronome-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 40px;
+    justify-content: center;
+    margin-bottom: 30px;
     gap: 20px;
     width: 100%;
+    position: relative;
 }
 
 .metronome-time-signature {
-    display: flex;
-    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .time-signature-select {
-    padding: 20px 24px;
-    border: 3px solid var(--border-color);
-    border-radius: 16px;
+    padding: 8px 16px;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
     background: var(--container-background-color);
-    color: var(--text-color);
-    font-size: 2rem;
-    font-weight: 900;
+    color: var(--primary-color);
+    font-size: 1.4rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
-    min-width: 120px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-width: 80px;
+    height: auto;
+    line-height: 1.2;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 .time-signature-select:focus {
@@ -254,8 +263,12 @@
 }
 
 .close-metronome-btn {
-    width: 50px;
-    height: 50px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
     border: 2px solid var(--border-color);
     border-radius: 50%;
     background: var(--container-background-color);
@@ -265,7 +278,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .close-metronome-btn:hover {
@@ -530,10 +543,9 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .time-signature-select {
-        padding: 14px 18px;
-        font-size: 1.4rem;
-        min-width: 90px;
-        height: 55px;
+        padding: 8px 12px;
+        font-size: 1.2rem;
+        min-width: 70px;
     }
     
     .metronome-bpm-display {
@@ -644,10 +656,9 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .time-signature-select {
-        padding: 12px 16px;
-        font-size: 1.3rem;
-        min-width: 85px;
-        height: 50px;
+        padding: 6px 10px;
+        font-size: 1.1rem;
+        min-width: 65px;
     }
     
     .metronome-bpm-display {
