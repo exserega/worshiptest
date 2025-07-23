@@ -11,8 +11,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
-    margin: 16px 0;
+    padding: 12px 20px;
+    margin: 12px 0;
     background: var(--container-background-color);
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -61,7 +61,7 @@
 }
 
 .bpm-value {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 900;
     color: var(--primary-color);
     font-family: 'Segoe UI', system-ui, sans-serif;
@@ -702,33 +702,31 @@ body[data-theme="light"] .metronome-modal {
 
 @media (max-width: 480px) {
     .metronome-control-bar {
-        padding: 10px 12px;
+        padding: 8px 12px;
         gap: 12px;
-        margin: 10px 0;
-        flex-wrap: wrap;
+        margin: 8px 0;
     }
     
     .metronome-button,
     .metronome-play-toggle {
-        padding: 8px 10px;
-        min-width: 60px;
-        font-size: 0.7rem;
+        padding: 6px 8px;
+        min-width: 55px;
+        font-size: 0.65rem;
     }
     
     .metronome-button i,
     .metronome-play-toggle i {
-        font-size: 1rem;
-        margin-bottom: 2px;
+        font-size: 0.9rem;
+        margin-bottom: 1px;
     }
     
     .bpm-value {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
     
     .current-bpm-display {
-        order: -1;
-        width: 100%;
-        margin-bottom: 10px;
+        width: auto;
+        margin-bottom: 0;
     }
     
     .metronome-modal {
