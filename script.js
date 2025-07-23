@@ -76,6 +76,17 @@ function closeNotesModal() {
 
 // --- SETLIST HANDLERS ---
 
+function openCreateSetlistModal() {
+    ui.createSetlistModal.style.display = 'flex';
+    ui.newSetlistNameInput.value = '';
+    ui.newSetlistNameInput.focus();
+}
+
+function closeCreateSetlistModal() {
+    ui.createSetlistModal.style.display = 'none';
+    ui.newSetlistNameInput.value = '';
+}
+
 async function handleCreateSetlist() {
     const name = ui.newSetlistNameInput.value.trim();
     if (!name) {
@@ -83,15 +94,15 @@ async function handleCreateSetlist() {
         return;
     }
     try {
-        ui.createSetlistButton.disabled = true;
+        ui.confirmCreateSetlist.disabled = true;
         await api.createSetlist(name);
-        ui.newSetlistNameInput.value = '';
+        closeCreateSetlistModal();
         await refreshSetlists();
     } catch (error) {
         console.error("Ошибка при создании сет-листа:", error);
         alert("Не удалось создать сет-лист.");
     } finally {
-        ui.createSetlistButton.disabled = false;
+        ui.confirmCreateSetlist.disabled = false;
     }
 }
 
@@ -563,7 +574,23 @@ function setupEventListeners() {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && ui.notesModal.classList.contains('visible')) closeNotesModal(); });
 
     // --- Сет-листы ---
-    ui.createSetlistButton.addEventListener('click', handleCreateSetlist);
+    ui.createSetlistButton.addEventListener('click', openCreateSetlistModal);
+    ui.closeCreateSetlistModal.addEventListener('click', closeCreateSetlistModal);
+    ui.cancelCreateSetlist.addEventListener('click', closeCreateSetlistModal);
+    ui.confirmCreateSetlist.addEventListener('click', handleCreateSetlist);
+    ui.createSetlistModal.addEventListener('click', (e) => { 
+        if (e.target === ui.createSetlistModal) closeCreateSetlistModal(); 
+    });
+    
+    // Обработчик Enter в поле ввода названия
+    ui.newSetlistNameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleCreateSetlist();
+        } else if (e.key === 'Escape') {
+            closeCreateSetlistModal();
+        }
+    });
 
     // --- Редактор песен ---
     ui.editSongButton.addEventListener('click', () => {

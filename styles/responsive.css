@@ -280,7 +280,7 @@
     /* ПРИНУДИТЕЛЬНОЕ ОГРАНИЧЕНИЕ для всех fixed элементов */
     *[style*="position: fixed"], 
     .side-panel, 
-    #setlists-panel, 
+    #setlists-panel:not(.horizontal-layout), 
     #my-list-panel, 
     #repertoire-panel {
         max-width: 90vw !important;
@@ -293,7 +293,7 @@
     }
     
     .side-panel.open,
-    #setlists-panel.open, 
+    #setlists-panel.open:not(.horizontal-layout), 
     #my-list-panel.open, 
     #repertoire-panel.open {
         transform: translateX(0) !important;
@@ -551,8 +551,8 @@
         border: 1px solid var(--border-color) !important;
     }
     
-    /* ВСЕ ПАНЕЛИ НА МОБИЛЬНЫХ ВЫЕЗЖАЮТ СЛЕВА, КРОМЕ РЕПЕРТУАРА */
-    #setlists-panel,
+    /* ВСЕ ПАНЕЛИ НА МОБИЛЬНЫХ ВЫЕЗЖАЮТ СЛЕВА, КРОМЕ РЕПЕРТУАРА (исключая горизонтальный дизайн) */
+    #setlists-panel:not(.horizontal-layout),
     #my-list-panel {
         left: 0 !important;
         right: auto !important;
@@ -570,7 +570,7 @@
         border-right: none !important;
     }
     
-    #setlists-panel.open,
+    #setlists-panel.open:not(.horizontal-layout),
     #my-list-panel.open {
         transform: translateX(0) !important;
     }
@@ -588,8 +588,8 @@
         z-index: 10 !important;
     }
     
-    /* Кнопки закрытия для левых панелей (справа) */
-    #setlists-panel .side-panel-close-btn,
+    /* Кнопки закрытия для левых панелей (справа, исключая горизонтальный дизайн) */
+    #setlists-panel:not(.horizontal-layout) .side-panel-close-btn,
     #my-list-panel .side-panel-close-btn {
         right: 8px !important;
         left: auto !important;
@@ -632,16 +632,16 @@
         padding-bottom: 4px;
     }
 
-    #setlists-panel .create-setlist-form { margin-bottom: 10px; }
-    #new-setlist-name-input { font-size: 0.9rem; padding: 7px 10px; height: 36px; box-sizing: border-box; }
-    #create-setlist-button { padding: 7px 12px; font-size: 0.8rem; }
-    /* Контролы текущего сет-листа на мобильных */
-    #setlists-panel .current-setlist-controls {
+    #setlists-panel:not(.horizontal-layout) .create-setlist-form { margin-bottom: 10px; }
+    #setlists-panel:not(.horizontal-layout) #new-setlist-name-input { font-size: 0.9rem; padding: 7px 10px; height: 36px; box-sizing: border-box; }
+    #setlists-panel:not(.horizontal-layout) #create-setlist-button { padding: 7px 12px; font-size: 0.8rem; }
+    /* Контролы текущего сет-листа на мобильных (исключая горизонтальный дизайн) */
+    #setlists-panel:not(.horizontal-layout) .current-setlist-controls {
         margin-bottom: 8px;
         /* padding-bottom: 8px; */ /* Убедитесь, что это закомментировано или удалено, если не нужно */
         gap: 8px; /* Можно уменьшить отступ на мобильных */
     }
-    #setlists-panel .current-setlist-controls button {
+    #setlists-panel:not(.horizontal-layout) .current-setlist-controls button {
         font-size: 0.75em !important; /* Уменьшаем шрифт еще */
         padding: 6px 10px !important; /* Уменьшаем паддинги */
         max-width: calc(50% - 4px); /* Пересчитываем макс. ширину под новый gap */

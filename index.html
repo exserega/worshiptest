@@ -193,31 +193,86 @@
     </div>
 </main>
 
-<aside id="setlists-panel" class="side-panel setlists-panel">
+<aside id="setlists-panel" class="side-panel setlists-panel horizontal-layout">
     <button class="side-panel-close-btn icon-button simple" title="Закрыть панель"><i class="fas fa-chevron-left"></i></button>
-    <div class="list-section setlist-section">
-        <h3>Сет-листы</h3>
-        <div class="create-setlist-form">
-            <input type="text" id="new-setlist-name-input" placeholder="Название нового сет-листа...">
-            <button id="create-setlist-button" title="Создать сет-лист">Создать</button>
+    
+    <!-- Верхняя панель с заголовком и кнопкой создания -->
+    <div class="setlists-header">
+        <div class="header-left">
+            <h2 class="panel-main-title">Сет-листы</h2>
+            <span id="current-setlist-header-title" class="current-setlist-name">Выберите сет-лист</span>
         </div>
-        <div id="setlists-list-container" class="list-container setlists-list">
-            <div class="empty-message">Загрузка сет-листов...</div>
+        <div class="header-right">
+            <button id="create-setlist-button" class="create-setlist-btn" title="Создать новый сет-лист">
+                <i class="fas fa-plus"></i>
+                <span>Новый сет-лист</span>
+            </button>
         </div>
     </div>
 
-    <div class="list-section current-setlist-section">
-        <h3 id="current-setlist-title">Выберите сет-лист</h3>
-        <div class="current-setlist-controls" style="display: none;">
-            <button id="start-presentation-button" title="Начать презентацию для этого сет-листа">
-                <i class="fas fa-play"></i> Презентация
-            </button>
-            <button id="delete-setlist-button" title="Удалить этот сет-лист">
-                <i class="fas fa-trash-alt"></i> Удалить
-            </button>
+    <!-- Основной контент с двумя панелями -->
+    <div class="setlists-main-content">
+        <!-- Левая панель: список сет-листов -->
+        <div class="setlists-left-panel">
+            <div class="setlists-list-header">
+                <h3>Все сет-листы</h3>
+            </div>
+            <div id="setlists-list-container" class="setlists-list-content">
+                <div class="empty-message">Загрузка сет-листов...</div>
+            </div>
         </div>
-        <div id="current-setlist-songs-container" class="list-container current-setlist-songs">
-            <div class="empty-message">Сначала выберите сет-лист</div>
+
+        <!-- Правая панель: содержимое выбранного сет-листа -->
+        <div class="setlists-right-panel">
+            <div class="current-setlist-header">
+                <div class="current-setlist-title-section">
+                    <h3 id="current-setlist-title">Выберите сет-лист</h3>
+                    <div class="current-setlist-meta">
+                        <span id="current-setlist-count" class="songs-count">0 песен</span>
+                    </div>
+                </div>
+                <div class="current-setlist-controls" style="display: none;">
+                    <button id="start-presentation-button" class="setlist-action-btn primary" title="Начать презентацию для этого сет-листа">
+                        <i class="fas fa-play"></i>
+                        <span>Презентация</span>
+                    </button>
+                    <button id="delete-setlist-button" class="setlist-action-btn danger" title="Удалить этот сет-лист">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Удалить</span>
+                    </button>
+                </div>
+            </div>
+            <div id="current-setlist-songs-container" class="current-setlist-content">
+                <div class="empty-message">
+                    <div class="empty-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="empty-text">Выберите сет-лист из списка слева</div>
+                    <div class="empty-hint">или создайте новый сет-лист</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно создания сет-листа -->
+    <div id="create-setlist-modal" class="setlist-modal-overlay" style="display: none;">
+        <div class="setlist-modal">
+            <div class="setlist-modal-header">
+                <h3>Создать новый сет-лист</h3>
+                <button id="close-create-setlist-modal" class="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="setlist-modal-content">
+                <div class="input-group">
+                    <label for="new-setlist-name-input">Название сет-листа</label>
+                    <input type="text" id="new-setlist-name-input" placeholder="Введите название сет-листа..." maxlength="100">
+                </div>
+            </div>
+            <div class="setlist-modal-footer">
+                <button id="cancel-create-setlist" class="modal-btn secondary">Отмена</button>
+                <button id="confirm-create-setlist" class="modal-btn primary">Создать</button>
+            </div>
         </div>
     </div>
 </aside>

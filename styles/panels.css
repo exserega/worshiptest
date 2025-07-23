@@ -38,8 +38,8 @@
     z-index: 1000;
 }
 
-/* ЛЕВЫЕ ПАНЕЛИ */
-#setlists-panel,
+/* ЛЕВЫЕ ПАНЕЛИ (исключая горизонтальный дизайн) */
+#setlists-panel:not(.horizontal-layout),
 #my-list-panel {
     left: 0 !important;
     right: auto !important;
@@ -48,7 +48,7 @@
     border-left: none !important;
 }
 
-#setlists-panel.open,
+#setlists-panel.open:not(.horizontal-layout),
 #my-list-panel.open {
     transform: translateX(0) !important;
 }
@@ -93,7 +93,7 @@
     top: 8px;
     z-index: 10;
 }
-#setlists-panel .side-panel-close-btn,
+#setlists-panel:not(.horizontal-layout) .side-panel-close-btn,
 #my-list-panel .side-panel-close-btn {
     right: 8px;
 }
@@ -119,29 +119,29 @@
 #my-list-panel .list-section { margin-bottom: 0; } /* Убираем нижний отступ */
 #my-list-panel #favorites-list { max-height: none; flex-grow: 1; } /* Растягиваем на всю высоту */
 
-/* Секции внутри панели Сет-листов (#setlists-panel) */
-#setlists-panel .setlist-section { /* Секция со списком сет-листов */
+/* Секции внутри панели Сет-листов (исключая горизонтальный дизайн) */
+#setlists-panel:not(.horizontal-layout) .setlist-section { /* Секция со списком сет-листов */
     flex-shrink: 0; /* Не сжимается */
 }
-#setlists-panel .create-setlist-form { /* Добавили класс форме в HTML? Если нет, стилизуем по-другому */
+#setlists-panel:not(.horizontal-layout) .create-setlist-form { /* Добавили класс форме в HTML? Если нет, стилизуем по-другому */
     display: flex;
     gap: 10px;
     margin-bottom: 15px; /* Отступ после формы */
 }
-#setlists-panel #new-setlist-name-input {
+#setlists-panel:not(.horizontal-layout) #new-setlist-name-input {
     flex-grow: 1; /* Поле ввода занимает доступное место */
 }
-#setlists-panel #create-setlist-button {
+#setlists-panel:not(.horizontal-layout) #create-setlist-button {
     flex-shrink: 0; /* Кнопка не сжимается */
 }
 
-#setlists-panel .current-setlist-section { /* Секция с выбранным сет-листом */
+#setlists-panel:not(.horizontal-layout) .current-setlist-section { /* Секция с выбранным сет-листом */
     flex-grow: 1; /* Занимает оставшееся место */
     display: flex; flex-direction: column;
     border-top: 1px solid var(--border-color); margin-top: 15px; padding-top: 10px;
     min-height: 150px;
 }
-#setlists-panel #current-setlist-songs-container { /* Контейнер песен */
+#setlists-panel:not(.horizontal-layout) #current-setlist-songs-container { /* Контейнер песен */
     flex-grow: 1; max-height: none; /* Снимаем ограничение */
 }
 
@@ -150,8 +150,8 @@
 /* === СТИЛИ ДЛЯ КНОПОК "Презентация" и "Удалить" (ВЕРСИЯ 2) === */
 /* ================================================================ */
 
-/* Контейнер для кнопок "Презентация" и "Удалить" */
-#setlists-panel .current-setlist-controls {
+/* Контейнер для кнопок "Презентация" и "Удалить" (исключая горизонтальный дизайн) */
+#setlists-panel:not(.horizontal-layout) .current-setlist-controls {
     display: flex !important;      /* Включаем Flexbox (с !important для надежности) */
     flex-wrap: wrap;             /* Позволяем переноситься */
     gap: 10px;                   /* Отступ между кнопками */
@@ -162,8 +162,8 @@
     box-sizing: border-box;
 }
 
-/* Стили для САМИХ кнопок внутри этого контейнера */
-#setlists-panel .current-setlist-controls button {
+/* Стили для САМИХ кнопок внутри этого контейнера (исключая горизонтальный дизайн) */
+#setlists-panel:not(.horizontal-layout) .current-setlist-controls button {
     flex-grow: 0 !important;       /* Запрещаем растягиваться */
     flex-shrink: 0;                /* Запрещаем сжиматься */
     width: auto !important;        /* Ширина по контенту */
@@ -174,15 +174,15 @@
     /* Наследует border-radius и базовый градиент, если не переопределено ниже */
 }
 
-#setlists-panel .current-setlist-controls button i {
+#setlists-panel:not(.horizontal-layout) .current-setlist-controls button i {
     margin-right: 6px; /* Отступ между иконкой и текстом. Можете поменять на 5px или 8px по вкусу. */
     /* vertical-align: middle; */ /* Можно добавить для выравнивания иконки по центру текста, если нужно */
 }
 
 /* Стили для кнопки "Презентация" - использует базовые стили */
 
-/* Стили для кнопки "Удалить", чтобы выделить ее */
-#setlists-panel #delete-setlist-button {
+/* Стили для кнопки "Удалить", чтобы выделить ее (исключая горизонтальный дизайн) */
+#setlists-panel:not(.horizontal-layout) #delete-setlist-button {
     background: var(--danger-color) !important; /* Ярко-красный фон */
     border: none !important;                 /* Убираем границу, если есть */
     color: white !important;                 /* Белый текст */
@@ -190,7 +190,7 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
-#setlists-panel #delete-setlist-button:hover {
+#setlists-panel:not(.horizontal-layout) #delete-setlist-button:hover {
     background: color-mix(in srgb, var(--danger-color) 85%, black) !important; /* Чуть темнее при наведении */
     color: white !important;
     transform: none !important; /* Отключаем подпрыгивание, если не нужно */
