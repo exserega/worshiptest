@@ -348,11 +348,27 @@
     transform: translateY(-50%);
 }
 
+.bpm-control-btn.bpm-decrease:hover {
+    transform: translateY(-50%);
+}
+
+.bpm-control-btn.bpm-decrease:active {
+    transform: translateY(-50%) scale(0.98);
+}
+
 .bpm-control-btn.bpm-increase {
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.bpm-control-btn.bpm-increase:hover {
+    transform: translateY(-50%);
+}
+
+.bpm-control-btn.bpm-increase:active {
+    transform: translateY(-50%) scale(0.98);
 }
 
 .metronome-play-controls {
@@ -380,18 +396,26 @@
 
 .bpm-control-btn i {
     color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .bpm-control-btn:hover {
     background: var(--primary-color);
     color: var(--button-text-color);
     border-color: var(--primary-color);
-    transform: scale(1.1);
     box-shadow: 0 6px 20px var(--glow-color);
 }
 
+.bpm-control-btn:hover i {
+    color: var(--button-text-color);
+}
+
 .bpm-control-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
 }
 
 /* ======================================== */
@@ -832,6 +856,27 @@ body[data-theme="light"] .metronome-modal {
     
     .bpm-control-btn i {
         color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .bpm-control-btn.bpm-decrease:hover {
+        transform: translateY(-50%);
+    }
+    
+    .bpm-control-btn.bpm-decrease:active {
+        transform: translateY(-50%) scale(0.98);
+    }
+    
+    .bpm-control-btn.bpm-increase:hover {
+        transform: translateY(-50%);
+    }
+    
+    .bpm-control-btn.bpm-increase:active {
+        transform: translateY(-50%) scale(0.98);
     }
     
 
