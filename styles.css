@@ -51,13 +51,14 @@
     max-height: 800px;
     left: 50% !important;
     top: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    transform: translate(-150%, -50%) !important;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     border: 1px solid var(--border-color);
     background: var(--container-background-color);
     backdrop-filter: blur(10px);
     z-index: 1001;
+    transition: transform 0.3s ease;
 }
 
 #setlists-panel.horizontal-layout.open {
@@ -84,6 +85,17 @@
     border-color: var(--primary-color);
     color: var(--primary-color);
     transform: scale(1.05);
+}
+
+/* Кнопка закрытия на мобильных устройствах */
+@media (max-width: 768px) {
+    #setlists-panel.horizontal-layout .side-panel-close-btn {
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
 }
 
 /* Верхняя панель с заголовком */
@@ -616,37 +628,73 @@
     transform: none;
 }
 
+/* Адаптивность для планшетов */
+@media (max-width: 1024px) and (min-width: 769px) {
+    #setlists-panel.horizontal-layout {
+        width: 92vw;
+        height: 82vh;
+        transform: translate(-150%, -50%) !important;
+    }
+    
+    #setlists-panel.horizontal-layout.open {
+        transform: translate(-50%, -50%) !important;
+    }
+    
+    .setlists-left-panel {
+        flex: 0 0 250px;
+    }
+    
+    .create-setlist-btn {
+        padding: 9px 14px;
+        font-size: 0.85rem;
+    }
+}
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     #setlists-panel.horizontal-layout {
         width: 95vw;
-        height: 90vh;
+        height: 85vh;
         border-radius: 8px;
+        transform: translate(-150%, -50%) !important;
     }
     
+    #setlists-panel.horizontal-layout.open {
+        transform: translate(-50%, -50%) !important;
+    }
+    
+    /* Сохраняем горизонтальный макет даже на мобильных */
     .setlists-main-content {
-        flex-direction: column;
+        flex-direction: row; /* Остается горизонтальным */
     }
     
     .setlists-left-panel {
-        flex: 0 0 200px;
-        border-radius: 0;
+        flex: 0 0 140px; /* Уменьшаем ширину для мобильных */
+        border-radius: 0 0 0 8px;
     }
     
     .setlists-right-panel {
         flex: 1;
-        border-radius: 0;
+        border-radius: 0 0 8px 0;
     }
     
     .setlists-header {
-        padding: 16px 20px 12px;
+        padding: 12px 16px 8px;
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 8px;
     }
     
     .header-left {
         width: 100%;
+    }
+    
+    .panel-main-title {
+        font-size: 1.2rem;
+    }
+    
+    .current-setlist-name {
+        font-size: 0.8rem;
     }
     
     .header-right {
@@ -654,15 +702,61 @@
         justify-content: flex-end;
     }
     
+    .create-setlist-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .create-setlist-btn span {
+        display: none; /* Скрываем текст на мобильных, оставляем только иконку */
+    }
+    
+    .setlists-list-header h3 {
+        font-size: 0.9rem;
+    }
+    
     .current-setlist-header {
+        padding: 12px 16px;
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 8px;
+    }
+    
+    .current-setlist-title-section h3 {
+        font-size: 1rem;
     }
     
     .current-setlist-controls {
         width: 100%;
         justify-content: flex-start;
+        gap: 6px;
+    }
+    
+    .setlist-action-btn {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .setlist-action-btn span {
+        display: none; /* Скрываем текст, оставляем только иконки */
+    }
+    
+    .setlist-item {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .setlist-song-item {
+        padding: 8px 12px;
+        margin-bottom: 6px;
+    }
+    
+    .song-name {
+        font-size: 0.85rem;
+    }
+    
+    .song-meta {
+        font-size: 0.75rem;
     }
     
     .setlist-modal {
