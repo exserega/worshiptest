@@ -578,6 +578,46 @@ body[data-theme="light"] .bpm-slider-handle {
     border-color: var(--container-background-color);
 }
 
+/* Fix icon colors for better visibility in different themes */
+body[data-theme="light"] .metronome-play-button-large i {
+    color: var(--primary-color) !important;
+}
+
+body[data-theme="dark"] .metronome-play-button-large i {
+    color: var(--primary-color) !important;
+}
+
+body[data-theme="light"] .close-metronome-btn i {
+    color: var(--primary-color) !important;
+}
+
+body[data-theme="dark"] .close-metronome-btn i {
+    color: var(--primary-color) !important;
+}
+
+/* Fix button text colors for better visibility */
+body[data-theme="light"] .metronome-button,
+body[data-theme="light"] .metronome-play-toggle {
+    color: #333333 !important;
+}
+
+body[data-theme="dark"] .metronome-button,
+body[data-theme="dark"] .metronome-play-toggle {
+    color: #ffffff !important;
+}
+
+/* Fix close button hover states */
+body[data-theme="light"] .close-metronome-btn:hover i,
+body[data-theme="dark"] .close-metronome-btn:hover i {
+    color: white !important;
+}
+
+/* Fix play button hover states */
+body[data-theme="light"] .metronome-play-button-large:hover i,
+body[data-theme="dark"] .metronome-play-button-large:hover i {
+    color: var(--button-text-color) !important;
+}
+
 body[data-theme="light"] .handle-indicator {
     background: var(--container-background-color);
 }
