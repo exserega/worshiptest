@@ -301,32 +301,34 @@
         </div>
         
         <div class="metronome-main-controls">
-            <button class="bpm-control-btn bpm-decrease" id="metronome-bpm-decrease" title="Уменьшить BPM">
-                <i class="fas fa-minus"></i>
-            </button>
-            
-            <div class="bpm-slider-container">
-                <div class="bpm-slider-track">
-                    <div class="bpm-slider-progress" id="bpm-slider-progress"></div>
-                    <div class="bpm-slider-handle" id="bpm-slider-handle">
-                        <div class="handle-indicator"></div>
+            <div class="bmp-controls-row">
+                <button class="bpm-control-btn bpm-decrease" id="metronome-bpm-decrease" title="Уменьшить BPM">
+                    <i class="fas fa-minus"></i>
+                </button>
+                
+                <div class="bpm-slider-container">
+                    <div class="bpm-slider-track">
+                        <div class="bpm-slider-progress" id="bpm-slider-progress"></div>
+                        <div class="bpm-slider-handle" id="bpm-slider-handle">
+                            <div class="handle-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="bpm-range-labels">
+                        <span class="range-min">40</span>
+                        <span class="range-max">200</span>
                     </div>
                 </div>
-                <div class="bpm-range-labels">
-                    <span class="range-min">40</span>
-                    <span class="range-max">200</span>
-                </div>
+                
+                <button class="bpm-control-btn bpm-increase" id="metronome-bpm-increase" title="Увеличить BPM">
+                    <i class="fas fa-plus"></i>
+                </button>
             </div>
             
-            <button class="bpm-control-btn bpm-increase" id="metronome-bpm-increase" title="Увеличить BPM">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-        
-        <div class="metronome-play-section">
-            <button id="metronome-play-button" class="metronome-play-button-large" aria-label="Включить метроном">
-                <i class="fas fa-play"></i>
-            </button>
+            <div class="metronome-play-controls">
+                <button id="metronome-play-button" class="metronome-play-button-large" aria-label="Включить метроном">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

@@ -289,15 +289,16 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     font-size: 1rem;
+    flex-shrink: 0;
 }
 
 .close-metronome-btn:hover {
     background: var(--danger-color);
     color: white;
     border-color: var(--danger-color);
-    transform: scale(1.05);
+    transform: translateY(-50%) scale(1.05);
 }
 
 /* ======================================== */
@@ -306,10 +307,27 @@
 
 .metronome-main-controls {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 30px;
     margin-bottom: 40px;
+    width: 100%;
+}
+
+.bmp-controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.metronome-play-controls {
+    display: flex;
+    justify-content: center;
     width: 100%;
 }
 
@@ -662,13 +680,14 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .metronome-header {
-        margin-bottom: 20px;
-        gap: 5px;
-        height: 45px;
+        margin-bottom: 25px;
+        gap: 10px;
+        height: 50px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 0 40px; /* Добавляем отступы для кнопок по краям */
     }
     
     .metronome-time-signature {
@@ -699,6 +718,11 @@ body[data-theme="light"] .metronome-modal {
         width: 30px;
         height: 30px;
         font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+    
+    .close-metronome-btn:hover {
+        transform: translateY(-50%) scale(1.05);
     }
     
     .bpm-input-large {
@@ -708,25 +732,39 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .metronome-main-controls {
-        gap: 10px;
-        margin-bottom: 20px;
+        gap: 25px;
+        margin-bottom: 30px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        width: 100%;
+        padding: 0 20px;
     }
     
-    .bpm-slider-container {
-        max-width: 250px;
+    /* First row: Slider with Plus/Minus buttons */
+    .bmp-controls-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
         width: 100%;
+        max-width: 280px;
         order: 1;
-        margin-bottom: 15px;
+        margin: 0 auto;
     }
     
     .bpm-control-btn {
         width: 45px;
         height: 45px;
         font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    
+    .bpm-slider-container {
+        flex: 1;
+        max-width: 200px;
+        margin: 0;
     }
     
     .bpm-slider-track {
@@ -739,18 +777,17 @@ body[data-theme="light"] .metronome-modal {
         height: 24px;
     }
     
+    /* Second row: Play button */
+    .metronome-play-controls {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        order: 2;
+    }
+    
     .metronome-play-button-large {
         width: 70px;
         height: 70px;
         font-size: 1.8rem;
-    }
-    
-    /* Arrange controls in mobile layout: slider first, then buttons */
-    .bmp-controls-row {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        align-items: center;
-        order: 2;
     }
 }
