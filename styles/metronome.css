@@ -379,7 +379,7 @@
 /* BPM Slider                               */
 /* ======================================== */
 
-.bmp-controls-row .bpm-slider-container {
+.bpm-slider-container {
     flex: 1;
     max-width: 250px;
     margin: 0 70px;
@@ -639,10 +639,10 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .bpm-slider-container {
-        max-width: 200px;
+        max-width: 180px;
         width: 100%;
         flex: 1;
-        margin: 0 15px;
+        margin: 0 55px;
     }
     
     .bpm-slider-handle {
@@ -794,11 +794,7 @@ body[data-theme="light"] .metronome-modal {
         flex-shrink: 0;
     }
     
-    .bmp-controls-row .bpm-slider-container {
-        flex: 1;
-        max-width: 180px;
-        margin: 0 55px;
-    }
+
     
     .bpm-slider-track {
         height: 10px;

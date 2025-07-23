@@ -43,10 +43,28 @@ class MetronomeController {
 
     init() {
         console.log('Initializing new metronome v4.0...');
-        this.setupEventListeners();
-        this.updateDisplay();
-        this.updateSliderVisuals();
-        console.log('Metronome initialized successfully');
+        
+        // Check if all required elements exist
+        const missingElements = [];
+        for (const [key, element] of Object.entries(this.elements)) {
+            if (!element) {
+                missingElements.push(key);
+            }
+        }
+        
+        if (missingElements.length > 0) {
+            console.error('Missing metronome elements:', missingElements);
+            return;
+        }
+        
+        try {
+            this.setupEventListeners();
+            this.updateDisplay();
+            this.updateSliderVisuals();
+            console.log('Metronome initialized successfully');
+        } catch (error) {
+            console.error('Error initializing metronome:', error);
+        }
     }
 
     setupEventListeners() {
