@@ -246,13 +246,8 @@ class MetronomeController {
             this.elements.overlay.offsetHeight;
             this.elements.overlay.classList.add('active');
             
-            // Focus on BPM input for keyboard control
-            if (this.elements.bpmInput) {
-                setTimeout(() => {
-                    this.elements.bpmInput.focus();
-                    this.elements.bpmInput.select();
-                }, 100);
-            }
+            // Don't auto-focus on BPM input to prevent keyboard popup on mobile
+            // User can manually tap if they want to edit
         }
     }
 

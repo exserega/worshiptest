@@ -321,7 +321,7 @@
     justify-content: center;
     gap: 20px;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
     position: relative;
     height: 60px;
@@ -353,13 +353,14 @@
     border: 3px solid var(--border-color);
     border-radius: 50%;
     background: var(--container-background-color);
-    color: var(--text-color);
+    color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 1.5rem;
+    font-weight: bold;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -381,7 +382,7 @@
 
 .bpm-slider-container {
     flex: 1;
-    max-width: 250px;
+    max-width: 350px;
     margin: 0 70px;
     display: flex;
     flex-direction: column;
@@ -639,7 +640,7 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .bpm-slider-container {
-        max-width: 180px;
+        max-width: 220px;
         width: 100%;
         flex: 1;
         margin: 0 55px;
@@ -766,7 +767,7 @@ body[data-theme="light"] .metronome-modal {
         justify-content: center;
         gap: 15px;
         width: 100%;
-        max-width: 300px;
+        max-width: 320px;
         order: 1;
         margin: 0 auto;
         position: relative;
@@ -791,6 +792,8 @@ body[data-theme="light"] .metronome-modal {
         width: 45px;
         height: 45px;
         font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--primary-color);
         flex-shrink: 0;
     }
     
