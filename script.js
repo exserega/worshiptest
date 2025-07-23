@@ -7,7 +7,7 @@ import { MIN_FONT_SIZE, SWIPE_THRESHOLD, SWIPE_VERTICAL_LIMIT } from './constant
 import * as api from './api.js';
 import * as core from './core.js';
 import * as ui from './ui.js';
-import * as metronomeUI from './metronome-ui.js';
+import * as metronomeUI from './metronome.js';
 
 // --- HANDLERS ---
 
@@ -449,7 +449,7 @@ function setupEventListeners() {
         ui.applyTheme(newTheme);
     });
 
-    // --- Метроном обрабатывается в metronome-ui.js ---
+    // --- Метроном обрабатывается в metronome.js ---
 
     // --- Боковые панели ---
     ui.toggleSetlistsButton.addEventListener('click', async () => {

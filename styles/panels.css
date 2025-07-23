@@ -313,8 +313,8 @@
     background: none; border: none; box-shadow: none; padding: 5px; margin: 0;
     font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
     justify-content: center; flex-grow: 1;
-    /* !!! ИЗМЕНЕНИЕ: Адаптация под 3 кнопки !!! */
-    max-width: 33.33%;
+    /* !!! ИЗМЕНЕНИЕ: Адаптация под 4 секции (3 кнопки + метроном) !!! */
+    max-width: 25%;
     height: 100%; cursor: pointer;
     transition: background-color 0.2s ease; border-radius: 0;
     background-image: none !important; position: relative;
@@ -385,9 +385,14 @@ body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button.active span {
     to { transform: rotate(360deg); }
 }
 
-/* Разделительные линии для средней кнопки */
-#toggle-my-list { /* Новая средняя кнопка */
+/* Разделительные линии для кнопок */
+#toggle-my-list { /* Средняя кнопка */
     border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    transition: border-color 0.3s ease;
+}
+
+#toggle-repertoire { /* Третья кнопка */
     border-right: 1px solid var(--border-color);
     transition: border-color 0.3s ease;
 }

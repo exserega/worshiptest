@@ -6,8 +6,7 @@
     <title>Agape Worship</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Round Slider CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css">
+
   <link rel="manifest" href="manifest.json">  </head>
 <body>
 
@@ -172,76 +171,6 @@
      </section>
 
     <div class="controls-footer">
-        <div class="metronome-panel">
-            <!-- Top Row: Time Signature, BPM Display, Play Button -->
-            <div class="metronome-header">
-                <div class="time-signature-display">
-                    <select id="time-signature" class="time-signature-select">
-                        <option value="4">4/4</option>
-                        <option value="3">3/4</option>
-                        <option value="6">6/8</option>
-                        <option value="2">2/4</option>
-                    </select>
-                </div>
-                
-                <div class="bpm-display">
-                    <input type="number" id="bpm-input" class="bpm-input" min="40" max="200" step="1" value="120">
-                </div>
-                
-                <button id="metronome-button" class="metronome-play-button" aria-label="Включить метроном">
-                    <i class="fas fa-play"></i>
-                </button>
-            </div>
-            
-            <!-- Bottom Row: Semicircle Slider with Control Buttons -->
-            <div class="metronome-controls">
-                <button class="bpm-control-btn bpm-decrease" id="bpm-decrease" title="Уменьшить BPM">
-                    <i class="fas fa-minus"></i>
-                </button>
-                
-                <div class="bpm-slider-container">
-                    <div class="professional-knob-container" id="professional-knob-container">
-                        <svg class="professional-knob-svg" width="160" height="80" viewBox="0 0 160 80">
-                            <!-- Background track -->
-                            <path id="knob-track" 
-                                  d="M 20 60 A 40 40 0 0 1 140 60" 
-                                  stroke="#2a2a2a" 
-                                  stroke-width="8" 
-                                  stroke-linecap="round" 
-                                  fill="none"/>
-                            
-                            <!-- Progress arc -->
-                            <path id="knob-progress" 
-                                  d="M 20 60 A 40 40 0 0 1 80 20" 
-                                  stroke="var(--primary-color)" 
-                                  stroke-width="8" 
-                                  stroke-linecap="round" 
-                                  fill="none"/>
-                            
-                            <!-- Center knob -->
-                            <circle id="knob-center" 
-                                    cx="80" 
-                                    cy="60" 
-                                    r="18" 
-                                    fill="var(--container-background-color)" 
-                                    stroke="var(--primary-color)" 
-                                    stroke-width="2"/>
-                            
-                            <!-- Indicator dot -->
-                            <circle id="knob-indicator" 
-                                    cx="80" 
-                                    cy="45" 
-                                    r="3" 
-                                    fill="var(--primary-color)"/>
-                        </svg>
-                    </div>
-                </div>
-                
-                <button class="bpm-control-btn bpm-increase" id="bpm-increase" title="Увеличить BPM">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-        </div>
         <a id="holychords-button" href="#" target="_blank">Holychords</a>
     </div>
 </main>
@@ -330,6 +259,60 @@
         </div>
 </div>
 
+<!-- Metronome Overlay -->
+<div id="metronome-overlay" class="metronome-overlay">
+    <div class="metronome-modal">
+        <div class="metronome-header">
+            <div class="metronome-time-signature">
+                <select id="metronome-time-signature" class="time-signature-select">
+                    <option value="4">4/4</option>
+                    <option value="3">3/4</option>
+                    <option value="6">6/8</option>
+                    <option value="2">2/4</option>
+                </select>
+            </div>
+            
+            <div class="metronome-bpm-display">
+                <input type="number" id="metronome-bpm-input" class="bpm-input-large" min="40" max="200" step="1" value="120">
+                <span class="bpm-label">BPM</span>
+            </div>
+            
+            <button id="close-metronome-overlay" class="close-metronome-btn" title="Закрыть метроном">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="metronome-main-controls">
+            <button class="bpm-control-btn bpm-decrease" id="metronome-bpm-decrease" title="Уменьшить BPM">
+                <i class="fas fa-minus"></i>
+            </button>
+            
+            <div class="bpm-slider-container">
+                <div class="bpm-slider-track">
+                    <div class="bpm-slider-progress" id="bpm-slider-progress"></div>
+                    <div class="bpm-slider-handle" id="bpm-slider-handle">
+                        <div class="handle-indicator"></div>
+                    </div>
+                </div>
+                <div class="bpm-range-labels">
+                    <span class="range-min">40</span>
+                    <span class="range-max">200</span>
+                </div>
+            </div>
+            
+            <button class="bpm-control-btn bpm-increase" id="metronome-bpm-increase" title="Увеличить BPM">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        
+        <div class="metronome-play-section">
+            <button id="metronome-play-button" class="metronome-play-button-large" aria-label="Включить метроном">
+                <i class="fas fa-play"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
 <div id="loading-indicator">Загрузка...</div>
 
 <nav class="mobile-bottom-nav" role="navigation" aria-label="Основная навигация">
@@ -345,15 +328,21 @@
         <i class="fas fa-microphone" aria-hidden="true"></i>
         <span>Репертуар</span>
     </button>
+    <div class="metronome-nav-section">
+        <button id="open-metronome-overlay" class="metronome-nav-button" aria-label="Открыть метроном" title="Метроном">
+            <i class="fas fa-drum" aria-hidden="true"></i>
+            <span>Метроном</span>
+        </button>
+        <div class="metronome-nav-info">
+            <span id="nav-bpm-display" class="nav-bpm-value">NA</span>
+            <button id="nav-metronome-toggle" class="nav-metronome-play" aria-label="Включить/выключить метроном" title="Включить/выключить метроном">
+                <i class="fas fa-play"></i>
+            </button>
+        </div>
+    </div>
 </nav>
 
-  <!-- No external libraries needed for professional knob -->
-  
-  <!-- Ready flag for metronome -->
-  <script>
-    console.log('Professional knob ready to initialize...');
-    window.librariesReady = true; // No external libraries needed
-  </script>
+  <!-- New Metronome Module - No external libraries needed -->
   
   <script type="module" src="script.js"></script>
 
