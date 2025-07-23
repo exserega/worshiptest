@@ -195,8 +195,14 @@ class MetronomeController {
         const percentage = Math.max(0, Math.min(1, currentX / trackWidth));
         const newBPM = Math.round(40 + (160 * percentage));
         
-        // Update display in real-time
-        this.updateBPMDisplay(newBPM, true);
+        // Update BPM immediately during drag - this is the key fix
+        this.currentBPM = newBPM;
+        
+        // Update all displays in real-time
+        if (this.elements.bpmInput) {
+            this.elements.bpmInput.value = this.currentBPM;
+        }
+        this.updateControlBarDisplay();
         this.updateSliderVisuals();
     }
 
