@@ -49,20 +49,20 @@
     max-width: 1200px;
     height: 80vh;
     max-height: 800px;
-    left: 50% !important;
+    left: 0 !important;
     top: 50% !important;
-    transform: translate(-150%, -50%) !important;
+    transform: translateY(-50%) translateX(-100%) !important;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     border: 1px solid var(--border-color);
     background: var(--container-background-color);
     backdrop-filter: blur(10px);
     z-index: 1001;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease-in-out;
 }
 
 #setlists-panel.horizontal-layout.open {
-    transform: translate(-50%, -50%) !important;
+    transform: translateY(-50%) translateX(5%) !important;
 }
 
 /* Кнопка закрытия для горизонтальной панели */
@@ -633,11 +633,11 @@
     #setlists-panel.horizontal-layout {
         width: 92vw;
         height: 82vh;
-        transform: translate(-150%, -50%) !important;
+        transform: translateY(-50%) translateX(-100%) !important;
     }
     
     #setlists-panel.horizontal-layout.open {
-        transform: translate(-50%, -50%) !important;
+        transform: translateY(-50%) translateX(4%) !important;
     }
     
     .setlists-left-panel {
@@ -656,11 +656,11 @@
         width: 95vw;
         height: 85vh;
         border-radius: 8px;
-        transform: translate(-150%, -50%) !important;
+        transform: translateY(-50%) translateX(-100%) !important;
     }
     
     #setlists-panel.horizontal-layout.open {
-        transform: translate(-50%, -50%) !important;
+        transform: translateY(-50%) translateX(2.5%) !important;
     }
     
     /* Сохраняем горизонтальный макет даже на мобильных */
