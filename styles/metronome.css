@@ -186,17 +186,21 @@
 }
 
 .time-signature-select {
-    padding: 12px 16px;
+    padding: 16px 20px;
     border: 2px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 12px;
     background: var(--container-background-color);
     color: var(--text-color);
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 1.6rem;
+    font-weight: 800;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
-    min-width: 80px;
+    min-width: 100px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .time-signature-select:focus {
@@ -525,6 +529,13 @@ body[data-theme="light"] .metronome-modal {
         order: 1;
     }
     
+    .time-signature-select {
+        padding: 14px 18px;
+        font-size: 1.4rem;
+        min-width: 90px;
+        height: 55px;
+    }
+    
     .metronome-bpm-display {
         order: 2;
         width: 100%;
@@ -630,6 +641,13 @@ body[data-theme="light"] .metronome-modal {
     .metronome-time-signature {
         order: 1;
         align-self: flex-start;
+    }
+    
+    .time-signature-select {
+        padding: 12px 16px;
+        font-size: 1.3rem;
+        min-width: 85px;
+        height: 50px;
     }
     
     .metronome-bpm-display {
