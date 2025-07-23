@@ -284,14 +284,24 @@
     border: 2px solid var(--border-color);
     border-radius: 50%;
     background: var(--container-background-color);
-    color: var(--text-color);
+    color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
     flex-shrink: 0;
+    line-height: 1;
+}
+
+.close-metronome-btn i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .close-metronome-btn:hover {
@@ -299,6 +309,10 @@
     color: white;
     border-color: var(--danger-color);
     transform: translateY(-50%);
+}
+
+.close-metronome-btn:hover i {
+    color: white;
 }
 
 /* ======================================== */
@@ -353,7 +367,6 @@
     border: 3px solid var(--border-color);
     border-radius: 50%;
     background: var(--container-background-color);
-    color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -362,6 +375,11 @@
     font-size: 1.5rem;
     font-weight: bold;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    line-height: 1;
+}
+
+.bpm-control-btn i {
+    color: var(--primary-color);
 }
 
 .bpm-control-btn:hover {
@@ -383,7 +401,7 @@
 .bpm-slider-container {
     flex: 1;
     max-width: 350px;
-    margin: 0 70px;
+    margin: 0 75px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -643,7 +661,7 @@ body[data-theme="light"] .metronome-modal {
         max-width: 220px;
         width: 100%;
         flex: 1;
-        margin: 0 55px;
+        margin: 0 57px;
     }
     
     .bpm-slider-handle {
@@ -733,14 +751,29 @@ body[data-theme="light"] .metronome-modal {
         right: 0;
         top: 50%;
         transform: translateY(-50%);
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: var(--primary-color);
         flex-shrink: 0;
+        line-height: 1;
+    }
+    
+    .close-metronome-btn i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
     }
     
     .close-metronome-btn:hover {
         transform: translateY(-50%);
+    }
+    
+    .close-metronome-btn:hover i {
+        color: white;
     }
     
     .bpm-input-large {
@@ -793,8 +826,12 @@ body[data-theme="light"] .metronome-modal {
         height: 45px;
         font-size: 1.2rem;
         font-weight: bold;
-        color: var(--primary-color);
         flex-shrink: 0;
+        line-height: 1;
+    }
+    
+    .bpm-control-btn i {
+        color: var(--primary-color);
     }
     
 
