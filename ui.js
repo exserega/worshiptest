@@ -813,21 +813,9 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
         currentSetlistName.textContent = setlist.name;
     }
 
-    // Показываем кнопки действий для сет-листа
-    if (setlistActions) {
-        setlistActions.style.display = 'flex';
-    }
-
     // Показываем кнопки действий внизу
     if (bottomActions) {
         bottomActions.style.display = 'flex';
-    }
-
-    // Обновляем счетчик песен
-    const songCount = setlist.songs ? setlist.songs.length : 0;
-    if (songsCount) {
-        songsCount.textContent = `${songCount} ${getSongCountText(songCount)}`;
-        songsCount.style.display = songCount > 0 ? 'block' : 'none';
     }
 
     // Отмечаем выбранный сет-лист в dropdown

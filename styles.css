@@ -35,7 +35,7 @@
 @import url('./styles/responsive.css');
 
 /* ======================================== */
-/* КОМПАКТНАЯ DROPDOWN СТРУКТУРА СЕТ-ЛИСТОВ */
+/* МИНИМАЛИСТИЧНАЯ СТРУКТУРА СЕТ-ЛИСТОВ */
 /* ======================================== */
 
 /* Переопределение базовых стилей панели сет-листов */
@@ -47,50 +47,13 @@
     overflow: hidden !important;
 }
 
-/* Заголовок панели */
-.panel-header {
-    padding: 3% 4% 2%;
+/* Минималистичный селектор сет-листа */
+.setlist-selector {
+    padding: 15px;
     border-bottom: 1px solid var(--border-color);
     background: var(--container-background-color);
     flex-shrink: 0;
-}
-
-.panel-title {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-color);
-    text-align: center;
-}
-
-/* Секция выбора сет-листа */
-.setlist-selector-section {
-    padding: 4% 4% 3%;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--container-background-color);
-    flex-shrink: 0;
-}
-
-/* Инструкция */
-.selector-instruction {
-    font-size: 0.9rem;
-    color: var(--label-color);
-    margin-bottom: 3%;
-    text-align: center;
-    font-weight: 500;
-}
-
-/* Контейнер для dropdown и кнопки создания */
-.selector-controls {
-    display: flex;
-    gap: 3%;
-    width: 100%;
-}
-
-/* Dropdown кнопка */
-.setlist-dropdown-container {
     position: relative;
-    flex: 1;
 }
 
 .setlist-dropdown-btn {
@@ -98,17 +61,27 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4% 5%;
+    padding: 12px 15px;
     background: var(--background-color);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 0.95rem;
+    border-radius: 6px;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--text-color);
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: 44px;
+    min-height: 48px;
     box-sizing: border-box;
+}
+
+.setlist-dropdown-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--hover-color);
+}
+
+.setlist-dropdown-btn.active {
+    border-color: var(--primary-color);
+    background: var(--hover-color);
 }
 
 .setlist-dropdown-btn::before {
@@ -156,16 +129,16 @@
     right: 0;
     z-index: 1000;
     background: var(--container-background-color);
-    border: 2px solid var(--primary-color);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px color-mix(in srgb, var(--primary-color) 20%, rgba(0,0,0,0.1));
-    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(-5px);
+    transition: all 0.2s ease;
     max-height: 300px;
     overflow: hidden;
+    margin-top: 2px;
 }
 
 .setlist-dropdown-menu.show {
@@ -235,7 +208,7 @@
 
 /* Список сет-листов в dropdown */
 .dropdown-list {
-    max-height: 200px;
+    max-height: 280px;
     overflow-y: auto;
     padding: 8px;
 }
@@ -244,16 +217,25 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
-    margin-bottom: 4px;
-    background: var(--background-color);
-    border: 1px solid transparent;
-    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 2px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 0.95rem;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.dropdown-list .setlist-item:hover {
+    background: var(--hover-color);
+}
+
+.dropdown-list .setlist-item.selected {
+    background: var(--primary-color);
+    color: var(--button-text-color);
+    font-weight: 600;
 }
 
 .dropdown-list .setlist-item::before {
@@ -354,66 +336,31 @@
     background: linear-gradient(135deg, var(--hover-color), color-mix(in srgb, var(--hover-color) 95%, var(--primary-color)));
 }
 
-/* Контент с песнями */
-.current-setlist-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 4%;
-    min-height: 0;
-    overflow: hidden;
-}
-
-.songs-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 4%;
-    padding-bottom: 3%;
-    border-bottom: 1px solid var(--border-color);
-    flex-direction: column;
-    gap: 2%;
-    flex-shrink: 0;
-}
-
-.songs-header h3 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-color);
-    text-align: center;
-}
-
-.songs-count {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--primary-color) 15%, transparent), color-mix(in srgb, var(--primary-color) 8%, transparent));
-    color: var(--primary-color);
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border: 1px solid color-mix(in srgb, var(--primary-color) 30%, transparent);
-}
-
 /* Список песен */
 .songs-list {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 4%;
+    padding: 15px;
     min-height: 0;
 }
 
 .songs-list .setlist-song-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 3% 4%;
-    margin-bottom: 2%;
+    padding: 12px 15px;
+    margin-bottom: 8px;
     background: var(--container-background-color);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 4px;
     transition: all 0.2s ease;
     cursor: pointer;
-    position: relative;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.songs-list .setlist-song-item:hover {
+    background: var(--hover-color);
+    border-color: var(--primary-color);
 }
 
 .songs-list .setlist-song-item::before {
@@ -523,25 +470,40 @@
 /* Кнопки действий внизу */
 .bottom-actions {
     display: flex;
-    gap: 3%;
-    padding: 4% 0 0;
+    gap: 8px;
+    padding: 15px;
     border-top: 1px solid var(--border-color);
     flex-shrink: 0;
     margin-top: auto;
+    background: var(--container-background-color);
 }
 
 .bottom-actions .action-btn {
     flex: 1;
-    justify-content: center;
-    padding: 4% 2%;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border-radius: 6px;
-    min-height: 44px;
     display: flex;
     align-items: center;
-    text-align: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--background-color);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 48px;
     box-sizing: border-box;
+}
+
+.bottom-actions .action-btn:hover {
+    background: var(--hover-color);
+    border-color: var(--primary-color);
+}
+
+.bottom-actions .action-btn i {
+    font-size: 1rem;
 }
 
 /* Модальное окно создания сет-листа */
@@ -700,7 +662,7 @@
     font-weight: 500;
 }
 
-/* Специальная адаптация для смартфонов до 600px */
+/* Мобильная адаптация для смартфонов до 600px */
 @media (max-width: 600px) {
     /* Переопределение базовых стилей панели */
     #setlists-panel {
@@ -715,120 +677,59 @@
         transform: translateX(0) !important;
     }
     
-    /* Заголовок панели */
-    .panel-header {
-        padding: 4% 4% 3%;
-        background: var(--primary-color);
-        color: var(--button-text-color);
-    }
-    
-    .panel-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--button-text-color);
-    }
-    
-    /* Инструкция */
-    .selector-instruction {
-        font-size: 0.85rem;
-        margin-bottom: 4%;
-        color: var(--text-color);
-    }
-    
-    /* Контролы селектора */
-    .selector-controls {
-        gap: 4%;
+    /* Селектор */
+    .setlist-selector {
+        padding: 20px 15px;
     }
     
     .setlist-dropdown-btn {
-        padding: 4%;
-        font-size: 0.9rem;
-        min-height: 48px;
-    }
-    
-    .create-new-setlist-btn {
-        min-width: 48px;
-        min-height: 48px;
-        padding: 0;
-        font-size: 1.1rem;
-    }
-    
-    /* Контент с песнями */
-    .current-setlist-content {
-        padding: 4% 4% 6%;
-    }
-    
-    .songs-header h3 {
-        font-size: 0.95rem;
-    }
-    
-    .songs-count {
-        font-size: 0.8rem;
-        padding: 2% 4%;
-    }
-    
-    /* Список песен */
-    .songs-list .setlist-song-item {
-        padding: 4%;
-        margin-bottom: 3%;
-        border-radius: 8px;
-    }
-    
-    .song-name {
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-    
-    .song-meta {
-        gap: 8px;
-        font-size: 0.75rem;
-    }
-    
-    .song-key {
-        padding: 2% 3%;
-        font-size: 0.7rem;
-        border-radius: 4px;
-    }
-    
-    /* Кнопки действий внизу */
-    .bottom-actions {
-        padding: 5% 0 0;
-        gap: 4%;
-        border-top: 2px solid var(--border-color);
-    }
-    
-    .bottom-actions .action-btn {
-        min-height: 50px;
-        padding: 4% 3%;
-        font-size: 0.85rem;
-        font-weight: 700;
-        border-radius: 8px;
-    }
-    
-    .bottom-actions .action-btn.primary {
-        background: var(--primary-color);
-    }
-    
-    .bottom-actions .action-btn.success {
-        background: #10b981;
+        padding: 15px;
+        font-size: 1rem;
+        min-height: 52px;
     }
     
     /* Dropdown меню */
     .setlist-dropdown-menu {
-        max-height: 50vh;
-        border-radius: 8px;
+        max-height: 40vh;
     }
     
     .dropdown-list {
-        max-height: 40vh;
-        padding: 3%;
+        padding: 5px;
     }
     
     .dropdown-list .setlist-item {
-        padding: 4%;
-        margin-bottom: 2%;
+        padding: 15px 12px;
+        font-size: 1rem;
+    }
+    
+    /* Список песен */
+    .songs-list {
+        padding: 10px 15px;
+    }
+    
+    .songs-list .setlist-song-item {
+        padding: 15px 12px;
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+    
+    /* Кнопки действий внизу */
+    .bottom-actions {
+        padding: 20px 15px;
+        gap: 10px;
+        border-top: 2px solid var(--border-color);
+    }
+    
+    .bottom-actions .action-btn {
+        min-height: 52px;
+        padding: 15px 8px;
         font-size: 0.9rem;
-        border-radius: 6px;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .bottom-actions .action-btn i {
+        font-size: 1.2rem;
     }
     
     /* Модальное окно */
@@ -840,8 +741,10 @@
     
     /* Empty message */
     .empty-message {
-        padding: 8% 4%;
-        font-size: 0.85rem;
+        padding: 40px 20px;
+        font-size: 1rem;
+        color: var(--label-color);
+        text-align: center;
     }
 }
 
