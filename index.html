@@ -263,23 +263,154 @@
     <!-- Кнопки действий внизу (удалены, перенесены наверх) -->
 
     <!-- Модальное окно для создания нового сет-листа -->
-    <div id="create-setlist-modal" class="create-setlist-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Создать новый сет-лист</h3>
-                <button id="close-create-modal" class="close-modal-btn">
+    <div id="create-setlist-modal" class="modern-overlay" style="display: none;">
+        <div class="overlay-content create-setlist-content">
+            <div class="overlay-header">
+                <div class="header-info">
+                    <i class="fas fa-plus-circle"></i>
+                    <div>
+                        <h3>Создать сет-лист</h3>
+                        <p>Шаг 1 из 2: Название</p>
+                    </div>
+                </div>
+                <button id="close-create-modal" class="overlay-close-btn">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="input-group">
-                    <label for="new-setlist-name-input">Название сет-листа</label>
-                    <input type="text" id="new-setlist-name-input" placeholder="Введите название...">
+            
+            <div class="overlay-body">
+                <div class="input-section">
+                    <label for="new-setlist-name-input" class="modern-label">
+                        <i class="fas fa-list"></i>
+                        Название сет-листа
+                    </label>
+                    <input 
+                        type="text" 
+                        id="new-setlist-name-input" 
+                        class="modern-input"
+                        placeholder="Например: Воскресное служение, Молодежка..."
+                        maxlength="50"
+                    >
+                    <div class="input-hint">
+                        <span id="name-char-count">0</span>/50 символов
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="cancel-create-setlist" class="btn secondary">Отмена</button>
-                <button id="create-setlist-button" class="btn primary">Создать</button>
+            
+            <div class="overlay-footer">
+                <button id="cancel-create-setlist" class="btn-modern secondary">
+                    <i class="fas fa-times"></i>
+                    <span>Отмена</span>
+                </button>
+                <button id="create-setlist-button" class="btn-modern primary">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>Продолжить</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения добавления песен -->
+    <div id="add-songs-confirm-modal" class="modern-overlay" style="display: none;">
+        <div class="overlay-content confirm-content">
+            <div class="overlay-header">
+                <div class="header-info">
+                    <i class="fas fa-music"></i>
+                    <div>
+                        <h3>Добавить песни?</h3>
+                        <p>Сет-лист "<span id="created-setlist-name"></span>" создан</p>
+                    </div>
+                </div>
+                <button id="close-confirm-modal" class="overlay-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="overlay-body">
+                <div class="confirm-section">
+                    <div class="confirm-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="confirm-text">
+                        <h4>Хотите добавить песни сейчас?</h4>
+                        <p>Вы можете добавить песни в сет-лист прямо сейчас или сделать это позже</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overlay-footer">
+                <button id="skip-add-songs" class="btn-modern secondary">
+                    <i class="fas fa-check"></i>
+                    <span>Пока нет</span>
+                </button>
+                <button id="start-add-songs" class="btn-modern primary">
+                    <i class="fas fa-plus"></i>
+                    <span>Добавить песни</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Полноэкранный оверлей для добавления песен -->
+    <div id="add-songs-overlay" class="fullscreen-overlay" style="display: none;">
+        <div class="fullscreen-content">
+            <div class="fullscreen-header">
+                <div class="header-left">
+                    <button id="close-add-songs" class="overlay-close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="header-info">
+                        <h3>Добавить песни</h3>
+                        <p>в сет-лист "<span id="target-setlist-name"></span>"</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="added-counter">
+                        <i class="fas fa-music"></i>
+                        <span id="added-songs-count">0</span> добавлено
+                    </div>
+                    <button id="finish-adding-songs" class="btn-modern primary">
+                        <i class="fas fa-check"></i>
+                        <span>Готово</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="fullscreen-body">
+                <div class="search-section">
+                    <div class="search-container">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input 
+                                type="text" 
+                                id="song-search-input" 
+                                class="search-input"
+                                placeholder="Поиск песен по названию..."
+                            >
+                            <button id="clear-search" class="clear-search-btn" style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="search-filters">
+                            <select id="category-filter" class="filter-select">
+                                <option value="">Все категории</option>
+                            </select>
+                            <button id="show-added-only" class="filter-btn">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Показать добавленные</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-section">
+                    <div id="songs-grid" class="songs-grid">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Загрузка песен...</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

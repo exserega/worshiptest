@@ -915,42 +915,528 @@
     color: var(--text-color) !important;
 }
 
-/* Модальное окно создания сет-листа */
-.create-setlist-modal {
+/* === СОВРЕМЕННЫЕ ОВЕРЛЕИ === */
+
+/* Базовые стили для оверлеев */
+.modern-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-    z-index: 10000;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2000;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.create-setlist-modal.show {
+.modern-overlay.show {
     opacity: 1;
     visibility: visible;
 }
 
-.modal-content {
+.overlay-content {
     background: var(--container-background-color);
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--border-color);
-    max-width: 400px;
     width: 90%;
-    transform: scale(0.9);
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    transform: scale(0.9) translateY(20px);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border-color);
 }
 
-.create-setlist-modal.show .modal-content {
-    transform: scale(1);
+.modern-overlay.show .overlay-content {
+    transform: scale(1) translateY(0);
+}
+
+/* Заголовок оверлея */
+.overlay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary-color) 8%, var(--container-background-color)), 
+        var(--container-background-color));
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-info i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.header-info h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.header-info p {
+    margin: 2px 0 0 0;
+    font-size: 0.875rem;
+    color: var(--label-color);
+    opacity: 0.8;
+}
+
+.overlay-close-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--hover-color);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: var(--text-color);
+}
+
+.overlay-close-btn:hover {
+    background: var(--danger-color);
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Тело оверлея */
+.overlay-body {
+    padding: 24px;
+}
+
+/* Секция ввода */
+.input-section {
+    margin-bottom: 24px;
+}
+
+.modern-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 8px;
+}
+
+.modern-label i {
+    color: var(--primary-color);
+}
+
+.modern-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.modern-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+.input-hint {
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: var(--label-color);
+    text-align: right;
+}
+
+/* Секция подтверждения */
+.confirm-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+}
+
+.confirm-icon {
+    flex-shrink: 0;
+}
+
+.confirm-icon i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+.confirm-text h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.confirm-text p {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--label-color);
+    line-height: 1.5;
+}
+
+/* Подвал оверлея */
+.overlay-footer {
+    display: flex;
+    gap: 12px;
+    padding: 20px 24px;
+    background: color-mix(in srgb, var(--container-background-color) 97%, var(--border-color));
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-modern {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 48px;
+}
+
+.btn-modern.primary {
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary-color) 75%, var(--container-background-color)), 
+        color-mix(in srgb, var(--primary-color) 65%, var(--container-background-color)));
+    color: var(--text-color);
+    border-color: color-mix(in srgb, var(--primary-color) 50%, var(--border-color));
+}
+
+.btn-modern.primary:hover {
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary-color) 85%, var(--container-background-color)), 
+        color-mix(in srgb, var(--primary-color) 75%, var(--container-background-color)));
+    border-color: color-mix(in srgb, var(--primary-color) 70%, var(--border-color));
+    transform: translateY(-1px);
+}
+
+.btn-modern.secondary {
+    background: var(--hover-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.btn-modern.secondary:hover {
+    background: color-mix(in srgb, var(--hover-color) 85%, var(--primary-color));
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+/* === ПОЛНОЭКРАННЫЙ ОВЕРЛЕЙ === */
+
+.fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background-color);
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.fullscreen-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.fullscreen-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullscreen-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--container-background-color);
+    border-bottom: 2px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.added-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: color-mix(in srgb, var(--primary-color) 10%, var(--container-background-color));
+    border: 1px solid color-mix(in srgb, var(--primary-color) 30%, var(--border-color));
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.added-counter i {
+    color: var(--primary-color);
+}
+
+.fullscreen-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Секция поиска */
+.search-section {
+    padding: 20px 24px;
+    background: var(--container-background-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.search-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.search-input-wrapper i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--label-color);
+    font-size: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 16px 16px 16px 48px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    font-size: 1.125rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+.clear-search-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--hover-color);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+}
+
+.clear-search-btn:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+.search-filters {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 10px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--container-background-color);
+    color: var(--text-color);
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background: var(--hover-color);
+    border-color: var(--primary-color);
+}
+
+.filter-btn.active {
+    background: color-mix(in srgb, var(--primary-color) 20%, var(--container-background-color));
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Секция результатов */
+.results-section {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+}
+
+.songs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.song-card {
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.song-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 20%, transparent);
+    transform: translateY(-2px);
+}
+
+.song-card.added {
+    background: color-mix(in srgb, var(--primary-color) 8%, var(--container-background-color));
+    border-color: var(--primary-color);
+}
+
+.song-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.song-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.song-category {
+    font-size: 0.75rem;
+    color: var(--label-color);
+    background: var(--hover-color);
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.song-add-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.song-add-btn:hover {
+    background: color-mix(in srgb, var(--primary-color) 85%, black);
+    transform: scale(1.1);
+}
+
+.song-add-btn.added {
+    background: var(--primary-color);
+    color: white;
+}
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: var(--label-color);
+}
+
+.loading-state i {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    color: var(--primary-color);
+}
+
+.loading-state p {
+    font-size: 1.125rem;
+    margin: 0;
 }
 
 .modal-header {

@@ -67,11 +67,32 @@ export const addSongBtn = document.getElementById('add-song-btn');
 export const startPresentationButton = document.getElementById('start-presentation-button');
 
 // Модальное окно создания сет-листа
+// Элементы создания сет-листа
 export const createSetlistModal = document.getElementById('create-setlist-modal');
 export const closeCreateModal = document.getElementById('close-create-modal');
 export const newSetlistNameInput = document.getElementById('new-setlist-name-input');
 export const cancelCreateSetlist = document.getElementById('cancel-create-setlist');
 export const createSetlistButton = document.getElementById('create-setlist-button');
+export const nameCharCount = document.getElementById('name-char-count');
+
+// Элементы подтверждения добавления песен
+export const addSongsConfirmModal = document.getElementById('add-songs-confirm-modal');
+export const closeConfirmModal = document.getElementById('close-confirm-modal');
+export const createdSetlistName = document.getElementById('created-setlist-name');
+export const skipAddSongs = document.getElementById('skip-add-songs');
+export const startAddSongs = document.getElementById('start-add-songs');
+
+// Элементы полноэкранного оверлея добавления песен
+export const addSongsOverlay = document.getElementById('add-songs-overlay');
+export const closeAddSongs = document.getElementById('close-add-songs');
+export const targetSetlistName = document.getElementById('target-setlist-name');
+export const addedSongsCount = document.getElementById('added-songs-count');
+export const finishAddingSongs = document.getElementById('finish-adding-songs');
+export const songSearchInput = document.getElementById('song-search-input');
+export const clearSearch = document.getElementById('clear-search');
+export const categoryFilter = document.getElementById('category-filter');
+export const showAddedOnly = document.getElementById('show-added-only');
+export const songsGrid = document.getElementById('songs-grid');
 export const vocalistSelect = document.getElementById('vocalist-select');
 export const repertoirePanelList = document.getElementById('repertoire-panel-list');
 export const presentationOverlay = document.getElementById('presentation-overlay');
