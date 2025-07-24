@@ -254,12 +254,34 @@ async function handleCreateSetlist() {
     }
 }
 
-async function startAddingSongs() {
+// Универсальная функция для запуска overlay добавления песен
+async function startAddingSongs(mode = 'create', targetSetlistId = null, targetSetlistName = '') {
     console.log('=== startAddingSongs START ===');
-    console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
-    console.log('currentCreatedSetlistName:', currentCreatedSetlistName);
+    console.log('Mode:', mode);
+    console.log('targetSetlistId:', targetSetlistId);
+    console.log('targetSetlistName:', targetSetlistName);
     
     closeAddSongsConfirmModal();
+    
+    // Определяем целевой setlist в зависимости от режима
+    let activeSetlistId, activeSetlistName;
+    
+    if (mode === 'create') {
+        // Режим создания нового списка
+        activeSetlistId = currentCreatedSetlistId;
+        activeSetlistName = currentCreatedSetlistName;
+        console.log('CREATE mode - using currentCreated:', activeSetlistId, activeSetlistName);
+    } else if (mode === 'edit') {
+        // Режим редактирования существующего списка
+        activeSetlistId = targetSetlistId || state.currentSetlistId;
+        activeSetlistName = targetSetlistName || state.currentSetlistName;
+        console.log('EDIT mode - using current:', activeSetlistId, activeSetlistName);
+    }
+    
+    // Сохраняем активные данные для использования в других функциях
+    window.activeOverlayMode = mode;
+    window.activeSetlistId = activeSetlistId;
+    window.activeSetlistName = activeSetlistName;
     
     // Очищаем и инициализируем состояние
     addedSongsToCurrentSetlist.clear();
@@ -269,7 +291,7 @@ async function startAddingSongs() {
     
     // Показываем полноэкранный оверлей
     if (ui.targetSetlistName) {
-        ui.targetSetlistName.textContent = currentCreatedSetlistName;
+        ui.targetSetlistName.textContent = activeSetlistName;
     }
     if (ui.addSongsOverlay) {
         ui.addSongsOverlay.classList.add('show');
@@ -277,10 +299,10 @@ async function startAddingSongs() {
     
     console.log('Overlay shown, addedSongsToCurrentSetlist cleared');
     
-         // Загружаем все песни если еще не загружены
-     if (state.allSongs.length === 0) {
-         try {
-             await songsApi.loadAllSongsFromFirestore();
+    // Загружаем все песни если еще не загружены
+    if (state.allSongs.length === 0) {
+        try {
+            await songsApi.loadAllSongsFromFirestore();
         } catch (error) {
             console.error('Ошибка загрузки песен:', error);
             showNotification('❌ Ошибка загрузки песен', 'error');
@@ -402,11 +424,15 @@ async function addSongToSetlist(song, key) {
     console.log('=== addSongToSetlist START ===');
     console.log('song:', song);
     console.log('key:', key);
-    console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
+    
+    // Используем активный setlist в зависимости от режима
+    const targetSetlistId = window.activeSetlistId || currentCreatedSetlistId;
+    console.log('targetSetlistId:', targetSetlistId);
+    console.log('activeOverlayMode:', window.activeOverlayMode);
     
     try {
         console.log('Calling API addSongToSetlist...');
-        const result = await api.addSongToSetlist(currentCreatedSetlistId, song.id, key);
+        const result = await api.addSongToSetlist(targetSetlistId, song.id, key);
         console.log('API result:', result);
         
         if (result.status === 'added') {
@@ -443,7 +469,9 @@ async function addSongToSetlist(song, key) {
 
 async function removeSongFromSetlist(song) {
     try {
-        await api.removeSongFromSetlist(currentCreatedSetlistId, song.id);
+        // Используем активный setlist в зависимости от режима
+        const targetSetlistId = window.activeSetlistId || currentCreatedSetlistId;
+        await api.removeSongFromSetlist(targetSetlistId, song.id);
         addedSongsToCurrentSetlist.delete(song.id);
         showNotification(`➖ "${song.name}" удалена из сет-листа`, 'info');
         
@@ -488,9 +516,10 @@ async function confirmAddSongWithKey() {
         return;
     }
     
-    if (!currentCreatedSetlistId) {
+    const targetSetlistId = window.activeSetlistId || currentCreatedSetlistId;
+    if (!targetSetlistId) {
         console.error('No setlist ID');
-        showNotification('❌ Сет-лист не создан', 'error');
+        showNotification('❌ Сет-лист не выбран', 'error');
         return;
     }
     
@@ -542,15 +571,33 @@ function finishAddingSongs() {
     // Обновляем список сет-листов
     refreshSetlists();
     
+    const mode = window.activeOverlayMode || 'create';
+    const setlistName = window.activeSetlistName;
+    
     if (addedSongsToCurrentSetlist.size > 0) {
-        showNotification(`🎉 Сет-лист "${currentCreatedSetlistName}" создан с ${addedSongsToCurrentSetlist.size} песнями!`, 'success');
+        if (mode === 'create') {
+            showNotification(`🎉 Сет-лист "${setlistName}" создан с ${addedSongsToCurrentSetlist.size} песнями!`, 'success');
+        } else {
+            showNotification(`🎉 Добавлено ${addedSongsToCurrentSetlist.size} песен в "${setlistName}"!`, 'success');
+        }
     } else {
-        showNotification(`✅ Сет-лист "${currentCreatedSetlistName}" готов к использованию!`, 'success');
+        if (mode === 'create') {
+            showNotification(`✅ Сет-лист "${setlistName}" готов к использованию!`, 'success');
+        } else {
+            showNotification(`✅ Редактирование "${setlistName}" завершено!`, 'success');
+        }
     }
     
     // Сброс состояния
-    currentCreatedSetlistId = null;
-    currentCreatedSetlistName = '';
+    if (mode === 'create') {
+        currentCreatedSetlistId = null;
+        currentCreatedSetlistName = '';
+    }
+    
+    // Очищаем глобальные переменные overlay
+    window.activeOverlayMode = null;
+    window.activeSetlistId = null;
+    window.activeSetlistName = null;
 }
 
 function handleSetlistSelect(setlist) {
@@ -1110,6 +1157,29 @@ function setupEventListeners() {
     }
     if (ui.startAddSongs) {
         ui.startAddSongs.addEventListener('click', startAddingSongs);
+    }
+    
+    // Кнопка "Добавить" в правой панели для редактирования существующего setlist
+    if (ui.addSongBtn) {
+        ui.addSongBtn.addEventListener('click', () => {
+            console.log('=== ADD SONG BTN CLICKED ===');
+            console.log('currentSetlistId:', state.currentSetlistId);
+            
+            if (!state.currentSetlistId) {
+                showNotification('❌ Сначала выберите сет-лист', 'error');
+                return;
+            }
+            
+            // Находим setlist по ID для получения имени
+            const currentSetlist = state.setlists.find(s => s.id === state.currentSetlistId);
+            const setlistName = currentSetlist ? currentSetlist.name : 'Сет-лист';
+            
+            console.log('Found setlist:', currentSetlist);
+            console.log('setlistName:', setlistName);
+            
+            // Запускаем overlay в режиме редактирования
+            startAddingSongs('edit', state.currentSetlistId, setlistName);
+        });
     }
     
     if (ui.addSongsConfirmModal) {
