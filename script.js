@@ -494,9 +494,20 @@ async function confirmAddSongWithKey() {
         return;
     }
     
-    console.log('Closing modal and calling addSongToSetlist...');
+    console.log('Calling addSongToSetlist BEFORE closing modal...');
+    
+    // Сохраняем данные перед закрытием модального окна
+    const songToAdd = currentSongForKey;
+    const keyToAdd = currentSelectedKey;
+    
+    console.log('Saved song:', songToAdd);
+    console.log('Saved key:', keyToAdd);
+    
+    // Закрываем модальное окно
     closeKeySelectionModal();
-    await addSongToSetlist(currentSongForKey, currentSelectedKey);
+    
+    // Добавляем песню с сохраненными данными
+    await addSongToSetlist(songToAdd, keyToAdd);
     console.log('=== confirmAddSongWithKey END ===');
 }
 
@@ -772,23 +783,17 @@ function setupEventListeners() {
     console.log('ui object:', ui);
     console.log('ui.confirmKeySelection:', ui.confirmKeySelection);
     
-    // ТЕСТ КНОПКИ ЧЕРЕЗ 3 СЕКУНДЫ ПОСЛЕ ЗАГРУЗКИ
-    setTimeout(() => {
-        console.log('=== TESTING CONFIRM BUTTON ===');
-        const testBtn = document.getElementById('confirm-key-selection');
-        console.log('Test button found:', testBtn);
-        
-        if (testBtn) {
-            console.log('Button styles:', window.getComputedStyle(testBtn));
-            console.log('Button z-index:', window.getComputedStyle(testBtn).zIndex);
-            console.log('Button pointer-events:', window.getComputedStyle(testBtn).pointerEvents);
-            console.log('Button display:', window.getComputedStyle(testBtn).display);
-            
-            // Программный клик для теста
-            console.log('Simulating click...');
-            testBtn.click();
-        }
-    }, 3000);
+    // ПРОСТОЙ ТЕСТ СРАЗУ
+    console.log('=== IMMEDIATE TEST ===');
+    const testBtn = document.getElementById('confirm-key-selection');
+    console.log('Button found immediately:', testBtn);
+    
+    if (testBtn) {
+        console.log('Adding test click handler...');
+        testBtn.addEventListener('click', () => {
+            console.log('TEST CLICK HANDLER WORKED!');
+        });
+    }
     
     // --- Основные элементы управления ---
     ui.sheetSelect.addEventListener('change', () => {
@@ -1197,10 +1202,26 @@ function setupEventListeners() {
         if (e.target.id === 'confirm-key-selection' || e.target.closest('#confirm-key-selection')) {
             console.log('=== CONFIRM BUTTON CLICKED VIA DELEGATION ===');
             console.log('Target:', e.target);
+            console.log('Target ID:', e.target.id);
+            console.log('Target classes:', e.target.className);
             console.log('Closest button:', e.target.closest('#confirm-key-selection'));
+            console.log('Event type:', e.type);
+            console.log('Event bubbles:', e.bubbles);
+            
             e.preventDefault();
             e.stopPropagation();
+            
+            console.log('Calling confirmAddSongWithKey...');
             confirmAddSongWithKey();
+        }
+        
+        // ДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА НА ВСЕ КЛИКИ В МОДАЛЬНОМ ОКНЕ
+        if (e.target.closest('#key-selection-modal')) {
+            console.log('=== CLICK IN KEY SELECTION MODAL ===');
+            console.log('Target:', e.target);
+            console.log('Target tag:', e.target.tagName);
+            console.log('Target ID:', e.target.id);
+            console.log('Target classes:', e.target.className);
         }
     });
 
