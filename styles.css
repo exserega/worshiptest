@@ -524,6 +524,51 @@
     border-color: var(--danger-color);
 }
 
+/* Компактные кнопки действий вверху */
+.top-actions {
+    display: flex;
+    gap: 8px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--container-background-color);
+}
+
+.compact-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--container-background-color);
+    color: var(--text-color) !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 28px;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+.compact-action-btn:hover {
+    background: var(--hover-color);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.compact-action-btn i {
+    font-size: 0.7rem;
+    color: var(--text-color) !important;
+}
+
+.compact-action-btn span {
+    font-size: 0.7rem;
+    color: var(--text-color) !important;
+}
+
 /* Кнопки действий внизу */
 .bottom-actions {
     display: flex;
@@ -1048,6 +1093,26 @@
     .bottom-actions {
         padding: 6px 15px;
     }
+    
+    .top-actions {
+        padding: 6px 8px;
+        gap: 6px;
+    }
+    
+    .compact-action-btn {
+        padding: 3px 6px;
+        font-size: 0.65rem;
+        min-height: 26px;
+        gap: 3px;
+    }
+    
+    .compact-action-btn i {
+        font-size: 0.65rem;
+    }
+    
+    .compact-action-btn span {
+        font-size: 0.65rem;
+    }
 }
 
 /* Дополнительная адаптация для больших мобильных (601px-768px) */
@@ -1385,6 +1450,27 @@
         line-height: 1.0;
         z-index: 1;
     }
+    
+    /* Компактные кнопки для средних экранов */
+    .top-actions {
+        padding: 8px 12px;
+        gap: 10px;
+    }
+    
+    .compact-action-btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+        min-height: 32px;
+        border-radius: 8px;
+    }
+    
+    .compact-action-btn i {
+        font-size: 0.75rem;
+    }
+    
+    .compact-action-btn span {
+        font-size: 0.75rem;
+    }
 }
 
 /* Список песен - КРАСИВЫЙ МОБИЛЬНЫЙ ДИЗАЙН (для больших экранов) */
@@ -1616,6 +1702,27 @@
             width: 24px;
             height: 24px;
             font-size: 0.7rem;
+        }
+        
+        /* Компактные кнопки для очень маленьких экранов */
+        .top-actions {
+            padding: 6px 8px;
+            gap: 6px;
+        }
+        
+        .compact-action-btn {
+            padding: 4px 6px;
+            font-size: 0.6rem;
+            min-height: 24px;
+            gap: 2px;
+        }
+        
+        .compact-action-btn i {
+            font-size: 0.6rem;
+        }
+        
+        .compact-action-btn span {
+            font-size: 0.6rem;
         }
     }
     

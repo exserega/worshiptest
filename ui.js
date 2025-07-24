@@ -59,7 +59,7 @@ export const editSetlistBtn = document.getElementById('edit-setlist-btn');
 export const deleteSetlistButton = document.getElementById('delete-setlist-button');
 export const songsCount = document.getElementById('songs-count');
 export const currentSetlistSongsContainer = document.getElementById('current-setlist-songs-container');
-export const bottomActions = document.getElementById('bottom-actions');
+export const topActions = document.getElementById('top-actions');
 export const addSongBtn = document.getElementById('add-song-btn');
 export const startPresentationButton = document.getElementById('start-presentation-button');
 
@@ -823,8 +823,8 @@ export function clearSetlistSelection() {
         setlistActions.style.display = 'none';
     }
     
-    if (bottomActions) {
-        bottomActions.style.display = 'none';
+    if (topActions) {
+        topActions.style.display = 'none';
     }
     
     // Скрываем счетчик песен
@@ -860,9 +860,9 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
         currentSetlistName.textContent = setlist.name;
     }
 
-    // Показываем кнопки действий внизу
-    if (bottomActions) {
-        bottomActions.style.display = 'flex';
+    // Показываем кнопки действий вверху
+    if (topActions) {
+        topActions.style.display = 'flex';
     }
 
     // Показываем и обновляем счетчик песен
