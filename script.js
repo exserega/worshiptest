@@ -76,6 +76,12 @@ function closeNotesModal() {
 
 // --- SETLIST HANDLERS ---
 
+// Функция закрытия модального окна создания сет-листа
+function closeCreateSetlistModal() {
+    ui.createSetlistModal.classList.remove('show');
+    ui.newSetlistNameInput.value = '';
+}
+
 async function handleCreateSetlist() {
     const name = ui.newSetlistNameInput.value.trim();
     if (!name) {
@@ -85,8 +91,9 @@ async function handleCreateSetlist() {
     try {
         ui.createSetlistButton.disabled = true;
         await api.createSetlist(name);
-        ui.newSetlistNameInput.value = '';
+        closeCreateSetlistModal();
         await refreshSetlists();
+        showNotification('✅ Сет-лист создан успешно!', 'success');
     } catch (error) {
         console.error("Ошибка при создании сет-листа:", error);
         alert("Не удалось создать сет-лист.");
@@ -562,8 +569,55 @@ function setupEventListeners() {
     ui.notesModal.addEventListener('click', (e) => { if (e.target === ui.notesModal) closeNotesModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && ui.notesModal.classList.contains('visible')) closeNotesModal(); });
 
-    // --- Сет-листы ---
+    // --- Сет-листы - Новые обработчики для dropdown ---
+    
+    // Dropdown кнопка
+    ui.setlistDropdownBtn.addEventListener('click', () => {
+        const isOpen = ui.setlistDropdownMenu.classList.contains('show');
+        if (isOpen) {
+            ui.setlistDropdownMenu.classList.remove('show');
+            ui.setlistDropdownBtn.classList.remove('active');
+        } else {
+            ui.setlistDropdownMenu.classList.add('show');
+            ui.setlistDropdownBtn.classList.add('active');
+        }
+    });
+
+    // Закрытие dropdown при клике вне его
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.setlist-dropdown-container')) {
+            ui.setlistDropdownMenu.classList.remove('show');
+            ui.setlistDropdownBtn.classList.remove('active');
+        }
+    });
+
+    // Кнопка создания нового сет-листа
+    ui.createNewSetlistBtn.addEventListener('click', () => {
+        ui.createSetlistModal.classList.add('show');
+        ui.newSetlistNameInput.value = '';
+        ui.newSetlistNameInput.focus();
+    });
+
+    // Модальное окно создания сет-листа
+    ui.closeCreateModal.addEventListener('click', closeCreateSetlistModal);
+    ui.cancelCreateSetlist.addEventListener('click', closeCreateSetlistModal);
     ui.createSetlistButton.addEventListener('click', handleCreateSetlist);
+    
+    // Закрытие модального окна при клике вне его
+    ui.createSetlistModal.addEventListener('click', (e) => {
+        if (e.target === ui.createSetlistModal) {
+            closeCreateSetlistModal();
+        }
+    });
+
+    // Создание сет-листа по Enter
+    ui.newSetlistNameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            handleCreateSetlist();
+        } else if (e.key === 'Escape') {
+            closeCreateSetlistModal();
+        }
+    });
 
     // --- Редактор песен ---
     ui.editSongButton.addEventListener('click', () => {
