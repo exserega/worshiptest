@@ -176,6 +176,23 @@ function showKeySelectionModal(song) {
             e.stopPropagation();
             confirmAddSongWithKey();
         });
+        
+        // Дополнительные обработчики для диагностики
+        confirmBtn.addEventListener('mousedown', (e) => {
+            console.log('=== CONFIRM BUTTON MOUSEDOWN ===', e);
+        });
+        
+        confirmBtn.addEventListener('mouseup', (e) => {
+            console.log('=== CONFIRM BUTTON MOUSEUP ===', e);
+        });
+        
+        confirmBtn.addEventListener('touchstart', (e) => {
+            console.log('=== CONFIRM BUTTON TOUCHSTART ===', e);
+        });
+        
+        confirmBtn.addEventListener('touchend', (e) => {
+            console.log('=== CONFIRM BUTTON TOUCHEND ===', e);
+        });
         console.log('Event listener added to confirm button');
     } else {
         console.error('Confirm button not found!');
@@ -360,6 +377,19 @@ function displaySongsGrid(songs) {
                     const confirmBtn = document.getElementById('confirm-key-selection');
                     console.log('Confirm button after modal shown:', confirmBtn);
                     console.log('Modal visible:', ui.keySelectionModal?.classList.contains('show'));
+                    
+                    if (confirmBtn) {
+                        console.log('Button rect:', confirmBtn.getBoundingClientRect());
+                        console.log('Button parent:', confirmBtn.parentElement);
+                        console.log('Button onclick:', confirmBtn.onclick);
+                        console.log('Button addEventListener count:', confirmBtn.getEventListeners ? confirmBtn.getEventListeners() : 'Not available');
+                        
+                        // Проверяем что кнопка кликабельна
+                        const rect = confirmBtn.getBoundingClientRect();
+                        const elementAtPoint = document.elementFromPoint(rect.left + rect.width/2, rect.top + rect.height/2);
+                        console.log('Element at button center:', elementAtPoint);
+                        console.log('Is same element?', elementAtPoint === confirmBtn || confirmBtn.contains(elementAtPoint));
+                    }
                 }, 100);
             }
         });
@@ -741,6 +771,24 @@ function setupEventListeners() {
     console.log('=== setupEventListeners START ===');
     console.log('ui object:', ui);
     console.log('ui.confirmKeySelection:', ui.confirmKeySelection);
+    
+    // ТЕСТ КНОПКИ ЧЕРЕЗ 3 СЕКУНДЫ ПОСЛЕ ЗАГРУЗКИ
+    setTimeout(() => {
+        console.log('=== TESTING CONFIRM BUTTON ===');
+        const testBtn = document.getElementById('confirm-key-selection');
+        console.log('Test button found:', testBtn);
+        
+        if (testBtn) {
+            console.log('Button styles:', window.getComputedStyle(testBtn));
+            console.log('Button z-index:', window.getComputedStyle(testBtn).zIndex);
+            console.log('Button pointer-events:', window.getComputedStyle(testBtn).pointerEvents);
+            console.log('Button display:', window.getComputedStyle(testBtn).display);
+            
+            // Программный клик для теста
+            console.log('Simulating click...');
+            testBtn.click();
+        }
+    }, 3000);
     
     // --- Основные элементы управления ---
     ui.sheetSelect.addEventListener('change', () => {
