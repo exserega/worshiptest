@@ -939,19 +939,28 @@
         opacity: 1;
     }
     
-    /* Кнопки действий - фиксированы над нижней навигацией */
+    /* Кнопки действий - ЖЕСТКО ПРИВЯЗАНЫ к навигации, НЕ ДВИГАЮТСЯ */
     .bottom-actions {
         display: none;
         gap: 6px;
         padding: 8px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: fixed;
-        bottom: 60px;
-        left: 0;
-        right: 0;
+        position: fixed !important;
+        bottom: 60px !important;
+        left: 0 !important;
+        right: 0 !important;
         z-index: 999;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        /* БЛОКИРУЕМ любые изменения позиции */
+        transform: translate3d(0, 0, 0) !important;
+        backface-visibility: hidden;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        -webkit-backface-visibility: hidden;
+        /* Отключаем реакцию на viewport changes */
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
     }
     
     /* Показывать кнопки только когда панель сет-листа активна */
@@ -1289,19 +1298,28 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     
-    /* Кнопки действий - фиксированы над нижней навигацией для средних экранов */
+    /* Кнопки действий - ЖЕСТКО ПРИВЯЗАНЫ к навигации, НЕ ДВИГАЮТСЯ (средние экраны) */
     .bottom-actions {
         display: none;
         gap: 8px;
         padding: 10px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: fixed;
-        bottom: 60px;
-        left: 0;
-        right: 0;
+        position: fixed !important;
+        bottom: 60px !important;
+        left: 0 !important;
+        right: 0 !important;
         z-index: 999;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        /* БЛОКИРУЕМ любые изменения позиции */
+        transform: translate3d(0, 0, 0) !important;
+        backface-visibility: hidden;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        -webkit-backface-visibility: hidden;
+        /* Отключаем реакцию на viewport changes */
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
     }
     
     /* Показывать кнопки только когда панель сет-листа активна */
@@ -1601,19 +1619,28 @@
         }
     }
     
-    /* Кнопки действий - фиксированы над нижней навигацией для больших экранов */
+    /* Кнопки действий - ЖЕСТКО ПРИВЯЗАНЫ к навигации, НЕ ДВИГАЮТСЯ (большие экраны) */
     .bottom-actions {
         display: none;
         gap: 6px;
         padding: 8px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: fixed;
-        bottom: 60px;
-        left: 0;
-        right: 0;
+        position: fixed !important;
+        bottom: 60px !important;
+        left: 0 !important;
+        right: 0 !important;
         z-index: 999;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        /* БЛОКИРУЕМ любые изменения позиции */
+        transform: translate3d(0, 0, 0) !important;
+        backface-visibility: hidden;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        -webkit-backface-visibility: hidden;
+        /* Отключаем реакцию на viewport changes */
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
     }
     
     /* Показывать кнопки только когда панель сет-листа активна */
@@ -1752,5 +1779,29 @@
     
     .empty-message span {
         font-size: 0.9rem;
+    }
+}
+
+/* КРИТИЧЕСКИ ВАЖНО: Блокируем viewport-based repositioning на мобильных */
+@media screen and (max-width: 768px) {
+    .bottom-actions {
+        /* Принудительная фиксация без реакции на viewport */
+        position: fixed !important;
+        bottom: 60px !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: translate3d(0, 0, 0) !important;
+        /* Отключаем все возможные влияния на позицию */
+        margin: 0 !important;
+        top: auto !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Блокируем любые CSS-анимации которые могут влиять на позицию */
+    .bottom-actions,
+    .bottom-actions * {
+        transition: none !important;
+        animation: none !important;
     }
 }
