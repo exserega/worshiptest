@@ -19,6 +19,9 @@
 /* - !!! МОДУЛЬНАЯ СТРУКТУРА CSS ДЛЯ ЛУЧШЕЙ ПОДДЕРЖКИ !!! */
 /* ======================================== */
 
+/* === ИМПОРТ МОДУЛЬНЫХ СТИЛЕЙ === */
+@import './styles/setlist-panel.css';
+
 /* Импорт модулей CSS в правильном порядке */
 @import url('./styles/variables.css');
 @import url('./styles/base.css');
@@ -38,65 +41,7 @@
 /* МИНИМАЛИСТИЧНАЯ СТРУКТУРА СЕТ-ЛИСТОВ */
 /* ======================================== */
 
-/* Переопределение базовых стилей панели сет-листов */
-#setlists-panel {
-    display: flex !important;
-    flex-direction: column !important;
-    padding: 0 !important;
-    gap: 0 !important;
-    overflow: hidden !important;
-}
-
-/* Заголовок панели */
-.panel-header-section {
-    padding: 15px 20px 12px 20px;
-    border-bottom: 1px solid var(--border-color);
-    flex-shrink: 0;
-    background: var(--container-background-color);
-}
-
-.panel-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-color) !important;
-    margin: 0;
-    text-align: center;
-}
-
-/* Кнопка создания нового списка - в едином стиле с основными кнопками */
-.create-new-header-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 12px;
-    margin: 0;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: #ffffff !important;
-    border: 1px solid var(--primary-color);
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-height: 36px;
-    box-sizing: border-box;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-.create-new-header-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.3s ease;
-}
+/* Перенесено в styles/setlist-panel.css */
 
 .create-new-header-btn:hover::before {
     left: 100%;
@@ -395,108 +340,7 @@
     font-size: 0.875rem;
 }
 
-/* Стили для dropdown меню (обновленные) */
-.setlist-dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--container-background-color);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: all 0.2s ease;
-    margin-top: 4px;
-}
-
-.setlist-dropdown-menu.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.dropdown-list {
-    padding: 4px;
-}
-
-/* Совместимость с новым классом modern-dropdown */
-.modern-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--container-background-color);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: all 0.2s ease;
-    margin-top: 4px;
-}
-
-.modern-dropdown.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.dropdown-content {
-    padding: 4px;
-}
-
-.setlist-dropdown-btn:hover {
-    border-color: var(--primary-color);
-    background: var(--hover-color);
-}
-
-.setlist-dropdown-btn.active {
-    border-color: var(--primary-color);
-    background: var(--hover-color);
-}
-
-.setlist-dropdown-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--primary-color) 5%, transparent), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.setlist-dropdown-btn:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px color-mix(in srgb, var(--primary-color) 20%, transparent);
-}
-
-.setlist-dropdown-btn:hover::before {
-    opacity: 1;
-}
-
-.setlist-dropdown-btn.active {
-    border-color: var(--primary-color);
-    background: linear-gradient(135deg, color-mix(in srgb, var(--primary-color) 10%, var(--background-color)), var(--background-color));
-}
-
-.dropdown-arrow {
-    font-size: 0.9rem;
-    color: var(--primary-color);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.setlist-dropdown-btn.active .dropdown-arrow {
-    transform: rotate(180deg);
-}
+/* Перенесено в styles/setlist-panel.css */
 
 /* Dropdown меню */
 .setlist-dropdown-menu {
