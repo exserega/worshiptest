@@ -701,6 +701,10 @@ function showNotification(message, type = 'info') {
 
 // --- EVENT LISTENER SETUP ---
 function setupEventListeners() {
+    console.log('=== setupEventListeners START ===');
+    console.log('ui object:', ui);
+    console.log('ui.confirmKeySelection:', ui.confirmKeySelection);
+    
     // --- Основные элементы управления ---
     ui.sheetSelect.addEventListener('change', () => {
         ui.searchInput.value = '';
@@ -1277,7 +1281,12 @@ function setupEventListeners() {
 
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log("DOM loaded.");
+    console.log("=== DOM loaded ===");
+    console.log("Checking key elements:");
+    console.log("confirm-key-selection element:", document.getElementById('confirm-key-selection'));
+    console.log("key-selection-modal element:", document.getElementById('key-selection-modal'));
+    console.log("add-songs-overlay element:", document.getElementById('add-songs-overlay'));
+    
     if(ui.loadingIndicator) ui.loadingIndicator.style.display = 'block';
 
     let initialTheme = 'dark';
