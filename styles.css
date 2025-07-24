@@ -67,7 +67,7 @@
     border-radius: 6px;
     font-size: 1rem;
     font-weight: 500;
-    color: var(--text-color);
+    color: var(--text-color) !important;
     cursor: pointer;
     transition: all 0.2s ease;
     min-height: 48px;
@@ -489,8 +489,8 @@
     font-weight: 500;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    background: var(--background-color);
-    color: var(--text-color);
+    background: var(--container-background-color);
+    color: var(--text-color) !important;
     cursor: pointer;
     transition: all 0.2s ease;
     min-height: 48px;
@@ -504,6 +504,7 @@
 
 .bottom-actions .action-btn i {
     font-size: 1rem;
+    color: var(--text-color) !important;
 }
 
 /* Модальное окно создания сет-листа */
@@ -872,11 +873,13 @@
     .bottom-actions .action-btn i {
         font-size: 1.1rem;
         margin-bottom: 2px;
+        color: var(--text-color) !important;
     }
     
     .bottom-actions .action-btn span {
         font-size: 0.8rem;
         font-weight: 600;
+        color: var(--text-color) !important;
         text-align: center;
         line-height: 1.2;
     }
