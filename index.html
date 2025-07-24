@@ -211,24 +211,24 @@
         </button>
     </div>
     
-    <!-- БЛОК 2: Выбор существующего списка -->
+    <!-- БЛОК 2: Выбор существующего списка (компактный с fieldset) -->
     <div class="ui-block selection-block">
-        <div class="block-label">
-            <span>Выберите список песен:</span>
-        </div>
-        <div class="setlist-selector">
-            <button id="setlist-dropdown-btn" class="setlist-dropdown-btn">
-                <span id="current-setlist-name">Выберите сет-лист</span>
-                <i class="fas fa-chevron-right dropdown-arrow"></i>
-            </button>
-            
-            <!-- Dropdown меню -->
-            <div id="setlist-dropdown-menu" class="setlist-dropdown-menu">
-                <div id="setlists-list-container" class="dropdown-list">
-                    <div class="empty-message">Загрузка сет-листов...</div>
+        <fieldset class="selection-fieldset">
+            <legend class="selection-legend">Выберите список песен:</legend>
+            <div class="setlist-selector">
+                <button id="setlist-dropdown-btn" class="setlist-dropdown-btn">
+                    <span id="current-setlist-name">Выберите сет-лист</span>
+                    <i class="fas fa-chevron-right dropdown-arrow"></i>
+                </button>
+                
+                <!-- Dropdown меню -->
+                <div id="setlist-dropdown-menu" class="setlist-dropdown-menu">
+                    <div id="setlists-list-container" class="dropdown-list">
+                        <div class="empty-message">Загрузка сет-листов...</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </fieldset>
     </div>
 
     <!-- БЛОК 3: Управление выбранным списком -->
