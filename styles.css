@@ -63,7 +63,7 @@
     text-align: center;
 }
 
-/* Кнопка создания под dropdown - в едином стиле с основными кнопками */
+/* Кнопка создания нового списка - в едином стиле с основными кнопками */
 .create-new-header-btn {
     width: 100%;
     display: flex;
@@ -71,7 +71,7 @@
     justify-content: center;
     gap: 6px;
     padding: 10px 12px;
-    margin-top: 12px;
+    margin: 0;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: #ffffff !important;
     border: 1px solid var(--primary-color);
@@ -117,6 +117,24 @@
 .create-new-header-btn span {
     color: #ffffff !important;
     z-index: 1;
+}
+
+/* Стили для новой структуры панели */
+.create-new-section {
+    padding: 0 10px;
+    margin-bottom: 16px;
+}
+
+.selection-label {
+    padding: 0 10px;
+    margin-bottom: 8px;
+}
+
+.selection-label span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--label-color);
+    display: block;
 }
 
 /* Минималистичный селектор сет-листа */
@@ -1113,6 +1131,21 @@
     .compact-action-btn span {
         font-size: 0.65rem;
     }
+    
+    /* Адаптивные стили для новой структуры панели */
+    .create-new-section {
+        padding: 0 8px;
+        margin-bottom: 12px;
+    }
+    
+    .selection-label {
+        padding: 0 8px;
+        margin-bottom: 6px;
+    }
+    
+    .selection-label span {
+        font-size: 0.8rem;
+    }
 }
 
 /* Дополнительная адаптация для больших мобильных (601px-768px) */
@@ -1471,6 +1504,21 @@
     .compact-action-btn span {
         font-size: 0.75rem;
     }
+    
+    /* Адаптивные стили для новой структуры панели (средние экраны) */
+    .create-new-section {
+        padding: 0 12px;
+        margin-bottom: 16px;
+    }
+    
+    .selection-label {
+        padding: 0 12px;
+        margin-bottom: 10px;
+    }
+    
+    .selection-label span {
+        font-size: 0.95rem;
+    }
 }
 
 /* Список песен - КРАСИВЫЙ МОБИЛЬНЫЙ ДИЗАЙН (для больших экранов) */
@@ -1723,6 +1771,21 @@
         
         .compact-action-btn span {
             font-size: 0.6rem;
+        }
+        
+        /* Адаптивные стили для новой структуры панели (очень маленькие экраны) */
+        .create-new-section {
+            padding: 0 6px;
+            margin-bottom: 10px;
+        }
+        
+        .selection-label {
+            padding: 0 6px;
+            margin-bottom: 5px;
+        }
+        
+        .selection-label span {
+            font-size: 0.75rem;
         }
     }
     
