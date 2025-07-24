@@ -351,6 +351,19 @@ function displaySongsGrid(songs) {
     
     songs.forEach(song => {
         const isAdded = addedSongsToCurrentSetlist.has(song.id);
+        
+        // ВРЕМЕННЫЙ ЛОГ ДЛЯ ОТЛАДКИ СТРУКТУРЫ ДАННЫХ
+        if (Math.random() < 0.1) { // Логируем только 10% песен, чтобы не засорять консоль
+            console.log('=== SONG DATA STRUCTURE DEBUG ===');
+            console.log('song.name:', song.name);
+            console.log('song object keys:', Object.keys(song));
+            console.log('song["Тональность"]:', song['Тональность']);
+            console.log('song["Оригинальная тональность"]:', song['Оригинальная тональность']);
+            console.log('song.key:', song.key);
+            console.log('song.originalKey:', song.originalKey);
+            console.log('Full song object:', song);
+        }
+        
         const originalKey = song['Тональность'] || 'C';
         
         const songCard = document.createElement('div');
