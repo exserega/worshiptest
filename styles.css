@@ -941,12 +941,14 @@
     .bottom-actions {
         display: flex !important;
         gap: 6px;
-        padding: 8px 15px 12px;
-        margin-bottom: 70px;
+        padding: 8px 15px calc(12px + env(safe-area-inset-bottom));
+        margin-bottom: calc(80px + env(safe-area-inset-bottom));
         border-top: 1px solid var(--border-color);
         margin-top: auto;
         flex-shrink: 0;
         background: var(--container-background-color);
+        position: relative;
+        z-index: 10;
     }
     
     .bottom-actions .action-btn {
@@ -1021,6 +1023,14 @@
         font-size: 1rem;
         color: var(--label-color);
         text-align: center;
+    }
+}
+
+/* Дополнительная адаптация для очень маленьких экранов и низких устройств */
+@media (max-width: 480px), (max-height: 600px) {
+    .bottom-actions {
+        margin-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
     }
 }
 
@@ -1276,12 +1286,14 @@
     .bottom-actions {
         display: flex !important;
         gap: 8px;
-        padding: 12px;
-        margin-bottom: 0;
+        padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+        margin-bottom: calc(10px + env(safe-area-inset-bottom));
         border-top: 1px solid var(--border-color);
         margin-top: auto;
         flex-shrink: 0;
         background: var(--container-background-color);
+        position: relative;
+        z-index: 10;
     }
     
     .bottom-actions .action-btn {
@@ -1580,12 +1592,14 @@
     .bottom-actions {
         display: flex !important;
         gap: 6px;
-        padding: 8px;
-        margin-bottom: 70px; /* 60px навигация + 10px отступ */
+        padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+        margin-bottom: calc(80px + env(safe-area-inset-bottom)); /* Увеличенный отступ для навигации */
         border-top: 1px solid var(--border-color);
         margin-top: auto;
         flex-shrink: 0;
         background: var(--container-background-color);
+        position: relative;
+        z-index: 10;
     }
     
     .bottom-actions .action-btn {
