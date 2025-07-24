@@ -63,7 +63,7 @@
     text-align: center;
 }
 
-/* Кнопка создания под dropdown */
+/* Кнопка создания под dropdown - в едином стиле с основными кнопками */
 .create-new-header-btn {
     width: 100%;
     display: flex;
@@ -72,32 +72,51 @@
     gap: 6px;
     padding: 10px 12px;
     margin-top: 12px;
-    background: var(--primary-color);
-    color: var(--button-text-color) !important;
-    border: none;
-    border-radius: 6px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #ffffff !important;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     min-height: 36px;
     box-sizing: border-box;
-    box-shadow: 0 1px 4px color-mix(in srgb, var(--primary-color) 20%, transparent);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.create-new-header-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.3s ease;
+}
+
+.create-new-header-btn:hover::before {
+    left: 100%;
 }
 
 .create-new-header-btn:hover {
-    background: var(--secondary-color);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 30%, transparent);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: var(--secondary-color);
 }
 
 .create-new-header-btn i {
     font-size: 0.85rem;
-    color: var(--button-text-color) !important;
+    color: #ffffff !important;
+    z-index: 1;
 }
 
 .create-new-header-btn span {
-    color: var(--button-text-color) !important;
+    color: #ffffff !important;
+    z-index: 1;
 }
 
 /* Минималистичный селектор сет-листа */
