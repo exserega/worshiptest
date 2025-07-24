@@ -1623,14 +1623,31 @@
 }
 
 /* Цвета для кнопок тональностей - ИСПРАВЛЕНО */
-/* Темная тема - светлый текст на темном фоне */
-:root .key-btn {
-    color: #f1f5f9; /* Очень светлый текст для темной темы */
+.key-btn {
+    /* Темная тема по умолчанию - светлый текст */
+    color: #f1f5f9 !important;
 }
 
-/* Светлая тема - темный текст на светлом фоне */
+/* Светлая тема - темный текст */
 body[data-theme="light"] .key-btn {
-    color: #0f172a; /* Очень темный текст для светлой темы */
+    color: #0f172a !important;
+}
+
+/* Дополнительные селекторы для гарантии */
+.keys-grid .key-btn {
+    color: #f1f5f9 !important; /* Темная тема */
+}
+
+body[data-theme="light"] .keys-grid .key-btn {
+    color: #0f172a !important; /* Светлая тема */
+}
+
+.key-selection-content .key-btn {
+    color: #f1f5f9 !important; /* Темная тема */
+}
+
+body[data-theme="light"] .key-selection-content .key-btn {
+    color: #0f172a !important; /* Светлая тема */
 }
 
 .key-btn:hover {
@@ -3392,4 +3409,18 @@ body[data-theme="light"] .key-btn {
         transition: none !important;
         animation: none !important;
     }
+}
+
+/* КРИТИЧЕСКИ ВАЖНЫЕ СТИЛИ ТОНАЛЬНОСТЕЙ - В КОНЦЕ ФАЙЛА */
+/* Максимальная специфичность для гарантии применения */
+#key-selection-modal .key-btn,
+.global-overlay .key-btn,
+button.key-btn {
+    color: #f1f5f9 !important; /* Светлый текст для темной темы */
+}
+
+body[data-theme="light"] #key-selection-modal .key-btn,
+body[data-theme="light"] .global-overlay .key-btn,
+body[data-theme="light"] button.key-btn {
+    color: #0f172a !important; /* Темный текст для светлой темы */
 }
