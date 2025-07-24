@@ -133,6 +133,8 @@ function showKeySelectionModal(song) {
     console.log('=== showKeySelectionModal START ===');
     console.log('song:', song);
     console.log('ui.keySelectionModal:', ui.keySelectionModal);
+    console.log('window.activeOverlayMode:', window.activeOverlayMode);
+    console.log('window.activeSetlistId:', window.activeSetlistId);
     
     if (!ui.keySelectionModal) {
         console.error('keySelectionModal not found!');
@@ -375,6 +377,8 @@ function displaySongsGrid(songs) {
             console.log('song:', song);
             console.log('isAdded:', isAdded);
             console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
+            console.log('window.activeSetlistId:', window.activeSetlistId);
+            console.log('window.activeOverlayMode:', window.activeOverlayMode);
             
             e.stopPropagation();
             if (isAdded) {
@@ -385,10 +389,14 @@ function displaySongsGrid(songs) {
                 // Если песня не добавлена, показываем модальное окно выбора тональности
                 console.log('Showing key selection modal...');
                 
-                // Проверяем что у нас есть активный сет-лист
-                if (!currentCreatedSetlistId) {
-                    console.error('No active setlist! currentCreatedSetlistId is null');
-                    showNotification('❌ Сначала создайте сет-лист', 'error');
+                // Проверяем что у нас есть активный сет-лист (в любом режиме)
+                const activeSetlistId = window.activeSetlistId || currentCreatedSetlistId;
+                if (!activeSetlistId) {
+                    console.error('No active setlist! activeSetlistId is null');
+                    console.log('window.activeSetlistId:', window.activeSetlistId);
+                    console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
+                    console.log('activeOverlayMode:', window.activeOverlayMode);
+                    showNotification('❌ Сначала выберите сет-лист', 'error');
                     return;
                 }
                 
