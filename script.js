@@ -599,8 +599,8 @@ function setupEventListeners() {
         }
     });
 
-    // Кнопка создания нового сет-листа (новая)
-    ui.createNewSetlistBtn.addEventListener('click', () => {
+    // Кнопка создания нового сет-листа в заголовке
+    ui.createNewSetlistHeaderBtn.addEventListener('click', () => {
         ui.createSetlistModal.classList.add('show');
         ui.newSetlistNameInput.value = '';
         ui.newSetlistNameInput.focus();
