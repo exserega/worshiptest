@@ -56,6 +56,14 @@ export const currentSetlistControls = document.querySelector('.current-setlist-c
 export const startPresentationButton = document.getElementById('start-presentation-button');
 export const deleteSetlistButton = document.getElementById('delete-setlist-button');
 export const currentSetlistSongsContainer = document.getElementById('current-setlist-songs-container');
+
+// Новые элементы для горизонтального дизайна
+export const currentSetlistHeaderTitle = document.getElementById('current-setlist-header-title');
+export const currentSetlistCount = document.getElementById('current-setlist-count');
+export const createSetlistModal = document.getElementById('create-setlist-modal');
+export const closeCreateSetlistModal = document.getElementById('close-create-setlist-modal');
+export const cancelCreateSetlist = document.getElementById('cancel-create-setlist');
+export const confirmCreateSetlist = document.getElementById('confirm-create-setlist');
 export const vocalistSelect = document.getElementById('vocalist-select');
 export const repertoirePanelList = document.getElementById('repertoire-panel-list');
 export const presentationOverlay = document.getElementById('presentation-overlay');
@@ -717,7 +725,15 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
     currentSetlistSongsContainer.innerHTML = '';
 
     if (!songs || songs.length === 0) {
-        currentSetlistSongsContainer.innerHTML = '<div class="empty-message">В этом сет-листе пока нет песен.</div>';
+        currentSetlistSongsContainer.innerHTML = `
+            <div class="empty-message">
+                <div class="empty-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="empty-text">Этот сет-лист пуст</div>
+                <div class="empty-hint">Добавьте песни из основного списка</div>
+            </div>
+        `;
         return;
     }
 
@@ -729,33 +745,86 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         .filter(s => s.id)
         .sort((a,b) => a.order - b.order);
 
-
     fullSongsData.forEach(song => {
         const songItem = document.createElement('div');
         songItem.className = 'setlist-song-item';
+        songItem.addEventListener('click', () => onSongSelect(song));
         
-        const songNameSpan = document.createElement('span');
-        songNameSpan.textContent = `${song.name} (${song.preferredKey})`;
-        songNameSpan.addEventListener('click', () => onSongSelect(song));
-        songItem.appendChild(songNameSpan);
+        // Информация о песне
+        const songInfo = document.createElement('div');
+        songInfo.className = 'song-info';
+        
+        const songName = document.createElement('div');
+        songName.className = 'song-name';
+        songName.textContent = song.name;
+        songInfo.appendChild(songName);
+        
+        const songMeta = document.createElement('div');
+        songMeta.className = 'song-meta';
+        
+        // Тональность
+        const keySpan = document.createElement('span');
+        keySpan.className = 'song-key';
+        keySpan.textContent = song.preferredKey;
+        songMeta.appendChild(keySpan);
+        
+        // BPM если есть
+        if (song.bpm) {
+            const bpmSpan = document.createElement('span');
+            bpmSpan.className = 'song-bpm';
+            bpmSpan.innerHTML = `<i class="fas fa-drum"></i> ${song.bpm} BPM`;
+            songMeta.appendChild(bpmSpan);
+        }
+        
+        songInfo.appendChild(songMeta);
+        songItem.appendChild(songInfo);
 
+        // Действия
+        const songActions = document.createElement('div');
+        songActions.className = 'song-actions';
+        
+        // Кнопка заметки (если есть)
+        if (song.note) {
+            const noteBtn = document.createElement('button');
+            noteBtn.className = 'song-action-btn';
+            noteBtn.innerHTML = '<i class="fas fa-sticky-note"></i>';
+            noteBtn.title = 'Просмотреть заметку';
+            songActions.appendChild(noteBtn);
+        }
+        
+        // Кнопка удаления
         const removeBtn = document.createElement('button');
+        removeBtn.className = 'song-action-btn danger';
         removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-        removeBtn.className = 'remove-button';
         removeBtn.title = 'Удалить из сет-листа';
         removeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             onSongRemove(song.id, song.name);
         });
-        songItem.appendChild(removeBtn);
-
+        songActions.appendChild(removeBtn);
+        
+        songItem.appendChild(songActions);
         currentSetlistSongsContainer.appendChild(songItem);
     });
 }
 
 export function clearSetlistSelection() {
     if (currentSetlistTitle) currentSetlistTitle.textContent = 'Выберите сет-лист';
-    if (currentSetlistSongsContainer) currentSetlistSongsContainer.innerHTML = '<div class="empty-message">Сначала выберите или создайте сет-лист.</div>';
+    if (currentSetlistHeaderTitle) currentSetlistHeaderTitle.textContent = 'Выберите сет-лист';
+    if (currentSetlistCount) currentSetlistCount.textContent = '0 песен';
+    
+    if (currentSetlistSongsContainer) {
+        currentSetlistSongsContainer.innerHTML = `
+            <div class="empty-message">
+                <div class="empty-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="empty-text">Выберите сет-лист из списка слева</div>
+                <div class="empty-hint">или создайте новый сет-лист</div>
+            </div>
+        `;
+    }
+    
     if (currentSetlistControls) currentSetlistControls.style.display = 'none';
     if (setlistsListContainer) {
         const items = setlistsListContainer.querySelectorAll('.setlist-item');
@@ -770,7 +839,16 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
         return;
     }
 
+    // Обновляем заголовки в разных местах
     if (currentSetlistTitle) currentSetlistTitle.textContent = setlist.name;
+    if (currentSetlistHeaderTitle) currentSetlistHeaderTitle.textContent = setlist.name;
+    
+    // Обновляем количество песен
+    const songCount = setlist.songs ? setlist.songs.length : 0;
+    if (currentSetlistCount) {
+        currentSetlistCount.textContent = `${songCount} ${songCount === 1 ? 'песня' : songCount < 5 ? 'песни' : 'песен'}`;
+    }
+    
     if (currentSetlistControls) currentSetlistControls.style.display = 'flex';
 
     if (setlistsListContainer) {
@@ -806,6 +884,7 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         item.addEventListener('click', () => onSelect(setlist));
 
         const nameSpan = document.createElement('span');
+        nameSpan.className = 'setlist-name-display';
         nameSpan.textContent = setlist.name;
         item.appendChild(nameSpan);
 
