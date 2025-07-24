@@ -770,7 +770,7 @@
     }
     
     .songs-list .setlist-song-item {
-        padding: 8px 12px 8px 32px;
+        padding: 8px 12px 8px 24px;
         margin-bottom: 4px;
         font-size: 0.9rem;
         position: relative;
@@ -786,33 +786,19 @@
         min-height: 44px;
     }
     
-    /* Тонкая нумерация для мобильных - не отвлекающая */
+    /* Минималистичная нумерация для мобильных - просто цифра */
     .songs-list .setlist-song-item::before {
         content: counter(song-counter);
         position: absolute;
         left: 8px;
-        top: 8px;
-        width: 18px;
-        height: 18px;
-        background: var(--background-color);
+        top: 50%;
+        transform: translateY(-50%);
         color: var(--label-color);
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.65rem;
+        font-size: 0.7rem;
         font-weight: 500;
         z-index: 1;
-        border: 1px solid var(--border-color);
-        opacity: 0.7;
+        opacity: 0.6;
         transition: all 0.2s ease;
-    }
-    
-    /* Цвет нумерации для светлой темы */
-    body[data-theme="light"] .songs-list .setlist-song-item::before {
-        background: var(--background-color);
-        color: var(--label-color);
-        border: 1px solid var(--border-color);
     }
     
     /* Компактная информация о песне для мобильных - всё в одну строку */
@@ -1122,7 +1108,7 @@
     .songs-list .setlist-song-item {
         display: flex;
         align-items: center;
-        padding: 14px 16px 14px 38px;
+        padding: 14px 16px 14px 28px;
         margin-bottom: 8px;
         background: var(--container-background-color);
         border: 1px solid var(--border-color);
@@ -1134,33 +1120,19 @@
         cursor: pointer;
     }
     
-    /* Тонкая нумерация для средних экранов - не отвлекающая */
+    /* Минималистичная нумерация для средних экранов - просто цифра */
     .songs-list .setlist-song-item::before {
         content: counter(song-counter);
         position: absolute;
         left: 10px;
-        top: 10px;
-        width: 20px;
-        height: 20px;
-        background: var(--background-color);
+        top: 50%;
+        transform: translateY(-50%);
         color: var(--label-color);
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         font-weight: 500;
         z-index: 1;
-        border: 1px solid var(--border-color);
-        opacity: 0.7;
+        opacity: 0.6;
         transition: all 0.2s ease;
-    }
-    
-    /* Цвет нумерации для светлой темы - средние экраны */
-    body[data-theme="light"] .songs-list .setlist-song-item::before {
-        background: var(--background-color);
-        color: var(--label-color);
-        border: 1px solid var(--border-color);
     }
     
     /* Контейнер информации о песне для средних экранов */
@@ -1363,48 +1335,34 @@
     background: var(--background-color);
 }
 
-    .songs-list .setlist-song-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 16px 12px 38px;
-        margin-bottom: 8px;
-        background: var(--container-background-color);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        position: relative;
-        counter-increment: song-counter;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
+         .songs-list .setlist-song-item {
+         display: flex;
+         align-items: center;
+         padding: 12px 16px 12px 28px;
+         margin-bottom: 8px;
+         background: var(--container-background-color);
+         border: 1px solid var(--border-color);
+         border-radius: 12px;
+         position: relative;
+         counter-increment: song-counter;
+         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+         transition: all 0.3s ease;
+         cursor: pointer;
+     }
 
-/* Тонкая нумерация песен - не отвлекающая */
+/* Минималистичная нумерация песен - просто цифра */
 .songs-list .setlist-song-item::before {
         content: counter(song-counter);
         position: absolute;
         left: 10px;
-        top: 10px;
-        width: 20px;
-        height: 20px;
-        background: var(--background-color);
+        top: 50%;
+        transform: translateY(-50%);
         color: var(--label-color);
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         font-weight: 500;
         z-index: 1;
-        border: 1px solid var(--border-color);
-        opacity: 0.7;
+        opacity: 0.6;
         transition: all 0.2s ease;
-    }
-    
-    /* Цвет нумерации для светлой темы - большие экраны */
-    body[data-theme="light"] .songs-list .setlist-song-item::before {
-        background: var(--background-color);
-        color: var(--label-color);
-        border: 1px solid var(--border-color);
     }
     
     /* Контейнер информации о песне */
