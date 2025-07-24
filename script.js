@@ -572,20 +572,28 @@ function setupEventListeners() {
     // --- Сет-листы - Новые обработчики для dropdown ---
     
     // Dropdown кнопка
-    ui.setlistDropdownBtn.addEventListener('click', () => {
+    ui.setlistDropdownBtn.addEventListener('click', async () => {
         const isOpen = ui.setlistDropdownMenu.classList.contains('show');
         if (isOpen) {
             ui.setlistDropdownMenu.classList.remove('show');
             ui.setlistDropdownBtn.classList.remove('active');
         } else {
-            ui.setlistDropdownMenu.classList.add('show');
-            ui.setlistDropdownBtn.classList.add('active');
+            // Загружаем данные при открытии dropdown
+            try {
+                await refreshSetlists();
+                ui.setlistDropdownMenu.classList.add('show');
+                ui.setlistDropdownBtn.classList.add('active');
+            } catch (error) {
+                console.error('Ошибка загрузки сет-листов:', error);
+                ui.setlistDropdownMenu.classList.add('show');
+                ui.setlistDropdownBtn.classList.add('active');
+            }
         }
     });
 
     // Закрытие dropdown при клике вне его
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.setlist-dropdown-container')) {
+        if (!e.target.closest('.setlist-selector')) {
             ui.setlistDropdownMenu.classList.remove('show');
             ui.setlistDropdownBtn.classList.remove('active');
         }
