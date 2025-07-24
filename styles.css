@@ -784,7 +784,7 @@
     
     /* Список песен */
     .songs-list {
-        padding: 10px 15px;
+        padding: 10px 15px 60px 15px;
         counter-reset: song-counter;
     }
     
@@ -937,18 +937,24 @@
         opacity: 1;
     }
     
-    /* Ультра-компактные кнопки действий внизу для мобильных */
+    /* Фиксированные кнопки действий внизу для мобильных */
     .bottom-actions {
-        display: flex !important;
+        display: none;
         gap: 6px;
         padding: 6px 15px calc(8px + env(safe-area-inset-bottom));
-        margin-bottom: calc(70px + env(safe-area-inset-bottom));
         border-top: 1px solid var(--border-color);
-        margin-top: auto;
-        flex-shrink: 0;
         background: var(--container-background-color);
-        position: relative;
-        z-index: 10;
+        position: fixed;
+        bottom: calc(60px + env(safe-area-inset-bottom));
+        left: 0;
+        right: 0;
+        z-index: 15;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Показывать кнопки только когда панель сет-листа активна */
+    .panel.active .bottom-actions {
+        display: flex !important;
     }
     
     .bottom-actions .action-btn {
@@ -1029,8 +1035,11 @@
 /* Дополнительная адаптация для очень маленьких экранов и низких устройств */
 @media (max-width: 480px), (max-height: 600px) {
     .bottom-actions {
-        margin-bottom: calc(75px + env(safe-area-inset-bottom)) !important;
-        padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+        bottom: calc(55px + env(safe-area-inset-bottom)) !important;
+    }
+    
+    .songs-list {
+        padding-bottom: 70px !important;
     }
 }
 
@@ -1294,6 +1303,7 @@
         background: var(--container-background-color);
         position: relative;
         z-index: 10;
+        box-shadow: none;
     }
     
     .bottom-actions .action-btn {
@@ -1600,6 +1610,7 @@
         background: var(--container-background-color);
         position: relative;
         z-index: 10;
+        box-shadow: none;
     }
     
     .bottom-actions .action-btn {
