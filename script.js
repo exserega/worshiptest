@@ -130,11 +130,21 @@ function closeKeySelectionModal() {
 }
 
 function showKeySelectionModal(song) {
-    if (!ui.keySelectionModal) return;
+    console.log('=== showKeySelectionModal START ===');
+    console.log('song:', song);
+    console.log('ui.keySelectionModal:', ui.keySelectionModal);
+    
+    if (!ui.keySelectionModal) {
+        console.error('keySelectionModal not found!');
+        return;
+    }
     
     currentSongForKey = song;
     const originalSongKey = song['Тональность'] || 'C';
     currentSelectedKey = originalSongKey;
+    
+    console.log('Set currentSongForKey:', currentSongForKey);
+    console.log('Set currentSelectedKey:', currentSelectedKey);
     
     // Заполняем информацию о песне
     if (ui.keySongName) {
@@ -152,6 +162,8 @@ function showKeySelectionModal(song) {
     
     // Показываем модальное окно
     ui.keySelectionModal.classList.add('show');
+    console.log('Modal shown with class "show"');
+    console.log('=== showKeySelectionModal END ===');
 }
 
 function updateKeyButtons() {
@@ -299,12 +311,18 @@ function displaySongsGrid(songs) {
         
         const addBtn = songCard.querySelector('.song-add-btn');
         addBtn.addEventListener('click', (e) => {
+            console.log('=== Song add button clicked ===');
+            console.log('song:', song);
+            console.log('isAdded:', isAdded);
+            
             e.stopPropagation();
             if (isAdded) {
                 // Если песня уже добавлена, удаляем её
+                console.log('Removing song from setlist...');
                 removeSongFromSetlist(song);
             } else {
                 // Если песня не добавлена, показываем модальное окно выбора тональности
+                console.log('Showing key selection modal...');
                 showKeySelectionModal(song);
             }
         });
@@ -1062,7 +1080,13 @@ function setupEventListeners() {
         ui.cancelKeySelection.addEventListener('click', closeKeySelectionModal);
     }
     if (ui.confirmKeySelection) {
-        ui.confirmKeySelection.addEventListener('click', confirmAddSongWithKey);
+        console.log('Adding event listener to confirmKeySelection button');
+        ui.confirmKeySelection.addEventListener('click', (e) => {
+            console.log('confirmKeySelection button clicked!', e);
+            confirmAddSongWithKey();
+        });
+    } else {
+        console.error('confirmKeySelection button not found!');
     }
     
     if (ui.keySelectionModal) {
