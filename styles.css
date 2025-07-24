@@ -1001,47 +1001,50 @@
     color: var(--primary-color);
 }
 
-.header-info {
-    overflow: hidden;
+.header-title {
     flex: 1;
     min-width: 0;
 }
 
-.header-info h3 {
+.header-title h3 {
     margin: 0;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 1.125rem;
+    font-weight: 700;
     color: var(--text-color);
-    line-height: 1.1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    line-height: 1.2;
 }
 
-.header-info p {
-    margin: 1px 0 0 0;
-    font-size: 0.7rem;
+.header-subtitle {
+    font-size: 0.875rem;
     color: var(--label-color);
-    opacity: 0.8;
-    line-height: 1.1;
+    line-height: 1.2;
+    padding-left: 44px; /* Отступ под кнопку закрытия */
+}
+
+.setlist-name {
+    font-weight: 600;
+    color: var(--text-color);
+    max-width: 200px;
+    display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    vertical-align: bottom;
 }
 
 .overlay-close-btn {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border: none;
     background: var(--hover-color);
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
     color: var(--text-color);
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     flex-shrink: 0;
 }
 
@@ -1159,11 +1162,11 @@
 /* Компактная версия кнопки для заголовка */
 .fullscreen-header .btn-modern {
     flex: none;
-    padding: 4px 8px;
-    font-size: 0.7rem;
-    min-height: 24px;
-    gap: 3px;
-    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    min-height: 36px;
+    gap: 6px;
+    border-radius: 6px;
     white-space: nowrap;
 }
 
@@ -1226,49 +1229,53 @@
 
 .fullscreen-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
+    flex-direction: column;
+    padding: 12px 16px;
     background: var(--container-background-color);
     border-bottom: 1px solid var(--border-color);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    min-height: 48px;
+    gap: 8px;
+}
+
+.header-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     flex: 1;
     min-width: 0;
-    overflow: hidden;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
 }
 
 .added-counter {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 3px 6px;
+    gap: 6px;
+    padding: 6px 10px;
     background: color-mix(in srgb, var(--primary-color) 10%, var(--container-background-color));
     border: 1px solid color-mix(in srgb, var(--primary-color) 30%, var(--border-color));
-    border-radius: 12px;
-    font-size: 0.65rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--text-color);
     white-space: nowrap;
-    min-width: 0;
 }
 
 .added-counter i {
     color: var(--primary-color);
-    font-size: 0.6rem;
+    font-size: 0.75rem;
 }
 
 .fullscreen-body {
@@ -1280,7 +1287,7 @@
 
 /* Секция поиска */
 .search-section {
-    padding: 20px 24px;
+    padding: 16px 20px;
     background: var(--container-background-color);
     border-bottom: 1px solid var(--border-color);
 }
@@ -1306,12 +1313,12 @@
 
 .search-input {
     width: 100%;
-    padding: 16px 16px 16px 48px;
+    padding: 14px 14px 14px 44px;
     border: 2px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 10px;
     background: var(--input-bg-color);
     color: var(--text-color);
-    font-size: 1.125rem;
+    font-size: 1rem;
     transition: all 0.2s ease;
     box-sizing: border-box;
 }
@@ -2157,6 +2164,57 @@ body[data-theme="light"] .key-btn {
         font-size: 0.8rem;
     }
     
+    /* Адаптация полноэкранного заголовка */
+    .fullscreen-header {
+        padding: 10px 14px;
+    }
+    
+    .header-subtitle {
+        padding-left: 38px;
+        font-size: 0.8rem;
+    }
+    
+    .setlist-name {
+        max-width: 150px;
+    }
+    
+    .overlay-close-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+    
+    .fullscreen-header .btn-modern {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        min-height: 32px;
+    }
+    
+    .added-counter {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+    
+    .added-counter i {
+        font-size: 0.7rem;
+    }
+    
+    /* Адаптация секции поиска */
+    .search-section {
+        padding: 12px 16px;
+    }
+    
+    .search-input {
+        padding: 12px 12px 12px 40px;
+        font-size: 0.9375rem;
+    }
+    
+    .search-input-wrapper i {
+        left: 14px;
+        font-size: 0.9rem;
+    }
+    
     /* Адаптация сетки тональностей */
     .keys-grid {
         grid-template-columns: repeat(4, 1fr);
@@ -2905,6 +2963,64 @@ body[data-theme="light"] .key-btn {
         
         .count-text {
             font-size: 0.75rem;
+        }
+        
+        /* Адаптация заголовка для очень маленьких экранов */
+        .fullscreen-header {
+            padding: 8px 12px;
+            gap: 6px;
+        }
+        
+        .header-title h3 {
+            font-size: 1rem;
+        }
+        
+        .header-subtitle {
+            padding-left: 32px;
+            font-size: 0.75rem;
+        }
+        
+        .setlist-name {
+            max-width: 120px;
+        }
+        
+        .overlay-close-btn {
+            width: 28px;
+            height: 28px;
+            font-size: 0.75rem;
+        }
+        
+        .fullscreen-header .btn-modern {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            min-height: 28px;
+            gap: 4px;
+        }
+        
+        .added-counter {
+            padding: 3px 6px;
+            font-size: 0.7rem;
+            gap: 3px;
+        }
+        
+        .added-counter i {
+            font-size: 0.65rem;
+        }
+        
+        /* Адаптация поиска для очень маленьких экранов */
+        .search-section {
+            padding: 10px 12px;
+        }
+        
+        .search-input {
+            padding: 10px 10px 10px 36px;
+            font-size: 0.875rem;
+            border-radius: 8px;
+        }
+        
+        .search-input-wrapper i {
+            left: 12px;
+            font-size: 0.8rem;
         }
         
         /* Адаптация сетки тональностей для очень маленьких экранов */

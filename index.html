@@ -505,24 +505,28 @@
 <div id="add-songs-overlay" class="global-fullscreen-overlay">
     <div class="fullscreen-content">
         <div class="fullscreen-header">
-            <div class="header-left">
-                <button id="close-add-songs" class="overlay-close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="header-info">
-                    <h3>Добавить песни</h3>
-                    <p>в сет-лист "<span id="target-setlist-name"></span>"</p>
+            <div class="header-top-row">
+                <div class="header-left">
+                    <button id="close-add-songs" class="overlay-close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="header-title">
+                        <h3>Добавить песни</h3>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="added-counter">
+                        <i class="fas fa-music"></i>
+                        <span id="added-songs-count">0</span>
+                    </div>
+                    <button id="finish-adding-songs" class="btn-modern primary">
+                        <i class="fas fa-check"></i>
+                        <span>Готово</span>
+                    </button>
                 </div>
             </div>
-            <div class="header-right">
-                <div class="added-counter">
-                    <i class="fas fa-music"></i>
-                    <span id="added-songs-count">0</span> добавлено
-                </div>
-                <button id="finish-adding-songs" class="btn-modern primary">
-                    <i class="fas fa-check"></i>
-                    <span>Готово</span>
-                </button>
+            <div class="header-subtitle">
+                <span>в сет-лист "</span><span id="target-setlist-name" class="setlist-name"></span><span>"</span>
             </div>
         </div>
         
