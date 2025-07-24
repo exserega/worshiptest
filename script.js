@@ -160,6 +160,27 @@ function showKeySelectionModal(song) {
     // Обновляем кнопки тональностей
     updateKeyButtons();
     
+    // ДОБАВЛЯЕМ ОБРАБОТЧИК СОБЫТИЯ ПРЯМО ЗДЕСЬ
+    const confirmBtn = document.getElementById('confirm-key-selection');
+    console.log('Found confirm button:', confirmBtn);
+    
+    if (confirmBtn) {
+        // Удаляем старые обработчики
+        confirmBtn.removeEventListener('click', confirmAddSongWithKey);
+        
+        // Добавляем новый обработчик
+        confirmBtn.addEventListener('click', (e) => {
+            console.log('=== CONFIRM BUTTON CLICKED IN MODAL ===');
+            console.log('Event:', e);
+            e.preventDefault();
+            e.stopPropagation();
+            confirmAddSongWithKey();
+        });
+        console.log('Event listener added to confirm button');
+    } else {
+        console.error('Confirm button not found!');
+    }
+    
     // Показываем модальное окно
     ui.keySelectionModal.classList.add('show');
     console.log('Modal shown with class "show"');
@@ -314,6 +335,7 @@ function displaySongsGrid(songs) {
             console.log('=== Song add button clicked ===');
             console.log('song:', song);
             console.log('isAdded:', isAdded);
+            console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
             
             e.stopPropagation();
             if (isAdded) {
@@ -323,7 +345,22 @@ function displaySongsGrid(songs) {
             } else {
                 // Если песня не добавлена, показываем модальное окно выбора тональности
                 console.log('Showing key selection modal...');
+                
+                // Проверяем что у нас есть активный сет-лист
+                if (!currentCreatedSetlistId) {
+                    console.error('No active setlist! currentCreatedSetlistId is null');
+                    showNotification('❌ Сначала создайте сет-лист', 'error');
+                    return;
+                }
+                
                 showKeySelectionModal(song);
+                
+                // Дополнительная проверка после показа модального окна
+                setTimeout(() => {
+                    const confirmBtn = document.getElementById('confirm-key-selection');
+                    console.log('Confirm button after modal shown:', confirmBtn);
+                    console.log('Modal visible:', ui.keySelectionModal?.classList.contains('show'));
+                }, 100);
             }
         });
         
@@ -1106,6 +1143,16 @@ function setupEventListeners() {
         if (e.target.classList.contains('key-btn')) {
             currentSelectedKey = e.target.dataset.key;
             updateKeyButtons();
+        }
+        
+        // АЛЬТЕРНАТИВНЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ ПОДТВЕРЖДЕНИЯ
+        if (e.target.id === 'confirm-key-selection' || e.target.closest('#confirm-key-selection')) {
+            console.log('=== CONFIRM BUTTON CLICKED VIA DELEGATION ===');
+            console.log('Target:', e.target);
+            console.log('Closest button:', e.target.closest('#confirm-key-selection'));
+            e.preventDefault();
+            e.stopPropagation();
+            confirmAddSongWithKey();
         }
     });
 
