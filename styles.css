@@ -784,7 +784,7 @@
     
     /* Список песен */
     .songs-list {
-        padding: 10px 15px 50px 15px;
+        padding: 10px 15px 60px 15px;
         counter-reset: song-counter;
     }
     
@@ -937,18 +937,18 @@
         opacity: 1;
     }
     
-    /* Кнопки действий закреплены над нижней навигацией */
+    /* Кнопки действий в нижней части панели */
     .bottom-actions {
         display: none;
         gap: 6px;
         padding: 6px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: fixed;
-        bottom: 60px;
+        position: absolute;
+        bottom: 0;
         left: 0;
         right: 0;
-        z-index: 1001;
+        z-index: 10;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
     }
     
@@ -1035,7 +1035,7 @@
 /* Дополнительная адаптация для очень маленьких экранов и низких устройств */
 @media (max-width: 480px), (max-height: 600px) {
     .songs-list {
-        padding-bottom: 55px !important;
+        padding-bottom: 65px !important;
     }
 }
 
@@ -1287,18 +1287,18 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     
-    /* Кнопки действий закреплены над нижней навигацией для средних экранов */
+    /* Кнопки действий в нижней части панели для средних экранов */
     .bottom-actions {
         display: none;
         gap: 8px;
         padding: 8px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: fixed;
-        bottom: 60px;
+        position: absolute;
+        bottom: 0;
         left: 0;
         right: 0;
-        z-index: 1001;
+        z-index: 10;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
     }
     
@@ -1370,7 +1370,7 @@
 /* Список песен - КРАСИВЫЙ МОБИЛЬНЫЙ ДИЗАЙН (для больших экранов) */
 .songs-list {
     flex: 1;
-    padding: 12px 8px 50px 8px;
+    padding: 12px 8px 60px 8px;
     min-height: 200px;
     overflow-y: auto;
     counter-reset: song-counter;
@@ -1599,18 +1599,18 @@
         }
     }
     
-    /* Кнопки действий закреплены над нижней навигацией для больших экранов */
+    /* Кнопки действий в нижней части панели для больших экранов */
     .bottom-actions {
         display: none;
         gap: 6px;
         padding: 6px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: fixed;
-        bottom: 60px;
+        position: absolute;
+        bottom: 0;
         left: 0;
         right: 0;
-        z-index: 1001;
+        z-index: 10;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
     }
     
