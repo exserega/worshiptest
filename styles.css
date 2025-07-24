@@ -1309,18 +1309,21 @@
     margin-bottom: 16px;
 }
 
-.search-input-wrapper i {
+/* ИКОНКА ЛУПЫ СПРАВА */
+.search-input-wrapper i.fa-search {
     position: absolute;
-    left: 16px;
+    right: 16px; /* Перемещена вправо */
     top: 50%;
     transform: translateY(-50%);
     color: var(--label-color);
     font-size: 1rem;
+    pointer-events: none; /* Не мешает вводу */
+    z-index: 1;
 }
 
 .search-input {
     width: 100%;
-    padding: 14px 14px 14px 44px;
+    padding: 14px 44px 14px 16px; /* Отступ справа для иконки лупы */
     border: 2px solid var(--border-color);
     border-radius: 10px;
     background: var(--input-bg-color);
@@ -1328,6 +1331,11 @@
     font-size: 1rem;
     transition: all 0.2s ease;
     box-sizing: border-box;
+}
+
+/* Дополнительный отступ когда видна кнопка очистки */
+.search-input-wrapper:has(.clear-search-btn:not([style*="display: none"])) .search-input {
+    padding-right: 80px; /* Место для кнопки очистки + лупы */
 }
 
 .search-input:focus {
@@ -1338,11 +1346,11 @@
 
 .clear-search-btn {
     position: absolute;
-    right: 12px;
+    right: 48px; /* Смещена левее, чтобы не перекрывать лупу */
     top: 50%;
     transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border: none;
     background: var(--hover-color);
     border-radius: 6px;
@@ -1352,6 +1360,7 @@
     justify-content: center;
     color: var(--text-color);
     transition: all 0.2s ease;
+    z-index: 2; /* Выше иконки лупы */
 }
 
 .clear-search-btn:hover {
@@ -1361,64 +1370,104 @@
 
 .search-filters {
     display: flex;
-    gap: 10px;
-    align-items: center;
+    gap: 12px;
+    align-items: stretch; /* Одинаковая высота элементов */
     flex-wrap: wrap;
 }
 
-.filter-select {
-    padding: 8px 12px;
+/* УНИФИЦИРОВАННЫЕ СТИЛИ ДЛЯ ВСЕХ ЭЛЕМЕНТОВ ФИЛЬТРАЦИИ */
+.filter-select,
+.filter-btn {
+    /* Базовые стили */
+    height: 44px; /* Единая высота */
+    padding: 0 16px;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 8px;
     background: var(--input-bg-color);
     color: var(--text-color);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
-    flex: 1;
-    min-width: 120px;
-    max-width: 200px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Flexbox для выравнивания содержимого */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Тени для глубины */
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--border-color) 30%, transparent);
 }
 
-.filter-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
+.filter-select {
+    flex: 1;
+    min-width: 140px;
+    max-width: 200px;
+    justify-content: flex-start; /* Текст слева для select */
+    padding-right: 32px; /* Место для стрелки */
 }
 
 .filter-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--container-background-color);
-    color: var(--text-color);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    gap: 8px;
     white-space: nowrap;
     flex-shrink: 0;
+    min-width: auto;
 }
 
+/* СОСТОЯНИЯ HOVER */
+.filter-select:hover,
 .filter-btn:hover {
-    background: var(--hover-color);
-    border-color: var(--primary-color);
+    border-color: color-mix(in srgb, var(--primary-color) 70%, var(--border-color));
+    background: color-mix(in srgb, var(--primary-color) 5%, var(--input-bg-color));
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 15%, transparent);
+    transform: translateY(-1px);
 }
 
+/* СОСТОЯНИЯ FOCUS */
+.filter-select:focus,
+.filter-btn:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+/* АКТИВНОЕ СОСТОЯНИЕ КНОПКИ "ПОКАЗАТЬ ДОБАВЛЕННЫЕ" */
 .filter-btn.active {
-    background: color-mix(in srgb, var(--primary-color) 20%, var(--container-background-color));
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary-color) 15%, var(--input-bg-color)),
+        color-mix(in srgb, var(--primary-color) 25%, var(--input-bg-color))
+    );
     border-color: var(--primary-color);
     color: var(--primary-color);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 20%, transparent);
+    transform: translateY(-1px);
 }
 
-/* Исправление цвета текста в разных темах */
+.filter-btn.active:hover {
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary-color) 20%, var(--input-bg-color)),
+        color-mix(in srgb, var(--primary-color) 30%, var(--input-bg-color))
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 25%, transparent);
+}
+
+/* АДАПТИВНЫЕ ЦВЕТА ИКОНОК И ТЕКСТА */
+.filter-btn i,
 .filter-btn span {
     color: var(--text-color);
+    transition: color 0.2s ease;
 }
 
+.filter-btn.active i,
 .filter-btn.active span {
     color: var(--primary-color);
+}
+
+/* СПЕЦИАЛЬНАЯ ИКОНКА ГАЛОЧКИ С АДАПТИВНЫМИ ЦВЕТАМИ */
+.filter-btn i.fa-check-circle {
+    /* Используем currentColor для адаптивности к теме */
+    color: currentColor;
 }
 
 /* Секция результатов */
@@ -3457,6 +3506,51 @@ body[data-theme="light"] .key-selection-content .key-btn {
     .bottom-actions * {
         transition: none !important;
         animation: none !important;
+    }
+    
+    /* МОБИЛЬНАЯ АДАПТАЦИЯ ПАНЕЛИ ФИЛЬТРОВ */
+    .search-filters {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+    
+    .filter-select,
+    .filter-btn {
+        height: 40px; /* Чуть меньше на мобильных */
+        font-size: 0.85rem;
+        padding: 0 12px;
+    }
+    
+    .filter-select {
+        max-width: none; /* На всю ширину */
+        min-width: auto;
+    }
+    
+    .filter-btn {
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    /* Поисковая строка на мобильных */
+    .search-input {
+        padding: 12px 40px 12px 14px;
+        font-size: 0.9rem;
+    }
+    
+    .search-input-wrapper i.fa-search {
+        right: 14px;
+        font-size: 0.9rem;
+    }
+    
+    .clear-search-btn {
+        right: 44px;
+        width: 24px;
+        height: 24px;
+    }
+    
+    .search-input-wrapper:has(.clear-search-btn:not([style*="display: none"])) .search-input {
+        padding-right: 72px;
     }
 }
 
