@@ -46,7 +46,6 @@
     transform: translateX(-100%) !important;
     border-right: 2px solid var(--primary-color) !important;
     border-left: none !important;
-    padding-bottom: 75px !important;
 }
 
 #setlists-panel.open,
