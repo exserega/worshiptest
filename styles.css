@@ -874,81 +874,216 @@
         align-self: center;
     }
     
-    /* Список песен */
+    /* Список песен - КРАСИВЫЙ МОБИЛЬНЫЙ ДИЗАЙН */
     .songs-list {
         flex: 1;
-        padding: 12px;
+        padding: 8px;
         min-height: 200px;
         overflow-y: auto;
+        counter-reset: song-counter;
     }
     
     .songs-list .setlist-song-item {
-        padding: 3px 4px;
-        margin-bottom: 1px;
-        border-radius: 2px;
-        font-size: 0.6rem;
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-bottom: 6px;
+        background: var(--container-background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        position: relative;
+        counter-increment: song-counter;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Нумерация песен */
+    .songs-list .setlist-song-item::before {
+        content: counter(song-counter);
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        background: var(--primary-color);
+        color: var(--button-text-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        z-index: 1;
+    }
+    
+    /* Сдвигаем контент вправо от номера */
+    .songs-list .setlist-song-item .song-info {
+        margin-left: 28px;
+        flex: 1;
     }
     
     .song-name {
-        font-size: 0.6rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 4px;
+        line-height: 1.2;
     }
     
     .song-meta {
-        gap: 2px;
-        font-size: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.7rem;
     }
     
+    /* Красивая тональность */
     .song-key {
-        padding: 1px 2px;
-        font-size: 0.45rem;
-        border-radius: 1px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: var(--button-text-color);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.2);
     }
     
+    /* BPM с иконкой */
     .song-bpm {
-        gap: 1px;
-        font-size: 0.45rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--label-color);
+        font-size: 0.65rem;
+        font-weight: 500;
+        background: var(--background-color);
+        padding: 2px 6px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
     }
     
     .song-bpm i {
-        font-size: 0.4rem;
+        color: var(--primary-color);
+        font-size: 0.6rem;
     }
     
-    /* Кнопки действий внизу - ИСПРАВЛЕНИЕ */
+    /* Кнопки действий для песен */
+    .songs-list .setlist-song-item .song-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-left: 8px;
+        opacity: 1;
+    }
+    
+    .songs-list .setlist-song-item .song-action-btn {
+        padding: 4px;
+        background: var(--danger-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .songs-list .setlist-song-item .song-action-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Hover эффект для элемента песни */
+    .songs-list .setlist-song-item:hover {
+        background: var(--hover-color);
+        border-color: var(--primary-color);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Анимация для номера при hover */
+    .songs-list .setlist-song-item:hover::before {
+        background: var(--secondary-color);
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    /* КРАСИВЫЕ нижние кнопки для мобильных */
     .bottom-actions {
         display: flex !important;
-        gap: 4px;
-        padding: 6px 8px;
+        gap: 8px;
+        padding: 12px;
         margin-bottom: 70px; /* 60px навигация + 10px отступ */
-        border-top: 1px solid var(--border-color);
+        border-top: 2px solid var(--border-color);
         margin-top: auto;
         flex-shrink: 0;
+        background: var(--container-background-color);
     }
     
     .bottom-actions .action-btn {
         flex: 1;
-        padding: 4px 2px;
-        font-size: 0.55rem;
-        border-radius: 2px;
-        min-height: 22px;
+        padding: 12px 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 2px solid var(--primary-color);
+        border-radius: 12px;
+        min-height: 48px;
         justify-content: center;
         align-items: center;
         display: flex;
         flex-direction: column;
-        gap: 1px;
+        gap: 4px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: var(--button-text-color) !important;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .bottom-actions .action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .bottom-actions .action-btn:hover::before {
+        left: 100%;
+    }
+    
+    .bottom-actions .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+        border-color: var(--secondary-color);
     }
     
     .bottom-actions .action-btn i {
-        font-size: 0.6rem;
-        margin-bottom: 0px;
-        color: var(--text-color) !important;
+        font-size: 1.2rem;
+        margin-bottom: 2px;
+        color: var(--button-text-color) !important;
+        z-index: 1;
     }
     
     .bottom-actions .action-btn span {
-        font-size: 0.5rem;
-        font-weight: 500;
-        color: var(--text-color) !important;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--button-text-color) !important;
         text-align: center;
-        line-height: 0.9;
+        line-height: 1.1;
+        z-index: 1;
     }
     
     /* Dropdown меню */
