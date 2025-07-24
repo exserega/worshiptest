@@ -119,184 +119,299 @@
     z-index: 1;
 }
 
-/* === НОВАЯ UI СТРУКТУРА С БЛОКАМИ === */
+/* === ПРЕМИУМ UI ДИЗАЙН ПАНЕЛИ === */
 
-/* Базовый стиль для UI блоков (компактный) */
-.ui-block {
-    margin-bottom: 4px;
+/* Базовая система для секций */
+.ui-section {
+    margin-bottom: 8px;
     position: relative;
 }
 
-/* БЛОК 1: Создание нового списка (без границ блока) */
-.create-block {
-    padding: 0 10px;
-    background: transparent;
+/* СЕКЦИЯ 1: Создание списка - Премиум дизайн */
+.create-section {
+    padding: 0 12px;
+    margin-bottom: 12px;
+}
+
+.create-btn-modern {
+    width: 100%;
+    position: relative;
+    background: linear-gradient(135deg, 
+        var(--primary-color), 
+        color-mix(in srgb, var(--primary-color) 85%, var(--secondary-color)));
     border: none;
-    margin: 0 0 8px 0;
-    box-shadow: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 20%, transparent);
 }
 
-/* БЛОК 2: Выбор списка (максимально компактный с fieldset) */
-.selection-block {
-    margin: 0 10px 4px 10px;
-    background: transparent;
+.create-btn-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--primary-color) 30%, transparent);
 }
 
-.selection-fieldset {
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 4px 6px;
-    margin: 0;
-    background: var(--container-background-color);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+.create-btn-modern:active {
+    transform: translateY(0);
 }
 
-.selection-legend {
-    font-size: 0.7rem;
-    font-weight: 500;
+.btn-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-content i {
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+.btn-content span {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+}
+
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.create-btn-modern:hover .btn-shine {
+    left: 100%;
+}
+
+/* СЕКЦИЯ 2: Выбор списка - Современный дизайн */
+.selection-section {
+    margin: 0 12px 12px 12px;
+}
+
+.section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--label-color);
     text-transform: uppercase;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
     opacity: 0.8;
-    padding: 0 4px;
-    background: var(--container-background-color);
-    margin: 0;
-    line-height: 1;
 }
 
-/* БЛОК 3: Управление выбранным списком (компактный) */
-.control-block {
+.modern-selector {
+    position: relative;
+}
+
+.selector-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 40px;
+}
+
+.selector-btn:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 10%, transparent);
+}
+
+.selector-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.selector-content i {
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.selector-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.selector-arrow {
+    font-size: 0.75rem;
+    color: var(--label-color);
+    transition: transform 0.2s ease;
+}
+
+.selector-btn.active .selector-arrow {
+    transform: rotate(180deg);
+}
+
+.modern-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+    margin-top: 4px;
+}
+
+.modern-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-content {
+    padding: 4px;
+}
+
+/* СЕКЦИЯ 3: Управление списком - Элегантный дизайн */
+.active-section {
+    margin: 0 12px 12px 12px;
     padding: 12px;
     background: linear-gradient(135deg, 
         var(--container-background-color), 
-        color-mix(in srgb, var(--container-background-color) 95%, var(--primary-color)));
-    border-radius: 10px;
-    margin: 0 10px 8px 10px;
-    border: 1px solid color-mix(in srgb, var(--primary-color) 20%, var(--border-color));
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 10%, transparent);
+        color-mix(in srgb, var(--container-background-color) 98%, var(--primary-color)));
+    border: 1px solid color-mix(in srgb, var(--primary-color) 15%, var(--border-color));
+    border-radius: 8px;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 8%, transparent);
     position: relative;
-    overflow: hidden;
 }
 
-.control-block::before {
+.active-section::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 1px;
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
-.control-header {
+.section-header {
+    margin-bottom: 8px;
+}
+
+.list-status {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    gap: 6px;
 }
 
-.setlist-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-}
-
-.setlist-info i {
+.list-status i {
+    font-size: 1rem;
     color: var(--primary-color);
-    font-size: 0.9rem;
 }
 
-.setlist-info span {
-    font-size: 0.85rem;
+.count-text {
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--text-color);
     opacity: 0.9;
 }
 
-.control-actions {
+.action-buttons {
     display: flex;
-    gap: 6px;
+    gap: 8px;
 }
 
-.control-action-btn {
+.action-btn {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 0.75rem;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     border: 1px solid transparent;
-    min-height: 28px;
-    position: relative;
-    overflow: hidden;
+    min-height: 32px;
 }
 
-.control-action-btn.primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+.primary-action {
+    background: var(--primary-color);
     color: #ffffff !important;
     border-color: var(--primary-color);
-    box-shadow: 0 2px 6px color-mix(in srgb, var(--primary-color) 25%, transparent);
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--primary-color) 20%, transparent);
 }
 
-.control-action-btn.secondary {
-    background: var(--container-background-color);
-    color: var(--text-color) !important;
-    border-color: var(--border-color);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.control-action-btn:hover {
+.primary-action:hover {
+    background: color-mix(in srgb, var(--primary-color) 90%, black);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 30%, transparent);
     transform: translateY(-1px);
 }
 
-.control-action-btn.primary:hover {
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 35%, transparent);
+.secondary-action {
+    background: var(--container-background-color);
+    color: var(--text-color) !important;
+    border-color: var(--border-color);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.control-action-btn.secondary:hover {
+.secondary-action:hover {
     background: var(--hover-color);
     border-color: var(--primary-color);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
 }
 
-.control-action-btn i {
-    font-size: 0.75rem;
+.action-btn i {
+    font-size: 1rem;
 }
 
-.control-action-btn span {
-    font-size: 0.75rem;
+.action-btn span {
+    font-size: 0.875rem;
 }
 
-/* Минималистичный селектор сет-листа (для fieldset) */
-.setlist-selector {
-    padding: 0;
-    background: transparent;
-    flex-shrink: 0;
-    position: relative;
-    margin: 0;
-}
-
-.setlist-dropdown-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 10px;
+/* Обновленные стили для dropdown меню */
+.setlist-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     background: var(--container-background-color);
     border: 1px solid var(--border-color);
     border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--text-color) !important;
-    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
     transition: all 0.2s ease;
-    min-height: 32px;
-    box-sizing: border-box;
+    margin-top: 4px;
+}
+
+.setlist-dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-list {
+    padding: 4px;
 }
 
 .setlist-dropdown-btn:hover {
@@ -1247,36 +1362,64 @@
         padding: 6px 15px;
     }
     
-    /* Адаптивные стили для новых UI блоков (маленькие экраны) */
-    .ui-block {
-        margin-bottom: 3px;
+    /* Адаптивные стили для премиум UI (маленькие экраны) */
+    .ui-section {
+        margin-bottom: 6px;
     }
     
-    .create-block {
-        margin: 0 8px 6px 8px;
+    .create-section {
         padding: 0 8px;
+        margin-bottom: 8px;
     }
     
-    .selection-block {
-        margin: 0 8px 3px 8px;
+    .create-btn-modern {
+        padding: 10px 14px;
+        border-radius: 6px;
     }
     
-    .selection-fieldset {
-        padding: 3px 4px;
-        border-radius: 5px;
+    .btn-content span {
+        font-size: 0.8rem;
     }
     
-    .selection-legend {
-        font-size: 0.65rem;
-        font-weight: 500;
-        letter-spacing: 0.1px;
-        padding: 0 3px;
+    .selection-section {
+        margin: 0 8px 8px 8px;
     }
     
-    .control-block {
-        margin: 0 8px 6px 8px;
+    .section-label {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+    }
+    
+    .selector-btn {
+        padding: 8px 10px;
+        min-height: 36px;
+    }
+    
+    .selector-content i {
+        font-size: 0.9rem;
+    }
+    
+    .selector-text {
+        font-size: 0.8rem;
+    }
+    
+    .active-section {
+        margin: 0 8px 8px 8px;
         padding: 10px;
-        border-radius: 8px;
+    }
+    
+    .action-btn {
+        padding: 7px 10px;
+        min-height: 30px;
+        font-size: 0.8rem;
+    }
+    
+    .action-btn i {
+        font-size: 0.9rem;
+    }
+    
+    .count-text {
+        font-size: 0.8rem;
     }
     
     .control-header {
@@ -1647,28 +1790,38 @@
         z-index: 1;
     }
     
-    /* Адаптивные стили для новых UI блоков (средние экраны) */
-    .create-block {
-        margin: 0 12px 8px 12px;
+    /* Адаптивные стили для премиум UI (средние экраны) */
+    .create-section {
         padding: 0 12px;
+        margin-bottom: 10px;
     }
     
-    .selection-block {
-        margin: 0 12px 6px 12px;
+    .create-btn-modern {
+        padding: 11px 15px;
     }
     
-    .selection-fieldset {
-        padding: 6px 8px;
-    }
-    
-    .selection-legend {
-        font-size: 0.75rem;
-        padding: 0 6px;
-    }
-    
-    .control-block {
+    .selection-section {
         margin: 0 12px 10px 12px;
-        padding: 14px;
+    }
+    
+    .section-label {
+        font-size: 0.75rem;
+        margin-bottom: 5px;
+    }
+    
+    .selector-btn {
+        padding: 9px 11px;
+        min-height: 38px;
+    }
+    
+    .active-section {
+        margin: 0 12px 10px 12px;
+        padding: 13px;
+    }
+    
+    .action-btn {
+        padding: 8px 11px;
+        min-height: 31px;
     }
     
     .control-header {
@@ -1932,32 +2085,60 @@
             font-size: 0.7rem;
         }
         
-        /* Адаптивные стили для новых UI блоков (очень маленькие экраны) */
-        .create-block {
-            margin: 0 6px 4px 6px;
+        /* Адаптивные стили для премиум UI (очень маленькие экраны) */
+        .create-section {
             padding: 0 6px;
+            margin-bottom: 6px;
         }
         
-        .selection-block {
-            margin: 0 6px 2px 6px;
+        .create-btn-modern {
+            padding: 8px 12px;
+            border-radius: 5px;
         }
         
-        .selection-fieldset {
-            padding: 2px 3px;
-            border-radius: 4px;
+        .btn-content span {
+            font-size: 0.75rem;
         }
         
-        .selection-legend {
-            font-size: 0.6rem;
-            font-weight: 500;
-            letter-spacing: 0.1px;
-            padding: 0 2px;
+        .selection-section {
+            margin: 0 6px 6px 6px;
         }
         
-        .control-block {
-            margin: 0 6px 4px 6px;
+        .section-label {
+            font-size: 0.65rem;
+            margin-bottom: 3px;
+        }
+        
+        .selector-btn {
+            padding: 6px 8px;
+            min-height: 32px;
+        }
+        
+        .selector-content i {
+            font-size: 0.85rem;
+        }
+        
+        .selector-text {
+            font-size: 0.75rem;
+        }
+        
+        .active-section {
+            margin: 0 6px 6px 6px;
             padding: 8px;
-            border-radius: 6px;
+        }
+        
+        .action-btn {
+            padding: 6px 8px;
+            min-height: 28px;
+            font-size: 0.75rem;
+        }
+        
+        .action-btn i {
+            font-size: 0.85rem;
+        }
+        
+        .count-text {
+            font-size: 0.75rem;
         }
         
         .control-header {

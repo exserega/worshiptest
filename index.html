@@ -203,51 +203,55 @@
         <h3 class="panel-title">Сет-листы</h3>
     </div>
     
-    <!-- БЛОК 1: Создание нового списка -->
-    <div class="ui-block create-block">
-        <button id="create-new-setlist-header-btn" class="create-new-header-btn">
-            <i class="fas fa-plus"></i>
-            <span>Новый список</span>
+    <!-- БЛОК 1: Создание нового списка (премиум дизайн) -->
+    <div class="ui-section create-section">
+        <button id="create-new-setlist-header-btn" class="create-btn-modern">
+            <div class="btn-content">
+                <i class="fas fa-plus"></i>
+                <span>Создать список</span>
+            </div>
+            <div class="btn-shine"></div>
         </button>
     </div>
     
-    <!-- БЛОК 2: Выбор существующего списка (компактный с fieldset) -->
-    <div class="ui-block selection-block">
-        <fieldset class="selection-fieldset">
-            <legend class="selection-legend">Выберите список песен:</legend>
-            <div class="setlist-selector">
-                <button id="setlist-dropdown-btn" class="setlist-dropdown-btn">
-                    <span id="current-setlist-name">Выберите сет-лист</span>
-                    <i class="fas fa-chevron-right dropdown-arrow"></i>
-                </button>
-                
-                <!-- Dropdown меню -->
-                <div id="setlist-dropdown-menu" class="setlist-dropdown-menu">
-                    <div id="setlists-list-container" class="dropdown-list">
-                        <div class="empty-message">Загрузка сет-листов...</div>
-                    </div>
+    <!-- БЛОК 2: Выбор списка (современный дизайн) -->
+    <div class="ui-section selection-section">
+        <div class="section-label">Выбрать список</div>
+        <div class="modern-selector">
+            <button id="setlist-dropdown-btn" class="selector-btn">
+                <div class="selector-content">
+                    <i class="fas fa-list"></i>
+                    <span id="current-setlist-name" class="selector-text">Выберите сет-лист</span>
+                </div>
+                <i class="fas fa-chevron-down selector-arrow"></i>
+            </button>
+            
+            <!-- Dropdown меню -->
+            <div id="setlist-dropdown-menu" class="modern-dropdown">
+                <div id="setlists-list-container" class="dropdown-content">
+                    <div class="empty-message">Загрузка сет-листов...</div>
                 </div>
             </div>
-        </fieldset>
+        </div>
     </div>
 
-    <!-- БЛОК 3: Управление выбранным списком -->
-    <div id="selected-setlist-control" class="ui-block control-block" style="display: none;">
-        <div class="control-header">
-            <div class="setlist-info">
-                <i class="fas fa-list-music"></i>
-                <span id="songs-count-text">0 песен</span>
+    <!-- БЛОК 3: Управление списком (элегантный дизайн) -->
+    <div id="selected-setlist-control" class="ui-section active-section" style="display: none;">
+        <div class="section-header">
+            <div class="list-status">
+                <i class="fas fa-music"></i>
+                <span id="songs-count-text" class="count-text">0 песен</span>
             </div>
-            <div class="control-actions">
-                <button id="add-song-btn" class="control-action-btn primary">
-                    <i class="fas fa-plus"></i>
-                    <span>Добавить</span>
-                </button>
-                <button id="start-presentation-button" class="control-action-btn secondary">
-                    <i class="fas fa-play"></i>
-                    <span>Презентация</span>
-                </button>
-            </div>
+        </div>
+        <div class="action-buttons">
+            <button id="add-song-btn" class="action-btn primary-action">
+                <i class="fas fa-plus"></i>
+                <span>Добавить</span>
+            </button>
+            <button id="start-presentation-button" class="action-btn secondary-action">
+                <i class="fas fa-play"></i>
+                <span>Презентация</span>
+            </button>
         </div>
     </div>
 

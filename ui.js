@@ -61,6 +61,34 @@ export const songsCount = document.getElementById('songs-count');
 export const currentSetlistSongsContainer = document.getElementById('current-setlist-songs-container');
 export const selectedSetlistControl = document.getElementById('selected-setlist-control');
 export const songsCountText = document.getElementById('songs-count-text');
+
+// Обновляем dropdown функциональность для нового дизайна
+function updateDropdownClasses() {
+    const dropdownBtn = document.getElementById('setlist-dropdown-btn');
+    const dropdownMenu = document.getElementById('setlist-dropdown-menu');
+    
+    if (dropdownBtn && dropdownMenu) {
+        // Обновляем классы для нового дизайна
+        dropdownMenu.className = 'modern-dropdown';
+        
+        // Добавляем обработчики для анимации стрелки
+        dropdownBtn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            dropdownMenu.classList.toggle('show');
+        });
+        
+        // Закрытие при клике вне элемента
+        document.addEventListener('click', function(e) {
+            if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownBtn.classList.remove('active');
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    }
+}
+
+// Инициализируем при загрузке DOM
+document.addEventListener('DOMContentLoaded', updateDropdownClasses);
 export const addSongBtn = document.getElementById('add-song-btn');
 export const startPresentationButton = document.getElementById('start-presentation-button');
 
