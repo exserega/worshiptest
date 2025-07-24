@@ -935,11 +935,11 @@
         opacity: 1;
     }
     
-    /* Компактные кнопки действий внизу для мобильных */
+    /* Ультра-компактные кнопки действий внизу для мобильных */
     .bottom-actions {
         display: flex !important;
-        gap: 8px;
-        padding: 12px 15px 16px;
+        gap: 6px;
+        padding: 8px 15px 12px;
         margin-bottom: 70px;
         border-top: 1px solid var(--border-color);
         margin-top: auto;
@@ -949,24 +949,24 @@
     
     .bottom-actions .action-btn {
         flex: 1;
-        min-height: 42px;
-        padding: 8px 6px;
-        font-size: 0.8rem;
+        min-height: 36px;
+        padding: 6px 4px;
+        font-size: 0.7rem;
         font-weight: 600;
         border: 1px solid var(--primary-color);
-        border-radius: 10px;
+        border-radius: 8px;
         background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         color: #ffffff !important;
         cursor: pointer;
         transition: all 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         position: relative;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 2px;
+        gap: 1px;
     }
     
     .bottom-actions .action-btn::before {
@@ -991,14 +991,14 @@
     }
     
     .bottom-actions .action-btn i {
-        font-size: 1.1rem;
-        margin-bottom: 1px;
+        font-size: 0.9rem;
+        margin-bottom: 0px;
         color: #ffffff !important;
         z-index: 1;
     }
     
     .bottom-actions .action-btn span {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
         font-weight: 600;
         color: #ffffff !important;
         text-align: center;
@@ -1287,13 +1287,13 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     
-    /* Кнопки действий внизу для средних экранов */
+    /* Компактные кнопки действий внизу для средних экранов */
     .bottom-actions {
         display: flex !important;
-        gap: 12px;
-        padding: 16px;
+        gap: 8px;
+        padding: 12px;
         margin-bottom: 0;
-        border-top: 2px solid var(--border-color);
+        border-top: 1px solid var(--border-color);
         margin-top: auto;
         flex-shrink: 0;
         background: var(--container-background-color);
@@ -1301,24 +1301,24 @@
     
     .bottom-actions .action-btn {
         flex: 1;
-        min-height: 52px;
-        padding: 12px 8px;
-        font-size: 0.85rem;
+        min-height: 38px;
+        padding: 8px 6px;
+        font-size: 0.75rem;
         font-weight: 600;
-        border: 2px solid var(--primary-color);
-        border-radius: 14px;
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
         background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: var(--button-text-color) !important;
+        color: #ffffff !important;
         cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         position: relative;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 4px;
+        gap: 2px;
     }
     
     .bottom-actions .action-btn::before {
@@ -1343,16 +1343,16 @@
     }
     
     .bottom-actions .action-btn i {
-        font-size: 1.2rem;
-        margin-bottom: 2px;
-        color: var(--button-text-color) !important;
+        font-size: 0.95rem;
+        margin-bottom: 1px;
+        color: #ffffff !important;
         z-index: 1;
     }
     
     .bottom-actions .action-btn span {
-        font-size: 0.8rem;
+        font-size: 0.65rem;
         font-weight: 600;
-        color: var(--button-text-color) !important;
+        color: #ffffff !important;
         text-align: center;
         line-height: 1.1;
         z-index: 1;
@@ -1608,13 +1608,13 @@
         }
     }
     
-    /* КРАСИВЫЕ нижние кнопки для мобильных */
+    /* Компактные нижние кнопки для больших экранов */
     .bottom-actions {
         display: flex !important;
-        gap: 8px;
-        padding: 12px;
+        gap: 6px;
+        padding: 8px;
         margin-bottom: 70px; /* 60px навигация + 10px отступ */
-        border-top: 2px solid var(--border-color);
+        border-top: 1px solid var(--border-color);
         margin-top: auto;
         flex-shrink: 0;
         background: var(--container-background-color);
@@ -1622,22 +1622,22 @@
     
     .bottom-actions .action-btn {
         flex: 1;
-        padding: 12px 8px;
-        font-size: 0.8rem;
+        padding: 8px 6px;
+        font-size: 0.7rem;
         font-weight: 600;
-        border: 2px solid var(--primary-color);
-        border-radius: 12px;
-        min-height: 48px;
+        border: 1px solid var(--primary-color);
+        border-radius: 8px;
+        min-height: 36px;
         justify-content: center;
         align-items: center;
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 2px;
         background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: var(--button-text-color) !important;
+        color: #ffffff !important;
         cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         position: relative;
         overflow: hidden;
     }
@@ -1664,16 +1664,16 @@
     }
     
     .bottom-actions .action-btn i {
-        font-size: 1.2rem;
-        margin-bottom: 2px;
-        color: var(--button-text-color) !important;
+        font-size: 0.9rem;
+        margin-bottom: 1px;
+        color: #ffffff !important;
         z-index: 1;
     }
     
     .bottom-actions .action-btn span {
-        font-size: 0.75rem;
+        font-size: 0.6rem;
         font-weight: 600;
-        color: var(--button-text-color) !important;
+        color: #ffffff !important;
         text-align: center;
         line-height: 1.1;
         z-index: 1;
