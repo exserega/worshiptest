@@ -67,7 +67,17 @@ export function displaySongDetails(songData, keyToSelect) {
     const originalLyrics = songData.hasWebEdits 
         ? (songData['Текст и аккорды (edited)'] || '') 
         : (songData['Текст и аккорды'] || '');
-    const originalKeyFromSheet = songData['Оригинальная тональность'] || "C";
+    // Получаем правильную тональность из данных песни
+    function getSongKey(song) {
+        return song['Оригинальная тональность'] || 
+               song['Тональность'] || 
+               song['originalKey'] || 
+               song['key'] || 
+               song.originalKey || 
+               song.key || 
+               'C';
+    }
+    const originalKeyFromSheet = getSongKey(songData);
     const srcUrl = songData.Holychords || '#';
     const bpm = songData.BPM || 'N/A';
     const ytLink = songData['YouTube Link'];

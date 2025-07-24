@@ -1,6 +1,21 @@
 // Agape Worship App - ui.js
 
 import { SONG_CATEGORIES_ORDER, MIN_FONT_SIZE, chords } from './constants.js';
+
+// --- UTILITY FUNCTIONS ---
+
+/** Универсальная функция для получения тональности песни из разных возможных полей */
+function getSongKey(song) {
+    // Проверяем различные возможные поля для тональности
+    // В порядке приоритета: русские названия, затем английские
+    return song['Оригинальная тональность'] || 
+           song['Тональность'] || 
+           song['originalKey'] || 
+           song['key'] || 
+           song.originalKey || 
+           song.key || 
+           'C'; // Fallback по умолчанию
+}
 import * as state from './state.js';
 import { 
     getTransposition, 
@@ -249,7 +264,7 @@ export function displaySongDetails(songData, keyToSelect) {
     const originalLyrics = songData.hasWebEdits 
         ? (songData['Текст и аккорды (edited)'] || '') 
         : (songData['Текст и аккорды'] || '');
-    const originalKeyFromSheet = songData['Оригинальная тональность'] || "C";
+    const originalKeyFromSheet = getSongKey(songData);
     const srcUrl = songData.Holychords || '#';
     const bpm = songData.BPM || 'N/A';
     const ytLink = songData['YouTube Link'];
@@ -668,7 +683,7 @@ export function displayCurrentPresentationSong() {
 
     const songTitle = song.name;
     const originalLyrics = song['Текст и аккорды'] || '';
-    const originalKey = song['Оригинальная тональность'] || "C";
+    const originalKey = getSongKey(song);
     const targetKey = songRef.preferredKey || originalKey;
     const songNote = songRef.notes || '';
 

@@ -10,6 +10,35 @@ import * as core from './core.js';
 import * as ui from './ui.js';
 import * as metronomeUI from './metronome.js';
 
+// --- UTILITY FUNCTIONS ---
+
+/** Универсальная функция для получения тональности песни из разных возможных полей */
+function getSongKey(song) {
+    // Проверяем различные возможные поля для тональности
+    // В порядке приоритета: русские названия, затем английские
+    const key = song['Оригинальная тональность'] || 
+                song['Тональность'] || 
+                song['originalKey'] || 
+                song['key'] || 
+                song.originalKey || 
+                song.key || 
+                'C'; // Fallback по умолчанию
+    
+    // ВРЕМЕННЫЙ ЛОГ ДЛЯ ОТЛАДКИ
+    if (Math.random() < 0.05) { // 5% песен для отладки
+        console.log('=== getSongKey DEBUG ===');
+        console.log('song.name:', song.name);
+        console.log('Available keys:', Object.keys(song).filter(k => k.toLowerCase().includes('тональ') || k.toLowerCase().includes('key')));
+        console.log('song["Оригинальная тональность"]:', song['Оригинальная тональность']);
+        console.log('song["Тональность"]:', song['Тональность']);
+        console.log('song.key:', song.key);
+        console.log('song.originalKey:', song.originalKey);
+        console.log('Resolved key:', key);
+    }
+    
+    return key;
+}
+
 // --- HANDLERS ---
 
 /** Обработчик выбора песни из репертуара или "Моего списка" */
@@ -142,7 +171,7 @@ function showKeySelectionModal(song) {
     }
     
     currentSongForKey = song;
-    const originalSongKey = song['Тональность'] || 'C';
+    const originalSongKey = getSongKey(song);
     currentSelectedKey = originalSongKey;
     
     console.log('Set currentSongForKey:', currentSongForKey);
@@ -352,19 +381,8 @@ function displaySongsGrid(songs) {
     songs.forEach(song => {
         const isAdded = addedSongsToCurrentSetlist.has(song.id);
         
-        // ВРЕМЕННЫЙ ЛОГ ДЛЯ ОТЛАДКИ СТРУКТУРЫ ДАННЫХ
-        if (Math.random() < 0.1) { // Логируем только 10% песен, чтобы не засорять консоль
-            console.log('=== SONG DATA STRUCTURE DEBUG ===');
-            console.log('song.name:', song.name);
-            console.log('song object keys:', Object.keys(song));
-            console.log('song["Тональность"]:', song['Тональность']);
-            console.log('song["Оригинальная тональность"]:', song['Оригинальная тональность']);
-            console.log('song.key:', song.key);
-            console.log('song.originalKey:', song.originalKey);
-            console.log('Full song object:', song);
-        }
-        
-        const originalKey = song['Тональность'] || 'C';
+        // Получаем правильную тональность из данных песни
+        const originalKey = getSongKey(song);
         
         const songCard = document.createElement('div');
         songCard.className = `song-card ${isAdded ? 'added' : ''}`;
