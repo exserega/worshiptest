@@ -786,33 +786,33 @@
         min-height: 44px;
     }
     
-    /* Современная нумерация для мобильных - минималистичный бейдж */
+    /* Тонкая нумерация для мобильных - не отвлекающая */
     .songs-list .setlist-song-item::before {
         content: counter(song-counter);
         position: absolute;
         left: 8px;
         top: 8px;
-        width: 20px;
-        height: 20px;
-        background: var(--primary-color);
-        color: #ffffff;
-        border-radius: 6px;
+        width: 18px;
+        height: 18px;
+        background: var(--background-color);
+        color: var(--label-color);
+        border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.7rem;
-        font-weight: 600;
+        font-size: 0.65rem;
+        font-weight: 500;
         z-index: 1;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        opacity: 0.9;
+        border: 1px solid var(--border-color);
+        opacity: 0.7;
         transition: all 0.2s ease;
     }
     
     /* Цвет нумерации для светлой темы */
     body[data-theme="light"] .songs-list .setlist-song-item::before {
-        background: var(--primary-color);
-        color: #ffffff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        background: var(--background-color);
+        color: var(--label-color);
+        border: 1px solid var(--border-color);
     }
     
     /* Компактная информация о песне для мобильных - всё в одну строку */
@@ -850,26 +850,23 @@
         flex-shrink: 0;
     }
     
-    /* Тональность для мобильных - исправленные цвета */
+    /* Тональность для мобильных - в стиле BPM */
     .songs-list .setlist-song-item .song-key {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: #ffffff;
-        padding: 3px 8px;
-        border-radius: 12px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--background-color);
+        padding: 4px 8px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
         min-width: 26px;
         text-align: center;
-    }
-    
-    /* Цвет тональности для светлой темы */
-    body[data-theme="light"] .songs-list .setlist-song-item .song-key {
-        color: #ffffff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     /* BPM для мобильных */
@@ -1137,33 +1134,33 @@
         cursor: pointer;
     }
     
-    /* Современная нумерация для средних экранов - минималистичный бейдж */
+    /* Тонкая нумерация для средних экранов - не отвлекающая */
     .songs-list .setlist-song-item::before {
         content: counter(song-counter);
         position: absolute;
         left: 10px;
         top: 10px;
-        width: 22px;
-        height: 22px;
-        background: var(--primary-color);
-        color: #ffffff;
-        border-radius: 6px;
+        width: 20px;
+        height: 20px;
+        background: var(--background-color);
+        color: var(--label-color);
+        border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.7rem;
+        font-weight: 500;
         z-index: 1;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        opacity: 0.9;
+        border: 1px solid var(--border-color);
+        opacity: 0.7;
         transition: all 0.2s ease;
     }
     
     /* Цвет нумерации для светлой темы - средние экраны */
     body[data-theme="light"] .songs-list .setlist-song-item::before {
-        background: var(--primary-color);
-        color: #ffffff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        background: var(--background-color);
+        color: var(--label-color);
+        border: 1px solid var(--border-color);
     }
     
     /* Контейнер информации о песне для средних экранов */
@@ -1196,26 +1193,23 @@
         flex-wrap: wrap;
     }
     
-    /* Тональность для средних экранов - исправленные цвета */
+    /* Тональность для средних экранов - в стиле BPM */
     .songs-list .setlist-song-item .song-key {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: #ffffff;
-        padding: 4px 10px;
-        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
         font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        font-weight: 600;
+        background: var(--background-color);
+        padding: 4px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
         min-width: 28px;
         text-align: center;
-    }
-    
-    /* Цвет тональности для светлой темы - средние экраны */
-    body[data-theme="light"] .songs-list .setlist-song-item .song-key {
-        color: #ffffff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
     }
     
     /* BPM для средних экранов */
@@ -1384,33 +1378,33 @@
         cursor: pointer;
     }
 
-/* Современная нумерация песен - минималистичный дизайн */
+/* Тонкая нумерация песен - не отвлекающая */
 .songs-list .setlist-song-item::before {
         content: counter(song-counter);
         position: absolute;
         left: 10px;
         top: 10px;
-        width: 22px;
-        height: 22px;
-        background: var(--primary-color);
-        color: #ffffff;
-        border-radius: 6px;
+        width: 20px;
+        height: 20px;
+        background: var(--background-color);
+        color: var(--label-color);
+        border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.7rem;
+        font-weight: 500;
         z-index: 1;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        opacity: 0.9;
+        border: 1px solid var(--border-color);
+        opacity: 0.7;
         transition: all 0.2s ease;
     }
     
     /* Цвет нумерации для светлой темы - большие экраны */
     body[data-theme="light"] .songs-list .setlist-song-item::before {
-        background: var(--primary-color);
-        color: #ffffff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        background: var(--background-color);
+        color: var(--label-color);
+        border: 1px solid var(--border-color);
     }
     
     /* Контейнер информации о песне */
@@ -1443,28 +1437,25 @@
         flex-wrap: wrap;
     }
     
-    /* Красивая тональность - улучшенный дизайн с исправленными цветами */
+    /* Тональность - в едином стиле с BPM */
     .song-key {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: #ffffff;
-        padding: 4px 10px;
-        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
         font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        font-weight: 600;
+        background: var(--background-color);
+        padding: 4px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
         min-width: 28px;
         text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
         position: relative;
         overflow: hidden;
-    }
-    
-    /* Цвет тональности для светлой темы - большие экраны */
-    body[data-theme="light"] .song-key {
-        color: #ffffff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
     
     .song-key::before {
