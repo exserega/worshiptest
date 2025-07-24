@@ -93,6 +93,15 @@ export const clearSearch = document.getElementById('clear-search');
 export const categoryFilter = document.getElementById('category-filter');
 export const showAddedOnly = document.getElementById('show-added-only');
 export const songsGrid = document.getElementById('songs-grid');
+
+// Элементы модального окна выбора тональности
+export const keySelectionModal = document.getElementById('key-selection-modal');
+export const closeKeyModal = document.getElementById('close-key-modal');
+export const keySongName = document.getElementById('key-song-name');
+export const originalKey = document.getElementById('original-key');
+export const selectedKey = document.getElementById('selected-key');
+export const cancelKeySelection = document.getElementById('cancel-key-selection');
+export const confirmKeySelection = document.getElementById('confirm-key-selection');
 export const vocalistSelect = document.getElementById('vocalist-select');
 export const repertoirePanelList = document.getElementById('repertoire-panel-list');
 export const presentationOverlay = document.getElementById('presentation-overlay');

@@ -83,6 +83,10 @@ let currentCreatedSetlistId = null;
 let currentCreatedSetlistName = '';
 let addedSongsToCurrentSetlist = new Set();
 
+// Переменные для выбора тональности
+let currentSongForKey = null;
+let currentSelectedKey = 'C';
+
 function closeCreateSetlistModal() {
     ui.createSetlistModal.classList.remove('show');
     ui.newSetlistNameInput.value = '';
@@ -114,6 +118,53 @@ function closeAddSongsOverlay() {
     }
     if (ui.showAddedOnly) {
         ui.showAddedOnly.classList.remove('active');
+    }
+}
+
+function closeKeySelectionModal() {
+    if (ui.keySelectionModal) {
+        ui.keySelectionModal.classList.remove('show');
+    }
+    currentSongForKey = null;
+    currentSelectedKey = 'C';
+}
+
+function showKeySelectionModal(song) {
+    if (!ui.keySelectionModal) return;
+    
+    currentSongForKey = song;
+    const originalSongKey = song['Тональность'] || 'C';
+    currentSelectedKey = originalSongKey;
+    
+    // Заполняем информацию о песне
+    if (ui.keySongName) {
+        ui.keySongName.textContent = song.name;
+    }
+    if (ui.originalKey) {
+        ui.originalKey.textContent = originalSongKey;
+    }
+    if (ui.selectedKey) {
+        ui.selectedKey.textContent = currentSelectedKey;
+    }
+    
+    // Обновляем кнопки тональностей
+    updateKeyButtons();
+    
+    // Показываем модальное окно
+    ui.keySelectionModal.classList.add('show');
+}
+
+function updateKeyButtons() {
+    const keyButtons = document.querySelectorAll('.key-btn');
+    keyButtons.forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.dataset.key === currentSelectedKey) {
+            btn.classList.add('selected');
+        }
+    });
+    
+    if (ui.selectedKey) {
+        ui.selectedKey.textContent = currentSelectedKey;
     }
 }
 
@@ -214,6 +265,7 @@ function displaySongsGrid(songs) {
     
     songs.forEach(song => {
         const isAdded = addedSongsToCurrentSetlist.has(song.id);
+        const originalKey = song['Тональность'] || 'C';
         
         const songCard = document.createElement('div');
         songCard.className = `song-card ${isAdded ? 'added' : ''}`;
@@ -222,9 +274,13 @@ function displaySongsGrid(songs) {
                 <div>
                     <h4 class="song-title">${song.name}</h4>
                     <div class="song-category">${song.sheet || 'Без категории'}</div>
+                    <div class="song-key-display">
+                        Тональность: <span class="song-key-badge">${originalKey}</span>
+                    </div>
                 </div>
                 <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
                     <i class="fas fa-${isAdded ? 'check' : 'plus'}"></i>
+                    <span>${isAdded ? 'Добавлена' : 'Добавить'}</span>
                 </button>
             </div>
         `;
@@ -232,29 +288,24 @@ function displaySongsGrid(songs) {
         const addBtn = songCard.querySelector('.song-add-btn');
         addBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            toggleSongInSetlist(song);
+            if (isAdded) {
+                // Если песня уже добавлена, удаляем её
+                removeSongFromSetlist(song);
+            } else {
+                // Если песня не добавлена, показываем модальное окно выбора тональности
+                showKeySelectionModal(song);
+            }
         });
         
         ui.songsGrid.appendChild(songCard);
     });
 }
 
-async function toggleSongInSetlist(song) {
-    const isAdded = addedSongsToCurrentSetlist.has(song.id);
-    
+async function addSongToSetlist(song, key) {
     try {
-        if (isAdded) {
-            // Удаляем песню
-            await api.removeSongFromSetlist(currentCreatedSetlistId, song.id);
-            addedSongsToCurrentSetlist.delete(song.id);
-            showNotification(`➖ "${song.name}" удалена из сет-листа`, 'info');
-        } else {
-            // Добавляем песню (с дефолтной тональностью)
-            const defaultKey = song['Тональность'] || 'C';
-            await api.addSongToSetlist(currentCreatedSetlistId, song.id, defaultKey);
-            addedSongsToCurrentSetlist.add(song.id);
-            showNotification(`➕ "${song.name}" добавлена в сет-лист`, 'success');
-        }
+        await api.addSongToSetlist(currentCreatedSetlistId, song.id, key);
+        addedSongsToCurrentSetlist.add(song.id);
+        showNotification(`➕ "${song.name}" добавлена в тональности ${key}`, 'success');
         
         // Обновляем счетчик
         if (ui.addedSongsCount) {
@@ -262,16 +313,47 @@ async function toggleSongInSetlist(song) {
         }
         
         // Обновляем отображение
-        const currentSearch = ui.songSearchInput ? ui.songSearchInput.value.trim() : '';
-        const currentCategory = ui.categoryFilter ? ui.categoryFilter.value : '';
-        const showAddedOnly = ui.showAddedOnly ? ui.showAddedOnly.classList.contains('active') : false;
-        
-        filterAndDisplaySongs(currentSearch, currentCategory, showAddedOnly);
+        refreshSongsDisplay();
         
     } catch (error) {
-        console.error('Ошибка при добавлении/удалении песни:', error);
-        showNotification('❌ Ошибка при изменении сет-листа', 'error');
+        console.error('Ошибка при добавлении песни:', error);
+        showNotification('❌ Ошибка при добавлении песни', 'error');
     }
+}
+
+async function removeSongFromSetlist(song) {
+    try {
+        await api.removeSongFromSetlist(currentCreatedSetlistId, song.id);
+        addedSongsToCurrentSetlist.delete(song.id);
+        showNotification(`➖ "${song.name}" удалена из сет-листа`, 'info');
+        
+        // Обновляем счетчик
+        if (ui.addedSongsCount) {
+            ui.addedSongsCount.textContent = addedSongsToCurrentSetlist.size;
+        }
+        
+        // Обновляем отображение
+        refreshSongsDisplay();
+        
+    } catch (error) {
+        console.error('Ошибка при удалении песни:', error);
+        showNotification('❌ Ошибка при удалении песни', 'error');
+    }
+}
+
+function refreshSongsDisplay() {
+    const currentSearch = ui.songSearchInput ? ui.songSearchInput.value.trim() : '';
+    const currentCategory = ui.categoryFilter ? ui.categoryFilter.value : '';
+    const showAddedOnly = ui.showAddedOnly ? ui.showAddedOnly.classList.contains('active') : false;
+    
+    filterAndDisplaySongs(currentSearch, currentCategory, showAddedOnly);
+}
+
+async function confirmAddSongWithKey() {
+    if (!currentSongForKey) return;
+    
+    closeKeySelectionModal();
+    await addSongToSetlist(currentSongForKey, currentSelectedKey);
 }
 
 function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = false) {
@@ -912,6 +994,33 @@ function setupEventListeners() {
             filterAndDisplaySongs(searchTerm, category, showAddedOnly);
         });
     }
+
+    // Модальное окно выбора тональности
+    if (ui.closeKeyModal) {
+        ui.closeKeyModal.addEventListener('click', closeKeySelectionModal);
+    }
+    if (ui.cancelKeySelection) {
+        ui.cancelKeySelection.addEventListener('click', closeKeySelectionModal);
+    }
+    if (ui.confirmKeySelection) {
+        ui.confirmKeySelection.addEventListener('click', confirmAddSongWithKey);
+    }
+    
+    if (ui.keySelectionModal) {
+        ui.keySelectionModal.addEventListener('click', (e) => {
+            if (e.target === ui.keySelectionModal) {
+                closeKeySelectionModal();
+            }
+        });
+    }
+    
+    // Обработчики кнопок тональностей
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('key-btn')) {
+            currentSelectedKey = e.target.dataset.key;
+            updateKeyButtons();
+        }
+    });
 
     // --- Редактор песен ---
     ui.editSongButton.addEventListener('click', () => {
