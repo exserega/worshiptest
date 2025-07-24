@@ -731,7 +731,20 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
 
     if (!songs || songs.length === 0) {
         currentSetlistSongsContainer.innerHTML = '<div class="empty-message">В этом сет-листе пока нет песен.</div>';
+        // Скрываем счетчик если нет песен
+        const songsCountElement = document.getElementById('songs-count');
+        if (songsCountElement) {
+            songsCountElement.style.display = 'none';
+        }
         return;
+    }
+
+    // Обновляем счетчик песен
+    const songsCountElement = document.getElementById('songs-count');
+    if (songsCountElement) {
+        const countText = getSongCountText(songs.length);
+        songsCountElement.querySelector('span').textContent = `${songs.length} ${countText}`;
+        songsCountElement.style.display = 'flex';
     }
 
     const fullSongsData = songs
@@ -742,25 +755,58 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         .filter(s => s.id)
         .sort((a,b) => a.order - b.order);
 
-
     fullSongsData.forEach(song => {
         const songItem = document.createElement('div');
         songItem.className = 'setlist-song-item';
         
-        const songNameSpan = document.createElement('span');
-        songNameSpan.textContent = `${song.name} (${song.preferredKey})`;
-        songNameSpan.addEventListener('click', () => onSongSelect(song));
-        songItem.appendChild(songNameSpan);
+        // Контейнер для информации о песне
+        const songInfo = document.createElement('div');
+        songInfo.className = 'song-info';
+        
+        // Название песни
+        const songName = document.createElement('div');
+        songName.className = 'song-name';
+        songName.textContent = song.name;
+        songName.addEventListener('click', () => onSongSelect(song));
+        
+        // Метаданные песни (тональность и BPM)
+        const songMeta = document.createElement('div');
+        songMeta.className = 'song-meta';
+        
+        // Красивая тональность
+        const keyElement = document.createElement('span');
+        keyElement.className = 'song-key';
+        keyElement.textContent = song.preferredKey || 'C';
+        
+        songMeta.appendChild(keyElement);
+        
+        // BPM если есть
+        if (song.BPM && song.BPM !== 'NA') {
+            const bpmElement = document.createElement('span');
+            bpmElement.className = 'song-bpm';
+            bpmElement.innerHTML = `<i class="fas fa-tachometer-alt"></i>${song.BPM}`;
+            songMeta.appendChild(bpmElement);
+        }
+        
+        songInfo.appendChild(songName);
+        songInfo.appendChild(songMeta);
+        songItem.appendChild(songInfo);
 
+        // Кнопки действий
+        const songActions = document.createElement('div');
+        songActions.className = 'song-actions';
+        
         const removeBtn = document.createElement('button');
         removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-        removeBtn.className = 'remove-button';
+        removeBtn.className = 'song-action-btn';
         removeBtn.title = 'Удалить из сет-листа';
         removeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             onSongRemove(song.id, song.name);
         });
-        songItem.appendChild(removeBtn);
+        
+        songActions.appendChild(removeBtn);
+        songItem.appendChild(songActions);
 
         currentSetlistSongsContainer.appendChild(songItem);
     });
@@ -782,8 +828,9 @@ export function clearSetlistSelection() {
     }
     
     // Скрываем счетчик песен
-    if (songsCount) {
-        songsCount.style.display = 'none';
+    const songsCountElement = document.getElementById('songs-count');
+    if (songsCountElement) {
+        songsCountElement.style.display = 'none';
     }
     
     // Очищаем список песен
@@ -816,6 +863,17 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
     // Показываем кнопки действий внизу
     if (bottomActions) {
         bottomActions.style.display = 'flex';
+    }
+
+    // Показываем и обновляем счетчик песен
+    const songsCount = setlist.songs ? setlist.songs.length : 0;
+    if (songsCount > 0) {
+        const songsCountElement = document.getElementById('songs-count');
+        if (songsCountElement) {
+            const countText = getSongCountText(songsCount);
+            songsCountElement.querySelector('span').textContent = `${songsCount} ${countText}`;
+            songsCountElement.style.display = 'flex';
+        }
     }
 
     // Отмечаем выбранный сет-лист в dropdown
