@@ -350,7 +350,29 @@ function refreshSongsDisplay() {
 }
 
 async function confirmAddSongWithKey() {
-    if (!currentSongForKey) return;
+    console.log('confirmAddSongWithKey called', {
+        currentSongForKey,
+        currentSelectedKey,
+        currentCreatedSetlistId
+    });
+    
+    if (!currentSongForKey) {
+        console.error('No song selected for key');
+        showNotification('❌ Песня не выбрана', 'error');
+        return;
+    }
+    
+    if (!currentSelectedKey) {
+        console.error('No key selected');
+        showNotification('❌ Тональность не выбрана', 'error');
+        return;
+    }
+    
+    if (!currentCreatedSetlistId) {
+        console.error('No setlist ID');
+        showNotification('❌ Сет-лист не создан', 'error');
+        return;
+    }
     
     closeKeySelectionModal();
     await addSongToSetlist(currentSongForKey, currentSelectedKey);
