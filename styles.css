@@ -38,6 +38,15 @@
 /* НОВАЯ DROPDOWN СТРУКТУРА СЕТ-ЛИСТОВ */
 /* ======================================== */
 
+/* Переопределение базовых стилей панели сет-листов */
+#setlists-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+}
+
 /* Заголовок панели */
 .panel-header {
     padding: 20px 24px 16px;
@@ -320,6 +329,8 @@
     display: flex;
     flex-direction: column;
     padding: 20px 24px;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .songs-header {
@@ -361,6 +372,7 @@
     flex: 1;
     overflow-y: auto;
     margin-bottom: 16px;
+    min-height: 0;
 }
 
 .songs-list .setlist-song-item {
@@ -491,6 +503,8 @@
     gap: 12px;
     padding-top: 16px;
     border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 .bottom-actions .action-btn {
@@ -658,47 +672,208 @@
 
 /* Мобильная адаптация */
 @media (max-width: 768px) {
+    /* Заголовок панели */
     .panel-header {
-        padding: 16px 20px 12px;
+        padding: 18px 16px 14px;
+        text-align: center;
     }
     
     .panel-title {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
+        justify-content: center;
     }
     
+    /* Секция выбора сет-листа */
     .setlist-selector-section {
-        padding: 16px 20px;
+        padding: 16px;
     }
     
     .setlist-dropdown-btn {
-        padding: 14px 16px;
-        font-size: 0.95rem;
+        padding: 16px 20px;
+        font-size: 1rem;
+        border-radius: 10px;
+        margin-bottom: 12px;
     }
     
+    /* Кнопки действий для сет-листа */
+    .setlist-actions {
+        gap: 10px;
+        justify-content: center;
+        margin-top: 8px;
+    }
+    
+    .setlist-actions .action-btn {
+        padding: 10px 14px;
+        border-radius: 10px;
+        min-width: 44px;
+        justify-content: center;
+    }
+    
+    /* Контент с песнями */
     .current-setlist-content {
-        padding: 16px 20px;
+        padding: 16px;
+        min-height: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .songs-header {
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        text-align: center;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .songs-header h3 {
+        font-size: 1.1rem;
+        justify-content: center;
+    }
+    
+    .songs-count {
+        align-self: center;
+    }
+    
+    /* Список песен */
+    .songs-list {
+        flex: 1;
+        margin-bottom: 12px;
+        min-height: 200px;
+        overflow-y: auto;
     }
     
     .songs-list .setlist-song-item {
-        padding: 14px 16px;
+        padding: 12px 14px;
+        margin-bottom: 6px;
+        border-radius: 10px;
     }
     
-    .action-btn span {
-        display: none;
+    .song-name {
+        font-size: 0.95rem;
+    }
+    
+    .song-meta {
+        gap: 8px;
+        font-size: 0.8rem;
+    }
+    
+    .song-key {
+        padding: 3px 6px;
+        font-size: 0.75rem;
+        border-radius: 5px;
+    }
+    
+    .song-bpm {
+        gap: 3px;
+    }
+    
+    /* Кнопки действий внизу - ИСПРАВЛЕНИЕ */
+    .bottom-actions {
+        display: flex !important;
+        gap: 10px;
+        padding: 12px 0 0;
+        border-top: 2px solid var(--border-color);
+        margin-top: auto;
+        flex-shrink: 0;
     }
     
     .bottom-actions .action-btn {
+        flex: 1;
+        padding: 14px 8px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        min-height: 48px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .bottom-actions .action-btn i {
+        font-size: 1.1rem;
+        margin-bottom: 2px;
+    }
+    
+    .bottom-actions .action-btn span {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.2;
+    }
+    
+    /* Dropdown меню */
+    .setlist-dropdown-menu {
+        max-height: 250px;
+        border-radius: 10px;
+    }
+    
+    .dropdown-header {
+        padding: 12px 16px 10px;
+    }
+    
+    .dropdown-title {
+        font-size: 0.85rem;
+    }
+    
+    .create-new-btn {
+        padding: 6px 8px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+    
+    .dropdown-list {
+        padding: 6px;
+        max-height: 160px;
+    }
+    
+    .dropdown-list .setlist-item {
         padding: 10px 12px;
+        margin-bottom: 3px;
+        border-radius: 6px;
+        font-size: 0.9rem;
     }
     
+    /* Модальное окно */
     .modal-content {
-        max-width: 350px;
+        max-width: 320px;
+        border-radius: 12px;
     }
     
-    .modal-header,
-    .modal-body,
+    .modal-header {
+        padding: 16px 20px 12px;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .modal-body {
+        padding: 16px 20px;
+    }
+    
     .modal-footer {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding: 12px 20px 16px;
+        gap: 10px;
+    }
+    
+    .btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        border-radius: 8px;
+    }
+    
+    /* Empty message */
+    .empty-message {
+        padding: 30px 16px;
+    }
+    
+    .empty-message i {
+        font-size: 2rem;
+    }
+    
+    .empty-message span {
+        font-size: 0.9rem;
     }
 }
