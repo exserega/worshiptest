@@ -86,21 +86,35 @@ let addedSongsToCurrentSetlist = new Set();
 function closeCreateSetlistModal() {
     ui.createSetlistModal.classList.remove('show');
     ui.newSetlistNameInput.value = '';
-    ui.nameCharCount.textContent = '0';
+    if (ui.nameCharCount) {
+        ui.nameCharCount.textContent = '0';
+    }
 }
 
 function closeAddSongsConfirmModal() {
-    ui.addSongsConfirmModal.classList.remove('show');
+    if (ui.addSongsConfirmModal) {
+        ui.addSongsConfirmModal.classList.remove('show');
+    }
 }
 
 function closeAddSongsOverlay() {
-    ui.addSongsOverlay.classList.remove('show');
+    if (ui.addSongsOverlay) {
+        ui.addSongsOverlay.classList.remove('show');
+    }
     // Сброс состояния
     addedSongsToCurrentSetlist.clear();
-    ui.addedSongsCount.textContent = '0';
-    ui.songSearchInput.value = '';
-    ui.categoryFilter.value = '';
-    ui.showAddedOnly.classList.remove('active');
+    if (ui.addedSongsCount) {
+        ui.addedSongsCount.textContent = '0';
+    }
+    if (ui.songSearchInput) {
+        ui.songSearchInput.value = '';
+    }
+    if (ui.categoryFilter) {
+        ui.categoryFilter.value = '';
+    }
+    if (ui.showAddedOnly) {
+        ui.showAddedOnly.classList.remove('active');
+    }
 }
 
 async function handleCreateSetlist() {
@@ -122,8 +136,12 @@ async function handleCreateSetlist() {
         await refreshSetlists();
         
         // Показываем модальное окно подтверждения добавления песен
-        ui.createdSetlistName.textContent = name;
-        ui.addSongsConfirmModal.classList.add('show');
+        if (ui.createdSetlistName) {
+            ui.createdSetlistName.textContent = name;
+        }
+        if (ui.addSongsConfirmModal) {
+            ui.addSongsConfirmModal.classList.add('show');
+        }
         
         showNotification('✅ Сет-лист создан успешно!', 'success');
     } catch (error) {
@@ -139,8 +157,12 @@ async function startAddingSongs() {
     closeAddSongsConfirmModal();
     
     // Показываем полноэкранный оверлей
-    ui.targetSetlistName.textContent = currentCreatedSetlistName;
-    ui.addSongsOverlay.classList.add('show');
+    if (ui.targetSetlistName) {
+        ui.targetSetlistName.textContent = currentCreatedSetlistName;
+    }
+    if (ui.addSongsOverlay) {
+        ui.addSongsOverlay.classList.add('show');
+    }
     
          // Загружаем все песни если еще не загружены
      if (state.allSongs.length === 0) {
@@ -160,6 +182,8 @@ async function startAddingSongs() {
 }
 
 function populateCategoryFilter() {
+    if (!ui.categoryFilter) return;
+    
     ui.categoryFilter.innerHTML = '<option value="">Все категории</option>';
     
     const categories = [...new Set(state.allSongs.map(song => song.sheet).filter(Boolean))];
@@ -174,6 +198,8 @@ function populateCategoryFilter() {
 }
 
 function displaySongsGrid(songs) {
+    if (!ui.songsGrid) return;
+    
     if (!songs || songs.length === 0) {
         ui.songsGrid.innerHTML = `
             <div class="loading-state">
@@ -231,12 +257,14 @@ async function toggleSongInSetlist(song) {
         }
         
         // Обновляем счетчик
-        ui.addedSongsCount.textContent = addedSongsToCurrentSetlist.size;
+        if (ui.addedSongsCount) {
+            ui.addedSongsCount.textContent = addedSongsToCurrentSetlist.size;
+        }
         
         // Обновляем отображение
-        const currentSearch = ui.songSearchInput.value.trim();
-        const currentCategory = ui.categoryFilter.value;
-        const showAddedOnly = ui.showAddedOnly.classList.contains('active');
+        const currentSearch = ui.songSearchInput ? ui.songSearchInput.value.trim() : '';
+        const currentCategory = ui.categoryFilter ? ui.categoryFilter.value : '';
+        const showAddedOnly = ui.showAddedOnly ? ui.showAddedOnly.classList.contains('active') : false;
         
         filterAndDisplaySongs(currentSearch, currentCategory, showAddedOnly);
         
@@ -814,60 +842,76 @@ function setupEventListeners() {
     });
     
     // Счетчик символов для названия
-    ui.newSetlistNameInput.addEventListener('input', (e) => {
-        ui.nameCharCount.textContent = e.target.value.length;
-    });
+    if (ui.nameCharCount) {
+        ui.newSetlistNameInput.addEventListener('input', (e) => {
+            ui.nameCharCount.textContent = e.target.value.length;
+        });
+    }
 
     // Модальное окно подтверждения добавления песен
-    ui.closeConfirmModal.addEventListener('click', closeAddSongsConfirmModal);
-    ui.skipAddSongs.addEventListener('click', closeAddSongsConfirmModal);
-    ui.startAddSongs.addEventListener('click', startAddingSongs);
+    if (ui.closeConfirmModal) {
+        ui.closeConfirmModal.addEventListener('click', closeAddSongsConfirmModal);
+    }
+    if (ui.skipAddSongs) {
+        ui.skipAddSongs.addEventListener('click', closeAddSongsConfirmModal);
+    }
+    if (ui.startAddSongs) {
+        ui.startAddSongs.addEventListener('click', startAddingSongs);
+    }
     
-    ui.addSongsConfirmModal.addEventListener('click', (e) => {
-        if (e.target === ui.addSongsConfirmModal) {
-            closeAddSongsConfirmModal();
-        }
-    });
+    if (ui.addSongsConfirmModal) {
+        ui.addSongsConfirmModal.addEventListener('click', (e) => {
+            if (e.target === ui.addSongsConfirmModal) {
+                closeAddSongsConfirmModal();
+            }
+        });
+    }
 
     // Полноэкранный оверлей добавления песен
-    ui.closeAddSongs.addEventListener('click', closeAddSongsOverlay);
-    ui.finishAddingSongs.addEventListener('click', finishAddingSongs);
+    if (ui.closeAddSongs) {
+        ui.closeAddSongs.addEventListener('click', closeAddSongsOverlay);
+    }
+    if (ui.finishAddingSongs) {
+        ui.finishAddingSongs.addEventListener('click', finishAddingSongs);
+    }
     
     // Поиск песен
-    ui.songSearchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.trim();
-        ui.clearSearch.style.display = searchTerm ? 'flex' : 'none';
+    if (ui.songSearchInput && ui.clearSearch && ui.categoryFilter && ui.showAddedOnly) {
+        ui.songSearchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim();
+            ui.clearSearch.style.display = searchTerm ? 'flex' : 'none';
+            
+            const category = ui.categoryFilter.value;
+            const showAddedOnly = ui.showAddedOnly.classList.contains('active');
+            filterAndDisplaySongs(searchTerm, category, showAddedOnly);
+        });
         
-        const category = ui.categoryFilter.value;
-        const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-        filterAndDisplaySongs(searchTerm, category, showAddedOnly);
-    });
-    
-    ui.clearSearch.addEventListener('click', () => {
-        ui.songSearchInput.value = '';
-        ui.clearSearch.style.display = 'none';
+        ui.clearSearch.addEventListener('click', () => {
+            ui.songSearchInput.value = '';
+            ui.clearSearch.style.display = 'none';
+            
+            const category = ui.categoryFilter.value;
+            const showAddedOnly = ui.showAddedOnly.classList.contains('active');
+            filterAndDisplaySongs('', category, showAddedOnly);
+        });
         
-        const category = ui.categoryFilter.value;
-        const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-        filterAndDisplaySongs('', category, showAddedOnly);
-    });
-    
-    // Фильтр по категориям
-    ui.categoryFilter.addEventListener('change', (e) => {
-        const searchTerm = ui.songSearchInput.value.trim();
-        const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-        filterAndDisplaySongs(searchTerm, e.target.value, showAddedOnly);
-    });
-    
-    // Показать только добавленные
-    ui.showAddedOnly.addEventListener('click', () => {
-        ui.showAddedOnly.classList.toggle('active');
+        // Фильтр по категориям
+        ui.categoryFilter.addEventListener('change', (e) => {
+            const searchTerm = ui.songSearchInput.value.trim();
+            const showAddedOnly = ui.showAddedOnly.classList.contains('active');
+            filterAndDisplaySongs(searchTerm, e.target.value, showAddedOnly);
+        });
         
-        const searchTerm = ui.songSearchInput.value.trim();
-        const category = ui.categoryFilter.value;
-        const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-        filterAndDisplaySongs(searchTerm, category, showAddedOnly);
-    });
+        // Показать только добавленные
+        ui.showAddedOnly.addEventListener('click', () => {
+            ui.showAddedOnly.classList.toggle('active');
+            
+            const searchTerm = ui.songSearchInput.value.trim();
+            const category = ui.categoryFilter.value;
+            const showAddedOnly = ui.showAddedOnly.classList.contains('active');
+            filterAndDisplaySongs(searchTerm, category, showAddedOnly);
+        });
+    }
 
     // --- Редактор песен ---
     ui.editSongButton.addEventListener('click', () => {

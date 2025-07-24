@@ -926,7 +926,7 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4px);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 2000;
@@ -936,6 +936,7 @@
 }
 
 .modern-overlay.show {
+    display: flex;
     opacity: 1;
     visibility: visible;
 }
@@ -1157,12 +1158,14 @@
     height: 100%;
     background: var(--background-color);
     z-index: 3000;
+    display: none;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
 }
 
 .fullscreen-overlay.show {
+    display: block;
     opacity: 1;
     visibility: visible;
 }
