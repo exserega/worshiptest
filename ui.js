@@ -790,7 +790,6 @@ export function clearSetlistSelection() {
     if (currentSetlistSongsContainer) {
         currentSetlistSongsContainer.innerHTML = `
             <div class="empty-message">
-                <i class="fas fa-music"></i>
                 <span>Сначала выберите сет-лист</span>
             </div>`;
     }
@@ -867,7 +866,6 @@ export function renderSetlists(setlists, onSelect, onDelete) {
     if (!setlists || setlists.length === 0) {
         setlistsListContainer.innerHTML = `
             <div class="empty-message">
-                <i class="fas fa-music"></i>
                 <span>Сет-листов пока нет. Создайте новый!</span>
             </div>`;
         return;

@@ -198,33 +198,35 @@
     
     <!-- Заголовок панели -->
     <div class="panel-header">
-        <h2 class="panel-title">
-            <i class="fas fa-list-music"></i>
-            Сет-листы
-        </h2>
+        <h2 class="panel-title">Сет-листы</h2>
     </div>
 
     <!-- Dropdown выбора сет-листа -->
     <div class="setlist-selector-section">
-        <div class="setlist-dropdown-container">
-            <button id="setlist-dropdown-btn" class="setlist-dropdown-btn">
-                <span id="current-setlist-name">Выберите сет-лист</span>
-                <i class="fas fa-chevron-down dropdown-arrow"></i>
-            </button>
+        <div class="selector-instruction">Выберите список песен</div>
+        
+        <div class="selector-controls">
+            <div class="setlist-dropdown-container">
+                <button id="setlist-dropdown-btn" class="setlist-dropdown-btn">
+                    <span id="current-setlist-name">Выберите сет-лист</span>
+                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                </button>
+            </div>
             
-            <div id="setlist-dropdown-menu" class="setlist-dropdown-menu">
-                <div class="dropdown-header">
-                    <span class="dropdown-title">Ваши сет-листы</span>
-                    <button id="create-new-setlist-btn" class="create-new-btn" title="Создать новый сет-лист">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-                
-                <div id="setlists-list-container" class="dropdown-list">
-                    <div class="empty-message">
-                        <i class="fas fa-music"></i>
-                        <span>Загрузка сет-листов...</span>
-                    </div>
+            <button id="create-new-setlist-btn" class="create-new-setlist-btn" title="Создать новый сет-лист">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        
+        <!-- Dropdown меню перенесено в правильное место -->
+        <div id="setlist-dropdown-menu" class="setlist-dropdown-menu">
+            <div class="dropdown-header">
+                <span class="dropdown-title">Ваши сет-листы</span>
+            </div>
+            
+            <div id="setlists-list-container" class="dropdown-list">
+                <div class="empty-message">
+                    <span>Загрузка сет-листов...</span>
                 </div>
             </div>
         </div>
