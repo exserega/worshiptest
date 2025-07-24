@@ -417,22 +417,11 @@
     border-color: var(--primary-color);
 }
 
-.songs-list .setlist-song-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: var(--primary-color);
-    border-radius: 0 2px 2px 0;
-}
+/* Убираем полосу слева для компактности */
 
 .songs-list .setlist-song-item:hover {
-    background: linear-gradient(135deg, var(--hover-color), color-mix(in srgb, var(--hover-color) 95%, var(--primary-color)));
-    border-color: color-mix(in srgb, var(--primary-color) 50%, transparent);
-    transform: translateX(4px) translateY(-1px);
-    box-shadow: 0 6px 20px color-mix(in srgb, var(--primary-color) 20%, transparent);
+    background: var(--hover-color);
+    border-color: var(--primary-color);
 }
 
 .song-info {
@@ -443,81 +432,76 @@
 }
 
 .song-name {
-    font-weight: 700;
+    font-weight: 600;
     color: var(--text-color);
-    font-size: 1rem;
+    font-size: 0.85rem;
     display: flex;
     align-items: center;
-    gap: 8px;
-}
-
-.song-name {
-    /* Убрали музыкальную иконку */
+    gap: 6px;
 }
 
 .song-meta {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
 }
 
 .song-key {
-    background: linear-gradient(135deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 85%, black));
+    background: var(--primary-color);
     color: var(--button-text-color);
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.3px;
 }
 
 .song-bpm {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     color: var(--label-color);
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 0.7rem;
 }
 
 .song-bpm i {
     color: var(--primary-color);
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 .song-actions {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     opacity: 0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateX(10px);
+    transition: opacity 0.2s ease;
 }
 
 .songs-list .setlist-song-item:hover .song-actions {
     opacity: 1;
-    transform: translateX(0);
 }
 
 .song-action-btn {
-    padding: 6px 8px;
-    background: linear-gradient(135deg, var(--container-background-color), var(--background-color));
+    padding: 4px 6px;
+    background: var(--container-background-color);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 4px;
     color: var(--text-color);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    font-size: 0.7rem;
 }
 
 .song-action-btn:hover {
-    background: linear-gradient(135deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 85%, black));
+    background: var(--primary-color);
     color: var(--button-text-color);
     border-color: var(--primary-color);
-    transform: translateY(-1px);
 }
 
 .song-action-btn.danger:hover {
-    background: linear-gradient(135deg, var(--danger-color), color-mix(in srgb, var(--danger-color) 85%, black));
+    background: var(--danger-color);
+    color: var(--button-text-color);
     border-color: var(--danger-color);
 }
 
@@ -899,29 +883,34 @@
     }
     
     .songs-list .setlist-song-item {
-        padding: 8px 10px;
-        margin-bottom: 5px;
-        border-radius: 6px;
-        font-size: 0.8rem;
+        padding: 6px 8px;
+        margin-bottom: 4px;
+        border-radius: 4px;
+        font-size: 0.75rem;
     }
     
     .song-name {
-        font-size: 0.95rem;
-    }
-    
-    .song-meta {
-        gap: 8px;
         font-size: 0.8rem;
     }
     
+    .song-meta {
+        gap: 6px;
+        font-size: 0.7rem;
+    }
+    
     .song-key {
-        padding: 3px 6px;
-        font-size: 0.75rem;
-        border-radius: 5px;
+        padding: 2px 4px;
+        font-size: 0.65rem;
+        border-radius: 3px;
     }
     
     .song-bpm {
-        gap: 3px;
+        gap: 2px;
+        font-size: 0.65rem;
+    }
+    
+    .song-bpm i {
+        font-size: 0.6rem;
     }
     
     /* Кнопки действий внизу - ИСПРАВЛЕНИЕ */
