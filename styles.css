@@ -1177,23 +1177,7 @@
     box-shadow: 0 6px 20px color-mix(in srgb, var(--primary-color) 50%, transparent);
 }
 
-.selected-key-display {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px 20px;
-    background: linear-gradient(135deg, 
-        color-mix(in srgb, var(--primary-color) 8%, var(--container-background-color)),
-        color-mix(in srgb, var(--primary-color) 12%, var(--container-background-color))
-    );
-    border: 1px solid color-mix(in srgb, var(--primary-color) 25%, var(--border-color));
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-color);
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 10%, transparent);
-}
+/* Блок "Выбранная тональность" удален как избыточный */
 
 .modal-header {
     display: flex;
@@ -1824,10 +1808,7 @@
         max-width: 95vw;
     }
     
-    .selected-key-display {
-        padding: 10px;
-        font-size: 0.875rem;
-    }
+    /* Блок "Выбранная тональность" удален */
     
     .control-header {
         gap: 8px;
@@ -2706,10 +2687,7 @@
             max-width: 90vw;
         }
         
-        .selected-key-display {
-            padding: 8px;
-            font-size: 0.8rem;
-        }
+        /* Блок "Выбранная тональность" удален */
         
         .control-header {
             gap: 6px;

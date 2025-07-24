@@ -184,9 +184,7 @@ function showKeySelectionModal(song) {
     if (ui.originalKey) {
         ui.originalKey.textContent = originalSongKey;
     }
-    if (ui.selectedKey) {
-        ui.selectedKey.textContent = currentSelectedKey;
-    }
+    // Блок "Выбранная тональность" удален за ненадобностью
     
     // Обновляем кнопки тональностей
     updateKeyButtons();
@@ -244,9 +242,7 @@ function updateKeyButtons() {
         }
     });
     
-    if (ui.selectedKey) {
-        ui.selectedKey.textContent = currentSelectedKey;
-    }
+    // Блок "Выбранная тональность" удален за ненадобностью
 }
 
 async function handleCreateSetlist() {
