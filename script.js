@@ -303,17 +303,24 @@ function displaySongsGrid(songs) {
 
 async function addSongToSetlist(song, key) {
     try {
-        await api.addSongToSetlist(currentCreatedSetlistId, song.id, key);
-        addedSongsToCurrentSetlist.add(song.id);
-        showNotification(`➕ "${song.name}" добавлена в тональности ${key}`, 'success');
+        const result = await api.addSongToSetlist(currentCreatedSetlistId, song.id, key);
         
-        // Обновляем счетчик
-        if (ui.addedSongsCount) {
-            ui.addedSongsCount.textContent = addedSongsToCurrentSetlist.size;
+        if (result.status === 'added') {
+            addedSongsToCurrentSetlist.add(song.id);
+            showNotification(`➕ "${song.name}" добавлена в тональности ${key}`, 'success');
+            
+            // Обновляем счетчик
+            if (ui.addedSongsCount) {
+                ui.addedSongsCount.textContent = addedSongsToCurrentSetlist.size;
+            }
+            
+            // Обновляем отображение
+            refreshSongsDisplay();
+        } else if (result.status === 'duplicate_same') {
+            showNotification(`⚠️ "${song.name}" уже добавлена в сет-лист`, 'warning');
+        } else if (result.status === 'duplicate_key') {
+            showNotification(`⚠️ "${song.name}" уже добавлена в тональности ${result.existingKey}`, 'warning');
         }
-        
-        // Обновляем отображение
-        refreshSongsDisplay();
         
     } catch (error) {
         console.error('Ошибка при добавлении песни:', error);
