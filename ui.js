@@ -59,7 +59,8 @@ export const editSetlistBtn = document.getElementById('edit-setlist-btn');
 export const deleteSetlistButton = document.getElementById('delete-setlist-button');
 export const songsCount = document.getElementById('songs-count');
 export const currentSetlistSongsContainer = document.getElementById('current-setlist-songs-container');
-export const topActions = document.getElementById('top-actions');
+export const selectedSetlistControl = document.getElementById('selected-setlist-control');
+export const songsCountText = document.getElementById('songs-count-text');
 export const addSongBtn = document.getElementById('add-song-btn');
 export const startPresentationButton = document.getElementById('start-presentation-button');
 
@@ -823,14 +824,13 @@ export function clearSetlistSelection() {
         setlistActions.style.display = 'none';
     }
     
-    if (topActions) {
-        topActions.style.display = 'none';
+    if (selectedSetlistControl) {
+        selectedSetlistControl.style.display = 'none';
     }
     
-    // Скрываем счетчик песен
-    const songsCountElement = document.getElementById('songs-count');
-    if (songsCountElement) {
-        songsCountElement.style.display = 'none';
+    // Сбрасываем счетчик песен
+    if (songsCountText) {
+        songsCountText.textContent = '0 песен';
     }
     
     // Очищаем список песен
@@ -860,20 +860,16 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
         currentSetlistName.textContent = setlist.name;
     }
 
-    // Показываем кнопки действий вверху
-    if (topActions) {
-        topActions.style.display = 'flex';
+    // Показываем блок управления выбранным списком
+    if (selectedSetlistControl) {
+        selectedSetlistControl.style.display = 'block';
     }
 
-    // Показываем и обновляем счетчик песен
+    // Обновляем счетчик песен в новом блоке управления
     const songsCount = setlist.songs ? setlist.songs.length : 0;
-    if (songsCount > 0) {
-        const songsCountElement = document.getElementById('songs-count');
-        if (songsCountElement) {
-            const countText = getSongCountText(songsCount);
-            songsCountElement.querySelector('span').textContent = `${songsCount} ${countText}`;
-            songsCountElement.style.display = 'flex';
-        }
+    if (songsCountText) {
+        const countText = getSongCountText(songsCount);
+        songsCountText.textContent = `${songsCount} ${countText}`;
     }
 
     // Отмечаем выбранный сет-лист в dropdown

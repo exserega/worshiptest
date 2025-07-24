@@ -119,29 +119,161 @@
     z-index: 1;
 }
 
-/* Стили для новой структуры панели */
-.create-new-section {
-    padding: 0 10px;
-    margin-bottom: 16px;
-}
+/* === НОВАЯ UI СТРУКТУРА С БЛОКАМИ === */
 
-.selection-label {
-    padding: 0 10px;
+/* Базовый стиль для UI блоков */
+.ui-block {
     margin-bottom: 8px;
+    position: relative;
 }
 
-.selection-label span {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--label-color);
-    display: block;
+/* БЛОК 1: Создание нового списка */
+.create-block {
+    padding: 12px 15px;
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary-color) 3%, var(--container-background-color)), 
+        var(--container-background-color));
+    border-radius: 12px;
+    margin: 0 10px 16px 10px;
+    border: 1px solid color-mix(in srgb, var(--primary-color) 15%, var(--border-color));
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 8%, transparent);
 }
 
-/* Минималистичный селектор сет-листа */
-.setlist-selector {
+/* БЛОК 2: Выбор списка */
+.selection-block {
     padding: 15px;
-    border-bottom: 1px solid var(--border-color);
     background: var(--container-background-color);
+    border-radius: 12px;
+    margin: 0 10px 12px 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.block-label {
+    margin-bottom: 12px;
+}
+
+.block-label span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--label-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
+
+/* БЛОК 3: Управление выбранным списком */
+.control-block {
+    padding: 15px;
+    background: linear-gradient(135deg, 
+        var(--container-background-color), 
+        color-mix(in srgb, var(--container-background-color) 95%, var(--primary-color)));
+    border-radius: 12px;
+    margin: 0 10px 16px 10px;
+    border: 1px solid color-mix(in srgb, var(--primary-color) 20%, var(--border-color));
+    box-shadow: 0 3px 12px color-mix(in srgb, var(--primary-color) 12%, transparent);
+    position: relative;
+    overflow: hidden;
+}
+
+.control-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    opacity: 0.6;
+}
+
+.control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.setlist-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.setlist-info i {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+}
+
+.setlist-info span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+.control-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.control-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    min-height: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.control-action-btn.primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #ffffff !important;
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--primary-color) 25%, transparent);
+}
+
+.control-action-btn.secondary {
+    background: var(--container-background-color);
+    color: var(--text-color) !important;
+    border-color: var(--border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.control-action-btn:hover {
+    transform: translateY(-1px);
+}
+
+.control-action-btn.primary:hover {
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 35%, transparent);
+}
+
+.control-action-btn.secondary:hover {
+    background: var(--hover-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.control-action-btn i {
+    font-size: 0.75rem;
+}
+
+.control-action-btn span {
+    font-size: 0.75rem;
+}
+
+/* Минималистичный селектор сет-листа (обновленный для блоков) */
+.setlist-selector {
+    padding: 0;
+    background: transparent;
     flex-shrink: 0;
     position: relative;
 }
@@ -1112,39 +1244,54 @@
         padding: 6px 15px;
     }
     
-    .top-actions {
-        padding: 6px 8px;
-        gap: 6px;
+    /* Адаптивные стили для новых UI блоков (маленькие экраны) */
+    .ui-block {
+        margin-bottom: 6px;
     }
     
-    .compact-action-btn {
-        padding: 3px 6px;
-        font-size: 0.65rem;
+    .create-block {
+        margin: 0 8px 12px 8px;
+        padding: 10px 12px;
+        border-radius: 10px;
+    }
+    
+    .selection-block {
+        margin: 0 8px 10px 8px;
+        padding: 12px;
+        border-radius: 10px;
+    }
+    
+    .control-block {
+        margin: 0 8px 12px 8px;
+        padding: 12px;
+        border-radius: 10px;
+    }
+    
+    .block-label span {
+        font-size: 0.8rem;
+    }
+    
+    .control-header {
+        gap: 8px;
+    }
+    
+    .setlist-info span {
+        font-size: 0.8rem;
+    }
+    
+    .control-action-btn {
+        padding: 5px 8px;
+        font-size: 0.7rem;
         min-height: 26px;
         gap: 3px;
     }
     
-    .compact-action-btn i {
-        font-size: 0.65rem;
+    .control-action-btn i {
+        font-size: 0.7rem;
     }
     
-    .compact-action-btn span {
-        font-size: 0.65rem;
-    }
-    
-    /* Адаптивные стили для новой структуры панели */
-    .create-new-section {
-        padding: 0 8px;
-        margin-bottom: 12px;
-    }
-    
-    .selection-label {
-        padding: 0 8px;
-        margin-bottom: 6px;
-    }
-    
-    .selection-label span {
-        font-size: 0.8rem;
+    .control-action-btn span {
+        font-size: 0.7rem;
     }
 }
 
@@ -1484,40 +1631,46 @@
         z-index: 1;
     }
     
-    /* Компактные кнопки для средних экранов */
-    .top-actions {
-        padding: 8px 12px;
-        gap: 10px;
+    /* Адаптивные стили для новых UI блоков (средние экраны) */
+    .create-block {
+        margin: 0 12px 16px 12px;
+        padding: 14px 16px;
     }
     
-    .compact-action-btn {
-        padding: 6px 10px;
-        font-size: 0.75rem;
+    .selection-block {
+        margin: 0 12px 14px 12px;
+        padding: 16px;
+    }
+    
+    .control-block {
+        margin: 0 12px 16px 12px;
+        padding: 16px;
+    }
+    
+    .block-label span {
+        font-size: 0.9rem;
+    }
+    
+    .control-header {
+        gap: 14px;
+    }
+    
+    .setlist-info span {
+        font-size: 0.9rem;
+    }
+    
+    .control-action-btn {
+        padding: 7px 12px;
+        font-size: 0.8rem;
         min-height: 32px;
-        border-radius: 8px;
     }
     
-    .compact-action-btn i {
-        font-size: 0.75rem;
+    .control-action-btn i {
+        font-size: 0.8rem;
     }
     
-    .compact-action-btn span {
-        font-size: 0.75rem;
-    }
-    
-    /* Адаптивные стили для новой структуры панели (средние экраны) */
-    .create-new-section {
-        padding: 0 12px;
-        margin-bottom: 16px;
-    }
-    
-    .selection-label {
-        padding: 0 12px;
-        margin-bottom: 10px;
-    }
-    
-    .selection-label span {
-        font-size: 0.95rem;
+    .control-action-btn span {
+        font-size: 0.8rem;
     }
 }
 
@@ -1752,40 +1905,57 @@
             font-size: 0.7rem;
         }
         
-        /* Компактные кнопки для очень маленьких экранов */
-        .top-actions {
-            padding: 6px 8px;
-            gap: 6px;
+        /* Адаптивные стили для новых UI блоков (очень маленькие экраны) */
+        .create-block {
+            margin: 0 6px 10px 6px;
+            padding: 8px 10px;
+            border-radius: 8px;
         }
         
-        .compact-action-btn {
-            padding: 4px 6px;
-            font-size: 0.6rem;
+        .selection-block {
+            margin: 0 6px 8px 6px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .control-block {
+            margin: 0 6px 10px 6px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .block-label span {
+            font-size: 0.75rem;
+        }
+        
+        .control-header {
+            gap: 6px;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .setlist-info {
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        
+        .setlist-info span {
+            font-size: 0.75rem;
+        }
+        
+        .control-action-btn {
+            padding: 4px 8px;
+            font-size: 0.65rem;
             min-height: 24px;
             gap: 2px;
         }
         
-        .compact-action-btn i {
-            font-size: 0.6rem;
+        .control-action-btn i {
+            font-size: 0.65rem;
         }
         
-        .compact-action-btn span {
-            font-size: 0.6rem;
-        }
-        
-        /* Адаптивные стили для новой структуры панели (очень маленькие экраны) */
-        .create-new-section {
-            padding: 0 6px;
-            margin-bottom: 10px;
-        }
-        
-        .selection-label {
-            padding: 0 6px;
-            margin-bottom: 5px;
-        }
-        
-        .selection-label span {
-            font-size: 0.75rem;
+        .control-action-btn span {
+            font-size: 0.65rem;
         }
     }
     

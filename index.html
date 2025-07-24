@@ -203,50 +203,52 @@
         <h3 class="panel-title">Сет-листы</h3>
     </div>
     
-    <!-- Кнопка создания нового списка вверху -->
-    <div class="create-new-section">
+    <!-- БЛОК 1: Создание нового списка -->
+    <div class="ui-block create-block">
         <button id="create-new-setlist-header-btn" class="create-new-header-btn">
             <i class="fas fa-plus"></i>
             <span>Новый список</span>
         </button>
     </div>
     
-    <!-- Надпись перед выбором -->
-    <div class="selection-label">
-        <span>Выберите список песен:</span>
-    </div>
-    
-    <!-- Dropdown выбора сет-листа -->
-    <div class="setlist-selector">
-        <button id="setlist-dropdown-btn" class="setlist-dropdown-btn">
-            <span id="current-setlist-name">Выберите сет-лист</span>
-            <i class="fas fa-chevron-right dropdown-arrow"></i>
-        </button>
-        
-        <!-- Dropdown меню -->
-        <div id="setlist-dropdown-menu" class="setlist-dropdown-menu">
-            <div id="setlists-list-container" class="dropdown-list">
-                <div class="empty-message">Загрузка сет-листов...</div>
+    <!-- БЛОК 2: Выбор существующего списка -->
+    <div class="ui-block selection-block">
+        <div class="block-label">
+            <span>Выберите список песен:</span>
+        </div>
+        <div class="setlist-selector">
+            <button id="setlist-dropdown-btn" class="setlist-dropdown-btn">
+                <span id="current-setlist-name">Выберите сет-лист</span>
+                <i class="fas fa-chevron-right dropdown-arrow"></i>
+            </button>
+            
+            <!-- Dropdown меню -->
+            <div id="setlist-dropdown-menu" class="setlist-dropdown-menu">
+                <div id="setlists-list-container" class="dropdown-list">
+                    <div class="empty-message">Загрузка сет-листов...</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Кнопки действий вверху -->
-    <div id="top-actions" class="top-actions" style="display: none;">
-        <button id="add-song-btn" class="compact-action-btn">
-            <i class="fas fa-plus"></i>
-            <span>Добавить песню</span>
-        </button>
-        <button id="start-presentation-button" class="compact-action-btn">
-            <i class="fas fa-play"></i>
-            <span>Презентация</span>
-        </button>
-    </div>
-
-    <!-- Счетчик песен -->
-    <div id="songs-count" class="songs-count" style="display: none;">
-        <i class="fas fa-music"></i>
-        <span>0 песен</span>
+    <!-- БЛОК 3: Управление выбранным списком -->
+    <div id="selected-setlist-control" class="ui-block control-block" style="display: none;">
+        <div class="control-header">
+            <div class="setlist-info">
+                <i class="fas fa-list-music"></i>
+                <span id="songs-count-text">0 песен</span>
+            </div>
+            <div class="control-actions">
+                <button id="add-song-btn" class="control-action-btn primary">
+                    <i class="fas fa-plus"></i>
+                    <span>Добавить</span>
+                </button>
+                <button id="start-presentation-button" class="control-action-btn secondary">
+                    <i class="fas fa-play"></i>
+                    <span>Презентация</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Список песен текущего сет-листа -->
