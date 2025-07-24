@@ -784,7 +784,7 @@
     
     /* Список песен */
     .songs-list {
-        padding: 10px 15px;
+        padding: 10px 15px 60px 15px;
         counter-reset: song-counter;
         flex: 1;
         overflow-y: auto;
@@ -939,23 +939,23 @@
         opacity: 1;
     }
     
-    /* Кнопки действий - липкие в нижней части панели */
+    /* Кнопки действий - фиксированы над нижней навигацией */
     .bottom-actions {
         display: none;
         gap: 6px;
         padding: 8px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: sticky;
-        bottom: 0;
-        margin-top: auto;
-        flex-shrink: 0;
-        z-index: 10;
+        position: fixed;
+        bottom: 60px;
+        left: 0;
+        right: 0;
+        z-index: 999;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
     }
     
     /* Показывать кнопки только когда панель сет-листа активна */
-    .panel.active .bottom-actions {
+    #setlists-panel.open .bottom-actions {
         display: flex !important;
     }
     
@@ -1289,23 +1289,23 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     
-    /* Кнопки действий - липкие в нижней части панели для средних экранов */
+    /* Кнопки действий - фиксированы над нижней навигацией для средних экранов */
     .bottom-actions {
         display: none;
         gap: 8px;
         padding: 10px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: sticky;
-        bottom: 0;
-        margin-top: auto;
-        flex-shrink: 0;
-        z-index: 10;
+        position: fixed;
+        bottom: 60px;
+        left: 0;
+        right: 0;
+        z-index: 999;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
     }
     
     /* Показывать кнопки только когда панель сет-листа активна */
-    .panel.active .bottom-actions {
+    #setlists-panel.open .bottom-actions {
         display: flex !important;
     }
     
@@ -1372,7 +1372,7 @@
 /* Список песен - КРАСИВЫЙ МОБИЛЬНЫЙ ДИЗАЙН (для больших экранов) */
 .songs-list {
     flex: 1;
-    padding: 12px 8px;
+    padding: 12px 8px 60px 8px;
     min-height: 200px;
     overflow-y: auto;
     counter-reset: song-counter;
@@ -1601,23 +1601,23 @@
         }
     }
     
-    /* Кнопки действий - липкие в нижней части панели для больших экранов */
+    /* Кнопки действий - фиксированы над нижней навигацией для больших экранов */
     .bottom-actions {
         display: none;
         gap: 6px;
         padding: 8px 15px;
         border-top: 1px solid var(--border-color);
         background: var(--container-background-color);
-        position: sticky;
-        bottom: 0;
-        margin-top: auto;
-        flex-shrink: 0;
-        z-index: 10;
+        position: fixed;
+        bottom: 60px;
+        left: 0;
+        right: 0;
+        z-index: 999;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
     }
     
     /* Показывать кнопки только когда панель сет-листа активна */
-    .panel.active .bottom-actions {
+    #setlists-panel.open .bottom-actions {
         display: flex !important;
     }
     
