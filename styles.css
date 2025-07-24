@@ -1748,12 +1748,12 @@
     }
     
     .search-input {
-        padding: 12px 12px 12px 40px;
+        padding: 12px 40px 12px 12px;
         font-size: 0.9375rem;
     }
     
     .search-input-wrapper i {
-        left: 14px;
+        right: 14px;
         font-size: 0.9rem;
     }
     
@@ -2625,13 +2625,13 @@
         }
         
         .search-input {
-            padding: 10px 10px 10px 36px;
+            padding: 10px 36px 10px 10px;
             font-size: 0.875rem;
             border-radius: 8px;
         }
         
         .search-input-wrapper i {
-            left: 12px;
+            right: 12px;
             font-size: 0.8rem;
         }
         
