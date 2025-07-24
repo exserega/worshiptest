@@ -205,7 +205,17 @@ async function handleCreateSetlist() {
 }
 
 async function startAddingSongs() {
+    console.log('=== startAddingSongs START ===');
+    console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
+    console.log('currentCreatedSetlistName:', currentCreatedSetlistName);
+    
     closeAddSongsConfirmModal();
+    
+    // Очищаем и инициализируем состояние
+    addedSongsToCurrentSetlist.clear();
+    if (ui.addedSongsCount) {
+        ui.addedSongsCount.textContent = '0';
+    }
     
     // Показываем полноэкранный оверлей
     if (ui.targetSetlistName) {
@@ -214,6 +224,8 @@ async function startAddingSongs() {
     if (ui.addSongsOverlay) {
         ui.addSongsOverlay.classList.add('show');
     }
+    
+    console.log('Overlay shown, addedSongsToCurrentSetlist cleared');
     
          // Загружаем все песни если еще не загружены
      if (state.allSongs.length === 0) {
@@ -302,23 +314,37 @@ function displaySongsGrid(songs) {
 }
 
 async function addSongToSetlist(song, key) {
+    console.log('=== addSongToSetlist START ===');
+    console.log('song:', song);
+    console.log('key:', key);
+    console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
+    
     try {
+        console.log('Calling API addSongToSetlist...');
         const result = await api.addSongToSetlist(currentCreatedSetlistId, song.id, key);
+        console.log('API result:', result);
         
         if (result.status === 'added') {
+            console.log('Song added successfully, updating UI...');
             addedSongsToCurrentSetlist.add(song.id);
+            console.log('addedSongsToCurrentSetlist size after add:', addedSongsToCurrentSetlist.size);
+            
             showNotification(`➕ "${song.name}" добавлена в тональности ${key}`, 'success');
             
             // Обновляем счетчик
             if (ui.addedSongsCount) {
                 ui.addedSongsCount.textContent = addedSongsToCurrentSetlist.size;
+                console.log('Updated counter to:', addedSongsToCurrentSetlist.size);
             }
             
             // Обновляем отображение
+            console.log('Refreshing songs display...');
             refreshSongsDisplay();
         } else if (result.status === 'duplicate_same') {
+            console.log('Song already exists with same key');
             showNotification(`⚠️ "${song.name}" уже добавлена в сет-лист`, 'warning');
         } else if (result.status === 'duplicate_key') {
+            console.log('Song already exists with different key:', result.existingKey);
             showNotification(`⚠️ "${song.name}" уже добавлена в тональности ${result.existingKey}`, 'warning');
         }
         
@@ -326,6 +352,8 @@ async function addSongToSetlist(song, key) {
         console.error('Ошибка при добавлении песни:', error);
         showNotification('❌ Ошибка при добавлении песни', 'error');
     }
+    
+    console.log('=== addSongToSetlist END ===');
 }
 
 async function removeSongFromSetlist(song) {
@@ -357,11 +385,11 @@ function refreshSongsDisplay() {
 }
 
 async function confirmAddSongWithKey() {
-    console.log('confirmAddSongWithKey called', {
-        currentSongForKey,
-        currentSelectedKey,
-        currentCreatedSetlistId
-    });
+    console.log('=== confirmAddSongWithKey START ===');
+    console.log('currentSongForKey:', currentSongForKey);
+    console.log('currentSelectedKey:', currentSelectedKey);
+    console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
+    console.log('addedSongsToCurrentSetlist size:', addedSongsToCurrentSetlist.size);
     
     if (!currentSongForKey) {
         console.error('No song selected for key');
@@ -381,8 +409,10 @@ async function confirmAddSongWithKey() {
         return;
     }
     
+    console.log('Closing modal and calling addSongToSetlist...');
     closeKeySelectionModal();
     await addSongToSetlist(currentSongForKey, currentSelectedKey);
+    console.log('=== confirmAddSongWithKey END ===');
 }
 
 function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = false) {

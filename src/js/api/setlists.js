@@ -55,28 +55,55 @@ async function deleteSetlist(setlistId) {
  * @returns {Promise<{status: string, existingKey?: string, message?: string}>}
  */
 async function addSongToSetlist(setlistId, songId, preferredKey) {
+    console.log('=== API addSongToSetlist START ===');
+    console.log('setlistId:', setlistId);
+    console.log('songId:', songId);
+    console.log('preferredKey:', preferredKey);
+    
     const setlistRef = doc(db, "worship_setlists", setlistId);
     let result = {};
-    await runTransaction(db, async (transaction) => {
-        const setlistDoc = await transaction.get(setlistRef);
-        if (!setlistDoc.exists()) throw new Error("Setlist does not exist!");
-
-        const songs = setlistDoc.data().songs || [];
-        const existingSongIndex = songs.findIndex(s => s.songId === songId);
-
-        if (existingSongIndex > -1) {
-            const existingSong = songs[existingSongIndex];
-            if (existingSong.preferredKey !== preferredKey) {
-                result = { status: 'duplicate_key', existingKey: existingSong.preferredKey };
-            } else {
-                result = { status: 'duplicate_same' };
+    
+    try {
+        await runTransaction(db, async (transaction) => {
+            console.log('Getting setlist document...');
+            const setlistDoc = await transaction.get(setlistRef);
+            if (!setlistDoc.exists()) {
+                console.error('Setlist does not exist!');
+                throw new Error("Setlist does not exist!");
             }
-        } else {
-            songs.push({ songId, preferredKey, order: songs.length });
-            transaction.update(setlistRef, { songs });
-            result = { status: 'added' };
-        }
-    });
+
+            const songs = setlistDoc.data().songs || [];
+            console.log('Current songs in setlist:', songs);
+            
+            const existingSongIndex = songs.findIndex(s => s.songId === songId);
+            console.log('Existing song index:', existingSongIndex);
+
+            if (existingSongIndex > -1) {
+                const existingSong = songs[existingSongIndex];
+                console.log('Found existing song:', existingSong);
+                if (existingSong.preferredKey !== preferredKey) {
+                    result = { status: 'duplicate_key', existingKey: existingSong.preferredKey };
+                    console.log('Song exists with different key');
+                } else {
+                    result = { status: 'duplicate_same' };
+                    console.log('Song exists with same key');
+                }
+            } else {
+                console.log('Adding new song to setlist...');
+                songs.push({ songId, preferredKey, order: songs.length });
+                console.log('Updated songs array:', songs);
+                transaction.update(setlistRef, { songs });
+                result = { status: 'added' };
+                console.log('Song added successfully');
+            }
+        });
+    } catch (error) {
+        console.error('Transaction failed:', error);
+        throw error;
+    }
+    
+    console.log('=== API addSongToSetlist END ===');
+    console.log('Final result:', result);
     return result;
 }
 
