@@ -593,7 +593,7 @@ function setupEventListeners() {
 
     // Закрытие dropdown при клике вне его
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.setlist-selector')) {
+        if (!e.target.closest('.modern-selector')) {
             ui.setlistDropdownMenu.classList.remove('show');
             ui.setlistDropdownBtn.classList.remove('active');
         }

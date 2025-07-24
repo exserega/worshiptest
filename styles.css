@@ -386,7 +386,7 @@
     font-size: 0.875rem;
 }
 
-/* Обновленные стили для dropdown меню */
+/* Стили для dropdown меню (обновленные) */
 .setlist-dropdown-menu {
     position: absolute;
     top: 100%;
@@ -411,6 +411,34 @@
 }
 
 .dropdown-list {
+    padding: 4px;
+}
+
+/* Совместимость с новым классом modern-dropdown */
+.modern-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+    margin-top: 4px;
+}
+
+.modern-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-content {
     padding: 4px;
 }
 
