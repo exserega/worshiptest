@@ -208,13 +208,15 @@ class SearchEngine {
 
             // Нечеткое совпадение в названии (оптимизированно)
             const titleFuzzyResult = fuzzyMatchWithScore(query, normalizedTitle, config.FUZZY_THRESHOLD_MEDIUM);
+            let lyricsFuzzyResult = null; // Объявляем переменную в нужной области видимости
+            
             if (titleFuzzyResult.isMatch) {
                 score = config.WEIGHT_TITLE_FUZZY * titleFuzzyResult.similarity;
                 matchType = `title-${titleFuzzyResult.matchType}`;
             }
             // Нечеткое совпадение в тексте (только если не найдено в названии)
             else {
-                const lyricsFuzzyResult = fuzzyMatchWithScore(query, normalizedLyrics, config.FUZZY_THRESHOLD_LOW);
+                lyricsFuzzyResult = fuzzyMatchWithScore(query, normalizedLyrics, config.FUZZY_THRESHOLD_LOW);
                 if (lyricsFuzzyResult.isMatch) {
                     score = config.WEIGHT_LYRICS_FUZZY * lyricsFuzzyResult.similarity;
                     matchType = `lyrics-${lyricsFuzzyResult.matchType}`;
