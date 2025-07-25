@@ -4822,6 +4822,16 @@ body:not([data-theme="light"]) mark.search-highlight {
     transform: translateY(1px);
 }
 
+/* Исправление цветов для разных тем */
+body[data-theme="light"] .btn-action-secondary {
+    color: var(--secondary-color) !important;
+}
+
+body[data-theme="dark"] .btn-action-secondary,
+body:not([data-theme="light"]) .btn-action-secondary {
+    color: var(--text-color) !important;
+}
+
 .song-text-container {
     flex: 1;
     overflow: hidden;
