@@ -10,6 +10,7 @@ import * as core from './core.js';
 import * as ui from './ui.js';
 import * as metronomeUI from './metronome.js';
 import searchWorkerManager from './src/js/workers/workerManager.js';
+import { getTransposition, transposeLyrics, processLyrics, highlightChords } from './src/js/core/transposition.js';
 
 // --- UTILITY FUNCTIONS ---
 
@@ -445,82 +446,22 @@ function updateSongTextInModal(song, selectedKey) {
     // Транспонируем аккорды если нужно
     const originalKey = getSongKey(song);
     if (selectedKey !== originalKey) {
-        songText = transposeChords(songText, originalKey, selectedKey);
+        // Используем новую улучшенную логику транспонирования
+        const transposition = core.getTransposition(originalKey, selectedKey);
+        songText = core.transposeLyrics(songText, transposition, selectedKey);
     }
     
     // Форматируем аккорды для отображения
-    const formattedText = formatChordsInText(songText);
+    const formattedText = highlightChords(songText);
     
     songTextDisplay.innerHTML = formattedText;
     
     console.log(`📝 Текст песни обновлен (${originalKey} → ${selectedKey})`);
 }
 
-/**
- * Простая функция транспонирования аккордов
- */
-function transposeChords(text, fromKey, toKey) {
-    // Если тональности одинаковые, возвращаем оригинальный текст
-    if (fromKey === toKey) {
-        return text;
-    }
-    
-    // Карта аккордов для транспонирования
-    const chordMap = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    
-    const fromIndex = chordMap.indexOf(fromKey);
-    const toIndex = chordMap.indexOf(toKey);
-    
-    if (fromIndex === -1 || toIndex === -1) {
-        console.warn(`Неизвестная тональность: ${fromKey} → ${toKey}`);
-        return text;
-    }
-    
-    const semitones = (toIndex - fromIndex + 12) % 12;
-    
-    // Транспонируем аккорды в квадратных скобках
-    return text.replace(/\[([^\]]+)\]/g, (match, chord) => {
-        const transposedChord = transposeChord(chord.trim(), semitones);
-        return `[${transposedChord}]`;
-    });
-}
+// Функции транспонирования перенесены в core модуль для избежания дублирования
 
-/**
- * Транспонирование одного аккорда
- */
-function transposeChord(chord, semitones) {
-    const chordMap = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    
-    // Находим основную ноту аккорда
-    let rootNote = '';
-    let suffix = '';
-    
-    if (chord.length >= 2 && chord[1] === '#') {
-        rootNote = chord.substring(0, 2);
-        suffix = chord.substring(2);
-    } else {
-        rootNote = chord[0];
-        suffix = chord.substring(1);
-    }
-    
-    const rootIndex = chordMap.indexOf(rootNote);
-    if (rootIndex === -1) {
-        return chord; // Если не найден, возвращаем как есть
-    }
-    
-    const newRootIndex = (rootIndex + semitones) % 12;
-    const newRootNote = chordMap[newRootIndex];
-    
-    return newRootNote + suffix;
-}
 
-/**
- * Форматирование аккордов в тексте для отображения
- */
-function formatChordsInText(text) {
-    // Заменяем аккорды в квадратных скобках на span с классом chord
-    return text.replace(/\[([^\]]+)\]/g, '<span class="chord">$1</span>');
-}
 
 function updateKeyButtons() {
     const keyButtons = document.querySelectorAll('.key-btn');
@@ -2402,16 +2343,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Транспонируем аккорды если нужно
         const originalKey = getSongKey(song);
         if (selectedKey !== originalKey) {
-            songText = transposeChords(songText, originalKey, selectedKey);
+            // Используем новую улучшенную логику транспонирования
+            const transposition = core.getTransposition(originalKey, selectedKey);
+            songText = core.transposeLyrics(songText, transposition, selectedKey);
         }
         
         // Форматируем аккорды для отображения
-        const formattedText = formatChordsInText(songText);
+        const formattedText = highlightChords(songText);
         
         songTextElement.innerHTML = formattedText;
         
         console.log(`📝 Текст песни отображен (${originalKey} → ${selectedKey})`);
     }
+    
+    // Дублирующие функции транспонирования удалены - используется логика из core модуля
     
 
     

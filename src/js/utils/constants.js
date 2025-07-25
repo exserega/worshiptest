@@ -17,6 +17,12 @@ export const structureMarkers = [
 
 // Музыкальные константы
 export const chords = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"];
+
+// Расширенный массив аккордов включая энгармонические эквиваленты
+export const chordsExtended = [
+    "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "H", "B"
+];
+
 export const DEFAULT_FONT_SIZE = 8;
 export const MIN_FONT_SIZE = 2;
 export const MAX_SHARED_SONGS = 8;

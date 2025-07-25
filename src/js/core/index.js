@@ -39,7 +39,7 @@ export function getRenderedSongText(originalLyrics, originalKey, targetKey) {
     if (!originalLyrics) return '';
     
     const transposition = getTransposition(originalKey, targetKey);
-    const transposedLyrics = transposeLyrics(originalLyrics, transposition);
+    const transposedLyrics = transposeLyrics(originalLyrics, transposition, targetKey);
     const processedLyrics = processLyrics(transposedLyrics);
     const highlightedLyrics = highlightChords(processedLyrics);
     const structuredLyrics = highlightStructure(highlightedLyrics);
