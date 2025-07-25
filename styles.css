@@ -1742,19 +1742,27 @@
     }
     
     .search-filters {
+        flex-direction: column;
         gap: 8px;
+        align-items: stretch;
     }
     
     .filter-select {
         min-width: 100px;
         font-size: 0.8rem;
         padding: 6px 10px;
+        height: 44px;
+        text-align: center;
+        flex: none;
     }
     
     .filter-btn {
         font-size: 0.8rem;
         padding: 6px 10px;
         gap: 4px;
+        height: 44px;
+        justify-content: center;
+        flex: none;
     }
     
     /* Адаптация результатов */
@@ -2626,13 +2634,18 @@
             min-width: auto;
             font-size: 0.75rem;
             padding: 5px 8px;
+            height: 44px;
+            text-align: center;
+            flex: none;
         }
         
         .filter-btn {
             font-size: 0.75rem;
             padding: 5px 8px;
             gap: 3px;
+            height: 44px;
             justify-content: center;
+            flex: none;
         }
         
         /* Адаптация результатов для очень маленьких экранов */
