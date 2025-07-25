@@ -4421,14 +4421,16 @@ mark.search-highlight {
 /* Дополнительные стили для лучшей контрастности */
 body[data-theme="light"] .search-highlight,
 body[data-theme="light"] mark.search-highlight {
-    background: var(--secondary-color);
-    color: #ffffff;
+    background: color-mix(in srgb, var(--secondary-color) 85%, transparent);
+    color: var(--secondary-color);
+    font-weight: 700;
 }
 
 body:not([data-theme="light"]) .search-highlight,
 body:not([data-theme="light"]) mark.search-highlight {
-    background: var(--primary-color);
-    color: var(--background-color);
+    background: color-mix(in srgb, var(--primary-color) 75%, transparent);
+    color: var(--primary-color);
+    font-weight: 700;
 }
 
 /* Состояние "ничего не найдено" */
