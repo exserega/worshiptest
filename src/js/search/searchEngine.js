@@ -11,6 +11,14 @@ import {
     getAlgorithmStats
 } from '../utils/fuzzySearch.js';
 
+import {
+    performBatchSearch,
+    getBatchStats,
+    searchByCategory,
+    prioritySearch,
+    WORSHIP_KEYWORDS
+} from './batchProcessor.js';
+
 /**
  * Конфигурация поискового движка
  */
@@ -103,16 +111,38 @@ class SearchEngine {
         const config = { ...SEARCH_CONFIG, ...options };
         this.lastQuery = query;
 
+        // Проверяем, нужна ли batch обработка для больших массивов
+        if (songs.length > 200 && options.enableBatch !== false) {
+            return this.batchSearch(query, songs, options);
+        }
+
+        // Применяем предварительные фильтры
+        let filteredSongs = songs;
+        
+        // Фильтр по категории (если указан)
+        if (options.category) {
+            filteredSongs = searchByCategory(filteredSongs, query, options.category);
+        }
+        
+        // Приоритетный поиск для spiritual запросов
+        if (options.enablePrioritySearch !== false) {
+            const prioritySongs = prioritySearch(filteredSongs, query);
+            if (prioritySongs.length < filteredSongs.length) {
+                console.log(`⭐ Используем priority поиск: ${prioritySongs.length} из ${filteredSongs.length}`);
+                filteredSongs = prioritySongs;
+            }
+        }
+
         // Получаем нормализованные данные
         const normalizedQuery = this.normalizeSearchQuery(query);
         
         // Точный поиск
-        const exactResults = this.performExactSearch(normalizedQuery, songs, config);
+        const exactResults = this.performExactSearch(normalizedQuery, filteredSongs, config);
         
         // Нечеткий поиск (только если точных результатов мало)
         let fuzzyResults = [];
         if (exactResults.length < config.FUZZY_TRIGGER_THRESHOLD) {
-            fuzzyResults = this.performFuzzySearch(normalizedQuery, songs, exactResults, config);
+            fuzzyResults = this.performFuzzySearch(normalizedQuery, filteredSongs, exactResults, config);
         }
 
         // Предложения для исправления (только если результатов очень мало)
@@ -135,6 +165,45 @@ class SearchEngine {
 
         this.lastResults = results;
         return results;
+    }
+    
+    /**
+     * Batch поиск для больших объемов данных
+     * @param {string} query - Поисковый запрос
+     * @param {Array} songs - Массив песен для поиска
+     * @param {Object} options - Дополнительные опции
+     * @returns {Promise<Object>} Результаты batch поиска
+     */
+    async batchSearch(query, songs, options = {}) {
+        console.log(`🔄 Переключение на batch поиск для ${songs.length} песен`);
+        
+        // Обертка для совместимости с batch процессором
+        const searchWrapper = (q, songList, opts) => {
+            return this.search(q, songList, { ...opts, enableBatch: false });
+        };
+        
+        try {
+            const results = await performBatchSearch(songs, searchWrapper, query, options);
+            
+            // Разделяем результаты на exact и fuzzy
+            const exactResults = results.filter(r => r.searchType === 'exact');
+            const fuzzyResults = results.filter(r => r.searchType === 'fuzzy');
+            
+            const batchResults = {
+                exactResults: exactResults.slice(0, SEARCH_CONFIG.MAX_EXACT_RESULTS),
+                fuzzyResults: fuzzyResults.slice(0, SEARCH_CONFIG.MAX_FUZZY_RESULTS),
+                suggestions: [],
+                totalFound: exactResults.length + fuzzyResults.length,
+                hasMore: exactResults.length > SEARCH_CONFIG.MAX_EXACT_RESULTS || fuzzyResults.length > SEARCH_CONFIG.MAX_FUZZY_RESULTS
+            };
+            
+            this.lastResults = batchResults;
+            return batchResults;
+        } catch (error) {
+            console.error('❌ Ошибка в batch поиске:', error);
+            // Fallback на обычный поиск
+            return this.search(query, songs, { ...options, enableBatch: false });
+        }
     }
 
     /**
@@ -337,9 +406,11 @@ class SearchEngine {
                 lastQuery: this.lastQuery,
                 dictionarySize: this.dictionary.length,
                 lastResultsCount: this.lastResults ? 
-                    (this.lastResults.exactResults.length + this.lastResults.fuzzyResults.length) : 0
+                    (this.lastResults.exactResults.length + this.lastResults.fuzzyResults.length) : 0,
+                worshipKeywords: Object.keys(WORSHIP_KEYWORDS).length
             },
-            algorithms: getAlgorithmStats()
+            algorithms: getAlgorithmStats(),
+            batch: getBatchStats()
         };
     }
 }

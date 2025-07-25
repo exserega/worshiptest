@@ -209,6 +209,26 @@ if (typeof window !== 'undefined') {
         show: showPerformanceStats,
         clear: clearPerformanceStats
     };
+    
+    // Добавляем функции для batch статистики
+    window.searchBatch = {
+        stats: () => {
+            try {
+                const { getBatchStats } = require('./search/batchProcessor.js');
+                return getBatchStats();
+            } catch (e) {
+                return { error: 'Batch processor не загружен' };
+            }
+        },
+        worship: () => {
+            try {
+                const { WORSHIP_KEYWORDS } = require('./search/batchProcessor.js');
+                return WORSHIP_KEYWORDS;
+            } catch (e) {
+                return { error: 'Worship keywords не загружены' };
+            }
+        }
+    };
 }
 
 export {
