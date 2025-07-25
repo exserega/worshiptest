@@ -4695,3 +4695,211 @@ body:not([data-theme="light"]) mark.search-highlight {
         max-height: 250px;
     }
 }
+
+/* ===== НОВЫЙ ДИЗАЙН SONG PREVIEW С ВЫБОРОМ ТОНАЛЬНОСТИ ===== */
+
+.song-preview-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--background-color);
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--background-color);
+    flex-shrink: 0;
+    min-height: 70px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.song-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.song-info h3 {
+    margin: 0 0 6px 0;
+    font-size: var(--font-lg);
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.key-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.key-label {
+    font-size: var(--font-sm);
+    color: var(--label-color);
+    white-space: nowrap;
+}
+
+.key-selector-modern {
+    padding: 4px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--input-background);
+    color: var(--text-color);
+    font-size: var(--font-sm);
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 80px;
+}
+
+.key-selector-modern:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+.original-key-badge {
+    padding: 2px 6px;
+    background: color-mix(in srgb, var(--label-color) 15%, transparent);
+    color: var(--label-color);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.header-right {
+    flex-shrink: 0;
+}
+
+.song-text-container {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.song-text-display {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-color);
+    background: var(--background-color);
+    white-space: pre-wrap;
+}
+
+.song-text-display .chord {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 13px;
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    padding: 1px 3px;
+    border-radius: 3px;
+    margin: 0 1px;
+}
+
+.loading-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--label-color);
+    text-align: center;
+}
+
+.loading-text i {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    opacity: 0.6;
+}
+
+.loading-text p {
+    margin: 0;
+    font-size: var(--font-md);
+    opacity: 0.8;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .preview-header {
+        padding: 12px 16px;
+        min-height: 60px;
+    }
+    
+    .header-left {
+        gap: 8px;
+    }
+    
+    .song-info h3 {
+        font-size: var(--font-md);
+        margin-bottom: 4px;
+    }
+    
+    .key-controls {
+        gap: 6px;
+    }
+    
+    .key-selector-modern {
+        padding: 3px 6px;
+        font-size: 0.8rem;
+        min-width: 70px;
+    }
+    
+    .original-key-badge {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+    }
+    
+    .song-text-display {
+        padding: 16px;
+        font-size: 13px;
+    }
+    
+    .song-text-display .chord {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .preview-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 10px 12px;
+    }
+    
+    .header-left {
+        order: 1;
+    }
+    
+    .header-right {
+        order: 2;
+        align-self: center;
+    }
+    
+    .key-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .song-text-display {
+        padding: 12px;
+        font-size: 12px;
+    }
+}

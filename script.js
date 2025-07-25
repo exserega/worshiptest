@@ -338,9 +338,6 @@ function closeKeySelectionModal() {
 function showKeySelectionModal(song) {
     console.log('=== showKeySelectionModal START ===');
     console.log('song:', song);
-    console.log('ui.keySelectionModal:', ui.keySelectionModal);
-    console.log('window.activeOverlayMode:', window.activeOverlayMode);
-    console.log('window.activeSetlistId:', window.activeSetlistId);
     
     if (!ui.keySelectionModal) {
         console.error('keySelectionModal not found!');
@@ -358,13 +355,26 @@ function showKeySelectionModal(song) {
     if (ui.keySongName) {
         ui.keySongName.textContent = song.name;
     }
-    if (ui.originalKey) {
-        ui.originalKey.textContent = originalSongKey;
-    }
-    // Блок "Выбранная тональность" удален за ненадобностью
     
-    // Обновляем кнопки тональностей
-    updateKeyButtons();
+    // Устанавливаем оригинальную тональность в селектор и бейдж
+    const keySelector = document.getElementById('key-selector');
+    const originalKeyBadge = document.getElementById('original-key-badge');
+    
+    if (keySelector) {
+        keySelector.value = originalSongKey;
+        // Добавляем обработчик изменения тональности
+        keySelector.onchange = (e) => {
+            currentSelectedKey = e.target.value;
+            updateSongTextInModal(song, currentSelectedKey);
+        };
+    }
+    
+    if (originalKeyBadge) {
+        originalKeyBadge.textContent = `Оригинал: ${originalSongKey}`;
+    }
+    
+    // Отображаем текст песни
+    updateSongTextInModal(song, currentSelectedKey);
     
     // ДОБАВЛЯЕМ ОБРАБОТЧИК СОБЫТИЯ ПРЯМО ЗДЕСЬ
     const confirmBtn = document.getElementById('confirm-key-selection');
@@ -408,6 +418,108 @@ function showKeySelectionModal(song) {
     ui.keySelectionModal.classList.add('show');
     console.log('Modal shown with class "show"');
     console.log('=== showKeySelectionModal END ===');
+}
+
+/**
+ * Обновление текста песни в modal с транспонированием
+ */
+function updateSongTextInModal(song, selectedKey) {
+    const songTextDisplay = document.getElementById('song-text-display');
+    if (!songTextDisplay) return;
+    
+    // Получаем текст песни
+    let songText = song.hasWebEdits 
+        ? (song['Текст и аккорды (edited)'] || song['Текст и аккорды'] || '') 
+        : (song['Текст и аккорды'] || '');
+    
+    if (!songText) {
+        songTextDisplay.innerHTML = `
+            <div class="loading-text">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Текст песни не найден</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Транспонируем аккорды если нужно
+    const originalKey = getSongKey(song);
+    if (selectedKey !== originalKey) {
+        songText = transposeChords(songText, originalKey, selectedKey);
+    }
+    
+    // Форматируем аккорды для отображения
+    const formattedText = formatChordsInText(songText);
+    
+    songTextDisplay.innerHTML = formattedText;
+    
+    console.log(`📝 Текст песни обновлен (${originalKey} → ${selectedKey})`);
+}
+
+/**
+ * Простая функция транспонирования аккордов
+ */
+function transposeChords(text, fromKey, toKey) {
+    // Если тональности одинаковые, возвращаем оригинальный текст
+    if (fromKey === toKey) {
+        return text;
+    }
+    
+    // Карта аккордов для транспонирования
+    const chordMap = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    
+    const fromIndex = chordMap.indexOf(fromKey);
+    const toIndex = chordMap.indexOf(toKey);
+    
+    if (fromIndex === -1 || toIndex === -1) {
+        console.warn(`Неизвестная тональность: ${fromKey} → ${toKey}`);
+        return text;
+    }
+    
+    const semitones = (toIndex - fromIndex + 12) % 12;
+    
+    // Транспонируем аккорды в квадратных скобках
+    return text.replace(/\[([^\]]+)\]/g, (match, chord) => {
+        const transposedChord = transposeChord(chord.trim(), semitones);
+        return `[${transposedChord}]`;
+    });
+}
+
+/**
+ * Транспонирование одного аккорда
+ */
+function transposeChord(chord, semitones) {
+    const chordMap = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    
+    // Находим основную ноту аккорда
+    let rootNote = '';
+    let suffix = '';
+    
+    if (chord.length >= 2 && chord[1] === '#') {
+        rootNote = chord.substring(0, 2);
+        suffix = chord.substring(2);
+    } else {
+        rootNote = chord[0];
+        suffix = chord.substring(1);
+    }
+    
+    const rootIndex = chordMap.indexOf(rootNote);
+    if (rootIndex === -1) {
+        return chord; // Если не найден, возвращаем как есть
+    }
+    
+    const newRootIndex = (rootIndex + semitones) % 12;
+    const newRootNote = chordMap[newRootIndex];
+    
+    return newRootNote + suffix;
+}
+
+/**
+ * Форматирование аккордов в тексте для отображения
+ */
+function formatChordsInText(text) {
+    // Заменяем аккорды в квадратных скобках на span с классом chord
+    return text.replace(/\[([^\]]+)\]/g, '<span class="chord">$1</span>');
 }
 
 function updateKeyButtons() {

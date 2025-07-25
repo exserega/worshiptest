@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agape Worship</title>
-    <link rel="stylesheet" href="styles.css?v=5.7">
+    <link rel="stylesheet" href="styles.css?v=6.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <link rel="manifest" href="manifest.json">  </head>
@@ -601,60 +601,53 @@
     </div>
 </div>
 
-<!-- Модальное окно выбора тональности -->
-<div id="key-selection-modal" class="global-overlay">
-    <div class="overlay-content key-selection-content">
-        <div class="overlay-header">
-            <div class="header-info">
-                <i class="fas fa-music"></i>
-                <div>
-                    <h3>Выбор тональности</h3>
-                    <p id="key-song-name">Название песни</p>
-                </div>
-            </div>
-            <button id="close-key-modal" class="overlay-close-btn">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="overlay-body">
-            <div class="key-section">
-                <div class="current-key-info">
-                    <div class="key-info-item">
-                        <label>Оригинальная тональность:</label>
-                        <span id="original-key" class="key-badge original">C</span>
+<!-- Полноэкранный preview с выбором тональности -->
+<div id="key-selection-modal" class="global-fullscreen-overlay">
+    <div class="fullscreen-content song-preview-content">
+        <!-- Компактный заголовок -->
+        <div class="preview-header">
+            <div class="header-left">
+                <button id="close-key-modal" class="overlay-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="song-info">
+                    <h3 id="key-song-name">Название песни</h3>
+                    <div class="key-controls">
+                        <span class="key-label">Тональность:</span>
+                        <select id="key-selector" class="key-selector-modern">
+                            <option value="C">C (До)</option>
+                            <option value="C#">C# (До#)</option>
+                            <option value="D">D (Ре)</option>
+                            <option value="D#">D# (Ре#)</option>
+                            <option value="E">E (Ми)</option>
+                            <option value="F">F (Фа)</option>
+                            <option value="F#">F# (Фа#)</option>
+                            <option value="G">G (Соль)</option>
+                            <option value="G#">G# (Соль#)</option>
+                            <option value="A">A (Ля)</option>
+                            <option value="A#">A# (Ля#)</option>
+                            <option value="B">B (Си)</option>
+                        </select>
+                        <span id="original-key-badge" class="original-key-badge">Оригинал: C</span>
                     </div>
-
                 </div>
-                
-                <div class="keys-grid">
-                    <button class="key-btn" data-key="C">C</button>
-                    <button class="key-btn" data-key="C#">C#</button>
-                    <button class="key-btn" data-key="D">D</button>
-                    <button class="key-btn" data-key="D#">D#</button>
-                    <button class="key-btn" data-key="E">E</button>
-                    <button class="key-btn" data-key="F">F</button>
-                    <button class="key-btn" data-key="F#">F#</button>
-                    <button class="key-btn" data-key="G">G</button>
-                    <button class="key-btn" data-key="G#">G#</button>
-                    <button class="key-btn" data-key="A">A</button>
-                    <button class="key-btn" data-key="A#">A#</button>
-                    <button class="key-btn" data-key="B">B</button>
-                </div>
-                
-
+            </div>
+            <div class="header-right">
+                <button id="confirm-key-selection" class="btn-modern primary">
+                    <i class="fas fa-plus"></i>
+                    <span>Добавить</span>
+                </button>
             </div>
         </div>
-        
-        <div class="overlay-footer">
-            <button id="cancel-key-selection" class="btn-modern secondary">
-                <i class="fas fa-times"></i>
-                <span>Отмена</span>
-            </button>
-            <button id="confirm-key-selection" class="btn-modern primary">
-                <i class="fas fa-check"></i>
-                <span>Добавить песню</span>
-            </button>
+
+        <!-- Текст песни с аккордами -->
+        <div class="song-text-container">
+            <div id="song-text-display" class="song-text-display">
+                <div class="loading-text">
+                    <i class="fas fa-music"></i>
+                    <p>Загрузка текста песни...</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
