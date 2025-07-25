@@ -431,9 +431,6 @@ function displaySongsGrid(songs, searchTerm = '') {
                 console.log('Removing song from setlist...');
                 removeSongFromSetlist(song);
             } else {
-                // Если песня не добавлена, показываем модальное окно выбора тональности
-                console.log('Showing key selection modal...');
-                
                 // Проверяем что у нас есть активный сет-лист (в любом режиме)
                 const activeSetlistId = window.activeSetlistId || currentCreatedSetlistId;
                 if (!activeSetlistId) {
@@ -445,7 +442,15 @@ function displaySongsGrid(songs, searchTerm = '') {
                     return;
                 }
                 
-                showKeySelectionModal(song);
+                // На мобильных устройствах показываем полноэкранный overlay
+                if (isMobileDevice()) {
+                    console.log('📱 Показ мобильного overlay для песни...');
+                    showMobileSongPreview(song);
+                } else {
+                    // На десктопе показываем модальное окно выбора тональности
+                    console.log('🖥️ Показ модального окна выбора тональности...');
+                    showKeySelectionModal(song);
+                }
                 
                 // Дополнительная проверка после показа модального окна
                 setTimeout(() => {
@@ -2015,4 +2020,206 @@ document.addEventListener('DOMContentLoaded', async () => {
             attributeFilter: ['class'] 
         });
     }
+    
+    // ===== МОБИЛЬНЫЙ OVERLAY ДЛЯ ПРОСМОТРА ПЕСНИ =====
+    
+    let currentMobileSong = null;
+    
+    /**
+     * Проверка мобильного устройства
+     */
+    function isMobileDevice() {
+        return window.innerWidth <= 768;
+    }
+    
+    /**
+     * Показ мобильного overlay для просмотра песни
+     */
+    function showMobileSongPreview(song) {
+        console.log('🔍 Показ мобильного overlay для песни:', song.name);
+        
+        currentMobileSong = song;
+        
+        // Получаем элементы
+        const overlay = document.getElementById('mobile-song-preview-overlay');
+        const titleElement = document.getElementById('mobile-song-title');
+        const keySelector = document.getElementById('mobile-key-selector');
+        const songTextElement = document.getElementById('mobile-song-text');
+        
+        if (!overlay || !titleElement || !keySelector || !songTextElement) {
+            console.error('❌ Не найдены элементы мобильного overlay');
+            return;
+        }
+        
+        // Устанавливаем название
+        titleElement.textContent = song.name;
+        
+        // Устанавливаем оригинальную тональность
+        const originalKey = getSongKey(song);
+        keySelector.value = originalKey;
+        
+        // Отображаем текст песни
+        displaySongTextInMobileOverlay(song, originalKey);
+        
+        // Показываем overlay
+        overlay.classList.add('active');
+        document.body.classList.add('overlay-active');
+        
+        console.log('✅ Мобильный overlay показан');
+    }
+    
+    /**
+     * Скрытие мобильного overlay
+     */
+    function hideMobileSongPreview() {
+        console.log('🔒 Скрытие мобильного overlay');
+        
+        const overlay = document.getElementById('mobile-song-preview-overlay');
+        if (overlay) {
+            overlay.classList.remove('active');
+            document.body.classList.remove('overlay-active');
+        }
+        
+        currentMobileSong = null;
+        
+        console.log('✅ Мобильный overlay скрыт');
+    }
+    
+    /**
+     * Отображение текста песни в мобильном overlay
+     */
+    function displaySongTextInMobileOverlay(song, selectedKey) {
+        const songTextElement = document.getElementById('mobile-song-text');
+        if (!songTextElement) return;
+        
+        // Получаем текст песни
+        let songText = song.hasWebEdits 
+            ? (song['Текст и аккорды (edited)'] || song['Текст и аккорды'] || '') 
+            : (song['Текст и аккорды'] || '');
+        
+        if (!songText) {
+            songTextElement.innerHTML = '<div style="text-align: center; color: var(--label-color); font-style: italic;">Текст песни не найден</div>';
+            return;
+        }
+        
+        // Транспонируем аккорды если нужно
+        const originalKey = getSongKey(song);
+        if (selectedKey !== originalKey) {
+            songText = transposeChords(songText, originalKey, selectedKey);
+        }
+        
+        // Форматируем аккорды для отображения
+        const formattedText = formatChordsInText(songText);
+        
+        songTextElement.innerHTML = formattedText;
+        
+        console.log(`📝 Текст песни отображен (${originalKey} → ${selectedKey})`);
+    }
+    
+    /**
+     * Простая функция транспонирования аккордов
+     */
+    function transposeChords(text, fromKey, toKey) {
+        // Если тональности одинаковые, возвращаем оригинальный текст
+        if (fromKey === toKey) {
+            return text;
+        }
+        
+        // Карта аккордов для транспонирования
+        const chordMap = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        
+        const fromIndex = chordMap.indexOf(fromKey);
+        const toIndex = chordMap.indexOf(toKey);
+        
+        if (fromIndex === -1 || toIndex === -1) {
+            console.warn(`Неизвестная тональность: ${fromKey} → ${toKey}`);
+            return text;
+        }
+        
+        const semitones = (toIndex - fromIndex + 12) % 12;
+        
+        // Транспонируем аккорды в квадратных скобках
+        return text.replace(/\[([^\]]+)\]/g, (match, chord) => {
+            const transposedChord = transposeChord(chord.trim(), semitones);
+            return `[${transposedChord}]`;
+        });
+    }
+    
+    /**
+     * Транспонирование одного аккорда
+     */
+    function transposeChord(chord, semitones) {
+        const chordMap = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        
+        // Находим основную ноту аккорда
+        let rootNote = '';
+        let suffix = '';
+        
+        if (chord.length >= 2 && chord[1] === '#') {
+            rootNote = chord.substring(0, 2);
+            suffix = chord.substring(2);
+        } else {
+            rootNote = chord[0];
+            suffix = chord.substring(1);
+        }
+        
+        const rootIndex = chordMap.indexOf(rootNote);
+        if (rootIndex === -1) {
+            return chord; // Если не найден, возвращаем как есть
+        }
+        
+        const newRootIndex = (rootIndex + semitones) % 12;
+        const newRootNote = chordMap[newRootIndex];
+        
+        return newRootNote + suffix;
+    }
+    
+    /**
+     * Форматирование аккордов в тексте для отображения
+     */
+    function formatChordsInText(text) {
+        // Заменяем аккорды в квадратных скобках на span с классом chord
+        return text.replace(/\[([^\]]+)\]/g, '<span class="chord">$1</span>');
+    }
+    
+    // Обработчики событий для мобильного overlay
+    document.addEventListener('DOMContentLoaded', () => {
+        // Закрытие overlay
+        const closeBtn = document.getElementById('close-mobile-song-preview');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', hideMobileSongPreview);
+        }
+        
+        // Изменение тональности
+        const keySelector = document.getElementById('mobile-key-selector');
+        if (keySelector) {
+            keySelector.addEventListener('change', (e) => {
+                if (currentMobileSong) {
+                    displaySongTextInMobileOverlay(currentMobileSong, e.target.value);
+                }
+            });
+        }
+        
+        // Добавление песни в сет-лист
+        const addBtn = document.getElementById('add-song-to-setlist-mobile');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                if (currentMobileSong) {
+                    const selectedKey = document.getElementById('mobile-key-selector').value;
+                    confirmAddSongWithKey(currentMobileSong, selectedKey);
+                    hideMobileSongPreview();
+                }
+            });
+        }
+        
+        // Закрытие по клику на overlay (вне контента)
+        const overlay = document.getElementById('mobile-song-preview-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    hideMobileSongPreview();
+                }
+            });
+        }
+    });
 });

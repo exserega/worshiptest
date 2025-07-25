@@ -4537,3 +4537,98 @@ body:not([data-theme="light"]) mark.search-highlight {
         border-left-width: 2px;
     }
 }
+
+/* ===== МОБИЛЬНЫЙ OVERLAY ДЛЯ ПРОСМОТРА ПЕСНИ ===== */
+
+/* Селектор тональности в мобильном overlay */
+.key-selector-mobile {
+    background: var(--container-background-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: var(--text-color);
+    font-size: var(--font-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.key-selector-mobile:hover {
+    border-color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 5%, var(--container-background-color));
+}
+
+.key-selector-mobile:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+/* Контейнер для текста песни в мобильном overlay */
+.mobile-song-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.song-text-display {
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    font-family: 'Courier New', 'Monaco', monospace;
+    font-size: var(--font-sm);
+    line-height: 1.6;
+    color: var(--text-color);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 400px;
+}
+
+/* Стили для аккордов в тексте */
+.song-text-display .chord {
+    color: var(--primary-color);
+    font-weight: bold;
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    padding: 1px 3px;
+    border-radius: 3px;
+    margin: 0 1px;
+    font-size: 0.9em;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 600px) {
+    .mobile-song-content {
+        padding: 12px;
+    }
+    
+    .song-text-display {
+        padding: 12px;
+        font-size: var(--font-xs);
+        line-height: 1.5;
+        min-height: 300px;
+    }
+    
+    .key-selector-mobile {
+        font-size: var(--font-xs);
+        padding: 4px 8px;
+        min-width: 100px;
+    }
+    
+    .song-text-display .chord {
+        font-size: 0.85em;
+        padding: 0 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-song-content {
+        padding: 8px;
+    }
+    
+    .song-text-display {
+        padding: 8px;
+        min-height: 250px;
+    }
+}

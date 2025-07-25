@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agape Worship</title>
-    <link rel="stylesheet" href="styles.css?v=5.4">
+    <link rel="stylesheet" href="styles.css?v=5.5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <link rel="manifest" href="manifest.json">  </head>
@@ -648,6 +648,55 @@
                 <i class="fas fa-check"></i>
                 <span>Добавить песню</span>
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- Мобильный overlay для просмотра песни при добавлении -->
+<div id="mobile-song-preview-overlay" class="global-fullscreen-overlay">
+    <div class="fullscreen-content">
+        <div class="fullscreen-header">
+            <div class="header-top-row">
+                <div class="header-left">
+                    <button id="close-mobile-song-preview" class="overlay-close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="header-title">
+                        <h3 id="mobile-song-title">Название песни</h3>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="add-song-to-setlist-mobile" class="btn-modern primary">
+                        <i class="fas fa-plus"></i>
+                        <span>Добавить</span>
+                    </button>
+                </div>
+            </div>
+            <div class="header-subtitle">
+                <span>Тональность: </span>
+                <select id="mobile-key-selector" class="key-selector-mobile">
+                    <option value="C">C (До)</option>
+                    <option value="C#">C# (До#)</option>
+                    <option value="D">D (Ре)</option>
+                    <option value="D#">D# (Ре#)</option>
+                    <option value="E">E (Ми)</option>
+                    <option value="F">F (Фа)</option>
+                    <option value="F#">F# (Фа#)</option>
+                    <option value="G">G (Соль)</option>
+                    <option value="G#">G# (Соль#)</option>
+                    <option value="A">A (Ля)</option>
+                    <option value="A#">A# (Ля#)</option>
+                    <option value="B">B (Си)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="fullscreen-body">
+            <div class="mobile-song-content">
+                <div id="mobile-song-text" class="song-text-display">
+                    <!-- Здесь будет отображаться текст песни с аккордами -->
+                </div>
+            </div>
         </div>
     </div>
 </div>
