@@ -4391,15 +4391,7 @@ body[data-theme="light"] button.key-btn {
     line-height: 1.3;
 }
 
-/* Категория песни */
-.search-result-category {
-    font-size: var(--font-xs);
-    color: var(--label-color);
-    margin-bottom: 6px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+/* Категория песни - УДАЛЕНА (больше не используется) */
 
 /* Фрагмент текста песни */
 .search-result-fragment {
@@ -4407,11 +4399,12 @@ body[data-theme="light"] button.key-btn {
     color: var(--label-color);
     line-height: 1.4;
     font-style: italic;
-    padding: 6px 12px;
-    background: color-mix(in srgb, var(--primary-color) 5%, transparent);
-    border-left: 3px solid color-mix(in srgb, var(--primary-color) 30%, transparent);
-    border-radius: 0 4px 4px 0;
-    margin-top: 8px;
+    padding: 8px 12px;
+    background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0 6px 6px 0;
+    margin-top: 6px;
+    font-family: inherit;
 }
 
 /* Выделение найденного текста */

@@ -513,34 +513,69 @@ export function populateSongSelect() {
 // --- SEARCH ---
 
 /**
+ * Нормализует текст для поиска (копия из script.js)
+ */
+function normalizeTextForSearch(text) {
+    if (!text) return '';
+    
+    return text
+        .toLowerCase()
+        .replace(/[^\w\s\u0400-\u04FF-]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
+ * Нормализует поисковый запрос (копия из script.js)
+ */
+function normalizeSearchQuery(query) {
+    if (!query) return '';
+    
+    return query
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s\u0400-\u04FF-]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
  * Находит фрагмент текста с выделением найденного запроса
+ * Показывает найденную часть В НАЧАЛЕ фрагмента
  * @param {string} text - Полный текст
  * @param {string} query - Поисковый запрос  
- * @param {number} contextLength - Длина контекста вокруг найденного
+ * @param {number} contextLength - Длина контекста после найденного
  * @returns {string} HTML с выделенным текстом
  */
-function getHighlightedTextFragment(text, query, contextLength = 60) {
+function getHighlightedTextFragment(text, query, contextLength = 80) {
     if (!text || !query) return '';
     
-    const lowerText = text.toLowerCase();
-    const lowerQuery = query.toLowerCase();
-    const index = lowerText.indexOf(lowerQuery);
+    // Нормализуем для поиска позиции
+    const normalizedText = normalizeTextForSearch(text);
+    const normalizedQuery = normalizeSearchQuery(query);
+    const index = normalizedText.indexOf(normalizedQuery);
     
     if (index === -1) return '';
     
-    // Определяем границы фрагмента
-    const start = Math.max(0, index - contextLength);
-    const end = Math.min(text.length, index + query.length + contextLength);
+    // Находим соответствующую позицию в оригинальном тексте
+    // Это приблизительно, но достаточно для отображения
+    let originalIndex = index;
+    
+    // Определяем границы фрагмента: начинаем с найденного места
+    const start = Math.max(0, originalIndex);
+    const end = Math.min(text.length, originalIndex + contextLength);
     
     let fragment = text.slice(start, end);
     
-    // Добавляем многоточие в начале и конце если нужно
-    if (start > 0) fragment = '...' + fragment;
+    // Добавляем многоточие только в конце если нужно
     if (end < text.length) fragment = fragment + '...';
     
-    // Выделяем найденный текст
-    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    fragment = fragment.replace(regex, '<mark class="search-highlight">$1</mark>');
+    // Выделяем найденный текст (используем гибкий поиск)
+    const words = normalizedQuery.split(' ').filter(w => w.length > 0);
+    words.forEach(word => {
+        const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        fragment = fragment.replace(regex, '<mark class="search-highlight">$1</mark>');
+    });
     
     return fragment;
 }
@@ -561,25 +596,30 @@ export function displaySearchResults(matchingSongs, onSelect, query = '') {
         const resultItem = document.createElement('div');
         resultItem.className = 'search-result';
         
+        // Нормализуем запрос для проверки
+        const normalizedQuery = normalizeSearchQuery(query);
+        
         // Проверяем, найдено ли в названии или тексте
-        const titleMatch = songMatch.name && songMatch.name.toLowerCase().includes(query.toLowerCase());
+        const normalizedTitle = normalizeTextForSearch(songMatch.name || '');
+        const titleMatch = normalizedTitle.includes(normalizedQuery);
+        
         const lyrics = songMatch.hasWebEdits 
             ? (songMatch['Текст и аккорды (edited)'] || '') 
             : (songMatch['Текст и аккорды'] || '');
         
-        // Для отображения фрагментов используем оригинальный текст с аккордами
-        // Но для поиска используем очищенный текст (импортируем функцию из script.js)
-        const lyricsMatch = !titleMatch && lyrics.toLowerCase().includes(query.toLowerCase());
+        // Убираем аккорды для более точного поиска
+        const cleanedLyrics = lyrics.replace(/\[[^\]]*\]/g, ' ');
+        const normalizedLyrics = normalizeTextForSearch(cleanedLyrics);
+        const lyricsMatch = !titleMatch && normalizedLyrics.includes(normalizedQuery);
         
-        // Формируем HTML для результата
+        // Формируем HTML для результата (БЕЗ КАТЕГОРИИ!)
         let resultHTML = `
             <div class="search-result-title">${songMatch.name}</div>
-            <div class="search-result-category">${songMatch.sheet || 'Без категории'}</div>
         `;
         
-        // Если найдено в тексте песни, показываем фрагмент
+        // Если найдено в тексте песни, показываем фрагмент С НАЧАЛА
         if (lyricsMatch && query) {
-            const fragment = getHighlightedTextFragment(lyrics, query);
+            const fragment = getHighlightedTextFragment(cleanedLyrics, query);
             if (fragment) {
                 resultHTML += `<div class="search-result-fragment">${fragment}</div>`;
             }

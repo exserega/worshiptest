@@ -593,6 +593,41 @@ function cleanLyricsForSearch(text) {
 }
 
 /**
+ * Нормализует поисковый запрос для более умного поиска
+ * @param {string} query - Исходный запрос
+ * @returns {string} Нормализованный запрос
+ */
+function normalizeSearchQuery(query) {
+    if (!query) return '';
+    
+    return query
+        .toLowerCase()
+        .trim()
+        // Убираем знаки препинания кроме дефисов в словах
+        .replace(/[^\w\s\u0400-\u04FF-]/g, ' ')
+        // Убираем лишние пробелы
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
+ * Нормализует текст для сравнения с запросом
+ * @param {string} text - Исходный текст
+ * @returns {string} Нормализованный текст
+ */
+function normalizeTextForSearch(text) {
+    if (!text) return '';
+    
+    return text
+        .toLowerCase()
+        // Убираем знаки препинания кроме дефисов в словах
+        .replace(/[^\w\s\u0400-\u04FF-]/g, ' ')
+        // Убираем лишние пробелы
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
  * Расширенный поиск по названию и тексту песни
  * @param {string} searchTerm - Поисковый запрос
  * @param {string} category - Категория для фильтрации
@@ -603,27 +638,29 @@ function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = f
     
     // Фильтр по поиску (название + текст песни)
     if (searchTerm) {
-        const query = searchTerm.trim().toLowerCase();
+        const query = normalizeSearchQuery(searchTerm);
         filteredSongs = filteredSongs.filter(song => {
             // Поиск по названию
-            const titleMatch = song.name && song.name.toLowerCase().includes(query);
+            const normalizedTitle = normalizeTextForSearch(song.name || '');
+            const titleMatch = normalizedTitle.includes(query);
             
             // Поиск по тексту песни (очищенному от аккордов)
             const lyrics = song.hasWebEdits 
                 ? (song['Текст и аккорды (edited)'] || '') 
                 : (song['Текст и аккорды'] || '');
             const cleanedLyrics = cleanLyricsForSearch(lyrics);
-            const lyricsMatch = cleanedLyrics.toLowerCase().includes(query);
+            const normalizedLyrics = normalizeTextForSearch(cleanedLyrics);
+            const lyricsMatch = normalizedLyrics.includes(query);
             
             return titleMatch || lyricsMatch;
         });
         
         // Сортировка: сначала точные совпадения по названию, потом по тексту
         filteredSongs.sort((a, b) => {
-            const aTitle = a.name ? a.name.toLowerCase() : '';
-            const bTitle = b.name ? b.name.toLowerCase() : '';
-            const aTitleMatch = aTitle.includes(query);
-            const bTitleMatch = bTitle.includes(query);
+            const aNormalizedTitle = normalizeTextForSearch(a.name || '');
+            const bNormalizedTitle = normalizeTextForSearch(b.name || '');
+            const aTitleMatch = aNormalizedTitle.includes(query);
+            const bTitleMatch = bNormalizedTitle.includes(query);
             
             if (aTitleMatch && !bTitleMatch) return -1;
             if (!aTitleMatch && bTitleMatch) return 1;
@@ -958,7 +995,13 @@ function setupEventListeners() {
     });
 
     ui.searchInput.addEventListener('input', () => {
-        const query = ui.searchInput.value.trim().toLowerCase();
+        const rawQuery = ui.searchInput.value.trim();
+        if(!rawQuery) {
+            if(ui.searchResults) ui.searchResults.innerHTML = '';
+            return;
+        }
+        
+        const query = normalizeSearchQuery(rawQuery);
         if(!query) {
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             return;
@@ -967,24 +1010,26 @@ function setupEventListeners() {
         // Расширенный поиск по названию и тексту
         const matchingSongs = state.allSongs.filter(song => {
             // Поиск по названию
-            const titleMatch = song.name && song.name.toLowerCase().includes(query);
+            const normalizedTitle = normalizeTextForSearch(song.name || '');
+            const titleMatch = normalizedTitle.includes(query);
             
             // Поиск по тексту песни (очищенному от аккордов)
             const lyrics = song.hasWebEdits 
                 ? (song['Текст и аккорды (edited)'] || '') 
                 : (song['Текст и аккорды'] || '');
             const cleanedLyrics = cleanLyricsForSearch(lyrics);
-            const lyricsMatch = cleanedLyrics.toLowerCase().includes(query);
+            const normalizedLyrics = normalizeTextForSearch(cleanedLyrics);
+            const lyricsMatch = normalizedLyrics.includes(query);
             
             return titleMatch || lyricsMatch;
         });
         
         // Сортировка: сначала точные совпадения по названию, потом по тексту
         matchingSongs.sort((a, b) => {
-            const aTitle = a.name ? a.name.toLowerCase() : '';
-            const bTitle = b.name ? b.name.toLowerCase() : '';
-            const aTitleMatch = aTitle.includes(query);
-            const bTitleMatch = bTitle.includes(query);
+            const aNormalizedTitle = normalizeTextForSearch(a.name || '');
+            const bNormalizedTitle = normalizeTextForSearch(b.name || '');
+            const aTitleMatch = aNormalizedTitle.includes(query);
+            const bTitleMatch = bNormalizedTitle.includes(query);
             
             if (aTitleMatch && !bTitleMatch) return -1;
             if (!aTitleMatch && bTitleMatch) return 1;
@@ -995,7 +1040,7 @@ function setupEventListeners() {
             ui.searchInput.value = songMatch.name;
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             handleFavoriteOrRepertoireSelect(songMatch);
-        }, query); // Передаем query для выделения
+        }, rawQuery); // Передаем оригинальный запрос для отображения
     });
     
     ui.searchInput.addEventListener('blur', () => setTimeout(() => { if(ui.searchResults) ui.searchResults.innerHTML = '' }, 200));
