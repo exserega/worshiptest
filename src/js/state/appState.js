@@ -13,7 +13,13 @@ export let currentRepertoireSongsData = [];
 export let currentRepertoireViewMode = 'byKey';
 
 // Functions to update state
-export function setAllSongs(newSongs) { allSongs = newSongs; }
+export function setAllSongs(newSongs) { 
+    allSongs = newSongs; 
+    // Инвалидируем кэш поиска при загрузке новых данных
+    if (typeof invalidateAllSongsCache === 'function') {
+        invalidateAllSongsCache();
+    }
+}
 export function setSongsBySheet(newSongsBySheet) { songsBySheet = newSongsBySheet; }
 export function setFavorites(newFavorites) { favorites = newFavorites; }
 export function setCurrentVocalistId(id) { currentVocalistId = id; }

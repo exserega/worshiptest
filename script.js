@@ -384,14 +384,11 @@ function displaySongsGrid(songs, searchTerm = '') {
         let textFragment = '';
         if (searchTerm) {
             const normalizedQuery = normalizeSearchQuery(searchTerm);
-            const titleMatch = normalizeTextForSearch(song.name || '').includes(normalizedQuery);
+            const titleMatch = getNormalizedTitle(song).includes(normalizedQuery);
             
             // Если не найдено в названии, ищем в тексте
             if (!titleMatch) {
-                const lyrics = song.hasWebEdits 
-                    ? (song['Текст и аккорды (edited)'] || '') 
-                    : (song['Текст и аккорды'] || '');
-                const cleanedLyrics = cleanLyricsForSearch(lyrics);
+                const cleanedLyrics = getCleanedLyrics(song);
                 
                 if (cleanedLyrics) {
                     textFragment = getHighlightedTextFragment(cleanedLyrics, searchTerm, 80);
@@ -648,6 +645,86 @@ function normalizeTextForSearch(text) {
 }
 
 /**
+ * Кэширует нормализованные данные песни для оптимизации поиска
+ * @param {Object} song - Объект песни
+ * @returns {Object} Песня с кэшированными данными
+ */
+function cacheNormalizedSongData(song) {
+    if (!song._searchCached) {
+        // Кэшируем нормализованное название
+        song._normalizedTitle = normalizeTextForSearch(song.name || '');
+        
+        // Кэшируем очищенный и нормализованный текст песни
+        const lyrics = song.hasWebEdits 
+            ? (song['Текст и аккорды (edited)'] || '') 
+            : (song['Текст и аккорды'] || '');
+        const cleanedLyrics = cleanLyricsForSearch(lyrics);
+        song._cleanedLyrics = cleanedLyrics;
+        song._normalizedLyrics = normalizeTextForSearch(cleanedLyrics);
+        
+        song._searchCached = true;
+    }
+    return song;
+}
+
+/**
+ * Получает нормализованное название песни (с кэшированием)
+ * @param {Object} song - Объект песни
+ * @returns {string} Нормализованное название
+ */
+function getNormalizedTitle(song) {
+    cacheNormalizedSongData(song);
+    return song._normalizedTitle;
+}
+
+/**
+ * Получает очищенный текст песни (с кэшированием)
+ * @param {Object} song - Объект песни
+ * @returns {string} Очищенный текст
+ */
+function getCleanedLyrics(song) {
+    cacheNormalizedSongData(song);
+    return song._cleanedLyrics;
+}
+
+/**
+ * Получает нормализованный текст песни (с кэшированием)
+ * @param {Object} song - Объект песни
+ * @returns {string} Нормализованный текст
+ */
+function getNormalizedLyrics(song) {
+    cacheNormalizedSongData(song);
+    return song._normalizedLyrics;
+}
+
+/**
+ * Инвалидирует кэш нормализованных данных песни
+ * Используется при изменении данных песни
+ * @param {Object} song - Объект песни
+ */
+function invalidateSongCache(song) {
+    if (song) {
+        song._searchCached = false;
+        delete song._normalizedTitle;
+        delete song._cleanedLyrics;
+        delete song._normalizedLyrics;
+    }
+}
+
+/**
+ * Инвалидирует кэш для всех песен
+ * Используется при загрузке новых данных
+ */
+function invalidateAllSongsCache() {
+    if (state.allSongs) {
+        state.allSongs.forEach(song => invalidateSongCache(song));
+    }
+}
+
+// Делаем функцию доступной глобально для state
+window.invalidateAllSongsCache = invalidateAllSongsCache;
+
+/**
  * Находит фрагмент текста с выделением найденного запроса
  * Показывает ТОЧНО найденную часть в начале фрагмента
  * @param {string} text - Полный текст
@@ -732,16 +809,12 @@ function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = f
     if (searchTerm) {
         const query = normalizeSearchQuery(searchTerm);
         filteredSongs = filteredSongs.filter(song => {
-            // Поиск по названию
-            const normalizedTitle = normalizeTextForSearch(song.name || '');
+            // Поиск по названию (с кэшированием)
+            const normalizedTitle = getNormalizedTitle(song);
             const titleMatch = normalizedTitle.includes(query);
             
-            // Поиск по тексту песни (очищенному от аккордов)
-            const lyrics = song.hasWebEdits 
-                ? (song['Текст и аккорды (edited)'] || '') 
-                : (song['Текст и аккорды'] || '');
-            const cleanedLyrics = cleanLyricsForSearch(lyrics);
-            const normalizedLyrics = normalizeTextForSearch(cleanedLyrics);
+            // Поиск по тексту песни (с кэшированием)
+            const normalizedLyrics = getNormalizedLyrics(song);
             const lyricsMatch = normalizedLyrics.includes(query);
             
             return titleMatch || lyricsMatch;
@@ -749,8 +822,8 @@ function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = f
         
         // Умная сортировка: начинающиеся → содержащие в названии → по тексту
         filteredSongs.sort((a, b) => {
-            const aNormalizedTitle = normalizeTextForSearch(a.name || '');
-            const bNormalizedTitle = normalizeTextForSearch(b.name || '');
+            const aNormalizedTitle = getNormalizedTitle(a);
+            const bNormalizedTitle = getNormalizedTitle(b);
             const aTitleMatch = aNormalizedTitle.includes(query);
             const bTitleMatch = bNormalizedTitle.includes(query);
             const aTitleStartsWith = aNormalizedTitle.startsWith(query);
@@ -1124,18 +1197,14 @@ function setupEventListeners() {
             return;
         }
         
-        // Расширенный поиск по названию и тексту
+        // Расширенный поиск по названию и тексту (с кэшированием)
         const matchingSongs = state.allSongs.filter(song => {
-            // Поиск по названию
-            const normalizedTitle = normalizeTextForSearch(song.name || '');
+            // Поиск по названию (с кэшированием)
+            const normalizedTitle = getNormalizedTitle(song);
             const titleMatch = normalizedTitle.includes(query);
             
-            // Поиск по тексту песни (очищенному от аккордов)
-            const lyrics = song.hasWebEdits 
-                ? (song['Текст и аккорды (edited)'] || '') 
-                : (song['Текст и аккорды'] || '');
-            const cleanedLyrics = cleanLyricsForSearch(lyrics);
-            const normalizedLyrics = normalizeTextForSearch(cleanedLyrics);
+            // Поиск по тексту песни (с кэшированием)
+            const normalizedLyrics = getNormalizedLyrics(song);
             const lyricsMatch = normalizedLyrics.includes(query);
             
             return titleMatch || lyricsMatch;
@@ -1143,8 +1212,8 @@ function setupEventListeners() {
         
         // Умная сортировка: начинающиеся → содержащие в названии → по тексту
         matchingSongs.sort((a, b) => {
-            const aNormalizedTitle = normalizeTextForSearch(a.name || '');
-            const bNormalizedTitle = normalizeTextForSearch(b.name || '');
+            const aNormalizedTitle = getNormalizedTitle(a);
+            const bNormalizedTitle = getNormalizedTitle(b);
             const aTitleMatch = aNormalizedTitle.includes(query);
             const bTitleMatch = bNormalizedTitle.includes(query);
             const aTitleStartsWith = aNormalizedTitle.startsWith(query);
