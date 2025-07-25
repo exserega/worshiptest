@@ -2916,26 +2916,27 @@
     
     /* МОБИЛЬНАЯ АДАПТАЦИЯ ПАНЕЛИ ФИЛЬТРОВ */
     .search-filters {
-        flex-direction: row;
+        flex-direction: column;
         gap: 8px;
         align-items: stretch;
     }
     
     .filter-select,
     .filter-btn {
-        height: 40px; /* Чуть меньше на мобильных */
+        height: 44px; /* Такая же высота как у строки поиска */
         font-size: 0.85rem;
         padding: 0 12px;
     }
     
     .filter-select {
-        flex: 1;
+        flex: none;
         max-width: none; /* На всю ширину */
         min-width: auto;
+        text-align: center; /* Центрируем текст */
     }
     
     .filter-btn {
-        flex: 1;
+        flex: none;
         justify-content: center;
         gap: 6px;
         min-width: auto;
