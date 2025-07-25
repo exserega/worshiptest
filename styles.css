@@ -1079,6 +1079,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
     
     /* Flexbox для выравнивания содержимого */
     display: flex;
@@ -1734,6 +1735,8 @@
     .search-input {
         padding: 12px 40px 12px 12px;
         font-size: 0.9375rem;
+        height: 44px;
+        box-sizing: border-box;
     }
     
     .search-input-wrapper i {
@@ -2617,6 +2620,8 @@
             padding: 10px 36px 10px 10px;
             font-size: 0.875rem;
             border-radius: 8px;
+            height: 44px;
+            box-sizing: border-box;
         }
         
         .search-input-wrapper i {
@@ -2959,6 +2964,8 @@
     .search-input {
         padding: 12px 40px 12px 14px;
         font-size: 0.9rem;
+        height: 44px;
+        box-sizing: border-box;
     }
     
     .search-input-wrapper i.fa-search {
@@ -3923,53 +3930,7 @@ body[data-theme="light"] button.key-btn {
     color: white;
 }
 
-/* === ФИЛЬТРЫ ПОИСКА === */
-
-.search-filters {
-    display: flex;
-    gap: 12px;
-    align-items: stretch; /* Одинаковая высота элементов */
-    flex-wrap: wrap;
-}
-
-/* УНИФИЦИРОВАННЫЕ СТИЛИ ДЛЯ ВСЕХ ЭЛЕМЕНТОВ ФИЛЬТРАЦИИ */
-.filter-select,
-.filter-btn {
-    /* Базовые стили */
-    height: 44px; /* Единая высота */
-    padding: 0 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--input-bg-color);
-    color: var(--text-color);
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Flexbox для выравнивания содержимого */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    /* Тени для глубины */
-    box-shadow: 0 1px 3px color-mix(in srgb, var(--border-color) 30%, transparent);
-}
-
-.filter-select {
-    flex: 1;
-    min-width: 140px;
-    max-width: 200px;
-    justify-content: flex-start; /* Текст слева для select */
-    padding-right: 32px; /* Место для стрелки */
-}
-
-.filter-btn {
-    gap: 8px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    min-width: auto;
-}
+/* Перенесено в styles/setlist-panel.css */
 
 /* СОСТОЯНИЯ HOVER */
 .filter-select:hover,
