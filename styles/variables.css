@@ -21,6 +21,13 @@
     --input-bg-color: #374151;
     --label-color: #9ca3af;
     --glow-color: rgba(34, 211, 238, 0.4);
+    
+    /* Typography System - Professional Scale */
+    --font-xs: 0.75rem;    /* 12px - вспомогательный текст */
+    --font-sm: 0.875rem;   /* 14px - основной текст кнопок */
+    --font-md: 1rem;       /* 16px - поиск, важные элементы */
+    --font-lg: 1.125rem;   /* 18px - заголовки overlay */
+    --font-xl: 1.25rem;    /* 20px - крупные заголовки */
 }
 
 /* --- Light Theme Variables --- */

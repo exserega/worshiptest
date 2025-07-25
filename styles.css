@@ -720,14 +720,14 @@
 
 .header-title h3 {
     margin: 0;
-    font-size: 1.125rem;
+    font-size: var(--font-lg);
     font-weight: 700;
     color: var(--text-color);
     line-height: 1.2;
 }
 
 .header-subtitle {
-    font-size: 0.875rem;
+    font-size: var(--font-sm);
     color: var(--label-color);
     line-height: 1.2;
     padding-left: 44px; /* Отступ под кнопку закрытия */
@@ -841,7 +841,7 @@
 
 .confirm-text h4 {
     margin: 0 0 8px 0;
-    font-size: 1.125rem;
+    font-size: var(--font-lg);
     font-weight: 600;
     color: var(--text-color);
 }
@@ -1018,7 +1018,7 @@
     border-radius: 10px;
     background: var(--input-bg-color);
     color: var(--text-color);
-    font-size: 1rem;
+    font-size: var(--font-md);
     transition: all 0.2s ease;
     box-sizing: border-box;
 }
@@ -1075,7 +1075,7 @@
     border-radius: 8px;
     background: var(--input-bg-color);
     color: var(--text-color);
-    font-size: 0.9rem;
+    font-size: var(--font-sm);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1734,7 +1734,7 @@
     
     .search-input {
         padding: 12px 40px 12px 12px;
-        font-size: 0.9375rem;
+        font-size: var(--font-md);
         height: 44px;
         box-sizing: border-box;
     }
@@ -1752,7 +1752,7 @@
     
     .filter-select {
         min-width: 100px;
-        font-size: 0.8rem;
+        font-size: var(--font-sm);
         padding: 6px 10px;
         height: 44px;
         text-align: center;
@@ -1760,7 +1760,7 @@
     }
     
     .filter-btn {
-        font-size: 0.8rem;
+        font-size: var(--font-sm);
         padding: 6px 10px;
         gap: 4px;
         height: 44px;
@@ -2618,7 +2618,7 @@
         
         .search-input {
             padding: 10px 36px 10px 10px;
-            font-size: 0.875rem;
+            font-size: var(--font-sm);
             border-radius: 8px;
             height: 44px;
             box-sizing: border-box;
@@ -2637,7 +2637,7 @@
         
         .filter-select {
             min-width: auto;
-            font-size: 0.75rem;
+            font-size: var(--font-sm);
             padding: 5px 8px;
             height: 44px;
             text-align: center;
@@ -2645,7 +2645,7 @@
         }
         
         .filter-btn {
-            font-size: 0.75rem;
+            font-size: var(--font-sm);
             padding: 5px 8px;
             gap: 3px;
             height: 44px;
@@ -2963,7 +2963,7 @@
     /* Поисковая строка на мобильных */
     .search-input {
         padding: 12px 40px 12px 14px;
-        font-size: 0.9rem;
+        font-size: var(--font-md);
         height: 44px;
         box-sizing: border-box;
     }
@@ -3677,14 +3677,14 @@ body[data-theme="light"] button.key-btn {
 
 .header-title h3 {
     margin: 0;
-    font-size: 1.125rem;
+    font-size: var(--font-lg);
     font-weight: 700;
     color: var(--text-color);
     line-height: 1.2;
 }
 
 .header-subtitle {
-    font-size: 0.875rem;
+    font-size: var(--font-sm);
     color: var(--label-color);
     line-height: 1.2;
     padding-left: 44px; /* Отступ под кнопку закрытия */
@@ -3890,7 +3890,7 @@ body[data-theme="light"] button.key-btn {
     border-radius: 10px;
     background: var(--input-bg-color);
     color: var(--text-color);
-    font-size: 1rem;
+    font-size: var(--font-md);
     transition: all 0.2s ease;
     box-sizing: border-box;
 }
@@ -4121,7 +4121,7 @@ body[data-theme="light"] button.key-btn {
 }
 
 .loading-state p {
-    font-size: 1.125rem;
+    font-size: var(--font-lg);
     margin: 0;
 }/* =====================================================================
    Agape Worship App - SetList Panel Styles (Part 4)
