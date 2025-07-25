@@ -13,6 +13,11 @@ import searchWorkerManager from './src/js/workers/workerManager.js';
 
 // --- UTILITY FUNCTIONS ---
 
+/** Проверка мобильного устройства */
+function isMobileDevice() {
+    return window.innerWidth <= 768;
+}
+
 /** Универсальная функция для получения тональности песни из разных возможных полей */
 function getSongKey(song) {
     // Проверяем различные возможные поля для тональности
@@ -2024,13 +2029,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ===== МОБИЛЬНЫЙ OVERLAY ДЛЯ ПРОСМОТРА ПЕСНИ =====
     
     let currentMobileSong = null;
-    
-    /**
-     * Проверка мобильного устройства
-     */
-    function isMobileDevice() {
-        return window.innerWidth <= 768;
-    }
     
     /**
      * Показ мобильного overlay для просмотра песни
