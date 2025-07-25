@@ -747,15 +747,27 @@ function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = f
             return titleMatch || lyricsMatch;
         });
         
-        // Сортировка: сначала точные совпадения по названию, потом по тексту
+        // Умная сортировка: начинающиеся → содержащие в названии → по тексту
         filteredSongs.sort((a, b) => {
             const aNormalizedTitle = normalizeTextForSearch(a.name || '');
             const bNormalizedTitle = normalizeTextForSearch(b.name || '');
             const aTitleMatch = aNormalizedTitle.includes(query);
             const bTitleMatch = bNormalizedTitle.includes(query);
+            const aTitleStartsWith = aNormalizedTitle.startsWith(query);
+            const bTitleStartsWith = bNormalizedTitle.startsWith(query);
             
+            // 1. Сначала песни, название которых начинается с запроса
+            if (aTitleStartsWith && !bTitleStartsWith) return -1;
+            if (!aTitleStartsWith && bTitleStartsWith) return 1;
+            
+            // 2. Потом песни, где запрос содержится в названии (но не в начале)
+            if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
+            if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
+            
+            // 3. Наконец песни по тексту (где нет совпадения в названии)
             if (aTitleMatch && !bTitleMatch) return -1;
             if (!aTitleMatch && bTitleMatch) return 1;
+            
             return 0;
         });
     }
@@ -1116,15 +1128,27 @@ function setupEventListeners() {
             return titleMatch || lyricsMatch;
         });
         
-        // Сортировка: сначала точные совпадения по названию, потом по тексту
+        // Умная сортировка: начинающиеся → содержащие в названии → по тексту
         matchingSongs.sort((a, b) => {
             const aNormalizedTitle = normalizeTextForSearch(a.name || '');
             const bNormalizedTitle = normalizeTextForSearch(b.name || '');
             const aTitleMatch = aNormalizedTitle.includes(query);
             const bTitleMatch = bNormalizedTitle.includes(query);
+            const aTitleStartsWith = aNormalizedTitle.startsWith(query);
+            const bTitleStartsWith = bNormalizedTitle.startsWith(query);
             
+            // 1. Сначала песни, название которых начинается с запроса
+            if (aTitleStartsWith && !bTitleStartsWith) return -1;
+            if (!aTitleStartsWith && bTitleStartsWith) return 1;
+            
+            // 2. Потом песни, где запрос содержится в названии (но не в начале)
+            if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
+            if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
+            
+            // 3. Наконец песни по тексту (где нет совпадения в названии)
             if (aTitleMatch && !bTitleMatch) return -1;
             if (!aTitleMatch && bTitleMatch) return 1;
+            
             return 0;
         });
         
