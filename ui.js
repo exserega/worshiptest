@@ -541,40 +541,71 @@ function normalizeSearchQuery(query) {
 
 /**
  * Находит фрагмент текста с выделением найденного запроса
- * Показывает найденную часть В НАЧАЛЕ фрагмента
+ * Показывает ТОЧНО найденную часть в начале фрагмента
  * @param {string} text - Полный текст
  * @param {string} query - Поисковый запрос  
- * @param {number} contextLength - Длина контекста после найденного
+ * @param {number} contextLength - Длина контекста вокруг найденного
  * @returns {string} HTML с выделенным текстом
  */
-function getHighlightedTextFragment(text, query, contextLength = 80) {
+function getHighlightedTextFragment(text, query, contextLength = 100) {
     if (!text || !query) return '';
     
-    // Нормализуем для поиска позиции
-    const normalizedText = normalizeTextForSearch(text);
     const normalizedQuery = normalizeSearchQuery(query);
-    const index = normalizedText.indexOf(normalizedQuery);
+    const queryWords = normalizedQuery.split(' ').filter(w => w.length > 1);
     
-    if (index === -1) return '';
+    if (queryWords.length === 0) return '';
     
-    // Находим соответствующую позицию в оригинальном тексте
-    // Это приблизительно, но достаточно для отображения
-    let originalIndex = index;
+    // Ищем самое длинное совпадение из слов запроса
+    let bestMatch = { index: -1, length: 0, word: '' };
     
-    // Определяем границы фрагмента: начинаем с найденного места
-    const start = Math.max(0, originalIndex);
-    const end = Math.min(text.length, originalIndex + contextLength);
+    queryWords.forEach(word => {
+        // Ищем точное совпадение слова в тексте (игнорируя аккорды и препинания)
+        const cleanText = text.replace(/\[[^\]]*\]/g, ' '); // убираем аккорды
+        const textWords = cleanText.split(/\s+/);
+        
+        for (let i = 0; i < textWords.length; i++) {
+            const cleanWord = normalizeTextForSearch(textWords[i]);
+            if (cleanWord.includes(word) && word.length > bestMatch.length) {
+                // Найдем позицию этого слова в оригинальном тексте
+                const wordStart = cleanText.toLowerCase().indexOf(textWords[i].toLowerCase());
+                if (wordStart !== -1) {
+                    bestMatch = { index: wordStart, length: word.length, word: word };
+                }
+            }
+        }
+    });
+    
+    if (bestMatch.index === -1) {
+        // Если точное совпадение не найдено, ищем первое хотя бы частичное
+        const firstWord = queryWords[0];
+        const lowerText = text.toLowerCase();
+        const searchIndex = lowerText.indexOf(firstWord);
+        if (searchIndex !== -1) {
+            bestMatch = { index: searchIndex, length: firstWord.length, word: firstWord };
+        }
+    }
+    
+    if (bestMatch.index === -1) {
+        return text.slice(0, contextLength) + '...';
+    }
+    
+    // Определяем границы фрагмента с найденным словом в начале
+    const beforeContext = Math.min(30, bestMatch.index); // немного контекста перед
+    const start = Math.max(0, bestMatch.index - beforeContext);
+    const end = Math.min(text.length, bestMatch.index + contextLength);
     
     let fragment = text.slice(start, end);
     
-    // Добавляем многоточие только в конце если нужно
+    // Добавляем многоточие
+    if (start > 0) fragment = '...' + fragment;
     if (end < text.length) fragment = fragment + '...';
     
-    // Выделяем найденный текст (используем гибкий поиск)
-    const words = normalizedQuery.split(' ').filter(w => w.length > 0);
-    words.forEach(word => {
-        const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-        fragment = fragment.replace(regex, '<mark class="search-highlight">$1</mark>');
+    // Выделяем все найденные слова
+    queryWords.forEach(word => {
+        if (word.length > 1) {
+            const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            fragment = fragment.replace(regex, '<mark class="search-highlight">$1</mark>');
+        }
     });
     
     return fragment;
