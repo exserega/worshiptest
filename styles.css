@@ -4410,12 +4410,25 @@ body[data-theme="light"] button.key-btn {
 /* Выделение найденного текста */
 .search-highlight,
 mark.search-highlight {
-    background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
-    color: var(--button-text-color);
+    background: var(--primary-color);
+    color: var(--background-color);
     padding: 2px 4px;
     border-radius: 3px;
     font-weight: 600;
     box-shadow: 0 1px 3px color-mix(in srgb, var(--primary-color) 25%, transparent);
+}
+
+/* Дополнительные стили для лучшей контрастности */
+body[data-theme="light"] .search-highlight,
+body[data-theme="light"] mark.search-highlight {
+    background: var(--secondary-color);
+    color: #ffffff;
+}
+
+body:not([data-theme="light"]) .search-highlight,
+body:not([data-theme="light"]) mark.search-highlight {
+    background: var(--primary-color);
+    color: var(--background-color);
 }
 
 /* Состояние "ничего не найдено" */
