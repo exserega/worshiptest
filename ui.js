@@ -512,17 +512,80 @@ export function populateSongSelect() {
 
 // --- SEARCH ---
 
-/** Отображение результатов поиска */
-export function displaySearchResults(matchingSongs, onSelect) {
+/**
+ * Находит фрагмент текста с выделением найденного запроса
+ * @param {string} text - Полный текст
+ * @param {string} query - Поисковый запрос  
+ * @param {number} contextLength - Длина контекста вокруг найденного
+ * @returns {string} HTML с выделенным текстом
+ */
+function getHighlightedTextFragment(text, query, contextLength = 60) {
+    if (!text || !query) return '';
+    
+    const lowerText = text.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    const index = lowerText.indexOf(lowerQuery);
+    
+    if (index === -1) return '';
+    
+    // Определяем границы фрагмента
+    const start = Math.max(0, index - contextLength);
+    const end = Math.min(text.length, index + query.length + contextLength);
+    
+    let fragment = text.slice(start, end);
+    
+    // Добавляем многоточие в начале и конце если нужно
+    if (start > 0) fragment = '...' + fragment;
+    if (end < text.length) fragment = fragment + '...';
+    
+    // Выделяем найденный текст
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    fragment = fragment.replace(regex, '<mark class="search-highlight">$1</mark>');
+    
+    return fragment;
+}
+
+/** Отображение результатов поиска с поддержкой фрагментов текста */
+export function displaySearchResults(matchingSongs, onSelect, query = '') {
     searchResults.innerHTML = '';
     if (matchingSongs.length === 0) {
-        searchResults.innerHTML = '<div class="search-result">Ничего не найдено</div>';
+        searchResults.innerHTML = `
+            <div class="search-result no-results">
+                <i class="fas fa-search"></i>
+                😕 Ничего не найдено по запросу "${query}"
+            </div>`;
         return;
     }
+    
     matchingSongs.forEach((songMatch) => {
         const resultItem = document.createElement('div');
-        resultItem.textContent = `${songMatch.name} (${songMatch.sheet || 'Без категории'})`;
         resultItem.className = 'search-result';
+        
+        // Проверяем, найдено ли в названии или тексте
+        const titleMatch = songMatch.name && songMatch.name.toLowerCase().includes(query.toLowerCase());
+        const lyrics = songMatch.hasWebEdits 
+            ? (songMatch['Текст и аккорды (edited)'] || '') 
+            : (songMatch['Текст и аккорды'] || '');
+        
+        // Для отображения фрагментов используем оригинальный текст с аккордами
+        // Но для поиска используем очищенный текст (импортируем функцию из script.js)
+        const lyricsMatch = !titleMatch && lyrics.toLowerCase().includes(query.toLowerCase());
+        
+        // Формируем HTML для результата
+        let resultHTML = `
+            <div class="search-result-title">${songMatch.name}</div>
+            <div class="search-result-category">${songMatch.sheet || 'Без категории'}</div>
+        `;
+        
+        // Если найдено в тексте песни, показываем фрагмент
+        if (lyricsMatch && query) {
+            const fragment = getHighlightedTextFragment(lyrics, query);
+            if (fragment) {
+                resultHTML += `<div class="search-result-fragment">${fragment}</div>`;
+            }
+        }
+        
+        resultItem.innerHTML = resultHTML;
         resultItem.addEventListener('click', () => onSelect(songMatch));
         searchResults.appendChild(resultItem);
     });

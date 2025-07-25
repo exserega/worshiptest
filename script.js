@@ -575,14 +575,60 @@ async function confirmAddSongWithKey() {
     console.log('=== confirmAddSongWithKey END ===');
 }
 
+/**
+ * Очищает текст от аккордов для более точного поиска
+ * @param {string} text - Текст с аккордами
+ * @returns {string} Очищенный текст
+ */
+function cleanLyricsForSearch(text) {
+    if (!text) return '';
+    
+    // Убираем аккорды в квадратных скобках [C], [Am7], etc.
+    let cleaned = text.replace(/\[[^\]]*\]/g, ' ');
+    
+    // Убираем лишние пробелы и переносы строк
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+    
+    return cleaned;
+}
+
+/**
+ * Расширенный поиск по названию и тексту песни
+ * @param {string} searchTerm - Поисковый запрос
+ * @param {string} category - Категория для фильтрации
+ * @param {boolean} showAddedOnly - Показывать только добавленные песни
+ */
 function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = false) {
     let filteredSongs = state.allSongs;
     
-    // Фильтр по поиску
+    // Фильтр по поиску (название + текст песни)
     if (searchTerm) {
-        filteredSongs = filteredSongs.filter(song => 
-            song.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        const query = searchTerm.trim().toLowerCase();
+        filteredSongs = filteredSongs.filter(song => {
+            // Поиск по названию
+            const titleMatch = song.name && song.name.toLowerCase().includes(query);
+            
+            // Поиск по тексту песни (очищенному от аккордов)
+            const lyrics = song.hasWebEdits 
+                ? (song['Текст и аккорды (edited)'] || '') 
+                : (song['Текст и аккорды'] || '');
+            const cleanedLyrics = cleanLyricsForSearch(lyrics);
+            const lyricsMatch = cleanedLyrics.toLowerCase().includes(query);
+            
+            return titleMatch || lyricsMatch;
+        });
+        
+        // Сортировка: сначала точные совпадения по названию, потом по тексту
+        filteredSongs.sort((a, b) => {
+            const aTitle = a.name ? a.name.toLowerCase() : '';
+            const bTitle = b.name ? b.name.toLowerCase() : '';
+            const aTitleMatch = aTitle.includes(query);
+            const bTitleMatch = bTitle.includes(query);
+            
+            if (aTitleMatch && !bTitleMatch) return -1;
+            if (!aTitleMatch && bTitleMatch) return 1;
+            return 0;
+        });
     }
     
     // Фильтр по категории
@@ -917,14 +963,39 @@ function setupEventListeners() {
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             return;
         }
-        const matchingSongs = state.allSongs.filter(song =>
-            song.name && song.name.toLowerCase().includes(query)
-        );
+        
+        // Расширенный поиск по названию и тексту
+        const matchingSongs = state.allSongs.filter(song => {
+            // Поиск по названию
+            const titleMatch = song.name && song.name.toLowerCase().includes(query);
+            
+            // Поиск по тексту песни (очищенному от аккордов)
+            const lyrics = song.hasWebEdits 
+                ? (song['Текст и аккорды (edited)'] || '') 
+                : (song['Текст и аккорды'] || '');
+            const cleanedLyrics = cleanLyricsForSearch(lyrics);
+            const lyricsMatch = cleanedLyrics.toLowerCase().includes(query);
+            
+            return titleMatch || lyricsMatch;
+        });
+        
+        // Сортировка: сначала точные совпадения по названию, потом по тексту
+        matchingSongs.sort((a, b) => {
+            const aTitle = a.name ? a.name.toLowerCase() : '';
+            const bTitle = b.name ? b.name.toLowerCase() : '';
+            const aTitleMatch = aTitle.includes(query);
+            const bTitleMatch = bTitle.includes(query);
+            
+            if (aTitleMatch && !bTitleMatch) return -1;
+            if (!aTitleMatch && bTitleMatch) return 1;
+            return 0;
+        });
+        
         ui.displaySearchResults(matchingSongs, (songMatch) => {
             ui.searchInput.value = songMatch.name;
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             handleFavoriteOrRepertoireSelect(songMatch);
-        });
+        }, query); // Передаем query для выделения
     });
     
     ui.searchInput.addEventListener('blur', () => setTimeout(() => { if(ui.searchResults) ui.searchResults.innerHTML = '' }, 200));
