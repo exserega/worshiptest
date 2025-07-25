@@ -9,6 +9,7 @@ import * as songsApi from './src/js/api/songs.js';
 import * as core from './core.js';
 import * as ui from './ui.js';
 import * as metronomeUI from './metronome.js';
+import searchWorkerManager from './src/js/workers/workerManager.js';
 
 // --- UTILITY FUNCTIONS ---
 
@@ -799,57 +800,91 @@ function getHighlightedTextFragment(text, query, contextLength = 100) {
     return fragment;
 }
 
+// Переменная для отслеживания текущего поискового запроса в overlay
+let currentOverlaySearchRequest = null;
+
 /**
- * Расширенный поиск по названию и тексту песни
+ * Расширенный поиск по названию и тексту песни с Web Worker поддержкой
  * @param {string} searchTerm - Поисковый запрос
  * @param {string} category - Категория для фильтрации
  * @param {boolean} showAddedOnly - Показывать только добавленные песни
  */
-function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = false) {
-    let filteredSongs = state.allSongs;
-    
-    // Фильтр по поиску (название + текст песни)
-    if (searchTerm) {
-        const query = normalizeSearchQuery(searchTerm);
-        filteredSongs = filteredSongs.filter(song => {
-            // Поиск по названию (с кэшированием)
-            const normalizedTitle = getNormalizedTitle(song);
-            const titleMatch = normalizedTitle.includes(query);
-            
-            // Поиск по тексту песни (с кэшированием)
-            const normalizedLyrics = getNormalizedLyrics(song);
-            const lyricsMatch = normalizedLyrics.includes(query);
-            
-            return titleMatch || lyricsMatch;
-        });
-        
-        // Умная сортировка: начинающиеся → содержащие в названии → по тексту
-        filteredSongs.sort((a, b) => {
-            const aNormalizedTitle = getNormalizedTitle(a);
-            const bNormalizedTitle = getNormalizedTitle(b);
-            const aTitleMatch = aNormalizedTitle.includes(query);
-            const bTitleMatch = bNormalizedTitle.includes(query);
-            const aTitleStartsWith = aNormalizedTitle.startsWith(query);
-            const bTitleStartsWith = bNormalizedTitle.startsWith(query);
-            
-            // 1. Сначала песни, название которых начинается с запроса
-            if (aTitleStartsWith && !bTitleStartsWith) return -1;
-            if (!aTitleStartsWith && bTitleStartsWith) return 1;
-            
-            // 2. Потом песни, где запрос содержится в названии (но не в начале)
-            if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
-            if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
-            
-            // 3. Наконец песни по тексту (где нет совпадения в названии)
-            if (aTitleMatch && !bTitleMatch) return -1;
-            if (!aTitleMatch && bTitleMatch) return 1;
-            
-            return 0;
-        });
+async function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = false) {
+    // Отменяем предыдущий поиск если есть
+    if (currentOverlaySearchRequest) {
+        searchWorkerManager.cancelSearch(currentOverlaySearchRequest);
+        currentOverlaySearchRequest = null;
     }
     
-    // Фильтр по категории
-    if (category) {
+    let filteredSongs = state.allSongs;
+    
+    // Фильтр по поиску через Web Worker (если есть поисковый запрос)
+    if (searchTerm) {
+        try {
+            console.log(`🔍 Overlay поиск через Worker: "${searchTerm}"`);
+            
+            const startTime = performance.now();
+            const { results, metadata } = await searchWorkerManager.overlaySearch(searchTerm, state.allSongs, {
+                category: category || undefined,
+                enablePrioritySearch: true
+            });
+            const duration = performance.now() - startTime;
+            
+            console.log(`✅ Overlay поиск завершен за ${duration.toFixed(2)}ms (Worker: ${metadata.duration.toFixed(2)}ms)`);
+            
+            // Объединяем точные и нечеткие результаты
+            filteredSongs = [
+                ...results.exactResults.map(r => r.song),
+                ...results.fuzzyResults.map(r => r.song)
+            ];
+            
+        } catch (error) {
+            console.error('❌ Ошибка Web Worker overlay поиска, fallback:', error);
+            
+            // Fallback: стандартный поиск
+            const query = normalizeSearchQuery(searchTerm);
+            filteredSongs = filteredSongs.filter(song => {
+                // Поиск по названию (с кэшированием)
+                const normalizedTitle = getNormalizedTitle(song);
+                const titleMatch = normalizedTitle.includes(query);
+                
+                // Поиск по тексту песни (с кэшированием)
+                const normalizedLyrics = getNormalizedLyrics(song);
+                const lyricsMatch = normalizedLyrics.includes(query);
+                
+                return titleMatch || lyricsMatch;
+            });
+            
+            // Умная сортировка для fallback
+            filteredSongs.sort((a, b) => {
+                const aNormalizedTitle = getNormalizedTitle(a);
+                const bNormalizedTitle = getNormalizedTitle(b);
+                const aTitleMatch = aNormalizedTitle.includes(query);
+                const bTitleMatch = bNormalizedTitle.includes(query);
+                const aTitleStartsWith = aNormalizedTitle.startsWith(query);
+                const bTitleStartsWith = bNormalizedTitle.startsWith(query);
+                
+                // 1. Сначала песни, название которых начинается с запроса
+                if (aTitleStartsWith && !bTitleStartsWith) return -1;
+                if (!aTitleStartsWith && bTitleStartsWith) return 1;
+                
+                // 2. Потом песни, где запрос содержится в названии (но не в начале)
+                if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
+                if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
+                
+                // 3. Наконец песни по тексту (где нет совпадения в названии)
+                if (aTitleMatch && !bTitleMatch) return -1;
+                if (!aTitleMatch && bTitleMatch) return 1;
+                
+                return 0;
+            });
+        }
+    }
+    
+    // Фильтр по категории (если не обработан в Worker)
+    if (category && searchTerm) {
+        // Если поиск был через Worker с категорией, фильтр уже применен
+    } else if (category) {
         filteredSongs = filteredSongs.filter(song => song.sheet === category);
     }
     
@@ -1187,8 +1222,17 @@ function setupEventListeners() {
         };
     }
 
-    // Создаем debounced версию поиска с фаззи-поддержкой
-    const performSearch = (rawQuery) => {
+    // Переменная для отслеживания текущего поискового запроса
+    let currentMainSearchRequest = null;
+    
+    // Создаем debounced версию поиска с Web Worker поддержкой
+    const performSearch = async (rawQuery) => {
+        // Отменяем предыдущий поиск если есть
+        if (currentMainSearchRequest) {
+            searchWorkerManager.cancelSearch(currentMainSearchRequest);
+            currentMainSearchRequest = null;
+        }
+        
         if(!rawQuery) {
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             return;
@@ -1200,6 +1244,44 @@ function setupEventListeners() {
             return;
         }
         
+        try {
+            // Используем Web Worker для поиска
+            console.log(`🔍 Основной поиск через Worker: "${rawQuery}"`);
+            
+            const startTime = performance.now();
+            const { results, metadata } = await searchWorkerManager.mainSearch(rawQuery, state.allSongs);
+            const duration = performance.now() - startTime;
+            
+            console.log(`✅ Основной поиск завершен за ${duration.toFixed(2)}ms (Worker: ${metadata.duration.toFixed(2)}ms)`);
+            
+            // Объединяем точные и нечеткие результаты
+            const allResults = [
+                ...results.exactResults.map(r => r.song),
+                ...results.fuzzyResults.map(r => r.song)
+            ];
+            
+            // Показываем предложения если результатов мало
+            if (allResults.length === 0 && results.suggestions && results.suggestions.length > 0) {
+                console.log('💡 Предложения:', results.suggestions);
+                // TODO: Показать предложения в UI
+            }
+            
+            ui.displaySearchResults(allResults, (songMatch) => {
+                ui.searchInput.value = songMatch.name;
+                if(ui.searchResults) ui.searchResults.innerHTML = '';
+                handleFavoriteOrRepertoireSelect(songMatch);
+            }, rawQuery);
+            
+        } catch (error) {
+            console.error('❌ Ошибка Web Worker поиска, fallback:', error);
+            
+            // Fallback: прямой поиск без worker
+            performFallbackSearch(rawQuery, query);
+        }
+    };
+    
+    // Fallback функция для поиска без Web Worker
+    const performFallbackSearch = (rawQuery, query) => {
         let allResults = [];
         
         // Используем фаззи-поиск если доступен
@@ -1218,7 +1300,7 @@ function setupEventListeners() {
                 // TODO: Показать предложения в UI
             }
         } else {
-            // Fallback: стандартный поиск
+            // Стандартный поиск
             allResults = state.allSongs.filter(song => {
                 // Поиск по названию (с кэшированием)
                 const normalizedTitle = getNormalizedTitle(song);
@@ -1260,7 +1342,7 @@ function setupEventListeners() {
             ui.searchInput.value = songMatch.name;
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             handleFavoriteOrRepertoireSelect(songMatch);
-        }, rawQuery); // Передаем оригинальный запрос для отображения
+        }, rawQuery);
     };
 
     const debouncedSearch = debounce(performSearch, 150);
@@ -1874,6 +1956,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Make metronome UI available globally for backward compatibility
     window.metronomeUI = metronomeUI;
+    
+    // Make search worker manager available globally  
+    window.searchWorkerManager = searchWorkerManager;
     
     // Устанавливаем двухколоночный режим по умолчанию
     ui.songContent.classList.add('split-columns');

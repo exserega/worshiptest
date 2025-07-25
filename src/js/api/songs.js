@@ -42,6 +42,11 @@ async function loadAllSongsFromFirestore() {
     state.setAllSongs(newAllSongs);
     state.setSongsBySheet(newSongsBySheet);
     console.log(`Загружено ${state.allSongs.length} песен.`);
+    
+    // Обновляем базу данных в Web Worker
+    if (typeof window !== 'undefined' && window.searchWorkerManager) {
+        window.searchWorkerManager.updateSongsDatabase(newAllSongs);
+    }
 }
 
 /** Сохранение отредактированного текста песни */
