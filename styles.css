@@ -4761,13 +4761,13 @@ body:not([data-theme="light"]) mark.search-highlight {
 .key-select-modern {
     padding: 6px 12px;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 6px;
     background: var(--background-color);
     color: var(--text-color);
-    font-size: var(--font-md);
+    font-size: var(--font-sm);
     font-weight: 600;
     cursor: pointer;
-    min-width: 60px;
+    min-width: 70px;
     text-align: center;
     transition: all 0.2s ease;
 }
@@ -4794,7 +4794,7 @@ body:not([data-theme="light"]) mark.search-highlight {
     opacity: 0.8;
 }
 
-/* Компактная кнопка действия */
+/* Кнопка действия - одинакового размера с селектором */
 .btn-action-secondary {
     padding: 6px 12px;
     border: 1px solid var(--border-color);
@@ -4802,7 +4802,7 @@ body:not([data-theme="light"]) mark.search-highlight {
     background: var(--background-color);
     color: var(--text-color);
     font-size: var(--font-sm);
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -4898,9 +4898,9 @@ body:not([data-theme="light"]) mark.search-highlight {
     }
     
     .key-select-modern {
-        padding: 4px 8px;
-        font-size: var(--font-sm);
-        min-width: 50px;
+        padding: 5px 8px;
+        font-size: 0.8rem;
+        min-width: 60px;
     }
     
     .key-badge-subtle {
@@ -4949,9 +4949,9 @@ body:not([data-theme="light"]) mark.search-highlight {
     }
     
     .key-select-modern {
-        padding: 3px 6px;
-        font-size: 0.8rem;
-        min-width: 45px;
+        padding: 4px 6px;
+        font-size: 0.75rem;
+        min-width: 50px;
     }
     
     .key-badge-subtle {
