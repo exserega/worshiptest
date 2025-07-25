@@ -353,7 +353,7 @@ function showKeySelectionModal(song) {
     
     // Заполняем информацию о песне
     if (ui.keySongName) {
-        ui.keySongName.textContent = song.name;
+        ui.keySongName.textContent = `Выберите тональность для песни "${song.name}"`;
     }
     
     // Устанавливаем оригинальную тональность в селектор и бейдж

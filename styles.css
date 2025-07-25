@@ -4720,21 +4720,22 @@ body:not([data-theme="light"]) mark.search-highlight {
     min-height: 48px;
 }
 
-.song-title-section {
+.header-title-section {
     flex: 1;
     margin: 0 12px;
     min-width: 0;
+    text-align: center;
 }
 
-.song-title-section h3 {
+.header-title-section h3 {
     margin: 0;
-    font-size: var(--font-lg);
-    font-weight: 600;
+    font-size: var(--font-md);
+    font-weight: 500;
     color: var(--text-color);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.2;
+    line-height: 1.3;
 }
 
 .btn-modern.compact {
@@ -4863,12 +4864,12 @@ body:not([data-theme="light"]) mark.search-highlight {
         min-height: 44px;
     }
     
-    .song-title-section {
+    .header-title-section {
         margin: 0 8px;
     }
     
-    .song-title-section h3 {
-        font-size: var(--font-md);
+    .header-title-section h3 {
+        font-size: var(--font-sm);
     }
     
     .btn-modern.compact {
@@ -4915,12 +4916,12 @@ body:not([data-theme="light"]) mark.search-highlight {
         min-height: 40px;
     }
     
-    .song-title-section {
+    .header-title-section {
         margin: 0 6px;
     }
     
-    .song-title-section h3 {
-        font-size: var(--font-sm);
+    .header-title-section h3 {
+        font-size: var(--font-xs);
     }
     
     .btn-modern.compact {
