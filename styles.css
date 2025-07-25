@@ -4739,9 +4739,9 @@ body:not([data-theme="light"]) mark.search-highlight {
 }
 
 .btn-modern.compact {
-    padding: 8px 12px;
+    padding: 8px 16px;
     font-size: var(--font-sm);
-    min-width: auto;
+    min-width: 80px;
 }
 
 .header-controls {
@@ -4873,8 +4873,8 @@ body:not([data-theme="light"]) mark.search-highlight {
     }
     
     .btn-modern.compact {
-        padding: 6px 10px;
-        font-size: 0.8rem;
+        padding: 5px 8px;
+        font-size: 0.75rem;
     }
     
     .header-controls {
@@ -4925,12 +4925,13 @@ body:not([data-theme="light"]) mark.search-highlight {
     }
     
     .btn-modern.compact {
-        padding: 5px 8px;
-        font-size: 0.75rem;
+        padding: 4px 6px;
+        font-size: 0.7rem;
+        min-width: 60px;
     }
     
     .btn-modern.compact span {
-        display: none; /* Только иконка на очень маленьких экранах */
+        display: inline; /* Показываем текст на маленьких экранах */
     }
     
     .header-controls {
@@ -4959,5 +4960,21 @@ body:not([data-theme="light"]) mark.search-highlight {
     .song-text-display {
         padding: 12px;
         font-size: 12px;
+    }
+}
+
+@media (max-width: 400px) {
+    .btn-modern.compact {
+        padding: 4px;
+        min-width: 32px;
+        width: 32px;
+    }
+    
+    .btn-modern.compact span {
+        display: none; /* Только иконка на очень маленьких экранах */
+    }
+    
+    .header-title-section h3 {
+        font-size: 0.7rem;
     }
 }
