@@ -98,6 +98,132 @@ async function performOverlayDropdownSearch(searchTerm) {
     }
 }
 
+/**
+ * Показ результатов поиска в dropdown overlay
+ */
+function showOverlaySearchResults(results, query) {
+    const dropdown = document.getElementById('overlay-search-results');
+    const container = dropdown.querySelector('.search-results-container');
+    
+    if (!dropdown || !container) {
+        console.error('❌ Не найдены элементы dropdown поиска');
+        return;
+    }
+    
+    // Очищаем контейнер
+    container.innerHTML = '';
+    
+    if (!results || results.length === 0) {
+        // Показываем сообщение "ничего не найдено"
+        container.innerHTML = `
+            <div class="overlay-search-no-results">
+                <i class="fas fa-search"></i>
+                Ничего не найдено по запросу "${query}"
+            </div>
+        `;
+    } else {
+        // Добавляем результаты
+        results.forEach(song => {
+            const resultElement = createOverlaySearchResultElement(song, query);
+            container.appendChild(resultElement);
+        });
+    }
+    
+    // Показываем dropdown
+    dropdown.style.display = 'block';
+    
+    console.log(`🔍 Показано ${results.length} результатов поиска в dropdown`);
+}
+
+/**
+ * Скрытие dropdown результатов поиска
+ */
+function hideOverlaySearchResults() {
+    const dropdown = document.getElementById('overlay-search-results');
+    if (dropdown) {
+        dropdown.style.display = 'none';
+    }
+}
+
+/**
+ * Создание элемента результата поиска для dropdown
+ */
+function createOverlaySearchResultElement(song, query) {
+    const resultDiv = document.createElement('div');
+    resultDiv.className = 'overlay-search-result';
+    
+    // Получаем фрагмент текста если поиск был по тексту
+    let textFragment = '';
+    const normalizedQuery = normalizeSearchQuery(query);
+    const titleMatch = normalizeTextForSearch(song.name || '').includes(normalizedQuery);
+    
+    if (!titleMatch) {
+        const lyrics = song.hasWebEdits 
+            ? (song['Текст и аккорды (edited)'] || '') 
+            : (song['Текст и аккорды'] || '');
+        const cleanedLyrics = cleanLyricsForSearch(lyrics);
+        
+        if (cleanedLyrics) {
+            textFragment = getHighlightedTextFragment(cleanedLyrics, query, 60);
+        }
+    }
+    
+    // Создаем HTML
+    resultDiv.innerHTML = `
+        <div class="overlay-search-result-title">${highlightText(song.name, query)}</div>
+        <div class="overlay-search-result-category">${song.sheet || 'Без категории'}</div>
+        ${textFragment ? `<div class="overlay-search-result-fragment">${textFragment}</div>` : ''}
+    `;
+    
+    // Добавляем обработчик клика
+    resultDiv.addEventListener('click', () => {
+        console.log('🎵 Клик на результат поиска:', song.name);
+        
+        // Скрываем dropdown
+        hideOverlaySearchResults();
+        
+        // Очищаем поле поиска
+        const searchInput = document.getElementById('song-search-input');
+        if (searchInput) {
+            searchInput.value = '';
+            searchInput.blur(); // Скрываем клавиатуру на мобильных
+        }
+        
+        // Скрываем кнопку очистки
+        const clearBtn = document.getElementById('clear-search');
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+        }
+        
+        // Открываем preview песни (мобильный overlay или модальное окно)
+        if (isMobileDevice()) {
+            showMobileSongPreview(song);
+        } else {
+            showKeySelectionModal(song);
+        }
+    });
+    
+    return resultDiv;
+}
+
+/**
+ * Подсветка текста в результатах поиска
+ */
+function highlightText(text, query) {
+    if (!query || !text) return text;
+    
+    const normalizedQuery = normalizeSearchQuery(query);
+    const words = normalizedQuery.split(/\s+/).filter(word => word.length > 0);
+    
+    let highlightedText = text;
+    words.forEach(word => {
+        const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        highlightedText = highlightedText.replace(regex, '<mark class="search-highlight">$1</mark>');
+    });
+    
+    return highlightedText;
+}
+
 // --- HANDLERS ---
 
 /** Обработчик выбора песни из репертуара или "Моего списка" */
@@ -2093,133 +2219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
     
-// ===== DROPDOWN ПОИСКА В OVERLAY (ГЛОБАЛЬНЫЕ ФУНКЦИИ) =====
 
-/**
- * Показ результатов поиска в dropdown overlay
- */
-function showOverlaySearchResults(results, query) {
-        const dropdown = document.getElementById('overlay-search-results');
-        const container = dropdown.querySelector('.search-results-container');
-        
-        if (!dropdown || !container) {
-            console.error('❌ Не найдены элементы dropdown поиска');
-            return;
-        }
-        
-        // Очищаем контейнер
-        container.innerHTML = '';
-        
-        if (!results || results.length === 0) {
-            // Показываем сообщение "ничего не найдено"
-            container.innerHTML = `
-                <div class="overlay-search-no-results">
-                    <i class="fas fa-search"></i>
-                    Ничего не найдено по запросу "${query}"
-                </div>
-            `;
-        } else {
-            // Добавляем результаты
-            results.forEach(song => {
-                const resultElement = createOverlaySearchResultElement(song, query);
-                container.appendChild(resultElement);
-            });
-        }
-        
-        // Показываем dropdown
-        dropdown.style.display = 'block';
-        
-        console.log(`🔍 Показано ${results.length} результатов поиска в dropdown`);
-    }
-    
-/**
- * Скрытие dropdown результатов поиска
- */
-function hideOverlaySearchResults() {
-        const dropdown = document.getElementById('overlay-search-results');
-        if (dropdown) {
-            dropdown.style.display = 'none';
-        }
-    }
-    
-/**
- * Создание элемента результата поиска для dropdown
- */
-function createOverlaySearchResultElement(song, query) {
-        const resultDiv = document.createElement('div');
-        resultDiv.className = 'overlay-search-result';
-        
-        // Получаем фрагмент текста если поиск был по тексту
-        let textFragment = '';
-        const normalizedQuery = normalizeSearchQuery(query);
-        const titleMatch = normalizeTextForSearch(song.name || '').includes(normalizedQuery);
-        
-        if (!titleMatch) {
-            const lyrics = song.hasWebEdits 
-                ? (song['Текст и аккорды (edited)'] || '') 
-                : (song['Текст и аккорды'] || '');
-            const cleanedLyrics = cleanLyricsForSearch(lyrics);
-            
-            if (cleanedLyrics) {
-                textFragment = getHighlightedTextFragment(cleanedLyrics, query, 60);
-            }
-        }
-        
-        // Создаем HTML
-        resultDiv.innerHTML = `
-            <div class="overlay-search-result-title">${highlightText(song.name, query)}</div>
-            <div class="overlay-search-result-category">${song.sheet || 'Без категории'}</div>
-            ${textFragment ? `<div class="overlay-search-result-fragment">${textFragment}</div>` : ''}
-        `;
-        
-        // Добавляем обработчик клика
-        resultDiv.addEventListener('click', () => {
-            console.log('🎵 Клик на результат поиска:', song.name);
-            
-            // Скрываем dropdown
-            hideOverlaySearchResults();
-            
-            // Очищаем поле поиска
-            const searchInput = document.getElementById('song-search-input');
-            if (searchInput) {
-                searchInput.value = '';
-                searchInput.blur(); // Скрываем клавиатуру на мобильных
-            }
-            
-            // Скрываем кнопку очистки
-            const clearBtn = document.getElementById('clear-search');
-            if (clearBtn) {
-                clearBtn.style.display = 'none';
-            }
-            
-            // Открываем preview песни (мобильный overlay или модальное окно)
-            if (isMobileDevice()) {
-                showMobileSongPreview(song);
-            } else {
-                showKeySelectionModal(song);
-            }
-        });
-        
-        return resultDiv;
-    }
-    
-/**
- * Подсветка текста в результатах поиска
- */
-function highlightText(text, query) {
-        if (!query || !text) return text;
-        
-        const normalizedQuery = normalizeSearchQuery(query);
-        const words = normalizedQuery.split(/\s+/).filter(word => word.length > 0);
-        
-        let highlightedText = text;
-        words.forEach(word => {
-            const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-            highlightedText = highlightedText.replace(regex, '<mark class="search-highlight">$1</mark>');
-        });
-        
-    return highlightedText;
-}
 
 // ===== МОБИЛЬНЫЙ OVERLAY ДЛЯ ПРОСМОТРА ПЕСНИ =====
     
