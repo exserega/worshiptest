@@ -66,32 +66,80 @@ function calculateSimilarity(str1, str2) {
  * @returns {boolean} true если найдено нечеткое совпадение
  */
 function fuzzyMatch(query, text, threshold = 0.7) {
-    if (!query || !text) return false;
+    const result = fuzzyMatchWithScore(query, text, threshold);
+    return result.isMatch;
+}
+
+/**
+ * Проверяет нечеткое совпадение И возвращает оценку схожести
+ * Оптимизированная функция без двойных вычислений
+ * @param {string} query - Поисковый запрос
+ * @param {string} text - Текст для проверки
+ * @param {number} threshold - Порог схожести (0-1)
+ * @returns {Object} {isMatch: boolean, similarity: number, matchType: string}
+ */
+function fuzzyMatchWithScore(query, text, threshold = 0.7) {
+    if (!query || !text) {
+        return { isMatch: false, similarity: 0, matchType: 'none' };
+    }
     
     query = query.toLowerCase().trim();
     text = text.toLowerCase().trim();
     
-    // Точное совпадение
-    if (text.includes(query)) return true;
+    // Точное совпадение - максимальный приоритет
+    if (text.includes(query)) {
+        return { isMatch: true, similarity: 1.0, matchType: 'exact' };
+    }
     
-    // Проверяем слова по отдельности
-    const queryWords = query.split(/\s+/).filter(w => w.length > 2);
+    // Проверяем нечеткое совпадение по словам
+    const queryWords = query.split(/\s+/).filter(w => w.length >= 3); // Увеличил до 3 символов
     const textWords = text.split(/\s+/);
     
+    if (queryWords.length === 0) {
+        return { isMatch: false, similarity: 0, matchType: 'none' };
+    }
+    
+    let totalSimilarity = 0;
+    let matchedWords = 0;
+    let maxWordSimilarity = 0;
+    
     for (const queryWord of queryWords) {
-        let bestMatch = 0;
+        let bestWordMatch = 0;
         
         for (const textWord of textWords) {
             const similarity = calculateSimilarity(queryWord, textWord);
-            bestMatch = Math.max(bestMatch, similarity);
+            bestWordMatch = Math.max(bestWordMatch, similarity);
         }
         
-        if (bestMatch >= threshold) {
-            return true;
+        if (bestWordMatch >= 0.5) { // Порог для учета слова
+            totalSimilarity += bestWordMatch;
+            matchedWords++;
+            maxWordSimilarity = Math.max(maxWordSimilarity, bestWordMatch);
         }
     }
     
-    return false;
+    // Вычисляем общую схожесть
+    const overallSimilarity = matchedWords > 0 
+        ? (totalSimilarity / queryWords.length) 
+        : 0;
+    
+    // Определяем тип совпадения
+    let matchType = 'none';
+    if (overallSimilarity >= 0.9) {
+        matchType = 'high-fuzzy';
+    } else if (overallSimilarity >= 0.75) {
+        matchType = 'medium-fuzzy';
+    } else if (overallSimilarity >= threshold) {
+        matchType = 'low-fuzzy';
+    }
+    
+    return {
+        isMatch: overallSimilarity >= threshold,
+        similarity: overallSimilarity,
+        matchType: matchType,
+        matchedWords: matchedWords,
+        totalWords: queryWords.length
+    };
 }
 
 /**
@@ -194,6 +242,7 @@ export {
     levenshteinDistance,
     calculateSimilarity,
     fuzzyMatch,
+    fuzzyMatchWithScore,
     findFuzzyMatches,
     calculateTextSimilarity,
     generateSuggestions

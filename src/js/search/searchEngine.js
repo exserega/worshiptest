@@ -5,6 +5,7 @@
 
 import { 
     fuzzyMatch, 
+    fuzzyMatchWithScore,
     calculateTextSimilarity, 
     generateSuggestions 
 } from '../utils/fuzzySearch.js';
@@ -13,17 +14,23 @@ import {
  * Конфигурация поискового движка
  */
 const SEARCH_CONFIG = {
-    // Пороги для нечеткого поиска
+    // Пороги для нечеткого поиска (оптимизированные)
     FUZZY_THRESHOLD_HIGH: 0.8,    // Высокая точность
     FUZZY_THRESHOLD_MEDIUM: 0.7,  // Средняя точность
     FUZZY_THRESHOLD_LOW: 0.6,     // Низкая точность
+    
+    // Настройки алгоритмов
+    MIN_WORD_LENGTH: 3,           // Минимум символов в слове для фаззи-поиска
+    MIN_WORD_SIMILARITY: 0.5,     // Минимальная схожесть слова для учета
+    MIN_OVERALL_SCORE: 0.3,       // Минимальный общий балл для включения в результаты
     
     // Настройки результатов
     MAX_EXACT_RESULTS: 50,        // Максимум точных результатов
     MAX_FUZZY_RESULTS: 20,        // Максимум нечетких результатов
     MAX_SUGGESTIONS: 3,           // Максимум предложений
+    FUZZY_TRIGGER_THRESHOLD: 10,  // Запускать фаззи-поиск если точных < этого
     
-    // Веса для ранжирования
+    // Веса для ранжирования (точно настроенные)
     WEIGHT_TITLE_EXACT: 1.0,      // Точное совпадение в названии
     WEIGHT_TITLE_START: 0.9,      // Начало названия
     WEIGHT_TITLE_CONTAIN: 0.8,    // Содержание в названии
@@ -103,7 +110,7 @@ class SearchEngine {
         
         // Нечеткий поиск (только если точных результатов мало)
         let fuzzyResults = [];
-        if (exactResults.length < 10) {
+        if (exactResults.length < config.FUZZY_TRIGGER_THRESHOLD) {
             fuzzyResults = this.performFuzzySearch(normalizedQuery, songs, exactResults, config);
         }
 
@@ -199,25 +206,32 @@ class SearchEngine {
             let score = 0;
             let matchType = null;
 
-            // Нечеткое совпадение в названии
-            if (fuzzyMatch(query, normalizedTitle, config.FUZZY_THRESHOLD_MEDIUM)) {
-                const similarity = calculateTextSimilarity(query, normalizedTitle);
-                score = config.WEIGHT_TITLE_FUZZY * similarity;
-                matchType = 'title-fuzzy';
+            // Нечеткое совпадение в названии (оптимизированно)
+            const titleFuzzyResult = fuzzyMatchWithScore(query, normalizedTitle, config.FUZZY_THRESHOLD_MEDIUM);
+            if (titleFuzzyResult.isMatch) {
+                score = config.WEIGHT_TITLE_FUZZY * titleFuzzyResult.similarity;
+                matchType = `title-${titleFuzzyResult.matchType}`;
             }
             // Нечеткое совпадение в тексте (только если не найдено в названии)
-            else if (fuzzyMatch(query, normalizedLyrics, config.FUZZY_THRESHOLD_LOW)) {
-                const similarity = calculateTextSimilarity(query, normalizedLyrics);
-                score = config.WEIGHT_LYRICS_FUZZY * similarity;
-                matchType = 'lyrics-fuzzy';
+            else {
+                const lyricsFuzzyResult = fuzzyMatchWithScore(query, normalizedLyrics, config.FUZZY_THRESHOLD_LOW);
+                if (lyricsFuzzyResult.isMatch) {
+                    score = config.WEIGHT_LYRICS_FUZZY * lyricsFuzzyResult.similarity;
+                    matchType = `lyrics-${lyricsFuzzyResult.matchType}`;
+                }
             }
 
-            if (score > 0.3) { // Минимальный порог для включения в результаты
+            if (score > config.MIN_OVERALL_SCORE) { // Минимальный порог для включения в результаты
                 results.push({
                     song,
                     score,
                     matchType,
-                    searchType: 'fuzzy'
+                    searchType: 'fuzzy',
+                    // Дополнительная информация для отладки и UI
+                    fuzzyDetails: {
+                        titleResult: titleFuzzyResult.isMatch ? titleFuzzyResult : null,
+                        lyricsResult: lyricsFuzzyResult?.isMatch ? lyricsFuzzyResult : null
+                    }
                 });
             }
         });
