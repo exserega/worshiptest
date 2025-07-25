@@ -4434,6 +4434,50 @@ mark.search-highlight {
     box-shadow: 0 1px 3px color-mix(in srgb, var(--primary-color) 25%, transparent);
 }
 
+/* Предложения для исправления запроса */
+.search-suggestions {
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: var(--font-sm);
+    color: var(--label-color);
+}
+
+.search-suggestions-label {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-color);
+}
+
+.search-suggestion-item {
+    display: inline-block;
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    color: var(--primary-color);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 6px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.search-suggestion-item:hover {
+    background: color-mix(in srgb, var(--primary-color) 20%, transparent);
+    transform: translateY(-1px);
+}
+
+/* Индикатор типа поиска */
+.search-result-type {
+    font-size: var(--font-xs);
+    color: var(--label-color);
+    opacity: 0.7;
+    font-style: italic;
+    margin-left: 8px;
+}
+
 /* Дополнительные стили для лучшей контрастности */
 body[data-theme="light"] .search-highlight,
 body[data-theme="light"] mark.search-highlight {

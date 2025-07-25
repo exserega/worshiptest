@@ -721,8 +721,11 @@ function invalidateAllSongsCache() {
     }
 }
 
-// Делаем функцию доступной глобально для state
+// Делаем функции доступными глобально для state и поискового движка
 window.invalidateAllSongsCache = invalidateAllSongsCache;
+window.getNormalizedTitle = getNormalizedTitle;
+window.getNormalizedLyrics = getNormalizedLyrics;
+window.getCleanedLyrics = getCleanedLyrics;
 
 /**
  * Находит фрагмент текста с выделением найденного запроса
@@ -1184,7 +1187,7 @@ function setupEventListeners() {
         };
     }
 
-    // Создаем debounced версию поиска
+    // Создаем debounced версию поиска с фаззи-поддержкой
     const performSearch = (rawQuery) => {
         if(!rawQuery) {
             if(ui.searchResults) ui.searchResults.innerHTML = '';
@@ -1197,44 +1200,63 @@ function setupEventListeners() {
             return;
         }
         
-        // Расширенный поиск по названию и тексту (с кэшированием)
-        const matchingSongs = state.allSongs.filter(song => {
-            // Поиск по названию (с кэшированием)
-            const normalizedTitle = getNormalizedTitle(song);
-            const titleMatch = normalizedTitle.includes(query);
-            
-            // Поиск по тексту песни (с кэшированием)
-            const normalizedLyrics = getNormalizedLyrics(song);
-            const lyricsMatch = normalizedLyrics.includes(query);
-            
-            return titleMatch || lyricsMatch;
-        });
+        let allResults = [];
         
-        // Умная сортировка: начинающиеся → содержащие в названии → по тексту
-        matchingSongs.sort((a, b) => {
-            const aNormalizedTitle = getNormalizedTitle(a);
-            const bNormalizedTitle = getNormalizedTitle(b);
-            const aTitleMatch = aNormalizedTitle.includes(query);
-            const bTitleMatch = bNormalizedTitle.includes(query);
-            const aTitleStartsWith = aNormalizedTitle.startsWith(query);
-            const bTitleStartsWith = bNormalizedTitle.startsWith(query);
+        // Используем фаззи-поиск если доступен
+        if (window.searchEngine && typeof window.searchEngine.search === 'function') {
+            const searchResults = window.searchEngine.search(rawQuery, state.allSongs);
             
-            // 1. Сначала песни, название которых начинается с запроса
-            if (aTitleStartsWith && !bTitleStartsWith) return -1;
-            if (!aTitleStartsWith && bTitleStartsWith) return 1;
+            // Объединяем точные и нечеткие результаты
+            allResults = [
+                ...searchResults.exactResults.map(r => r.song),
+                ...searchResults.fuzzyResults.map(r => r.song)
+            ];
             
-            // 2. Потом песни, где запрос содержится в названии (но не в начале)
-            if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
-            if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
+            // Показываем предложения если результатов мало
+            if (allResults.length === 0 && searchResults.suggestions.length > 0) {
+                console.log('💡 Предложения:', searchResults.suggestions);
+                // TODO: Показать предложения в UI
+            }
+        } else {
+            // Fallback: стандартный поиск
+            allResults = state.allSongs.filter(song => {
+                // Поиск по названию (с кэшированием)
+                const normalizedTitle = getNormalizedTitle(song);
+                const titleMatch = normalizedTitle.includes(query);
+                
+                // Поиск по тексту песни (с кэшированием)
+                const normalizedLyrics = getNormalizedLyrics(song);
+                const lyricsMatch = normalizedLyrics.includes(query);
+                
+                return titleMatch || lyricsMatch;
+            });
             
-            // 3. Наконец песни по тексту (где нет совпадения в названии)
-            if (aTitleMatch && !bTitleMatch) return -1;
-            if (!aTitleMatch && bTitleMatch) return 1;
-            
-            return 0;
-        });
+            // Умная сортировка: начинающиеся → содержащие в названии → по тексту
+            allResults.sort((a, b) => {
+                const aNormalizedTitle = getNormalizedTitle(a);
+                const bNormalizedTitle = getNormalizedTitle(b);
+                const aTitleMatch = aNormalizedTitle.includes(query);
+                const bTitleMatch = bNormalizedTitle.includes(query);
+                const aTitleStartsWith = aNormalizedTitle.startsWith(query);
+                const bTitleStartsWith = bNormalizedTitle.startsWith(query);
+                
+                // 1. Сначала песни, название которых начинается с запроса
+                if (aTitleStartsWith && !bTitleStartsWith) return -1;
+                if (!aTitleStartsWith && bTitleStartsWith) return 1;
+                
+                // 2. Потом песни, где запрос содержится в названии (но не в начале)
+                if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
+                if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
+                
+                // 3. Наконец песни по тексту (где нет совпадения в названии)
+                if (aTitleMatch && !bTitleMatch) return -1;
+                if (!aTitleMatch && bTitleMatch) return 1;
+                
+                return 0;
+            });
+        }
         
-        ui.displaySearchResults(matchingSongs, (songMatch) => {
+        ui.displaySearchResults(allResults, (songMatch) => {
             ui.searchInput.value = songMatch.name;
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             handleFavoriteOrRepertoireSelect(songMatch);

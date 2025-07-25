@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agape Worship</title>
-    <link rel="stylesheet" href="styles.css?v=4.9">
+    <link rel="stylesheet" href="styles.css?v=5.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <link rel="manifest" href="manifest.json">  </head>
@@ -396,6 +396,31 @@
   <!-- New Metronome Module - No external libraries needed -->
   
   <script type="module" src="script.js"></script>
+  
+  <!-- Модульная система фаззи-поиска -->
+  <script type="module">
+    // Импортируем поисковый движок
+    import searchEngine from './src/js/search/searchEngine.js';
+    
+    // Делаем поисковый движок доступным глобально
+    window.searchEngine = searchEngine;
+    
+    // Интегрируем с существующей системой
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ждем загрузки данных и инициализируем словарь
+        const initSearchEngine = () => {
+            if (window.state && window.state.allSongs && window.state.allSongs.length > 0) {
+                searchEngine.initializeDictionary(window.state.allSongs);
+                console.log('🔍 Фаззи-поиск инициализирован');
+            } else {
+                // Повторяем через 500ms если данные еще не загружены
+                setTimeout(initSearchEngine, 500);
+            }
+        };
+        
+        initSearchEngine();
+    });
+  </script>
 
     <script>
       if ('serviceWorker' in navigator) {
