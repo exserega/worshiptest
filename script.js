@@ -146,34 +146,42 @@ function hideOverlaySearchResults() {
 }
 
 /**
- * Создание элемента результата поиска для dropdown
+ * Создание элемента результата поиска для dropdown (как в главном меню)
  */
 function createOverlaySearchResultElement(song, query) {
     const resultDiv = document.createElement('div');
-    resultDiv.className = 'overlay-search-result';
+    resultDiv.className = 'search-result'; // Используем тот же класс что и в главном меню
     
-    // Получаем фрагмент текста если поиск был по тексту
-    let textFragment = '';
+    // Нормализуем запрос для проверки
     const normalizedQuery = normalizeSearchQuery(query);
-    const titleMatch = normalizeTextForSearch(song.name || '').includes(normalizedQuery);
     
-    if (!titleMatch) {
-        const lyrics = song.hasWebEdits 
-            ? (song['Текст и аккорды (edited)'] || '') 
-            : (song['Текст и аккорды'] || '');
-        const cleanedLyrics = cleanLyricsForSearch(lyrics);
-        
-        if (cleanedLyrics) {
-            textFragment = getHighlightedTextFragment(cleanedLyrics, query, 60);
+    // Проверяем, найдено ли в названии или тексте
+    const normalizedTitle = normalizeTextForSearch(song.name || '');
+    const titleMatch = normalizedTitle.includes(normalizedQuery);
+    
+    const lyrics = song.hasWebEdits 
+        ? (song['Текст и аккорды (edited)'] || '') 
+        : (song['Текст и аккорды'] || '');
+    
+    // Убираем аккорды для более точного поиска
+    const cleanedLyrics = lyrics.replace(/\[[^\]]*\]/g, ' ');
+    const normalizedLyrics = normalizeTextForSearch(cleanedLyrics);
+    const lyricsMatch = !titleMatch && normalizedLyrics.includes(normalizedQuery);
+    
+    // Формируем HTML для результата (КАК В ГЛАВНОМ МЕНЮ - БЕЗ КАТЕГОРИИ И БЕЗ ПОДСВЕТКИ В НАЗВАНИИ!)
+    let resultHTML = `
+        <div class="search-result-title">${song.name}</div>
+    `;
+    
+    // Если найдено в тексте песни, показываем фрагмент С ПОДСВЕТКОЙ
+    if (lyricsMatch && query) {
+        const fragment = getHighlightedTextFragment(cleanedLyrics, query, 60);
+        if (fragment) {
+            resultHTML += `<div class="search-result-fragment">${fragment}</div>`;
         }
     }
     
-    // Создаем HTML
-    resultDiv.innerHTML = `
-        <div class="overlay-search-result-title">${highlightText(song.name, query)}</div>
-        <div class="overlay-search-result-category">${song.sheet || 'Без категории'}</div>
-        ${textFragment ? `<div class="overlay-search-result-fragment">${textFragment}</div>` : ''}
-    `;
+    resultDiv.innerHTML = resultHTML;
     
     // Добавляем обработчик клика
     resultDiv.addEventListener('click', () => {
@@ -206,23 +214,7 @@ function createOverlaySearchResultElement(song, query) {
     return resultDiv;
 }
 
-/**
- * Подсветка текста в результатах поиска
- */
-function highlightText(text, query) {
-    if (!query || !text) return text;
-    
-    const normalizedQuery = normalizeSearchQuery(query);
-    const words = normalizedQuery.split(/\s+/).filter(word => word.length > 0);
-    
-    let highlightedText = text;
-    words.forEach(word => {
-        const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-        highlightedText = highlightedText.replace(regex, '<mark class="search-highlight">$1</mark>');
-    });
-    
-    return highlightedText;
-}
+
 
 // --- HANDLERS ---
 
