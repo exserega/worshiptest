@@ -2089,12 +2089,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
     
-    // ===== DROPDOWN ПОИСКА В OVERLAY =====
-    
-    /**
-     * Показ результатов поиска в dropdown overlay
-     */
-    function showOverlaySearchResults(results, query) {
+// ===== DROPDOWN ПОИСКА В OVERLAY (ГЛОБАЛЬНЫЕ ФУНКЦИИ) =====
+
+/**
+ * Показ результатов поиска в dropdown overlay
+ */
+function showOverlaySearchResults(results, query) {
         const dropdown = document.getElementById('overlay-search-results');
         const container = dropdown.querySelector('.search-results-container');
         
@@ -2128,20 +2128,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(`🔍 Показано ${results.length} результатов поиска в dropdown`);
     }
     
-    /**
-     * Скрытие dropdown результатов поиска
-     */
-    function hideOverlaySearchResults() {
+/**
+ * Скрытие dropdown результатов поиска
+ */
+function hideOverlaySearchResults() {
         const dropdown = document.getElementById('overlay-search-results');
         if (dropdown) {
             dropdown.style.display = 'none';
         }
     }
     
-    /**
-     * Создание элемента результата поиска для dropdown
-     */
-    function createOverlaySearchResultElement(song, query) {
+/**
+ * Создание элемента результата поиска для dropdown
+ */
+function createOverlaySearchResultElement(song, query) {
         const resultDiv = document.createElement('div');
         resultDiv.className = 'overlay-search-result';
         
@@ -2199,10 +2199,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         return resultDiv;
     }
     
-    /**
-     * Подсветка текста в результатах поиска
-     */
-    function highlightText(text, query) {
+/**
+ * Подсветка текста в результатах поиска
+ */
+function highlightText(text, query) {
         if (!query || !text) return text;
         
         const normalizedQuery = normalizeSearchQuery(query);
@@ -2214,9 +2214,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             highlightedText = highlightedText.replace(regex, '<mark class="search-highlight">$1</mark>');
         });
         
-        return highlightedText;
-    }
-    
+    return highlightedText;
+}
+
     // ===== МОБИЛЬНЫЙ OVERLAY ДЛЯ ПРОСМОТРА ПЕСНИ =====
     
     let currentMobileSong = null;
