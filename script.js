@@ -1098,8 +1098,21 @@ function setupEventListeners() {
         }
     });
 
-    ui.searchInput.addEventListener('input', () => {
-        const rawQuery = ui.searchInput.value.trim();
+    // Функция debounce для оптимизации поиска
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Создаем debounced версию поиска
+    const performSearch = (rawQuery) => {
         if(!rawQuery) {
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             return;
@@ -1157,6 +1170,13 @@ function setupEventListeners() {
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             handleFavoriteOrRepertoireSelect(songMatch);
         }, rawQuery); // Передаем оригинальный запрос для отображения
+    };
+
+    const debouncedSearch = debounce(performSearch, 150);
+
+    ui.searchInput.addEventListener('input', () => {
+        const rawQuery = ui.searchInput.value.trim();
+        debouncedSearch(rawQuery);
     });
     
     ui.searchInput.addEventListener('blur', () => setTimeout(() => { if(ui.searchResults) ui.searchResults.innerHTML = '' }, 200));
@@ -1467,13 +1487,20 @@ function setupEventListeners() {
     
     // Поиск песен
     if (ui.songSearchInput && ui.clearSearch && ui.categoryFilter && ui.showAddedOnly) {
+        // Создаем debounced версию поиска для overlay
+        const performOverlaySearch = (searchTerm) => {
+            const category = ui.categoryFilter.value;
+            const showAddedOnly = ui.showAddedOnly.classList.contains('active');
+            filterAndDisplaySongs(searchTerm, category, showAddedOnly);
+        };
+        
+        const debouncedOverlaySearch = debounce(performOverlaySearch, 150);
+        
         ui.songSearchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.trim();
             ui.clearSearch.style.display = searchTerm ? 'flex' : 'none';
             
-            const category = ui.categoryFilter.value;
-            const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-            filterAndDisplaySongs(searchTerm, category, showAddedOnly);
+            debouncedOverlaySearch(searchTerm);
         });
         
         ui.clearSearch.addEventListener('click', () => {
