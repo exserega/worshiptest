@@ -370,7 +370,7 @@ function showKeySelectionModal(song) {
     }
     
     if (originalKeyBadge) {
-        originalKeyBadge.textContent = `Оригинал: ${originalSongKey}`;
+        originalKeyBadge.textContent = `оригинал: ${originalSongKey}`;
     }
     
     // Отображаем текст песни

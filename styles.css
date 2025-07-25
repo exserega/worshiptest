@@ -4705,83 +4705,104 @@ body:not([data-theme="light"]) mark.search-highlight {
     background: var(--background-color);
 }
 
-.preview-header {
+/* Профессиональная шапка в стиле сайта */
+.song-preview-header {
+    background: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.header-main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--background-color);
-    flex-shrink: 0;
-    min-height: 70px;
+    padding: 12px 16px;
+    min-height: 48px;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.song-title-section {
     flex: 1;
+    margin: 0 12px;
     min-width: 0;
 }
 
-.song-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.song-info h3 {
-    margin: 0 0 6px 0;
+.song-title-section h3 {
+    margin: 0;
     font-size: var(--font-lg);
     font-weight: 600;
     color: var(--text-color);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.2;
 }
 
-.key-controls {
+.btn-modern.compact {
+    padding: 8px 12px;
+    font-size: var(--font-sm);
+    min-width: auto;
+}
+
+.header-controls {
+    padding: 8px 16px 12px;
+    background: color-mix(in srgb, var(--background-color) 98%, var(--border-color));
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tonality-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.tonality-label {
+    font-size: var(--font-sm);
+    color: var(--label-color);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.tonality-controls {
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
 }
 
-.key-label {
-    font-size: var(--font-sm);
-    color: var(--label-color);
-    white-space: nowrap;
-}
-
-.key-selector-modern {
-    padding: 4px 8px;
+.key-select-compact {
+    padding: 6px 12px;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--input-background);
+    border-radius: 8px;
+    background: var(--background-color);
     color: var(--text-color);
-    font-size: var(--font-sm);
-    font-weight: 500;
+    font-size: var(--font-md);
+    font-weight: 600;
     cursor: pointer;
-    min-width: 80px;
+    min-width: 60px;
+    text-align: center;
+    transition: all 0.2s ease;
 }
 
-.key-selector-modern:focus {
+.key-select-compact:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 20%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 15%, transparent);
 }
 
-.original-key-badge {
-    padding: 2px 6px;
-    background: color-mix(in srgb, var(--label-color) 15%, transparent);
+.key-select-compact:hover {
+    border-color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 5%, var(--background-color));
+}
+
+.key-badge-original {
+    padding: 4px 8px;
+    background: color-mix(in srgb, var(--label-color) 10%, transparent);
     color: var(--label-color);
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 500;
     white-space: nowrap;
-}
-
-.header-right {
-    flex-shrink: 0;
+    border: 1px solid color-mix(in srgb, var(--label-color) 20%, transparent);
 }
 
 .song-text-container {
@@ -4837,33 +4858,45 @@ body:not([data-theme="light"]) mark.search-highlight {
 
 /* Мобильная адаптация */
 @media (max-width: 768px) {
-    .preview-header {
-        padding: 12px 16px;
-        min-height: 60px;
+    .header-main {
+        padding: 10px 12px;
+        min-height: 44px;
     }
     
-    .header-left {
+    .song-title-section {
+        margin: 0 8px;
+    }
+    
+    .song-title-section h3 {
+        font-size: var(--font-md);
+    }
+    
+    .btn-modern.compact {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .header-controls {
+        padding: 6px 12px 8px;
+    }
+    
+    .tonality-selector {
         gap: 8px;
     }
     
-    .song-info h3 {
-        font-size: var(--font-md);
-        margin-bottom: 4px;
-    }
-    
-    .key-controls {
-        gap: 6px;
-    }
-    
-    .key-selector-modern {
-        padding: 3px 6px;
+    .tonality-label {
         font-size: 0.8rem;
-        min-width: 70px;
     }
     
-    .original-key-badge {
+    .key-select-compact {
+        padding: 4px 8px;
+        font-size: var(--font-sm);
+        min-width: 50px;
+    }
+    
+    .key-badge-original {
+        padding: 3px 6px;
         font-size: 0.7rem;
-        padding: 1px 4px;
     }
     
     .song-text-display {
@@ -4877,25 +4910,49 @@ body:not([data-theme="light"]) mark.search-highlight {
 }
 
 @media (max-width: 480px) {
-    .preview-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        padding: 10px 12px;
+    .header-main {
+        padding: 8px 10px;
+        min-height: 40px;
     }
     
-    .header-left {
-        order: 1;
+    .song-title-section {
+        margin: 0 6px;
     }
     
-    .header-right {
-        order: 2;
-        align-self: center;
+    .song-title-section h3 {
+        font-size: var(--font-sm);
     }
     
-    .key-controls {
-        justify-content: center;
-        flex-wrap: wrap;
+    .btn-modern.compact {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .btn-modern.compact span {
+        display: none; /* Только иконка на очень маленьких экранах */
+    }
+    
+    .header-controls {
+        padding: 4px 10px 6px;
+    }
+    
+    .tonality-selector {
+        gap: 6px;
+    }
+    
+    .tonality-label {
+        font-size: 0.75rem;
+    }
+    
+    .key-select-compact {
+        padding: 3px 6px;
+        font-size: 0.8rem;
+        min-width: 45px;
+    }
+    
+    .key-badge-original {
+        padding: 2px 4px;
+        font-size: 0.65rem;
     }
     
     .song-text-display {
