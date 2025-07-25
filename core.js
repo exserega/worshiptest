@@ -34,8 +34,8 @@ function getTransposition(originalKey, newKey) {
 }
 
 /** Транспонирование всего текста с аккордами */
-function transposeLyrics(lyrics, transposition) {
-    return transposeLyricsNew(lyrics, transposition);
+function transposeLyrics(lyrics, transposition, targetKey) {
+    return transposeLyricsNew(lyrics, transposition, targetKey);
 }
 
 /** Обработка строк текста - сокращаем пробелы в строках с аккордами в 2 раза */
@@ -89,7 +89,7 @@ function getRenderedSongText(originalLyrics, originalKey, targetKey) {
     if (!originalLyrics) return '';
     const processedLyrics = processLyrics(originalLyrics);
     const transposition = getTransposition(originalKey, targetKey);
-    const transposedLyrics = transposeLyrics(processedLyrics, transposition);
+    const transposedLyrics = transposeLyrics(processedLyrics, transposition, targetKey);
     const blocksWrappedLyrics = wrapSongBlocks(transposedLyrics);
     const finalHighlightedLyrics = highlightChords(blocksWrappedLyrics);
     
