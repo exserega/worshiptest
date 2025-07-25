@@ -4794,42 +4794,16 @@ body:not([data-theme="light"]) mark.search-highlight {
     opacity: 0.8;
 }
 
-/* Кнопка действия - одинакового размера с селектором */
-.btn-action-secondary {
+/* Компактная версия основной кнопки - одинакового размера с селектором */
+.btn-modern.compact {
     padding: 6px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--background-color);
-    color: var(--text-color);
     font-size: var(--font-sm);
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    min-width: 70px;
     display: flex;
     align-items: center;
     gap: 4px;
-    min-width: 70px;
     justify-content: center;
-}
-
-.btn-action-secondary:hover {
-    border-color: var(--primary-color);
-    background: color-mix(in srgb, var(--primary-color) 8%, var(--background-color));
-    color: var(--primary-color);
-}
-
-.btn-action-secondary:active {
-    transform: translateY(1px);
-}
-
-/* Исправление цветов для разных тем */
-body[data-theme="light"] .btn-action-secondary {
-    color: var(--secondary-color) !important;
-}
-
-body[data-theme="dark"] .btn-action-secondary,
-body:not([data-theme="light"]) .btn-action-secondary {
-    color: var(--text-color) !important;
 }
 
 .song-text-container {
@@ -4918,7 +4892,7 @@ body:not([data-theme="light"]) .btn-action-secondary {
         font-size: 0.65rem;
     }
     
-    .btn-action-secondary {
+    .btn-modern.compact {
         padding: 5px 8px;
         font-size: 0.8rem;
         min-width: 60px;
@@ -4969,7 +4943,7 @@ body:not([data-theme="light"]) .btn-action-secondary {
         font-size: 0.6rem;
     }
     
-    .btn-action-secondary {
+    .btn-modern.compact {
         padding: 4px 6px;
         font-size: 0.75rem;
         min-width: 50px;
@@ -4987,11 +4961,11 @@ body:not([data-theme="light"]) .btn-action-secondary {
         font-size: 0.7rem;
     }
     
-    .btn-action-secondary span {
+    .btn-modern.compact span {
         display: none; /* Только иконка на очень маленьких экранах */
     }
     
-    .btn-action-secondary {
+    .btn-modern.compact {
         min-width: 32px;
         padding: 4px;
     }
