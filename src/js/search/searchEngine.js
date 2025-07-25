@@ -7,7 +7,8 @@ import {
     fuzzyMatch, 
     fuzzyMatchWithScore,
     calculateTextSimilarity, 
-    generateSuggestions 
+    generateSuggestions,
+    getAlgorithmStats
 } from '../utils/fuzzySearch.js';
 
 /**
@@ -324,6 +325,22 @@ class SearchEngine {
      */
     getLastQuery() {
         return this.lastQuery;
+    }
+    
+    /**
+     * Получить детальную статистику производительности
+     * @returns {Object} Статистика поискового движка и алгоритмов
+     */
+    getPerformanceStats() {
+        return {
+            engine: {
+                lastQuery: this.lastQuery,
+                dictionarySize: this.dictionary.length,
+                lastResultsCount: this.lastResults ? 
+                    (this.lastResults.exactResults.length + this.lastResults.fuzzyResults.length) : 0
+            },
+            algorithms: getAlgorithmStats()
+        };
     }
 }
 

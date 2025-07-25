@@ -3,59 +3,48 @@
  * Позволяет находить текст с опечатками и неточными совпадениями
  */
 
+import { 
+    optimizedLevenshteinDistance, 
+    cachedSimilarity,
+    getPerformanceStats 
+} from './algorithms.js';
+
 /**
  * Вычисляет расстояние Левенштейна между двумя строками
+ * ОПТИМИЗИРОВАННАЯ версия с экономией памяти
  * @param {string} str1 - Первая строка
  * @param {string} str2 - Вторая строка
  * @returns {number} Расстояние Левенштейна
  */
 function levenshteinDistance(str1, str2) {
-    if (!str1 || !str2) return Math.max(str1?.length || 0, str2?.length || 0);
-    
-    const matrix = [];
-    const len1 = str1.length;
-    const len2 = str2.length;
-
-    // Инициализация матрицы
-    for (let i = 0; i <= len1; i++) {
-        matrix[i] = [i];
-    }
-    for (let j = 0; j <= len2; j++) {
-        matrix[0][j] = j;
-    }
-
-    // Заполнение матрицы
-    for (let i = 1; i <= len1; i++) {
-        for (let j = 1; j <= len2; j++) {
-            if (str1.charAt(i - 1) === str2.charAt(j - 1)) {
-                matrix[i][j] = matrix[i - 1][j - 1];
-            } else {
-                matrix[i][j] = Math.min(
-                    matrix[i - 1][j - 1] + 1,
-                    matrix[i][j - 1] + 1,
-                    matrix[i - 1][j] + 1
-                );
-            }
-        }
-    }
-
-    return matrix[len1][len2];
+    // Используем оптимизированный алгоритм
+    return optimizedLevenshteinDistance(str1, str2);
 }
 
 /**
  * Вычисляет процент схожести между двумя строками
+ * ОПТИМИЗИРОВАННАЯ версия с кэшированием
  * @param {string} str1 - Первая строка
  * @param {string} str2 - Вторая строка
+ * @param {number} threshold - Порог схожести для оптимизации (по умолчанию 0.0)
  * @returns {number} Процент схожести (0-1)
  */
-function calculateSimilarity(str1, str2) {
+function calculateSimilarity(str1, str2, threshold = 0.0) {
     if (!str1 || !str2) return 0;
     if (str1 === str2) return 1;
     
-    const maxLength = Math.max(str1.length, str2.length);
-    const distance = levenshteinDistance(str1, str2);
+    // Используем кэшированную версию с ранним прерыванием
+    const result = cachedSimilarity(str1, str2, threshold);
     
-    return (maxLength - distance) / maxLength;
+    // Если результат отрицательный, значит ниже порога
+    if (result < 0) {
+        // Для обратной совместимости все равно вычисляем точное значение
+        const maxLength = Math.max(str1.length, str2.length);
+        const distance = optimizedLevenshteinDistance(str1, str2);
+        return (maxLength - distance) / maxLength;
+    }
+    
+    return result;
 }
 
 /**
@@ -237,6 +226,17 @@ function generateSuggestions(query, dictionary, maxSuggestions = 3) {
     return Array.from(suggestions).slice(0, maxSuggestions);
 }
 
+/**
+ * Получить статистику производительности алгоритмов
+ * @returns {Object} Статистика кэша и производительности
+ */
+function getAlgorithmStats() {
+    return {
+        similarity: getPerformanceStats(),
+        timestamp: new Date().toISOString()
+    };
+}
+
 // Экспорт функций
 export {
     levenshteinDistance,
@@ -245,5 +245,6 @@ export {
     fuzzyMatchWithScore,
     findFuzzyMatches,
     calculateTextSimilarity,
-    generateSuggestions
+    generateSuggestions,
+    getAlgorithmStats
 };
