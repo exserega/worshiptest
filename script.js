@@ -340,7 +340,7 @@ async function startAddingSongs(mode = 'create', targetSetlistId = null, targetS
     populateCategoryFilter();
     
     // Отображаем все песни
-    displaySongsGrid(state.allSongs);
+    displaySongsGrid(state.allSongs, '');
 }
 
 function populateCategoryFilter() {
@@ -359,7 +359,7 @@ function populateCategoryFilter() {
     });
 }
 
-function displaySongsGrid(songs) {
+function displaySongsGrid(songs, searchTerm = '') {
     if (!ui.songsGrid) return;
     
     if (!songs || songs.length === 0) {
@@ -380,6 +380,25 @@ function displaySongsGrid(songs) {
         // Получаем правильную тональность из данных песни
         const originalKey = getSongKey(song);
         
+        // Проверяем, есть ли поиск по тексту
+        let textFragment = '';
+        if (searchTerm) {
+            const normalizedQuery = normalizeSearchQuery(searchTerm);
+            const titleMatch = normalizeTextForSearch(song.name || '').includes(normalizedQuery);
+            
+            // Если не найдено в названии, ищем в тексте
+            if (!titleMatch) {
+                const lyrics = song.hasWebEdits 
+                    ? (song['Текст и аккорды (edited)'] || '') 
+                    : (song['Текст и аккорды'] || '');
+                const cleanedLyrics = cleanLyricsForSearch(lyrics);
+                
+                if (cleanedLyrics) {
+                    textFragment = getHighlightedTextFragment(cleanedLyrics, searchTerm, 80);
+                }
+            }
+        }
+        
         const songCard = document.createElement('div');
         songCard.className = `song-card ${isAdded ? 'added' : ''}`;
         songCard.innerHTML = `
@@ -390,6 +409,7 @@ function displaySongsGrid(songs) {
                     <div class="song-key-display">
                         Тональность: <span class="song-key-badge">${originalKey}</span>
                     </div>
+                    ${textFragment ? `<div class="song-text-fragment">${textFragment}</div>` : ''}
                 </div>
                 <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
                     <i class="fas fa-${isAdded ? 'check' : 'plus'}"></i>
@@ -628,6 +648,78 @@ function normalizeTextForSearch(text) {
 }
 
 /**
+ * Находит фрагмент текста с выделением найденного запроса
+ * Показывает ТОЧНО найденную часть в начале фрагмента
+ * @param {string} text - Полный текст
+ * @param {string} query - Поисковый запрос  
+ * @param {number} contextLength - Длина контекста вокруг найденного
+ * @returns {string} HTML с выделенным текстом
+ */
+function getHighlightedTextFragment(text, query, contextLength = 100) {
+    if (!text || !query) return '';
+    
+    const normalizedQuery = normalizeSearchQuery(query);
+    const queryWords = normalizedQuery.split(' ').filter(w => w.length > 1);
+    
+    if (queryWords.length === 0) return '';
+    
+    // Ищем самое длинное совпадение из слов запроса
+    let bestMatch = { index: -1, length: 0, word: '' };
+    
+    queryWords.forEach(word => {
+        // Ищем точное совпадение слова в тексте (игнорируя аккорды и препинания)
+        const cleanText = text.replace(/\[[^\]]*\]/g, ' '); // убираем аккорды
+        const textWords = cleanText.split(/\s+/);
+        
+        for (let i = 0; i < textWords.length; i++) {
+            const cleanWord = normalizeTextForSearch(textWords[i]);
+            if (cleanWord.includes(word) && word.length > bestMatch.length) {
+                // Найдем позицию этого слова в оригинальном тексте
+                const wordStart = cleanText.toLowerCase().indexOf(textWords[i].toLowerCase());
+                if (wordStart !== -1) {
+                    bestMatch = { index: wordStart, length: word.length, word: word };
+                }
+            }
+        }
+    });
+    
+    if (bestMatch.index === -1) {
+        // Если точное совпадение не найдено, ищем первое хотя бы частичное
+        const firstWord = queryWords[0];
+        const lowerText = text.toLowerCase();
+        const searchIndex = lowerText.indexOf(firstWord);
+        if (searchIndex !== -1) {
+            bestMatch = { index: searchIndex, length: firstWord.length, word: firstWord };
+        }
+    }
+    
+    if (bestMatch.index === -1) {
+        return text.slice(0, contextLength) + '...';
+    }
+    
+    // Определяем границы фрагмента с найденным словом в начале
+    const beforeContext = Math.min(30, bestMatch.index); // немного контекста перед
+    const start = Math.max(0, bestMatch.index - beforeContext);
+    const end = Math.min(text.length, bestMatch.index + contextLength);
+    
+    let fragment = text.slice(start, end);
+    
+    // Добавляем многоточие
+    if (start > 0) fragment = '...' + fragment;
+    if (end < text.length) fragment = fragment + '...';
+    
+    // Выделяем все найденные слова
+    queryWords.forEach(word => {
+        if (word.length > 1) {
+            const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            fragment = fragment.replace(regex, '<mark class="search-highlight">$1</mark>');
+        }
+    });
+    
+    return fragment;
+}
+
+/**
  * Расширенный поиск по названию и тексту песни
  * @param {string} searchTerm - Поисковый запрос
  * @param {string} category - Категория для фильтрации
@@ -680,7 +772,7 @@ function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = f
         );
     }
     
-    displaySongsGrid(filteredSongs);
+    displaySongsGrid(filteredSongs, searchTerm);
 }
 
 function finishAddingSongs() {

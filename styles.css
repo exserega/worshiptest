@@ -4105,6 +4105,22 @@ body[data-theme="light"] button.key-btn {
     margin-left: 4px;
 }
 
+/* Фрагмент текста песни в карточке overlay */
+.song-text-fragment {
+    font-size: 0.75rem;
+    color: var(--label-color);
+    line-height: 1.4;
+    font-style: italic;
+    padding: 6px 8px;
+    background: color-mix(in srgb, var(--primary-color) 6%, transparent);
+    border-left: 3px solid var(--primary-color);
+    border-radius: 0 4px 4px 0;
+    margin-top: 6px;
+    max-width: 100%;
+    overflow: hidden;
+    font-family: inherit;
+}
+
 .loading-state {
     display: flex;
     flex-direction: column;
@@ -4467,5 +4483,13 @@ body:not([data-theme="light"]) mark.search-highlight {
     
     .search-highlight {
         padding: 1px 3px;
+    }
+    
+    /* Фрагменты текста в карточках overlay на мобильных */
+    .song-text-fragment {
+        font-size: var(--font-xs);
+        padding: 4px 6px;
+        margin-top: 4px;
+        border-left-width: 2px;
     }
 }
