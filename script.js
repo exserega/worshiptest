@@ -45,6 +45,59 @@ function getSongKey(song) {
     return key;
 }
 
+/**
+ * Поиск для dropdown в overlay (глобальная функция)
+ */
+async function performOverlayDropdownSearch(searchTerm) {
+    try {
+        // Используем Web Worker для поиска если доступен
+        if (window.searchWorkerManager && typeof window.searchWorkerManager.overlaySearch === 'function') {
+            const { results } = await window.searchWorkerManager.overlaySearch(searchTerm, state.allSongs, {
+                enablePrioritySearch: true
+            });
+            
+            const allResults = [
+                ...results.exactResults.map(r => r.song),
+                ...results.fuzzyResults.map(r => r.song)
+            ];
+            
+            showOverlaySearchResults(allResults, searchTerm);
+        } else {
+            // Fallback: обычный поиск
+            const query = normalizeSearchQuery(searchTerm);
+            let matchingSongs = state.allSongs.filter(song => {
+                const titleMatch = getNormalizedTitle(song).includes(query);
+                const lyricsMatch = getNormalizedLyrics(song).includes(query);
+                return titleMatch || lyricsMatch;
+            });
+            
+            // Применяем smart sorting
+            matchingSongs.sort((a, b) => {
+                const aNormalizedTitle = getNormalizedTitle(a);
+                const bNormalizedTitle = getNormalizedTitle(b);
+                const aTitleMatch = aNormalizedTitle.includes(query);
+                const bTitleMatch = bNormalizedTitle.includes(query);
+                const aTitleStartsWith = aNormalizedTitle.startsWith(query);
+                const bTitleStartsWith = bNormalizedTitle.startsWith(query);
+                
+                if (aTitleStartsWith && !bTitleStartsWith) return -1;
+                if (!aTitleStartsWith && bTitleStartsWith) return 1;
+                if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
+                if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
+                if (aTitleMatch && !bTitleMatch) return -1;
+                if (!aTitleMatch && bTitleMatch) return 1;
+                
+                return 0;
+            });
+            
+            showOverlaySearchResults(matchingSongs.slice(0, 10), searchTerm); // Ограничиваем до 10 результатов
+        }
+    } catch (error) {
+        console.error('❌ Ошибка поиска в dropdown:', error);
+        showOverlaySearchResults([], searchTerm);
+    }
+}
+
 // --- HANDLERS ---
 
 /** Обработчик выбора песни из репертуара или "Моего списка" */
@@ -2166,59 +2219,6 @@ function highlightText(text, query) {
         });
         
     return highlightedText;
-}
-
-/**
- * Поиск для dropdown в overlay (глобальная функция)
- */
-async function performOverlayDropdownSearch(searchTerm) {
-    try {
-        // Используем Web Worker для поиска если доступен
-        if (window.searchWorkerManager && typeof window.searchWorkerManager.overlaySearch === 'function') {
-            const { results } = await window.searchWorkerManager.overlaySearch(searchTerm, state.allSongs, {
-                enablePrioritySearch: true
-            });
-            
-            const allResults = [
-                ...results.exactResults.map(r => r.song),
-                ...results.fuzzyResults.map(r => r.song)
-            ];
-            
-            showOverlaySearchResults(allResults, searchTerm);
-        } else {
-            // Fallback: обычный поиск
-            const query = normalizeSearchQuery(searchTerm);
-            let matchingSongs = state.allSongs.filter(song => {
-                const titleMatch = getNormalizedTitle(song).includes(query);
-                const lyricsMatch = getNormalizedLyrics(song).includes(query);
-                return titleMatch || lyricsMatch;
-            });
-            
-            // Применяем smart sorting
-            matchingSongs.sort((a, b) => {
-                const aNormalizedTitle = getNormalizedTitle(a);
-                const bNormalizedTitle = getNormalizedTitle(b);
-                const aTitleMatch = aNormalizedTitle.includes(query);
-                const bTitleMatch = bNormalizedTitle.includes(query);
-                const aTitleStartsWith = aNormalizedTitle.startsWith(query);
-                const bTitleStartsWith = bNormalizedTitle.startsWith(query);
-                
-                if (aTitleStartsWith && !bTitleStartsWith) return -1;
-                if (!aTitleStartsWith && bTitleStartsWith) return 1;
-                if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
-                if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
-                if (aTitleMatch && !bTitleMatch) return -1;
-                if (!aTitleMatch && bTitleMatch) return 1;
-                
-                return 0;
-            });
-            
-            showOverlaySearchResults(matchingSongs.slice(0, 10), searchTerm); // Ограничиваем до 10 результатов
-        }
-    } catch (error) {
-        console.error('❌ Ошибка поиска в dropdown:', error);
-        showOverlaySearchResults([], searchTerm);
-    }
 }
 
 // ===== МОБИЛЬНЫЙ OVERLAY ДЛЯ ПРОСМОТРА ПЕСНИ =====
