@@ -236,7 +236,11 @@ function showMobileSongPreview(song) {
     const songTextElement = document.getElementById('mobile-song-text');
     
     if (!overlay || !titleElement || !keySelector || !songTextElement) {
-        console.error('❌ Не найдены элементы мобильного overlay');
+        console.error('❌ Не найдены элементы мобильного overlay:');
+        console.error('overlay:', overlay);
+        console.error('titleElement:', titleElement);
+        console.error('keySelector:', keySelector);
+        console.error('songTextElement:', songTextElement);
         return;
     }
     
@@ -251,7 +255,7 @@ function showMobileSongPreview(song) {
     displaySongTextInMobileOverlay(song, originalKey);
     
     // Показываем overlay
-    overlay.classList.add('active');
+    overlay.classList.add('show');
     document.body.classList.add('overlay-active');
     
     console.log('✅ Мобильный overlay показан');
@@ -265,7 +269,7 @@ function hideMobileSongPreview() {
     
     const overlay = document.getElementById('mobile-song-preview-overlay');
     if (overlay) {
-        overlay.classList.remove('active');
+        overlay.classList.remove('show');
         document.body.classList.remove('overlay-active');
     }
     
@@ -278,8 +282,12 @@ function hideMobileSongPreview() {
  * Отображение текста песни в мобильном overlay
  */
 function displaySongTextInMobileOverlay(song, selectedKey) {
+    console.log('📝 displaySongTextInMobileOverlay called:', song.name, selectedKey);
     const songTextElement = document.getElementById('mobile-song-text');
-    if (!songTextElement) return;
+    if (!songTextElement) {
+        console.error('❌ Элемент mobile-song-text не найден');
+        return;
+    }
     
     // Получаем текст песни
     let songText = song.hasWebEdits 
