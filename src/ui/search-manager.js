@@ -363,9 +363,13 @@ export async function filterAndDisplaySongs(searchTerm = '', category = '', show
     if (showAddedOnly) {
         // Получаем addedSongsToCurrentSetlist из глобальной области
         const addedSongs = window.addedSongsToCurrentSetlist || new Set();
+        console.log('🔍 filterAndDisplaySongs: showAddedOnly=true');
+        console.log('🔍 addedSongs size:', addedSongs.size);
+        console.log('🔍 addedSongs contents:', Array.from(addedSongs));
         filteredSongs = filteredSongs.filter(song => 
             addedSongs.has(song.id)
         );
+        console.log('🔍 Filtered songs count:', filteredSongs.length);
     }
     
     // Вызываем displaySongsGrid через глобальную область
