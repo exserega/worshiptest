@@ -13,6 +13,17 @@ import searchWorkerManager from './src/js/workers/workerManager.js';
 import { getTransposition, transposeLyrics, processLyrics, highlightChords } from './src/js/core/transposition.js';
 import eventBus from './src/core/event-bus.js';
 
+// ====================================
+// RESTRUCTURE STAGE INDICATOR
+// ====================================
+console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 2.3');
+console.log('📋 Current Stage: State Manager Created');
+console.log('🔧 Event Bus: ✅ Integrated');
+console.log('🗃️ State Manager: ✅ Created');
+console.log('🧪 Testing: Event Bus + State Manager');
+console.log('📊 Commit: Stage 2.3 - State Manager for centralized data management');
+console.log('=====================================');
+
 // --- UTILITY FUNCTIONS ---
 
 /** Проверка мобильного устройства */
