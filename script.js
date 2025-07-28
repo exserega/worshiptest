@@ -31,14 +31,16 @@ import {
   showKeySelectionModal,
   updateSongTextInModal,
   updateKeyButtons,
-  performOverlayDropdownSearch
+  performOverlayDropdownSearch,
+  cleanLyricsForSearch,
+  filterAndDisplaySongs
 } from './src/core/index.js';
 
 // ====================================
 // RESTRUCTURE STAGE INDICATOR
 // ====================================
-console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 5.1');
-console.log('📋 Current Stage: UI Component Migration - Overlay Manager');
+console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 5.2 - COMPLETED');
+console.log('📋 Current Stage: UI Component Migration - Search Manager DONE');
 console.log('🔧 Event Bus: ✅ Integrated');
 console.log('🗃️ State Manager: ✅ Integrated');
 console.log('⚙️ Core Index: ✅ Created');
@@ -48,8 +50,9 @@ console.log('📺 Song Display: ✅ Created');
 console.log('🛠️ UI Utils: ✅ Created');
 console.log('🔌 API Module: ✅ Created (saveSongEdit FIXED)');
 console.log('🎭 Overlay Manager: ✅ Created (mobile preview, key selection)');
-console.log('🧪 Testing: Overlay functions migrated to dedicated module');
-console.log('📊 Commit: Stage 5.1 - Overlay Manager Module Created');
+console.log('🔍 Search Manager: ✅ Created (overlay search, filtering, highlighting)');
+console.log('🧪 Testing: All search functions migrated to dedicated module');
+console.log('📊 Commit: Stage 5.2 - Search Manager Module COMPLETED');
 console.log('=====================================');
 
 // --- UTILITY FUNCTIONS ---
@@ -715,103 +718,6 @@ window.getCleanedLyrics = getCleanedLyrics;
 // getHighlightedTextFragment moved to src/ui/search-manager.js
 
 // Переменная для отслеживания текущего поискового запроса в overlay
-let currentOverlaySearchRequest = null;
-
-/**
- * Расширенный поиск по названию и тексту песни с Web Worker поддержкой
- * @param {string} searchTerm - Поисковый запрос
- * @param {string} category - Категория для фильтрации
- * @param {boolean} showAddedOnly - Показывать только добавленные песни
- */
-async function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = false) {
-    // Отменяем предыдущий поиск если есть
-    if (currentOverlaySearchRequest) {
-        searchWorkerManager.cancelSearch(currentOverlaySearchRequest);
-        currentOverlaySearchRequest = null;
-    }
-    
-    let filteredSongs = state.allSongs;
-    
-    // Фильтр по поиску через Web Worker (если есть поисковый запрос)
-    if (searchTerm) {
-        try {
-            console.log(`🔍 Overlay поиск через Worker: "${searchTerm}"`);
-            
-            const startTime = performance.now();
-            const { results, metadata } = await searchWorkerManager.overlaySearch(searchTerm, state.allSongs, {
-                category: category || undefined,
-                enablePrioritySearch: true
-            });
-            const duration = performance.now() - startTime;
-            
-            console.log(`✅ Overlay поиск завершен за ${duration.toFixed(2)}ms (Worker: ${metadata.duration.toFixed(2)}ms)`);
-            
-            // Объединяем точные и нечеткие результаты
-            filteredSongs = [
-                ...results.exactResults.map(r => r.song),
-                ...results.fuzzyResults.map(r => r.song)
-            ];
-            
-        } catch (error) {
-            console.error('❌ Ошибка Web Worker overlay поиска, fallback:', error);
-            
-            // Fallback: стандартный поиск
-            const query = normalizeSearchQueryLocal(searchTerm);
-            filteredSongs = filteredSongs.filter(song => {
-                // Поиск по названию (с кэшированием)
-                const normalizedTitle = getNormalizedTitleLocal(song);
-                const titleMatch = normalizedTitle.includes(query);
-                
-                // Поиск по тексту песни (с кэшированием)
-                const normalizedLyrics = getNormalizedLyricsLocal(song);
-                const lyricsMatch = normalizedLyrics.includes(query);
-                
-                return titleMatch || lyricsMatch;
-            });
-            
-            // Умная сортировка для fallback
-            filteredSongs.sort((a, b) => {
-                const aNormalizedTitle = getNormalizedTitleLocal(a);
-                const bNormalizedTitle = getNormalizedTitleLocal(b);
-                const aTitleMatch = aNormalizedTitle.includes(query);
-                const bTitleMatch = bNormalizedTitle.includes(query);
-                const aTitleStartsWith = aNormalizedTitle.startsWith(query);
-                const bTitleStartsWith = bNormalizedTitle.startsWith(query);
-                
-                // 1. Сначала песни, название которых начинается с запроса
-                if (aTitleStartsWith && !bTitleStartsWith) return -1;
-                if (!aTitleStartsWith && bTitleStartsWith) return 1;
-                
-                // 2. Потом песни, где запрос содержится в названии (но не в начале)
-                if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
-                if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
-                
-                // 3. Наконец песни по тексту (где нет совпадения в названии)
-                if (aTitleMatch && !bTitleMatch) return -1;
-                if (!aTitleMatch && bTitleMatch) return 1;
-                
-                return 0;
-            });
-        }
-    }
-    
-    // Фильтр по категории (если не обработан в Worker)
-    if (category && searchTerm) {
-        // Если поиск был через Worker с категорией, фильтр уже применен
-    } else if (category) {
-        filteredSongs = filteredSongs.filter(song => song.sheet === category);
-    }
-    
-    // Фильтр только добавленные
-    if (showAddedOnly) {
-        filteredSongs = filteredSongs.filter(song => 
-            addedSongsToCurrentSetlist.has(song.id)
-        );
-    }
-    
-    displaySongsGrid(filteredSongs, searchTerm);
-}
-
 function finishAddingSongs() {
     closeAddSongsOverlay();
     
