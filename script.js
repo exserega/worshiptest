@@ -195,7 +195,7 @@ function closeAddSongsConfirmModal() {
     }
 }
 
-function closeAddSongsOverlay() {
+function closeAddSongsOverlayOld() {
     if (ui.addSongsOverlay) {
         ui.addSongsOverlay.classList.remove('show');
     }
@@ -721,7 +721,7 @@ window.getCleanedLyrics = getCleanedLyrics;
 
 // Переменная для отслеживания текущего поискового запроса в overlay
 function finishAddingSongs() {
-    closeAddSongsOverlay();
+    closeAddSongsOverlayOld();
     
     // Обновляем список сет-листов
     refreshSetlists();
@@ -1481,7 +1481,7 @@ function setupEventListeners() {
 
     // Полноэкранный оверлей добавления песен
     if (ui.closeAddSongs) {
-        ui.closeAddSongs.addEventListener('click', closeAddSongsOverlay);
+        ui.closeAddSongs.addEventListener('click', closeAddSongsOverlayOld);
     }
     if (ui.finishAddingSongs) {
         ui.finishAddingSongs.addEventListener('click', finishAddingSongs);
@@ -1929,7 +1929,8 @@ if (typeof window !== 'undefined') {
     
     // ТЕСТОВЫЕ ФУНКЦИИ - экспортируем новые модульные функции для тестирования
     window.startAddingSongsModule = startAddingSongs;
-    window.closeAddSongsOverlayModule = closeAddSongsOverlayModule;
+    window.closeAddSongsOverlay = closeAddSongsOverlayOld;  // Старая функция
+    window.closeAddSongsOverlayModule = closeAddSongsOverlayModule;  // Новая функция
     console.log('🧪 [TEST] Модульные функции Setlist Manager доступны в window');
     console.log('🧪 [TEST] Попробуйте: window.startAddingSongsModule("edit", "setlistId", "setlistName")');
     console.log('🧪 [TEST] Старая функция: window.startAddingSongs');
