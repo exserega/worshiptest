@@ -237,6 +237,9 @@ export {
 // Search Manager exports
 export {
     performOverlayDropdownSearch,
+    showOverlaySearchResults,
+    hideOverlaySearchResults,
+    createOverlaySearchResultElement,
     metadata as searchManagerMetadata
 } from '../ui/search-manager.js';
 
