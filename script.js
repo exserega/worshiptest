@@ -374,7 +374,18 @@ function displaySongsGrid(songs, searchTerm = '') {
                 const cleanedLyrics = getCleanedLyricsLocal(song);
                 
                 if (cleanedLyrics) {
-                    textFragment = getHighlightedTextFragment(cleanedLyrics, searchTerm, 80);
+                    // Импортируем функцию из модуля
+                    if (window.getHighlightedTextFragment) {
+                        textFragment = window.getHighlightedTextFragment(cleanedLyrics, searchTerm, 80);
+                    } else {
+                        // Fallback - простое извлечение фрагмента
+                        const index = cleanedLyrics.toLowerCase().indexOf(searchTerm.toLowerCase());
+                        if (index !== -1) {
+                            const start = Math.max(0, index - 40);
+                            const end = Math.min(cleanedLyrics.length, index + searchTerm.length + 40);
+                            textFragment = cleanedLyrics.substring(start, end);
+                        }
+                    }
                 }
             }
         }
@@ -1458,7 +1469,7 @@ function setupEventListeners() {
         ui.skipAddSongs.addEventListener('click', closeAddSongsConfirmModal);
     }
     if (ui.startAddSongs) {
-        ui.startAddSongs.addEventListener('click', startAddingSongs);
+        ui.startAddSongs.addEventListener('click', () => startAddingSongs('create'));
     }
     
     // Кнопка "Добавить" в правой панели для редактирования существующего setlist
@@ -1936,8 +1947,12 @@ if (typeof window !== 'undefined') {
     window.addedSongsToCurrentSetlist = addedSongsToCurrentSetlist;
     window.refreshSongsDisplay = refreshSongsDisplay;
     // Импортируем cleanLyricsForSearch из модуля и экспортируем глобально
-    import('./src/core/index.js').then(({ cleanLyricsForSearch: cleanLyricsForSearchModule }) => {
+    import('./src/core/index.js').then(({ 
+        cleanLyricsForSearch: cleanLyricsForSearchModule,
+        getHighlightedTextFragment: getHighlightedTextFragmentModule 
+    }) => {
         window.cleanLyricsForSearch = cleanLyricsForSearchModule;
+        window.getHighlightedTextFragment = getHighlightedTextFragmentModule;
     });
     
     // Импортируем Modal Manager функции для совместимости
