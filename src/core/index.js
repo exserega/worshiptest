@@ -26,6 +26,32 @@ export {
   toggleClass
 } from '../ui/dom-refs.js';
 
+// Search functionality
+export {
+  searchSongs,
+  searchSongsWithCache,
+  displaySearchResults,
+  createSearchResultElement,
+  getHighlightedTextFragment,
+  highlightText,
+  clearSearchCache,
+  normalizeTextForSearch
+} from '../ui/search.js';
+
+// Song display functionality
+export {
+  displaySongDetails,
+  displaySongTextInMobileOverlay,
+  createSongListItem,
+  displaySongsList,
+  toggleChordsVisibility,
+  toggleChordsOnlyMode,
+  toggleChordOnlyBlocks,
+  increaseFontSize,
+  decreaseFontSize,
+  resetFontSize
+} from '../ui/song-display.js';
+
 // Транспонирование и обработка текста
 export { 
   getTransposition, 
@@ -169,6 +195,8 @@ export const metadata = {
     'event-bus',
     'state-manager',
     'dom-refs',
+    'search',
+    'song-display',
     'transposition',
     'song-parser',
     'metronome',
