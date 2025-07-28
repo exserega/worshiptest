@@ -42,8 +42,8 @@ import {
 // ====================================
 // RESTRUCTURE STAGE INDICATOR
 // ====================================
-console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 6.1 - MAIN CONTROLLER');
-console.log('📋 Current Stage: Main Entry Point Refactor - Controller Created');
+console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 6.2 - EVENT HANDLERS');
+console.log('📋 Current Stage: Main Entry Point Refactor - Event Handlers Created');
 console.log('🔧 Event Bus: ✅ Integrated');
 console.log('🗃️ State Manager: ✅ Integrated');
 console.log('⚙️ Core Index: ✅ Created');
@@ -57,8 +57,9 @@ console.log('🔍 Search Manager: ✅ Created (overlay search, filtering, highli
 console.log('🎵 Setlist Manager: ✅ Created (song addition, display filtering)');
 console.log('🎭 Modal Manager: ✅ Created (notifications, dialogs, modals)');
 console.log('🎮 Main Controller: ✅ Created (setlist, song, repertoire management)');
-console.log('🧪 Testing: Main application logic moved to dedicated controller');
-console.log('📊 Commit: Stage 6.1 - Main Controller Module CREATED');
+console.log('🎮 Event Handlers: ✅ Created (UI, search, modal, keyboard handlers)');
+console.log('🧪 Testing: Event handling logic moved to dedicated module');
+console.log('📊 Commit: Stage 6.2 - Event Handlers Module CREATED');
 console.log('=====================================');
 
 // --- UTILITY FUNCTIONS ---
