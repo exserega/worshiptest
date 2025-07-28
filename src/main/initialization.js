@@ -16,8 +16,8 @@
 import { setupEventListeners } from './event-handlers.js';
 import * as api from '../api/index.js';
 import * as ui from '../../ui.js';
-import { metronomeUI } from '../../metronome.js';
-import { searchWorkerManager } from '../../workerManager.js';
+import * as metronomeUI from '../../metronome.js';
+import searchWorkerManager from '../../src/js/workers/workerManager.js';
 
 // ====================================
 // MAIN INITIALIZATION FUNCTION
