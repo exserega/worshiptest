@@ -286,24 +286,38 @@ export async function filterAndDisplaySongs(searchTerm = '', category = '', show
         currentOverlaySearchRequest = null;
     }
     
-    // Используем State Manager с fallback к старому state
-    const stateManagerSongs = stateManager.getAllSongs();
-    const windowStateSongs = window.state?.allSongs || [];
+    // ИСПРАВЛЕНИЕ: Используем те же источники данных что и старые функции
+    // Проверяем все возможные источники в том же порядке что и старый код
+    const globalStateSongs = window.state?.allSongs || [];
+    const globalStateManagerSongs = window.stateManager?.getAllSongs() || [];
+    const importedStateManagerSongs = stateManager?.getAllSongs() || [];
+    const importedStateSongs = state?.allSongs || [];
     
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] stateManager.getAllSongs() length:', stateManagerSongs.length);
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] window.state?.allSongs length:', windowStateSongs.length);
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] window.state?.allSongs length:', globalStateSongs.length);
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] window.stateManager?.getAllSongs() length:', globalStateManagerSongs.length);
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] imported stateManager?.getAllSongs() length:', importedStateManagerSongs.length);
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] imported state?.allSongs length:', importedStateSongs.length);
     
-    const allSongs = stateManagerSongs.length > 0 ? stateManagerSongs : windowStateSongs;
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] Selected allSongs source:', stateManagerSongs.length > 0 ? 'stateManager' : 'window.state');
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] Final allSongs length:', allSongs.length);
+    // Выбираем первый непустой источник
+    let allSongs = [];
+    let selectedSource = 'none';
     
-    // ЭКСТРЕННАЯ ДИАГНОСТИКА
-    if (allSongs.length === 0) {
-        console.error('💥💥💥 EMPTY SONGS ARRAY! Checking all possible sources:');
-        console.error('💥 window.state:', window.state);
-        console.error('💥 stateManager:', window.stateManager);
-        console.error('💥 stateManager methods:', Object.getOwnPropertyNames(window.stateManager || {}));
+    if (globalStateSongs.length > 0) {
+        allSongs = globalStateSongs;
+        selectedSource = 'window.state.allSongs';
+    } else if (globalStateManagerSongs.length > 0) {
+        allSongs = globalStateManagerSongs;
+        selectedSource = 'window.stateManager.getAllSongs()';
+    } else if (importedStateManagerSongs.length > 0) {
+        allSongs = importedStateManagerSongs;
+        selectedSource = 'imported stateManager.getAllSongs()';
+    } else if (importedStateSongs.length > 0) {
+        allSongs = importedStateSongs;
+        selectedSource = 'imported state.allSongs';
     }
+    
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] Selected source:', selectedSource);
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] Final allSongs length:', allSongs.length);
     
     let filteredSongs = allSongs;
     
