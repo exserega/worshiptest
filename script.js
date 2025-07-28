@@ -217,6 +217,93 @@ function createOverlaySearchResultElement(song, query) {
 
 
 
+// ===== MOBILE PREVIEW FUNCTIONS (MOVED UP FOR HOISTING) =====
+
+let currentMobileSong = null;
+
+/**
+ * Показ мобильного overlay для просмотра песни
+ */
+function showMobileSongPreview(song) {
+    console.log('🔍 Показ мобильного overlay для песни:', song.name);
+    
+    currentMobileSong = song;
+    
+    // Получаем элементы
+    const overlay = document.getElementById('mobile-song-preview-overlay');
+    const titleElement = document.getElementById('mobile-song-title');
+    const keySelector = document.getElementById('mobile-key-selector');
+    const songTextElement = document.getElementById('mobile-song-text');
+    
+    if (!overlay || !titleElement || !keySelector || !songTextElement) {
+        console.error('❌ Не найдены элементы мобильного overlay');
+        return;
+    }
+    
+    // Устанавливаем название
+    titleElement.textContent = song.name;
+    
+    // Устанавливаем оригинальную тональность
+    const originalKey = getSongKey(song);
+    keySelector.value = originalKey;
+    
+    // Отображаем текст песни
+    displaySongTextInMobileOverlay(song, originalKey);
+    
+    // Показываем overlay
+    overlay.classList.add('active');
+    document.body.classList.add('overlay-active');
+    
+    console.log('✅ Мобильный overlay показан');
+}
+
+/**
+ * Скрытие мобильного overlay
+ */
+function hideMobileSongPreview() {
+    console.log('🔒 Скрытие мобильного overlay');
+    
+    const overlay = document.getElementById('mobile-song-preview-overlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        document.body.classList.remove('overlay-active');
+    }
+    
+    currentMobileSong = null;
+    
+    console.log('✅ Мобильный overlay скрыт');
+}
+
+/**
+ * Отображение текста песни в мобильном overlay
+ */
+function displaySongTextInMobileOverlay(song, selectedKey) {
+    const songTextElement = document.getElementById('mobile-song-text');
+    if (!songTextElement) return;
+    
+    // Получаем текст песни
+    let songText = song.hasWebEdits 
+        ? (song['Текст и аккорды (edited)'] || song['Текст и аккорды'] || '') 
+        : (song['Текст и аккорды'] || '');
+    
+    if (!songText) {
+        songTextElement.innerHTML = '<div style="text-align: center; color: var(--label-color); font-style: italic;">Текст песни не найден</div>';
+        return;
+    }
+    
+    // Транспонируем аккорды если нужно
+    const originalKey = getSongKey(song);
+    if (selectedKey !== originalKey) {
+        // Используем новую улучшенную логику транспонирования
+        const transposition = core.getTransposition(originalKey, selectedKey);
+        songText = core.transposeLyrics(songText, transposition, selectedKey);
+    }
+    
+    // Обрабатываем и отображаем
+    const processedLyrics = core.processLyrics(songText);
+    songTextElement.innerHTML = processedLyrics;
+}
+
 // --- HANDLERS ---
 
 /** Обработчик выбора песни из репертуара или "Моего списка" */
@@ -2266,97 +2353,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
 
 
-// ===== МОБИЛЬНЫЙ OVERLAY ДЛЯ ПРОСМОТРА ПЕСНИ =====
-    
-    let currentMobileSong = null;
-    
-    /**
-     * Показ мобильного overlay для просмотра песни
-     */
-    function showMobileSongPreview(song) {
-        console.log('🔍 Показ мобильного overlay для песни:', song.name);
-        
-        currentMobileSong = song;
-        
-        // Получаем элементы
-        const overlay = document.getElementById('mobile-song-preview-overlay');
-        const titleElement = document.getElementById('mobile-song-title');
-        const keySelector = document.getElementById('mobile-key-selector');
-        const songTextElement = document.getElementById('mobile-song-text');
-        
-        if (!overlay || !titleElement || !keySelector || !songTextElement) {
-            console.error('❌ Не найдены элементы мобильного overlay');
-            return;
-        }
-        
-        // Устанавливаем название
-        titleElement.textContent = song.name;
-        
-        // Устанавливаем оригинальную тональность
-        const originalKey = getSongKey(song);
-        keySelector.value = originalKey;
-        
-        // Отображаем текст песни
-        displaySongTextInMobileOverlay(song, originalKey);
-        
-        // Показываем overlay
-        overlay.classList.add('active');
-        document.body.classList.add('overlay-active');
-        
-        console.log('✅ Мобильный overlay показан');
-    }
-    
-    /**
-     * Скрытие мобильного overlay
-     */
-    function hideMobileSongPreview() {
-        console.log('🔒 Скрытие мобильного overlay');
-        
-        const overlay = document.getElementById('mobile-song-preview-overlay');
-        if (overlay) {
-            overlay.classList.remove('active');
-            document.body.classList.remove('overlay-active');
-        }
-        
-        currentMobileSong = null;
-        
-        console.log('✅ Мобильный overlay скрыт');
-    }
-    
-    /**
-     * Отображение текста песни в мобильном overlay
-     */
-    function displaySongTextInMobileOverlay(song, selectedKey) {
-        const songTextElement = document.getElementById('mobile-song-text');
-        if (!songTextElement) return;
-        
-        // Получаем текст песни
-        let songText = song.hasWebEdits 
-            ? (song['Текст и аккорды (edited)'] || song['Текст и аккорды'] || '') 
-            : (song['Текст и аккорды'] || '');
-        
-        if (!songText) {
-            songTextElement.innerHTML = '<div style="text-align: center; color: var(--label-color); font-style: italic;">Текст песни не найден</div>';
-            return;
-        }
-        
-        // Транспонируем аккорды если нужно
-        const originalKey = getSongKey(song);
-        if (selectedKey !== originalKey) {
-            // Используем новую улучшенную логику транспонирования
-            const transposition = core.getTransposition(originalKey, selectedKey);
-            songText = core.transposeLyrics(songText, transposition, selectedKey);
-        }
-        
-        // Форматируем аккорды для отображения
-        const formattedText = highlightChords(songText);
-        
-        songTextElement.innerHTML = formattedText;
-        
-        console.log(`📝 Текст песни отображен (${originalKey} → ${selectedKey})`);
-    }
-    
-    // Дублирующие функции транспонирования удалены - используется логика из core модуля
+// ===== MOBILE OVERLAY FUNCTIONS MOVED TO TOP =====
+// (Functions moved above for proper hoisting)
     
 
     
