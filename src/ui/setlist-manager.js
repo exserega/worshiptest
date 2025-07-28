@@ -160,7 +160,7 @@ export async function addSongToSetlist(song, key) {
     try {
         // Вызываем API для добавления песни
         const apiModule = await import('../../api.js');
-        const result = await apiModule.default.addSongToSetlist(targetSetlistId, song.id, key);
+        const result = await apiModule.addSongToSetlist(targetSetlistId, song.id, key);
         
         console.log('API result:', result);
         

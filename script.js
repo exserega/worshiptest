@@ -531,7 +531,7 @@ function refreshSongsDisplay() {
     const currentCategory = ui.categoryFilter ? ui.categoryFilter.value : '';
     const showAddedOnly = ui.showAddedOnly ? ui.showAddedOnly.classList.contains('active') : false;
     
-    filterAndDisplaySongs(currentSearch, currentCategory, showAddedOnly);
+    filterAndDisplaySongsModule(currentSearch, currentCategory, showAddedOnly);
 }
 
 async function confirmAddSongWithKey() {
@@ -1500,7 +1500,7 @@ function setupEventListeners() {
         const performOverlaySearch = (searchTerm) => {
             const category = ui.categoryFilter.value;
             const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-            filterAndDisplaySongs(searchTerm, category, showAddedOnly);
+            filterAndDisplaySongsModule(searchTerm, category, showAddedOnly);
         };
         
         // Используем глобальную функцию performOverlayDropdownSearch
@@ -1532,14 +1532,14 @@ function setupEventListeners() {
             // Показываем основной список
             const category = ui.categoryFilter.value;
             const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-            filterAndDisplaySongs('', category, showAddedOnly);
+            filterAndDisplaySongsModule('', category, showAddedOnly);
         });
         
         // Фильтр по категориям
         ui.categoryFilter.addEventListener('change', (e) => {
             const searchTerm = ui.songSearchInput.value.trim();
             const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-            filterAndDisplaySongs(searchTerm, e.target.value, showAddedOnly);
+            filterAndDisplaySongsModule(searchTerm, e.target.value, showAddedOnly);
         });
         
         // Показать только добавленные
@@ -1549,7 +1549,7 @@ function setupEventListeners() {
             const searchTerm = ui.songSearchInput.value.trim();
             const category = ui.categoryFilter.value;
             const showAddedOnly = ui.showAddedOnly.classList.contains('active');
-            filterAndDisplaySongs(searchTerm, category, showAddedOnly);
+            filterAndDisplaySongsModule(searchTerm, category, showAddedOnly);
         });
     }
 
