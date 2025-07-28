@@ -124,6 +124,73 @@ window.hideMobileSongPreview = hideMobileSongPreview;
 window.USE_MODULE_FUNCTIONS = false; // По умолчанию используем старые функции для совместимости
 
 // ====================================
+// 🔧 LEGACY FUNCTION STUBS
+// ====================================
+// Временные заглушки для функций, на которые ссылаются event handlers
+
+// Font size functions
+window.increaseFontSize = function() {
+    console.log('🔤 [Legacy] increaseFontSize called');
+    if (window.state) {
+        window.state.setCurrentFontSize(Math.min(window.state.currentFontSize + 2, 30));
+        if (typeof ui.updateFontSize === 'function') {
+            ui.updateFontSize();
+        }
+    }
+};
+
+window.decreaseFontSize = function() {
+    console.log('🔤 [Legacy] decreaseFontSize called');
+    if (window.state) {
+        window.state.setCurrentFontSize(Math.max(16, window.state.currentFontSize - 2));
+        if (typeof ui.updateFontSize === 'function') {
+            ui.updateFontSize();
+        }
+    }
+};
+
+// Theme toggle
+window.toggleTheme = function() {
+    console.log('🎨 [Legacy] toggleTheme called');
+    const currentTheme = document.body.dataset.theme;
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    if (typeof ui.applyTheme === 'function') {
+        ui.applyTheme(newTheme);
+    }
+};
+
+// Text manipulation
+window.splitTextIntoColumns = function() {
+    console.log('📄 [Legacy] splitTextIntoColumns called');
+    if (ui.songContent) {
+        ui.songContent.classList.toggle('split-columns');
+        if (typeof ui.updateSplitButton === 'function') {
+            ui.updateSplitButton();
+        }
+    }
+};
+
+window.toggleChords = function() {
+    console.log('🎵 [Legacy] toggleChords called');
+    if (window.state) {
+        window.state.setAreChordsVisible(!window.state.areChordsVisible);
+        if (ui.songContent) {
+            ui.songContent.classList.toggle('chords-hidden', !window.state.areChordsVisible);
+        }
+    }
+};
+
+window.showChordsOnly = function() {
+    console.log('🎼 [Legacy] showChordsOnly called');
+    if (window.state) {
+        window.state.setIsChordsOnlyMode(!window.state.isChordsOnlyMode);
+        if (ui.songContent) {
+            ui.songContent.classList.toggle('chords-only-mode', window.state.isChordsOnlyMode);
+        }
+    }
+};
+
+// ====================================
 // 🚀 APPLICATION STARTUP
 // ====================================
 // Единственная задача этого файла - запустить приложение!

@@ -120,24 +120,40 @@ function setupUIEventHandlers() {
     // Селекторы инструментов
     if (ui.sheetSelect) {
         ui.sheetSelect.addEventListener('change', () => {
-            if (typeof window.handleSheetChange === 'function') {
-                window.handleSheetChange();
+            console.log('🎵 [EventHandlers] Sheet selector changed:', ui.sheetSelect.value);
+            // Очищаем поиск и обновляем список песен
+            if (ui.searchInput) ui.searchInput.value = '';
+            if (ui.searchResults) ui.searchResults.innerHTML = '';
+            if (typeof ui.populateSongSelect === 'function') {
+                ui.populateSongSelect();
             }
         });
     }
     
     if (ui.songSelect) {
         ui.songSelect.addEventListener('change', () => {
-            if (typeof window.handleSongChange === 'function') {
-                window.handleSongChange();
+            console.log('🎵 [EventHandlers] Song selector changed:', ui.songSelect.value);
+            const songId = ui.songSelect.value;
+            if (songId && window.state && window.state.allSongs) {
+                const songData = window.state.allSongs.find(s => s.id === songId);
+                console.log('🎵 [EventHandlers] Found song data:', songData?.name);
+                if (songData && typeof ui.displaySongDetails === 'function') {
+                    ui.displaySongDetails(songData);
+                }
             }
         });
     }
     
     if (ui.keySelect) {
         ui.keySelect.addEventListener('change', () => {
-            if (typeof window.handleKeyChange === 'function') {
-                window.handleKeyChange();
+            console.log('🎵 [EventHandlers] Key selector changed:', ui.keySelect.value);
+            const songId = ui.keySelect.dataset.songId;
+            if (songId && window.state && window.state.allSongs) {
+                const songData = window.state.allSongs.find(s => s.id === songId);
+                if (songData && typeof ui.displaySongDetails === 'function') {
+                    const newKey = ui.keySelect.value;
+                    ui.displaySongDetails(songData, newKey);
+                }
             }
         });
     }
