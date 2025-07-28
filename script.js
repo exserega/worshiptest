@@ -11,6 +11,7 @@ import * as ui from './ui.js';
 import * as metronomeUI from './metronome.js';
 import searchWorkerManager from './src/js/workers/workerManager.js';
 import { getTransposition, transposeLyrics, processLyrics, highlightChords } from './src/js/core/transposition.js';
+import eventBus from './src/core/event-bus.js';
 
 // --- UTILITY FUNCTIONS ---
 
@@ -716,6 +717,12 @@ async function startAddingSongs(mode = 'create', targetSetlistId = null, targetS
     }
     
     // Сохраняем активные данные для использования в других функциях
+    // Используем Event Bus вместо глобальных переменных
+    eventBus.setState('activeOverlayMode', mode);
+    eventBus.setState('activeSetlistId', activeSetlistId);
+    eventBus.setState('activeSetlistName', activeSetlistName);
+    
+    // Оставляем старые переменные для совместимости (временно)
     window.activeOverlayMode = mode;
     window.activeSetlistId = activeSetlistId;
     window.activeSetlistName = activeSetlistName;
@@ -1318,8 +1325,9 @@ function finishAddingSongs() {
     // Обновляем список сет-листов
     refreshSetlists();
     
-    const mode = window.activeOverlayMode || 'create';
-    const setlistName = window.activeSetlistName;
+    // Используем Event Bus с fallback к старым переменным
+    const mode = eventBus.getState('activeOverlayMode', window.activeOverlayMode || 'create');
+    const setlistName = eventBus.getState('activeSetlistName', window.activeSetlistName);
     
     if (addedSongsToCurrentSetlist.size > 0) {
         if (mode === 'create') {
@@ -1342,6 +1350,12 @@ function finishAddingSongs() {
     }
     
     // Очищаем глобальные переменные overlay
+    // Очищаем состояние в Event Bus
+    eventBus.deleteState('activeOverlayMode');
+    eventBus.deleteState('activeSetlistId');
+    eventBus.deleteState('activeSetlistName');
+    
+    // Очищаем старые переменные для совместимости
     window.activeOverlayMode = null;
     window.activeSetlistId = null;
     window.activeSetlistName = null;
