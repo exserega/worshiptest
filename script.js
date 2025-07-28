@@ -1932,12 +1932,19 @@ if (typeof window !== 'undefined') {
     window.closeAddSongsOverlay = closeAddSongsOverlayOld;  // Старая функция
     window.closeAddSongsOverlayModule = closeAddSongsOverlayModule;  // Новая функция
     window.filterAndDisplaySongsModule = filterAndDisplaySongsModule;  // Новая функция
-    console.log('🧪 [TEST] Модульные функции Setlist Manager доступны в window');
-    console.log('🧪 [TEST] Старые функции:');
-    console.log('🧪 [TEST] - window.startAddingSongs (старая)');
-    console.log('🧪 [TEST] - window.closeAddSongsOverlay (старая)');
-    console.log('🧪 [TEST] Новые функции:');
-    console.log('🧪 [TEST] - window.startAddingSongsModule (новая)');
-    console.log('🧪 [TEST] - window.closeAddSongsOverlayModule (новая)');
-    console.log('🧪 [TEST] - window.filterAndDisplaySongsModule (новая)');
+    
+    // Импортируем модульную версию addSongToSetlist
+    import('./src/core/index.js').then(({ addSongToSetlistModule }) => {
+        window.addSongToSetlistModule = addSongToSetlistModule;
+        console.log('🧪 [TEST] Модульные функции Setlist Manager доступны в window');
+        console.log('🧪 [TEST] Старые функции:');
+        console.log('🧪 [TEST] - window.startAddingSongs (старая)');
+        console.log('🧪 [TEST] - window.closeAddSongsOverlay (старая)');
+        console.log('🧪 [TEST] - window.addSongToSetlist (старая)');
+        console.log('🧪 [TEST] Новые функции:');
+        console.log('🧪 [TEST] - window.startAddingSongsModule (новая)');
+        console.log('🧪 [TEST] - window.closeAddSongsOverlayModule (новая)');
+        console.log('🧪 [TEST] - window.filterAndDisplaySongsModule (новая)');
+        console.log('🧪 [TEST] - window.addSongToSetlistModule (новая)');
+    });
 }

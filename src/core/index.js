@@ -249,7 +249,7 @@ export {
 export {
     startAddingSongs,
     closeAddSongsOverlay,
-    addSongToSetlist,
+    addSongToSetlist as addSongToSetlistModule,
     confirmAddSongWithKey,
     getCurrentCreatedSetlistId,
     getCurrentCreatedSetlistName,
