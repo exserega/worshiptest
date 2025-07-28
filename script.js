@@ -323,97 +323,9 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
     console.log('🎵 [Legacy] displaySongsGrid completed, rendered', songs.length, 'songs');
 };
 
-window.toggleMyListPanel = async function() {
-    console.log('⭐ [Legacy] toggleMyListPanel called');
-    
-    if (!ui.myListPanel || !ui.toggleMyListButton) {
-        console.error('⭐ [Legacy] UI elements not found');
-        return;
-    }
-    
-    try {
-        const isAlreadyOpen = ui.myListPanel.classList.contains('open');
-        
-        if (typeof ui.closeAllSidePanels === 'function') {
-            ui.closeAllSidePanels();
-        }
-        
-        if (!isAlreadyOpen) {
-            ui.toggleMyListButton.classList.add('loading');
-            ui.myListPanel.classList.add('open');
-            
-            // Логика загрузки избранных песен
-            if (window.state && window.state.allSongs && window.state.favorites) {
-                const favoriteSongs = window.state.allSongs.filter(song => 
-                    window.state.favorites.some(fav => fav.songId === song.id)
-                ).map(song => {
-                    const fav = window.state.favorites.find(f => f.songId === song.id);
-                    return { ...song, preferredKey: fav.preferredKey };
-                });
-                
-                if (typeof ui.renderFavorites === 'function') {
-                    ui.renderFavorites(favoriteSongs, 
-                        window.handleFavoriteOrRepertoireSelect || function(song) {
-                            console.log('Favorite selected:', song.name);
-                        },
-                        async function(songId) {
-                            if (confirm("Удалить песню из 'Моих'?")) {
-                                try {
-                                    await api.removeFromFavorites(songId);
-                                    window.toggleMyListPanel(); // Refresh
-                                } catch (error) {
-                                    console.error('Ошибка удаления:', error);
-                                    alert('Не удалось удалить песню');
-                                }
-                            }
-                        }
-                    );
-                }
-            }
-        }
-    } catch (error) {
-        console.error('⭐ [Legacy] Error:', error);
-    } finally {
-        if (ui.toggleMyListButton) {
-            ui.toggleMyListButton.classList.remove('loading');
-        }
-    }
-};
+// УБРАЛИ toggleMyListPanel - логика теперь в обработчике событий
 
-window.toggleRepertoirePanel = async function() {
-    console.log('🎭 [Legacy] toggleRepertoirePanel called');
-    
-    if (!ui.repertoirePanel || !ui.toggleRepertoireButton) {
-        console.error('🎭 [Legacy] UI elements not found');
-        return;
-    }
-    
-    try {
-        const isAlreadyOpen = ui.repertoirePanel.classList.contains('open');
-        
-        if (typeof ui.closeAllSidePanels === 'function') {
-            ui.closeAllSidePanels();
-        }
-        
-        if (!isAlreadyOpen) {
-            ui.toggleRepertoireButton.classList.add('loading');
-            ui.repertoirePanel.classList.add('open');
-            
-            // Загружаем репертуар для текущего вокалиста
-            if (typeof api.loadRepertoire === 'function' && window.state) {
-                api.loadRepertoire(window.state.currentVocalistId, window.handleRepertoireUpdate || function(data) {
-                    console.log('Repertoire loaded:', data);
-                });
-            }
-        }
-    } catch (error) {
-        console.error('🎭 [Legacy] Error:', error);
-    } finally {
-        if (ui.toggleRepertoireButton) {
-            ui.toggleRepertoireButton.classList.remove('loading');
-        }
-    }
-};
+// УБРАЛИ toggleRepertoirePanel - логика теперь в обработчике событий
 
 // ВОССТАНАВЛИВАЕМ ТОЧНО КАК В ОРИГИНАЛЕ
 window.refreshSetlists = async function() {
@@ -693,5 +605,69 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('📋 [EntryPoint] Setlists panel handler attached');
     } else {
         console.error('📋 [EntryPoint] ui.toggleSetlistsButton not found!');
+    }
+    
+    // ПАНЕЛЬ "МОИ" - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+    if (ui.toggleMyListButton) {
+        ui.toggleMyListButton.addEventListener('click', async () => {
+            console.log('⭐ [EntryPoint] My List button clicked');
+            const isAlreadyOpen = ui.myListPanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleMyListButton.classList.add('loading');
+                try {
+                    ui.myListPanel.classList.add('open');
+                    // Logic to load and render favorites - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+                    const favoriteSongs = window.state.allSongs.filter(song => 
+                        window.state.favorites.some(fav => fav.songId === song.id)
+                    ).map(song => {
+                        const fav = window.state.favorites.find(f => f.songId === song.id);
+                        return { ...song, preferredKey: fav.preferredKey };
+                    });
+                    ui.renderFavorites(favoriteSongs, window.handleFavoriteOrRepertoireSelect, async (songId) => {
+                        if(confirm("Удалить песню из 'Моих'?")) {
+                            try {
+                                await api.removeFromFavorites(songId);
+                                // Refresh list after deletion
+                                ui.toggleMyListButton.click();
+                            } catch (error) {
+                                console.error('Ошибка удаления из избранного:', error);
+                                alert('Не удалось удалить песню из списка');
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error('Ошибка загрузки избранных:', error);
+                } finally {
+                    ui.toggleMyListButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('⭐ [EntryPoint] My List panel handler attached');
+    } else {
+        console.error('⭐ [EntryPoint] ui.toggleMyListButton not found!');
+    }
+    
+    // ПАНЕЛЬ РЕПЕРТУАР - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+    if (ui.toggleRepertoireButton) {
+        ui.toggleRepertoireButton.addEventListener('click', async () => {
+            console.log('🎭 [EntryPoint] Repertoire button clicked');
+            const isAlreadyOpen = ui.repertoirePanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleRepertoireButton.classList.add('loading');
+                try {
+                    ui.repertoirePanel.classList.add('open');
+                    api.loadRepertoire(window.state.currentVocalistId, window.handleRepertoireUpdate);
+                } catch (error) {
+                    console.error('Ошибка загрузки репертуара:', error);
+                } finally {
+                    ui.toggleRepertoireButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('🎭 [EntryPoint] Repertoire panel handler attached');
+    } else {
+        console.error('🎭 [EntryPoint] ui.toggleRepertoireButton not found!');
     }
 });

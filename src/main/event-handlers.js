@@ -428,21 +428,13 @@ function setupSetlistEventHandlers() {
     // Логика перенесена в script.js где есть доступ ко всем функциям
     // ui.toggleSetlistsButton обработчик теперь в script.js
     
-    if (ui.toggleMyListButton) {
-        ui.toggleMyListButton.addEventListener('click', async () => {
-            if (typeof window.toggleMyListPanel === 'function') {
-                await window.toggleMyListPanel();
-            }
-        });
-    }
+    // Панель "Мои" - УБРАЛИ ИЗ event-handlers.js!
+    // Логика перенесена в script.js где есть доступ ко всем функциям
+    // ui.toggleMyListButton обработчик теперь в script.js
     
-    if (ui.toggleRepertoireButton) {
-        ui.toggleRepertoireButton.addEventListener('click', async () => {
-            if (typeof window.toggleRepertoirePanel === 'function') {
-                await window.toggleRepertoirePanel();
-            }
-        });
-    }
+    // Панель "Репертуар" - УБРАЛИ ИЗ event-handlers.js!
+    // Логика перенесена в script.js где есть доступ ко всем функциям
+    // ui.toggleRepertoireButton обработчик теперь в script.js
     
     // Селектор вокалистов
     if (ui.vocalistSelect) {
