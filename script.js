@@ -247,17 +247,236 @@ window.handleMainSearch = function() {
     }
 };
 
-// МИНИМАЛЬНЫЕ заглушки для панелей - НЕ ЛОМАЕМ НИЧЕГО!
-window.toggleSetlistsPanel = function() {
-    console.log('📋 [Legacy] toggleSetlistsPanel - STUB');
+// ВОССТАНАВЛИВАЕМ РЕАЛЬНУЮ ФУНКЦИОНАЛЬНОСТЬ ПАНЕЛЕЙ
+window.toggleSetlistsPanel = async function() {
+    console.log('📋 [Legacy] toggleSetlistsPanel called');
+    
+    if (!ui.setlistsPanel || !ui.toggleSetlistsButton) {
+        console.error('📋 [Legacy] UI elements not found');
+        return;
+    }
+    
+    try {
+        const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
+        
+        // Закрываем все панели
+        if (typeof ui.closeAllSidePanels === 'function') {
+            ui.closeAllSidePanels();
+        }
+        
+        if (!isAlreadyOpen) {
+            ui.toggleSetlistsButton.classList.add('loading');
+            ui.setlistsPanel.classList.add('open');
+            
+            // Вызываем refreshSetlists (нужно создать)
+            await window.refreshSetlists();
+        }
+    } catch (error) {
+        console.error('📋 [Legacy] Error:', error);
+    } finally {
+        if (ui.toggleSetlistsButton) {
+            ui.toggleSetlistsButton.classList.remove('loading');
+        }
+    }
 };
 
-window.toggleMyListPanel = function() {
-    console.log('⭐ [Legacy] toggleMyListPanel - STUB');
+window.toggleMyListPanel = async function() {
+    console.log('⭐ [Legacy] toggleMyListPanel called');
+    
+    if (!ui.myListPanel || !ui.toggleMyListButton) {
+        console.error('⭐ [Legacy] UI elements not found');
+        return;
+    }
+    
+    try {
+        const isAlreadyOpen = ui.myListPanel.classList.contains('open');
+        
+        if (typeof ui.closeAllSidePanels === 'function') {
+            ui.closeAllSidePanels();
+        }
+        
+        if (!isAlreadyOpen) {
+            ui.toggleMyListButton.classList.add('loading');
+            ui.myListPanel.classList.add('open');
+            
+            // Логика загрузки избранных песен
+            if (window.state && window.state.allSongs && window.state.favorites) {
+                const favoriteSongs = window.state.allSongs.filter(song => 
+                    window.state.favorites.some(fav => fav.songId === song.id)
+                ).map(song => {
+                    const fav = window.state.favorites.find(f => f.songId === song.id);
+                    return { ...song, preferredKey: fav.preferredKey };
+                });
+                
+                if (typeof ui.renderFavorites === 'function') {
+                    ui.renderFavorites(favoriteSongs, 
+                        window.handleFavoriteOrRepertoireSelect || function(song) {
+                            console.log('Favorite selected:', song.name);
+                        },
+                        async function(songId) {
+                            if (confirm("Удалить песню из 'Моих'?")) {
+                                try {
+                                    await api.removeFromFavorites(songId);
+                                    window.toggleMyListPanel(); // Refresh
+                                } catch (error) {
+                                    console.error('Ошибка удаления:', error);
+                                    alert('Не удалось удалить песню');
+                                }
+                            }
+                        }
+                    );
+                }
+            }
+        }
+    } catch (error) {
+        console.error('⭐ [Legacy] Error:', error);
+    } finally {
+        if (ui.toggleMyListButton) {
+            ui.toggleMyListButton.classList.remove('loading');
+        }
+    }
 };
 
-window.toggleRepertoirePanel = function() {
-    console.log('🎭 [Legacy] toggleRepertoirePanel - STUB');
+window.toggleRepertoirePanel = async function() {
+    console.log('🎭 [Legacy] toggleRepertoirePanel called');
+    
+    if (!ui.repertoirePanel || !ui.toggleRepertoireButton) {
+        console.error('🎭 [Legacy] UI elements not found');
+        return;
+    }
+    
+    try {
+        const isAlreadyOpen = ui.repertoirePanel.classList.contains('open');
+        
+        if (typeof ui.closeAllSidePanels === 'function') {
+            ui.closeAllSidePanels();
+        }
+        
+        if (!isAlreadyOpen) {
+            ui.toggleRepertoireButton.classList.add('loading');
+            ui.repertoirePanel.classList.add('open');
+            
+            // Загружаем репертуар для текущего вокалиста
+            if (typeof api.loadRepertoire === 'function' && window.state) {
+                api.loadRepertoire(window.state.currentVocalistId, window.handleRepertoireUpdate || function(data) {
+                    console.log('Repertoire loaded:', data);
+                });
+            }
+        }
+    } catch (error) {
+        console.error('🎭 [Legacy] Error:', error);
+    } finally {
+        if (ui.toggleRepertoireButton) {
+            ui.toggleRepertoireButton.classList.remove('loading');
+        }
+    }
+};
+
+// ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ПАНЕЛЕЙ
+window.refreshSetlists = async function() {
+    console.log('📋 [Legacy] refreshSetlists called');
+    
+    try {
+        if (typeof api.loadSetlists === 'function') {
+            const setlists = await api.loadSetlists();
+            console.log('📋 [Legacy] Loaded setlists:', setlists.length);
+            
+            // Сохраняем в state
+            if (window.state && typeof window.state.setSetlists === 'function') {
+                window.state.setSetlists(setlists);
+            }
+            
+            // Отображаем сетлисты
+            if (typeof ui.renderSetlists === 'function') {
+                ui.renderSetlists(setlists, 
+                    window.handleSetlistSelect || function(setlist) {
+                        console.log('📋 [Legacy] Setlist selected:', setlist.name);
+                        // Выбираем сетлист
+                        if (window.state && typeof window.state.setCurrentSetlistId === 'function') {
+                            window.state.setCurrentSetlistId(setlist.id);
+                        }
+                        if (typeof ui.displaySelectedSetlist === 'function') {
+                            ui.displaySelectedSetlist(setlist, 
+                                window.handleFavoriteOrRepertoireSelect,
+                                window.handleRemoveSongFromSetlist
+                            );
+                        }
+                    },
+                    window.handleSetlistDelete || async function(setlistId, setlistName) {
+                        console.log('📋 [Legacy] Delete setlist:', setlistName);
+                        if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
+                            try {
+                                await api.deleteSetlist(setlistId);
+                                await window.refreshSetlists(); // Обновляем список
+                            } catch (error) {
+                                console.error('Ошибка удаления:', error);
+                                alert('Не удалось удалить сет-лист');
+                            }
+                        }
+                    }
+                );
+            }
+        }
+    } catch (error) {
+        console.error('📋 [Legacy] Error in refreshSetlists:', error);
+        // Показываем пустой список при ошибке
+        if (typeof ui.renderSetlists === 'function') {
+            ui.renderSetlists([], function(){}, function(){});
+        }
+    }
+};
+
+window.handleFavoriteOrRepertoireSelect = function(song) {
+    console.log('🎵 [Legacy] Song selected from panel:', song.name);
+    
+    if (!song || !song.id) return;
+    
+    // Выбираем категорию
+    if (ui.sheetSelect && song.sheet) {
+        ui.sheetSelect.value = song.sheet;
+        ui.sheetSelect.dispatchEvent(new Event('change'));
+    }
+    
+    // Выбираем песню
+    if (ui.songSelect) {
+        ui.songSelect.value = song.id;
+        ui.songSelect.dispatchEvent(new Event('change'));
+    }
+    
+    // Закрываем панели
+    if (typeof ui.closeAllSidePanels === 'function') {
+        ui.closeAllSidePanels();
+    }
+};
+
+window.handleRepertoireUpdate = function(data) {
+    console.log('🎭 [Legacy] handleRepertoireUpdate called:', data);
+    
+    if (data.error) {
+        console.error('🎭 [Legacy] Repertoire error:', data.error);
+        if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
+            window.state.setCurrentRepertoireSongsData([]);
+        }
+    } else {
+        console.log('🎭 [Legacy] Repertoire data loaded:', data.data?.length || 0);
+        if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
+            window.state.setCurrentRepertoireSongsData(data.data || []);
+        }
+    }
+    
+    // Отображаем репертуар
+    if (typeof ui.renderRepertoire === 'function') {
+        ui.renderRepertoire(window.handleFavoriteOrRepertoireSelect);
+    }
+    
+    // Обновляем кнопку репертуара для текущей песни
+    const currentSongId = ui.songSelect?.value;
+    if (currentSongId && window.state && window.state.allSongs) {
+        const currentSong = window.state.allSongs.find(s => s.id === currentSongId);
+        if (currentSong && typeof ui.updateRepertoireButton === 'function') {
+            ui.updateRepertoireButton(currentSong);
+        }
+    }
 };
 
 // ====================================
