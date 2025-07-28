@@ -234,6 +234,12 @@ export {
     metadata as overlayManagerMetadata
 } from '../ui/overlay-manager.js';
 
+// Search Manager exports
+export {
+    performOverlayDropdownSearch,
+    metadata as searchManagerMetadata
+} from '../ui/search-manager.js';
+
 /**
  * Core modules metadata
  * @readonly

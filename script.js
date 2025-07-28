@@ -30,7 +30,8 @@ import {
   closeKeySelectionModal,
   showKeySelectionModal,
   updateSongTextInModal,
-  updateKeyButtons
+  updateKeyButtons,
+  performOverlayDropdownSearch
 } from './src/core/index.js';
 
 // ====================================
