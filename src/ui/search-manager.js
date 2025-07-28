@@ -269,6 +269,113 @@ export function getHighlightedTextFragment(text, query, contextLength = 100) {
     return fragment;
 }
 
+// Переменная для отслеживания текущего поискового запроса в overlay
+let currentOverlaySearchRequest = null;
+
+/**
+ * Расширенный поиск по названию и тексту песни с Web Worker поддержкой
+ * @param {string} searchTerm - Поисковый запрос
+ * @param {string} category - Категория для фильтрации
+ * @param {boolean} showAddedOnly - Показывать только добавленные песни
+ */
+export async function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOnly = false) {
+    // Отменяем предыдущий поиск если есть
+    if (currentOverlaySearchRequest) {
+        window.searchWorkerManager?.cancelSearch(currentOverlaySearchRequest);
+        currentOverlaySearchRequest = null;
+    }
+    
+    // Используем State Manager с fallback к старому state
+    const allSongs = stateManager.getAllSongs().length > 0 ? stateManager.getAllSongs() : window.state?.allSongs || [];
+    let filteredSongs = allSongs;
+    
+    // Фильтр по поиску через Web Worker (если есть поисковый запрос)
+    if (searchTerm) {
+        try {
+            console.log(`🔍 Overlay поиск через Worker: "${searchTerm}"`);
+            
+            const startTime = performance.now();
+            const { results, metadata } = await window.searchWorkerManager.overlaySearch(searchTerm, allSongs, {
+                category: category || undefined,
+                enablePrioritySearch: true
+            });
+            const duration = performance.now() - startTime;
+            
+            console.log(`✅ Overlay поиск завершен за ${duration.toFixed(2)}ms (Worker: ${metadata.duration.toFixed(2)}ms)`);
+            
+            // Объединяем точные и нечеткие результаты
+            filteredSongs = [
+                ...results.exactResults.map(r => r.song),
+                ...results.fuzzyResults.map(r => r.song)
+            ];
+            
+        } catch (error) {
+            console.error('❌ Ошибка Web Worker overlay поиска, fallback:', error);
+            
+            // Fallback: стандартный поиск
+            const query = normalizeSearchQuery(searchTerm);
+            filteredSongs = filteredSongs.filter(song => {
+                // Поиск по названию
+                const normalizedTitle = getNormalizedTitle(song);
+                const titleMatch = normalizedTitle.includes(query);
+                
+                // Поиск по тексту песни
+                const normalizedLyrics = getNormalizedLyrics(song);
+                const lyricsMatch = normalizedLyrics.includes(query);
+                
+                return titleMatch || lyricsMatch;
+            });
+            
+            // Умная сортировка для fallback
+            filteredSongs.sort((a, b) => {
+                const aNormalizedTitle = getNormalizedTitle(a);
+                const bNormalizedTitle = getNormalizedTitle(b);
+                const aTitleMatch = aNormalizedTitle.includes(query);
+                const bTitleMatch = bNormalizedTitle.includes(query);
+                const aTitleStartsWith = aNormalizedTitle.startsWith(query);
+                const bTitleStartsWith = bNormalizedTitle.startsWith(query);
+                
+                // 1. Сначала песни, название которых начинается с запроса
+                if (aTitleStartsWith && !bTitleStartsWith) return -1;
+                if (!aTitleStartsWith && bTitleStartsWith) return 1;
+                
+                // 2. Потом песни, где запрос содержится в названии (но не в начале)
+                if (aTitleMatch && !aTitleStartsWith && (!bTitleMatch || bTitleStartsWith)) return -1;
+                if (bTitleMatch && !bTitleStartsWith && (!aTitleMatch || aTitleStartsWith)) return 1;
+                
+                // 3. Наконец песни по тексту (где нет совпадения в названии)
+                if (aTitleMatch && !bTitleMatch) return -1;
+                if (!aTitleMatch && bTitleMatch) return 1;
+                
+                return 0;
+            });
+        }
+    }
+    
+    // Фильтр по категории (если не обработан в Worker)
+    if (category && searchTerm) {
+        // Если поиск был через Worker с категорией, фильтр уже применен
+    } else if (category) {
+        filteredSongs = filteredSongs.filter(song => song.sheet === category);
+    }
+    
+    // Фильтр только добавленные
+    if (showAddedOnly) {
+        // Получаем addedSongsToCurrentSetlist из глобальной области
+        const addedSongs = window.addedSongsToCurrentSetlist || new Set();
+        filteredSongs = filteredSongs.filter(song => 
+            addedSongs.has(song.id)
+        );
+    }
+    
+    // Вызываем displaySongsGrid через глобальную область
+    if (typeof window.displaySongsGrid === 'function') {
+        window.displaySongsGrid(filteredSongs, searchTerm);
+    } else {
+        console.error('❌ displaySongsGrid function not found');
+    }
+}
+
 export const metadata = {
     name: 'SearchManager',
     version: '1.0.0',
@@ -279,6 +386,7 @@ export const metadata = {
         'hideOverlaySearchResults',
         'createOverlaySearchResultElement',
         'cleanLyricsForSearch',
-        'getHighlightedTextFragment'
+        'getHighlightedTextFragment',
+        'filterAndDisplaySongs'
     ]
 };

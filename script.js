@@ -2011,4 +2011,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 if (typeof window !== 'undefined') {
     window.addSongToSetlist = addSongToSetlist;
     window.confirmAddSongWithKey = confirmAddSongWithKey;
+    window.displaySongsGrid = displaySongsGrid;
+    window.addedSongsToCurrentSetlist = addedSongsToCurrentSetlist;
 }
