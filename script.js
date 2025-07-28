@@ -531,6 +531,12 @@ function refreshSongsDisplay() {
 
 async function confirmAddSongWithKey() {
     console.log('=== confirmAddSongWithKey START ===');
+    
+    // Получаем данные из overlay-manager через импорт
+    const { getCurrentSongForKey, getCurrentSelectedKey } = await import('./src/ui/overlay-manager.js');
+    const currentSongForKey = getCurrentSongForKey();
+    const currentSelectedKey = getCurrentSelectedKey();
+    
     console.log('currentSongForKey:', currentSongForKey);
     console.log('currentSelectedKey:', currentSelectedKey);
     console.log('currentCreatedSetlistId:', currentCreatedSetlistId);
@@ -565,6 +571,7 @@ async function confirmAddSongWithKey() {
     console.log('Saved key:', keyToAdd);
     
     // Закрываем модальное окно
+    const { closeKeySelectionModal } = await import('./src/ui/overlay-manager.js');
     closeKeySelectionModal();
     
     // Добавляем песню с сохраненными данными
