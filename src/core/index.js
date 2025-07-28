@@ -1,0 +1,177 @@
+/**
+ * @fileoverview Core Modules Index - Центральный экспорт всех core модулей
+ * @module CoreIndex
+ * @version 1.0.0
+ * @author Agape Worship Team
+ * @since 2024
+ */
+
+// ====================================
+// CORE MODULES IMPORTS
+// ====================================
+
+// Event Bus и State Manager
+export { default as eventBus, EventBus } from './event-bus.js';
+export { default as stateManager, StateManager } from './state-manager.js';
+
+// Транспонирование и обработка текста
+export { 
+  getTransposition, 
+  transposeLyrics, 
+  processLyrics, 
+  highlightChords 
+} from '../js/core/transposition.js';
+
+// Парсинг песен
+export { 
+  wrapSongBlocks,
+  correctBlockType,
+  demonstrateParser,
+  resetParserLearning 
+} from '../js/core/songParser.js';
+
+// Метроном
+export {
+  setupAudioContext,
+  resumeAudioContext,
+  loadAudioFile,
+  playClick,
+  toggleMetronome,
+  getMetronomeState
+} from '../js/core/metronome.js';
+
+// ====================================
+// UTILITY FUNCTIONS
+// ====================================
+
+/**
+ * Проверка мобильного устройства
+ * @returns {boolean} True если мобильное устройство
+ */
+export function isMobileDevice() {
+  return window.innerWidth <= 768;
+}
+
+/**
+ * Нормализация поискового запроса
+ * @param {string} query - Поисковый запрос
+ * @returns {string} Нормализованный запрос
+ */
+export function normalizeSearchQuery(query) {
+  if (!query || typeof query !== 'string') return '';
+  
+  return query
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s\u0400-\u04FF]/g, '') // Оставляем только буквы, цифры, пробелы и кириллицу
+    .replace(/\s+/g, ' '); // Заменяем множественные пробелы одним
+}
+
+/**
+ * Получение нормализованного названия песни
+ * @param {Object} song - Объект песни
+ * @returns {string} Нормализованное название
+ */
+export function getNormalizedTitle(song) {
+  if (!song || !song.name) return '';
+  return normalizeSearchQuery(song.name);
+}
+
+/**
+ * Получение нормализованного текста песни
+ * @param {Object} song - Объект песни
+ * @returns {string} Нормализованный текст
+ */
+export function getNormalizedLyrics(song) {
+  if (!song) return '';
+  
+  const lyrics = song['Текст и аккорды'] || song.lyrics || '';
+  return normalizeSearchQuery(lyrics);
+}
+
+/**
+ * Получение очищенного текста песни (без аккордов)
+ * @param {Object} song - Объект песни
+ * @returns {string} Очищенный текст
+ */
+export function getCleanedLyrics(song) {
+  if (!song) return '';
+  
+  const lyrics = song['Текст и аккорды'] || song.lyrics || '';
+  
+  // Удаляем аккорды (буквы с диезами/бемолями)
+  return lyrics
+    .replace(/[A-H][#b]?(?:maj7|maj9|m7|m9|m11|7sus4|sus4|sus2|add9|dim7|dim|aug7|aug|7|m|6|9|11|13|sus)?(?:\s*\/\s*[A-H][#b]?)?/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Получение тональности песни из разных полей
+ * @param {Object} song - Объект песни
+ * @returns {string} Тональность песни
+ */
+export function getSongKey(song) {
+  if (!song) return 'C';
+  
+  // Проверяем различные возможные поля для тональности
+  const key = song['Оригинальная тональность'] || 
+              song['Тональность'] || 
+              song['originalKey'] || 
+              song['key'] || 
+              song.originalKey || 
+              song.key || 
+              'C'; // Fallback по умолчанию
+  
+  return key;
+}
+
+// ====================================
+// CONSTANTS RE-EXPORT
+// ====================================
+
+// Основные константы из constants.js
+export const CHORDS = [
+  'C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 
+  'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'H', 'B'
+];
+
+export const STRUCTURE_MARKERS = [
+  'Intro', 'Verse', 'Chorus', 'Bridge', 'Outro', 
+  'Pre-Chorus', 'Tag', 'Interlude', 'Solo'
+];
+
+// ====================================
+// MODULE METADATA
+// ====================================
+
+/**
+ * Core modules metadata
+ * @readonly
+ */
+export const metadata = {
+  name: 'CoreIndex',
+  version: '1.0.0',
+  description: 'Central export for all core modules',
+  modules: [
+    'event-bus',
+    'state-manager', 
+    'transposition',
+    'song-parser',
+    'metronome',
+    'utilities'
+  ],
+  exports: [
+    'eventBus',
+    'stateManager',
+    'getTransposition',
+    'transposeLyrics',
+    'processLyrics',
+    'highlightChords',
+    'wrapSongBlocks',
+    'isMobileDevice',
+    'normalizeSearchQuery',
+    'getNormalizedTitle',
+    'getSongKey'
+  ]
+};

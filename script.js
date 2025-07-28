@@ -10,19 +10,31 @@ import * as core from './core.js';
 import * as ui from './ui.js';
 import * as metronomeUI from './metronome.js';
 import searchWorkerManager from './src/js/workers/workerManager.js';
-import { getTransposition, transposeLyrics, processLyrics, highlightChords } from './src/js/core/transposition.js';
-import eventBus from './src/core/event-bus.js';
-import stateManager from './src/core/state-manager.js';
+import { 
+  getTransposition, 
+  transposeLyrics, 
+  processLyrics, 
+  highlightChords,
+  eventBus,
+  stateManager,
+  getNormalizedTitle,
+  getNormalizedLyrics,
+  getCleanedLyrics,
+  getSongKey,
+  normalizeSearchQuery,
+  isMobileDevice as isMobileCore
+} from './src/core/index.js';
 
 // ====================================
 // RESTRUCTURE STAGE INDICATOR
 // ====================================
-console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 2.4');
-console.log('📋 Current Stage: State Manager Integration');
+console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 3.1');
+console.log('📋 Current Stage: Core Modules Centralization');
 console.log('🔧 Event Bus: ✅ Integrated');
 console.log('🗃️ State Manager: ✅ Integrated');
-console.log('🧪 Testing: Hybrid state management (State Manager + fallback)');
-console.log('📊 Commit: Stage 2.4 - State Manager integration with fallback');
+console.log('⚙️ Core Index: ✅ Created');
+console.log('🧪 Testing: Centralized core imports');
+console.log('📊 Commit: Stage 3.1 - Core modules centralization');
 console.log('=====================================');
 
 // --- UTILITY FUNCTIONS ---
