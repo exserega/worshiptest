@@ -307,16 +307,16 @@ function displaySongTextInMobileOverlay(song, selectedKey) {
     console.log(`🎵 Транспонирование: ${originalKey} → ${selectedKey}`);
     
     if (selectedKey !== originalKey) {
-        // Используем функцию транспонирования из core модуля
-        const transposition = core.getTransposition(originalKey, selectedKey);
-        songText = core.transposeLyrics(songText, transposition);
-        console.log('✅ Транспонирование выполнено');
+        // Используем продвинутую функцию транспонирования с поддержкой бемолей
+        const transposition = getTransposition(originalKey, selectedKey);
+        songText = transposeLyrics(songText, transposition, selectedKey);
+        console.log('✅ Транспонирование выполнено с поддержкой бемолей');
     } else {
         console.log('⚪ Транспонирование не требуется');
     }
     
     // Обрабатываем и отображаем
-    const processedLyrics = core.processLyrics(songText);
+    const processedLyrics = processLyrics(songText);
     songTextElement.innerHTML = processedLyrics;
     console.log('📝 Текст песни отображен в mobile overlay');
 }
