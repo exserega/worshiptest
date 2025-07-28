@@ -21,7 +21,7 @@ import {
 // ====================================
 
 const songsCollection = collection(db, "songs");
-const setlistsCollection = collection(db, "setlists");
+const setlistsCollection = collection(db, "worship_setlists");
 const vocalistsCollection = collection(db, "vocalists");
 
 // ====================================
@@ -376,7 +376,7 @@ export const metadata = {
     ],
     collections: [
         'songs',
-        'setlists', 
+        'worship_setlists', 
         'vocalists'
     ]
 };

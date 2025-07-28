@@ -12,7 +12,7 @@ import {
 import * as state from './state.js';
 
 const songsCollection = collection(db, "songs");
-const setlistsCollection = collection(db, "setlists");
+const setlistsCollection = collection(db, "worship_setlists");
 const vocalistsCollection = collection(db, "vocalists");
 
 // --- SONGS ---
