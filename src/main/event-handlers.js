@@ -169,12 +169,18 @@ function setupUIEventHandlers() {
 function setupSearchEventHandlers() {
     console.log('🔍 [EventHandlers] setupSearchEventHandlers');
     
-    // Основной поиск
+    // Основной поиск с debounce
     if (ui.searchInput) {
+        // Простая debounce функция
+        let searchTimeout;
+        
         ui.searchInput.addEventListener('input', () => {
-            if (typeof window.handleMainSearch === 'function') {
-                window.handleMainSearch();
-            }
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (typeof window.handleMainSearch === 'function') {
+                    window.handleMainSearch();
+                }
+            }, 150); // Задержка 150мс
         });
         
         ui.searchInput.addEventListener('blur', () => {

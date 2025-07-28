@@ -190,11 +190,59 @@ window.showChordsOnly = function() {
     }
 };
 
-// МИНИМАЛЬНАЯ функция поиска - НЕ ТРОГАЕМ СЛОЖНУЮ ЛОГИКУ!
+// ВОССТАНАВЛИВАЕМ поиск ОСТОРОЖНО - используем проверенную логику
 window.handleMainSearch = function() {
-    console.log('🔍 [Legacy] handleMainSearch called - STUB');
-    // Пока просто заглушка, чтобы не было ошибок
-    // Основной поиск работал раньше, оставляем как есть
+    console.log('🔍 [Legacy] handleMainSearch called');
+    
+    if (!ui.searchInput) {
+        console.log('🔍 [Legacy] No search input found');
+        return;
+    }
+    
+    const rawQuery = ui.searchInput.value.trim();
+    console.log('🔍 [Legacy] Search query:', rawQuery);
+    
+    if (!rawQuery) {
+        if (ui.searchResults) ui.searchResults.innerHTML = '';
+        return;
+    }
+    
+    // Простой поиск без Worker (безопасно)
+    if (window.state && window.state.allSongs) {
+        console.log('🔍 [Legacy] Searching in allSongs:', window.state.allSongs.length);
+        
+        const results = window.state.allSongs.filter(song => {
+            const titleMatch = song.name.toLowerCase().includes(rawQuery.toLowerCase());
+            const lyricsMatch = song['Текст и аккорды'] && 
+                song['Текст и аккорды'].toLowerCase().includes(rawQuery.toLowerCase());
+            return titleMatch || lyricsMatch;
+        }).slice(0, 10); // Ограничиваем результаты
+        
+        console.log('🔍 [Legacy] Found results:', results.length);
+        
+        // Используем существующую функцию отображения
+        if (typeof ui.displaySearchResults === 'function') {
+            ui.displaySearchResults(results, (song) => {
+                console.log('🔍 [Legacy] Search result selected:', song.name);
+                ui.searchInput.value = song.name;
+                if (ui.searchResults) ui.searchResults.innerHTML = '';
+                
+                // Выбираем песню через селекторы (безопасно)
+                if (ui.sheetSelect && song.sheet) {
+                    ui.sheetSelect.value = song.sheet;
+                    ui.sheetSelect.dispatchEvent(new Event('change'));
+                }
+                if (ui.songSelect) {
+                    ui.songSelect.value = song.id;
+                    ui.songSelect.dispatchEvent(new Event('change'));
+                }
+            }, rawQuery);
+        } else {
+            console.log('🔍 [Legacy] ui.displaySearchResults not available');
+        }
+    } else {
+        console.log('🔍 [Legacy] No songs data available');
+    }
 };
 
 // МИНИМАЛЬНЫЕ заглушки для панелей - НЕ ЛОМАЕМ НИЧЕГО!
