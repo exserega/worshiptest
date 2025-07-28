@@ -247,7 +247,9 @@ window.handleMainSearch = function() {
     }
 };
 
-// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ИЗ ОРИГИНАЛА
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ИЗ ОРИГИНАЛА - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+window.currentCreatedSetlistId = null;
+window.currentCreatedSetlistName = '';
 window.addedSongsToCurrentSetlist = new Set();
 
 // ДОБАВЛЯЕМ НЕДОСТАЮЩУЮ ФУНКЦИЮ displaySongsGrid ИЗ ОРИГИНАЛА
@@ -568,4 +570,128 @@ export const metadata = {
     cursorEfficiency: 'Оптимизировано для AI-ассистентов'
 };
 
+// ФУНКЦИЯ УВЕДОМЛЕНИЙ - ИЗ РАБОЧЕГО КОДА
+window.showNotification = function(message, type = 'info') {
+    console.log('📢 [EntryPoint] showNotification:', message, type);
+    
+    // Используем модульную функцию если доступна
+    if (typeof modal?.showNotification === 'function') {
+        modal.showNotification(message, type);
+        return;
+    }
+    
+    // Fallback - простое уведомление
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--container-background-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        max-width: 300px;
+        word-wrap: break-word;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+};
+
+// ФУНКЦИЯ СОЗДАНИЯ СЕТЛИСТА - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+window.handleCreateSetlist = async function() {
+    console.log('🎵 [EntryPoint] handleCreateSetlist called');
+    const name = ui.newSetlistNameInput.value.trim();
+    if (!name) {
+        window.showNotification('❌ Название сет-листа не может быть пустым', 'error');
+        return;
+    }
+    
+    try {
+        ui.createSetlistButton.disabled = true;
+        ui.createSetlistButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Создание...</span>';
+        
+        const docRef = await api.createSetlist(name);
+        // api.createSetlist возвращает строку ID, не объект - КАК В РАБОЧЕМ КОДЕ!
+        window.currentCreatedSetlistId = docRef; // docRef это уже строка ID
+        window.currentCreatedSetlistName = name;
+        
+        console.log('🎯 [DEBUG] Created setlist:', window.currentCreatedSetlistId, window.currentCreatedSetlistName);
+        
+        // Закрываем модал (функция должна быть в ui)
+        if (typeof ui.closeCreateSetlistModal === 'function') {
+            ui.closeCreateSetlistModal();
+        } else if (ui.createSetlistModal) {
+            ui.createSetlistModal.classList.remove('show');
+            ui.newSetlistNameInput.value = '';
+            window.addedSongsToCurrentSetlist.clear();
+        }
+        
+        await window.refreshSetlists();
+        
+        if (ui.createdSetlistName) {
+            ui.createdSetlistName.textContent = name;
+        }
+        
+        window.showNotification('✅ Сет-лист создан успешно!', 'success');
+        
+    } catch (error) {
+        console.error('Ошибка создания сет-листа:', error);
+        window.showNotification('❌ Ошибка при создании сет-листа', 'error');
+    } finally {
+        ui.createSetlistButton.disabled = false;
+        ui.createSetlistButton.innerHTML = '<i class="fas fa-arrow-right"></i><span>Продолжить</span>';
+    }
+};
+
 console.log('✨ [EntryPoint] Agape Worship App v2.0 - Modular Architecture Ready!');
+
+// ОБРАБОТЧИКИ ПАНЕЛЕЙ - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+// (должны быть в script.js для доступа ко всем функциям)
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('📋 [EntryPoint] Setting up panel handlers...');
+    
+    // ПАНЕЛЬ СЕТЛИСТОВ - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+    if (ui.toggleSetlistsButton) {
+        ui.toggleSetlistsButton.addEventListener('click', async () => {
+            console.log('📋 [EntryPoint] Setlists button clicked');
+            const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleSetlistsButton.classList.add('loading');
+                try {
+                    ui.setlistsPanel.classList.add('open');
+                    await window.refreshSetlists(); // ← ЭТА ФУНКЦИЯ ЕСТЬ В script.js!
+                } catch (error) {
+                    console.error('Ошибка загрузки сет-листов:', error);
+                } finally {
+                    ui.toggleSetlistsButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('📋 [EntryPoint] Setlists panel handler attached');
+    } else {
+        console.error('📋 [EntryPoint] ui.toggleSetlistsButton not found!');
+    }
+});

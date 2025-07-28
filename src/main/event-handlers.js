@@ -424,21 +424,9 @@ function setupSetlistEventHandlers() {
         }
     });
     
-    // Переключение панелей - ТОЧНО КАК В ОРИГИНАЛЕ
-    if (ui.toggleSetlistsButton) {
-        ui.toggleSetlistsButton.addEventListener('click', async () => {
-            console.log('📋 [EventHandlers] Setlists button clicked');
-            const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
-            if (!isAlreadyOpen) {
-                ui.toggleSetlistsButton.classList.add('loading');
-                ui.setlistsPanel.classList.add('open');
-                await window.refreshSetlists();
-                ui.toggleSetlistsButton.classList.remove('loading');
-            } else {
-                ui.closeAllSidePanels();
-            }
-        });
-    }
+    // Переключение панелей - УБРАЛИ ИЗ event-handlers.js!
+    // Логика перенесена в script.js где есть доступ ко всем функциям
+    // ui.toggleSetlistsButton обработчик теперь в script.js
     
     if (ui.toggleMyListButton) {
         ui.toggleMyListButton.addEventListener('click', async () => {
