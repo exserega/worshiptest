@@ -638,7 +638,7 @@ function cacheNormalizedSongData(song) {
         const lyrics = song.hasWebEdits 
             ? (song['Текст и аккорды (edited)'] || '') 
             : (song['Текст и аккорды'] || '');
-        const cleanedLyrics = cleanLyricsForSearch(lyrics);
+        const cleanedLyrics = window.cleanLyricsForSearch ? window.cleanLyricsForSearch(lyrics) : lyrics;
         song._cleanedLyrics = cleanedLyrics;
         song._normalizedLyrics = normalizeTextForSearch(cleanedLyrics);
         
@@ -1919,4 +1919,8 @@ if (typeof window !== 'undefined') {
     window.confirmAddSongWithKey = confirmAddSongWithKey;
     window.displaySongsGrid = displaySongsGrid;
     window.addedSongsToCurrentSetlist = addedSongsToCurrentSetlist;
+    // Импортируем cleanLyricsForSearch из модуля и экспортируем глобально
+    import('./src/core/index.js').then(({ cleanLyricsForSearch: cleanLyricsForSearchModule }) => {
+        window.cleanLyricsForSearch = cleanLyricsForSearchModule;
+    });
 }
