@@ -232,8 +232,11 @@ async function handleCreateSetlist() {
         ui.createSetlistButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Создание...</span>';
         
         const docRef = await api.createSetlist(name);
-        currentCreatedSetlistId = docRef.id;
+        // api.createSetlist возвращает строку ID, не объект
+        currentCreatedSetlistId = docRef; // docRef это уже строка ID
         currentCreatedSetlistName = name;
+        
+        console.log('🎯 [DEBUG] Created setlist:', currentCreatedSetlistId, currentCreatedSetlistName);
         
         closeCreateSetlistModal();
         await refreshSetlists();
