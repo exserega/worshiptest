@@ -240,6 +240,7 @@ export {
     showOverlaySearchResults,
     hideOverlaySearchResults,
     createOverlaySearchResultElement,
+    cleanLyricsForSearch,
     metadata as searchManagerMetadata
 } from '../ui/search-manager.js';
 

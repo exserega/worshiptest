@@ -577,17 +577,7 @@ async function confirmAddSongWithKey() {
  * @param {string} text - Текст с аккордами
  * @returns {string} Очищенный текст
  */
-function cleanLyricsForSearch(text) {
-    if (!text) return '';
-    
-    // Убираем аккорды в квадратных скобках [C], [Am7], etc.
-    let cleaned = text.replace(/\[[^\]]*\]/g, ' ');
-    
-    // Убираем лишние пробелы и переносы строк
-    cleaned = cleaned.replace(/\s+/g, ' ').trim();
-    
-    return cleaned;
-}
+// cleanLyricsForSearch moved to src/ui/search-manager.js
 
 /**
  * Нормализует поисковый запрос для более умного поиска

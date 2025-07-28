@@ -181,6 +181,23 @@ export function createOverlaySearchResultElement(song, query) {
     return resultDiv;
 }
 
+/**
+ * Очистка текста песни для поиска (удаление аккордов)
+ * @param {string} text - исходный текст
+ * @returns {string} очищенный текст
+ */
+export function cleanLyricsForSearch(text) {
+    if (!text) return '';
+    
+    // Убираем аккорды в квадратных скобках [C], [Am7], etc.
+    let cleaned = text.replace(/\[[^\]]*\]/g, ' ');
+    
+    // Убираем лишние пробелы и переносы строк
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+    
+    return cleaned;
+}
+
 // Временная заглушка для getHighlightedTextFragment (будет перенесена позже)
 function getHighlightedTextFragment(text, query, contextLength = 100) {
     if (!text || !query) return '';
@@ -215,6 +232,7 @@ export const metadata = {
         'performOverlayDropdownSearch',
         'showOverlaySearchResults',
         'hideOverlaySearchResults',
-        'createOverlaySearchResultElement'
+        'createOverlaySearchResultElement',
+        'cleanLyricsForSearch'
     ]
 };
