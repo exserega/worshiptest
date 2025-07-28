@@ -301,15 +301,21 @@ function displaySongTextInMobileOverlay(song, selectedKey) {
     
     // Транспонируем аккорды если нужно
     const originalKey = getSongKey(song);
+    console.log(`🎵 Транспонирование: ${originalKey} → ${selectedKey}`);
+    
     if (selectedKey !== originalKey) {
-        // Используем новую улучшенную логику транспонирования
-        const transposition = core.getTransposition(originalKey, selectedKey);
-        songText = core.transposeLyrics(songText, transposition, selectedKey);
+        // Используем функцию транспонирования
+        const transposition = getTransposition(originalKey, selectedKey);
+        songText = transposeLyrics(songText, transposition);
+        console.log('✅ Транспонирование выполнено');
+    } else {
+        console.log('⚪ Транспонирование не требуется');
     }
     
     // Обрабатываем и отображаем
-    const processedLyrics = core.processLyrics(songText);
+    const processedLyrics = processLyrics(songText);
     songTextElement.innerHTML = processedLyrics;
+    console.log('📝 Текст песни отображен в mobile overlay');
 }
 
 // --- HANDLERS ---
@@ -2371,7 +2377,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Закрытие overlay
         const closeBtn = document.getElementById('close-mobile-song-preview');
         if (closeBtn) {
-            closeBtn.addEventListener('click', hideMobileSongPreview);
+            closeBtn.addEventListener('click', () => {
+                console.log('❌ Кнопка закрытия мобильного overlay нажата');
+                hideMobileSongPreview();
+            });
+        } else {
+            console.error('❌ Кнопка close-mobile-song-preview не найдена');
         }
         
         // Изменение тональности
@@ -2387,11 +2398,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Добавление песни в сет-лист
         const addBtn = document.getElementById('add-song-to-setlist-mobile');
         if (addBtn) {
-            addBtn.addEventListener('click', () => {
+            addBtn.addEventListener('click', async () => {
+                console.log('🎵 Кнопка "Добавить" нажата в мобильном overlay');
                 if (currentMobileSong) {
                     const selectedKey = document.getElementById('mobile-key-selector').value;
-                    confirmAddSongWithKey(currentMobileSong, selectedKey);
-                    hideMobileSongPreview();
+                    console.log('📝 Добавляем песню:', currentMobileSong.name, 'в тональности:', selectedKey);
+                    
+                    try {
+                        await addSongToSetlist(currentMobileSong, selectedKey);
+                        console.log('✅ Песня успешно добавлена');
+                        hideMobileSongPreview();
+                        showNotification('✅ Песня добавлена в сет-лист', 'success');
+                    } catch (error) {
+                        console.error('❌ Ошибка добавления песни:', error);
+                        showNotification('❌ Ошибка добавления песни', 'error');
+                    }
                 }
             });
         }
