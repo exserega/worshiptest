@@ -40,12 +40,12 @@ console.log('=====================================');
 // --- UTILITY FUNCTIONS ---
 
 /** Проверка мобильного устройства */
-function isMobileDevice() {
+function isMobileDeviceLocal() {
     return window.innerWidth <= 768;
 }
 
 /** Универсальная функция для получения тональности песни из разных возможных полей */
-function getSongKey(song) {
+function getSongKeyLocal(song) {
     // Проверяем различные возможные поля для тональности
     // В порядке приоритета: русские названия, затем английские
     const key = song['Оригинальная тональность'] || 
@@ -58,7 +58,7 @@ function getSongKey(song) {
     
     // ВРЕМЕННЫЙ ЛОГ ДЛЯ ОТЛАДКИ
     if (Math.random() < 0.05) { // 5% песен для отладки
-        console.log('=== getSongKey DEBUG ===');
+        console.log('=== getSongKeyLocal DEBUG ===');
         console.log('song.name:', song.name);
         console.log('Available keys:', Object.keys(song).filter(k => k.toLowerCase().includes('тональ') || k.toLowerCase().includes('key')));
         console.log('song["Оригинальная тональность"]:', song['Оригинальная тональность']);
@@ -233,7 +233,7 @@ function createOverlaySearchResultElement(song, query) {
         }
         
         // Открываем preview песни (мобильный overlay или модальное окно)
-        if (isMobileDevice()) {
+        if (isMobileDeviceLocal()) {
             showMobileSongPreview(song);
         } else {
             showKeySelectionModal(song);
@@ -276,7 +276,7 @@ function showMobileSongPreview(song) {
     titleElement.textContent = song.name;
     
     // Устанавливаем оригинальную тональность
-    const originalKey = getSongKey(song);
+    const originalKey = getSongKeyLocal(song);
     keySelector.value = originalKey;
     
     // Отображаем текст песни
@@ -331,7 +331,7 @@ function displaySongTextInMobileOverlay(song, selectedKey) {
     }
     
     // Транспонируем аккорды если нужно
-    const originalKey = getSongKey(song);
+    const originalKey = getSongKeyLocal(song);
     console.log(`🎵 Транспонирование: ${originalKey} → ${selectedKey}`);
     
     if (selectedKey !== originalKey) {
@@ -409,7 +409,7 @@ function setupMobileOverlayEventListeners() {
         
         // Восстанавливаем выбранное значение
         if (currentMobileSong) {
-            const originalKey = getSongKey(currentMobileSong);
+            const originalKey = getSongKeyLocal(currentMobileSong);
             newKeySelector.value = originalKey;
         }
         
@@ -554,7 +554,7 @@ function showKeySelectionModal(song) {
     }
     
     currentSongForKey = song;
-    const originalSongKey = getSongKey(song);
+    const originalSongKey = getSongKeyLocal(song);
     currentSelectedKey = originalSongKey;
     
     console.log('Set currentSongForKey:', currentSongForKey);
@@ -652,7 +652,7 @@ function updateSongTextInModal(song, selectedKey) {
     }
     
     // Транспонируем аккорды если нужно
-    const originalKey = getSongKey(song);
+    const originalKey = getSongKeyLocal(song);
     if (selectedKey !== originalKey) {
         // Используем новую улучшенную логику транспонирования
         const transposition = core.getTransposition(originalKey, selectedKey);
@@ -824,7 +824,7 @@ function displaySongsGrid(songs, searchTerm = '') {
         const isAdded = addedSongsToCurrentSetlist.has(song.id);
         
         // Получаем правильную тональность из данных песни
-        const originalKey = getSongKey(song);
+        const originalKey = getSongKeyLocal(song);
         
         // Проверяем, есть ли поиск по тексту
         let textFragment = '';
@@ -888,7 +888,7 @@ function displaySongsGrid(songs, searchTerm = '') {
                 }
                 
                 // На мобильных устройствах показываем полноэкранный overlay
-                if (isMobileDevice()) {
+                if (isMobileDeviceLocal()) {
                     console.log('📱 Показ мобильного overlay для песни...');
                     showMobileSongPreview(song);
                 } else {
