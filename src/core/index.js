@@ -32,7 +32,6 @@ export {
   searchSongsWithCache,
   displaySearchResults,
   createSearchResultElement,
-  getHighlightedTextFragment,
   highlightText,
   clearSearchCache,
   normalizeTextForSearch
