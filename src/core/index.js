@@ -50,16 +50,11 @@ export {
   resetFontSize
 } from '../ui/song-display.js';
 
-// UI utilities
+// UI utilities (без showModal - теперь в modal-manager.js)
 export {
   showLoadingIndicator,
   hideLoadingIndicator,
-  showModal,
   hideModal,
-  showNotification,
-  showSuccessNotification,
-  showErrorNotification,
-  showWarningNotification,
   validateForm,
   clearForm,
   scrollToElement,
