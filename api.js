@@ -1,7 +1,7 @@
 // Agape Worship App - api.js
 
-// Import from new modular API structure
-import * as api from './src/js/api/index.js';
+// Import from new centralized API structure
+import * as api from './src/api/index.js';
 
 // Legacy imports for backward compatibility
 import { db } from './firebase-config.js';

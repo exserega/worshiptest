@@ -70,6 +70,20 @@ export {
   throttle
 } from '../ui/utils.js';
 
+// API functions
+export {
+  loadAllSongsFromFirestore,
+  saveSongEdit,
+  revertToOriginal,
+  getSongEditStatus,
+  loadSetlists,
+  createSetlist,
+  deleteSetlist,
+  addSongToSetlist,
+  removeSongFromSetlist,
+  loadVocalists
+} from '../api/index.js';
+
 // Транспонирование и обработка текста
 export { 
   getTransposition, 
@@ -216,6 +230,7 @@ export const metadata = {
     'search',
     'song-display',
     'ui-utils',
+    'api',
     'transposition',
     'song-parser',
     'metronome',
