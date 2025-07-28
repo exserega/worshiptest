@@ -198,28 +198,73 @@ export function cleanLyricsForSearch(text) {
     return cleaned;
 }
 
-// Временная заглушка для getHighlightedTextFragment (будет перенесена позже)
-function getHighlightedTextFragment(text, query, contextLength = 100) {
+/**
+ * Получение выделенного фрагмента текста с подсветкой найденных слов
+ * @param {string} text - исходный текст
+ * @param {string} query - поисковый запрос
+ * @param {number} contextLength - длина контекста
+ * @returns {string} фрагмент с подсветкой
+ */
+export function getHighlightedTextFragment(text, query, contextLength = 100) {
     if (!text || !query) return '';
     
-    const normalizedText = text.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    const index = normalizedText.indexOf(normalizedQuery);
+    const normalizedQuery = normalizeSearchQuery(query);
+    const queryWords = normalizedQuery.split(' ').filter(w => w.length > 1);
     
-    if (index === -1) return '';
+    if (queryWords.length === 0) return '';
     
-    const start = Math.max(0, index - contextLength / 2);
-    const end = Math.min(text.length, index + query.length + contextLength / 2);
+    // Ищем самое длинное совпадение из слов запроса
+    let bestMatch = { index: -1, length: 0, word: '' };
     
-    let fragment = text.substring(start, end);
+    queryWords.forEach(word => {
+        // Ищем точное совпадение слова в тексте (игнорируя аккорды и препинания)
+        const cleanText = text.replace(/\[[^\]]*\]/g, ' '); // убираем аккорды
+        const textWords = cleanText.split(/\s+/);
+        
+        for (let i = 0; i < textWords.length; i++) {
+            const cleanWord = normalizeSearchQuery(textWords[i]);
+            if (cleanWord.includes(word) && word.length > bestMatch.length) {
+                // Найдем позицию этого слова в оригинальном тексте
+                const wordStart = cleanText.toLowerCase().indexOf(textWords[i].toLowerCase());
+                if (wordStart !== -1) {
+                    bestMatch = { index: wordStart, length: word.length, word: word };
+                }
+            }
+        }
+    });
     
-    // Добавляем многоточие если фрагмент обрезан
+    if (bestMatch.index === -1) {
+        // Если точное совпадение не найдено, ищем первое хотя бы частичное
+        const firstWord = queryWords[0];
+        const lowerText = text.toLowerCase();
+        const searchIndex = lowerText.indexOf(firstWord);
+        if (searchIndex !== -1) {
+            bestMatch = { index: searchIndex, length: firstWord.length, word: firstWord };
+        }
+    }
+    
+    if (bestMatch.index === -1) {
+        return text.slice(0, contextLength) + '...';
+    }
+    
+    // Определяем границы фрагмента с найденным словом в начале
+    const beforeContext = Math.min(30, bestMatch.index); // немного контекста перед
+    const start = Math.max(0, bestMatch.index - beforeContext);
+    const end = Math.min(text.length, bestMatch.index + contextLength);
+    
+    let fragment = text.slice(start, end);
+    
+    // Добавляем многоточие
     if (start > 0) fragment = '...' + fragment;
     if (end < text.length) fragment = fragment + '...';
     
-    // Подсвечиваем найденное слово
-    const regex = new RegExp(`(${query})`, 'gi');
-    fragment = fragment.replace(regex, '<mark>$1</mark>');
+    // Выделяем все найденные слова
+    queryWords.forEach(word => {
+        if (word.length > 1) {
+            const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            fragment = fragment.replace(regex, '<mark class="search-highlight">$1</mark>');
+        }
+    });
     
     return fragment;
 }
@@ -233,6 +278,7 @@ export const metadata = {
         'showOverlaySearchResults',
         'hideOverlaySearchResults',
         'createOverlaySearchResultElement',
-        'cleanLyricsForSearch'
+        'cleanLyricsForSearch',
+        'getHighlightedTextFragment'
     ]
 };

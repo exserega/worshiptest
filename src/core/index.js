@@ -241,6 +241,7 @@ export {
     hideOverlaySearchResults,
     createOverlaySearchResultElement,
     cleanLyricsForSearch,
+    getHighlightedTextFragment,
     metadata as searchManagerMetadata
 } from '../ui/search-manager.js';
 
