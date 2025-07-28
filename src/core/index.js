@@ -52,6 +52,24 @@ export {
   resetFontSize
 } from '../ui/song-display.js';
 
+// UI utilities
+export {
+  showLoadingIndicator,
+  hideLoadingIndicator,
+  showModal,
+  hideModal,
+  showNotification,
+  showSuccessNotification,
+  showErrorNotification,
+  showWarningNotification,
+  validateForm,
+  clearForm,
+  scrollToElement,
+  isElementInViewport,
+  debounce,
+  throttle
+} from '../ui/utils.js';
+
 // Транспонирование и обработка текста
 export { 
   getTransposition, 
@@ -197,6 +215,7 @@ export const metadata = {
     'dom-refs',
     'search',
     'song-display',
+    'ui-utils',
     'transposition',
     'song-parser',
     'metronome',
