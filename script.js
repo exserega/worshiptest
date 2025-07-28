@@ -42,8 +42,8 @@ import {
 // ====================================
 // RESTRUCTURE STAGE INDICATOR
 // ====================================
-console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 5.4 - MODAL MANAGER');
-console.log('📋 Current Stage: UI Component Migration - Modal Manager CREATED');
+console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 6.1 - MAIN CONTROLLER');
+console.log('📋 Current Stage: Main Entry Point Refactor - Controller Created');
 console.log('🔧 Event Bus: ✅ Integrated');
 console.log('🗃️ State Manager: ✅ Integrated');
 console.log('⚙️ Core Index: ✅ Created');
@@ -56,8 +56,9 @@ console.log('🎭 Overlay Manager: ✅ Created (mobile preview, key selection)')
 console.log('🔍 Search Manager: ✅ Created (overlay search, filtering, highlighting)');
 console.log('🎵 Setlist Manager: ✅ Created (song addition, display filtering)');
 console.log('🎭 Modal Manager: ✅ Created (notifications, dialogs, modals)');
-console.log('🧪 Testing: All UI components migrated to dedicated modules');
-console.log('📊 Commit: Stage 5.4 - Modal Manager Module COMPLETED');
+console.log('🎮 Main Controller: ✅ Created (setlist, song, repertoire management)');
+console.log('🧪 Testing: Main application logic moved to dedicated controller');
+console.log('📊 Commit: Stage 6.1 - Main Controller Module CREATED');
 console.log('=====================================');
 
 // --- UTILITY FUNCTIONS ---
