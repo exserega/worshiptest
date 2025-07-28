@@ -30,23 +30,46 @@ const vocalistsCollection = collection(db, "vocalists");
 // ====================================
 
 /**
- * Загружает все песни из Firestore
- * @returns {Promise<Array>} Массив песен
+ * Загружает все песни из Firestore и сохраняет в state
+ * @returns {Promise<void>}
  */
 export async function loadAllSongsFromFirestore() {
     try {
-        const querySnapshot = await getDocs(query(songsCollection, orderBy("name")));
-        const songs = [];
-        
-        querySnapshot.forEach((doc) => {
-            songs.push({
-                id: doc.id,
-                ...doc.data()
-            });
+        console.log("Загрузка всех песен из Firestore...");
+        const querySnapshot = await getDocs(songsCollection);
+        let newAllSongs = [];
+        let newSongsBySheet = {};
+
+        querySnapshot.forEach(doc => {
+            const songData = doc.data();
+            const songId = doc.id;
+            const song = { id: songId, name: songId, ...songData };
+            newAllSongs.push(song);
+
+            const sheetName = song.sheet;
+            if (sheetName) {
+                if (!newSongsBySheet[sheetName]) {
+                    newSongsBySheet[sheetName] = [];
+                }
+                newSongsBySheet[sheetName].push(song);
+            } else {
+                console.warn(`Песня "${song.name}" (${songId}) не имеет поля 'sheet' (категории).`);
+            }
         });
+
+        newAllSongs.sort((a, b) => a.name.localeCompare(b.name));
+        for (const category in newSongsBySheet) {
+            newSongsBySheet[category].sort((a, b) => a.name.localeCompare(b.name));
+        }
         
-        console.log(`✅ Загружено ${songs.length} песен из Firestore`);
-        return songs;
+        state.setAllSongs(newAllSongs);
+        state.setSongsBySheet(newSongsBySheet);
+        console.log(`Загружено ${state.allSongs.length} песен.`);
+        
+        // Обновляем базу данных в Web Worker
+        if (typeof window !== 'undefined' && window.searchWorkerManager) {
+            window.searchWorkerManager.updateSongsDatabase(newAllSongs);
+        }
     } catch (error) {
         console.error('❌ Ошибка загрузки песен:', error);
         throw error;
