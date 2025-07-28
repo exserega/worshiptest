@@ -580,7 +580,14 @@ async function confirmAddSongWithKey() {
     closeKeySelectionModal();
     
     // Добавляем песню с сохраненными данными
-    await addSongToSetlist(songToAdd, keyToAdd);
+    // ТЕСТОВЫЙ РЕЖИМ - выбираем старую или новую функцию
+    if (window.USE_MODULE_FUNCTIONS && window.addSongToSetlistModule) {
+        console.log('🧪 [TEST] Используем НОВУЮ модульную функцию addSongToSetlist');
+        await window.addSongToSetlistModule(songToAdd, keyToAdd);
+    } else {
+        console.log('🧪 [TEST] Используем СТАРУЮ функцию addSongToSetlist');
+        await addSongToSetlist(songToAdd, keyToAdd);
+    }
     console.log('=== confirmAddSongWithKey END ===');
 }
 
@@ -1936,6 +1943,10 @@ if (typeof window !== 'undefined') {
     // Импортируем модульную версию addSongToSetlist
     import('./src/core/index.js').then(({ addSongToSetlistModule }) => {
         window.addSongToSetlistModule = addSongToSetlistModule;
+        
+        // ТЕСТОВЫЙ РЕЖИМ - переключение между старой и новой версией
+        window.USE_MODULE_FUNCTIONS = false; // false = старые, true = новые
+        
         console.log('🧪 [TEST] Модульные функции Setlist Manager доступны в window');
         console.log('🧪 [TEST] Старые функции:');
         console.log('🧪 [TEST] - window.startAddingSongs (старая)');
@@ -1946,5 +1957,10 @@ if (typeof window !== 'undefined') {
         console.log('🧪 [TEST] - window.closeAddSongsOverlayModule (новая)');
         console.log('🧪 [TEST] - window.filterAndDisplaySongsModule (новая)');
         console.log('🧪 [TEST] - window.addSongToSetlistModule (новая)');
+        console.log('');
+        console.log('🔧 [TEST] РЕЖИМ ПЕРЕКЛЮЧЕНИЯ:');
+        console.log('🔧 [TEST] window.USE_MODULE_FUNCTIONS = false (используем старые)');
+        console.log('🔧 [TEST] Чтобы протестировать новые функции:');
+        console.log('🔧 [TEST] window.USE_MODULE_FUNCTIONS = true');
     });
 }
