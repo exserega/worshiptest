@@ -172,9 +172,10 @@ export function createOverlaySearchResultElement(song, query) {
         // Скрываем dropdown
         hideOverlaySearchResults();
         
-        // Показываем модальное окно выбора ключа (импортируем динамически)
-        import('../ui/overlay-manager.js').then(({ showKeySelectionModal }) => {
-            showKeySelectionModal(song);
+        // Используем РАБОЧИЙ механизм - тот же что и кнопка "добавить"
+        // Показываем мобильный overlay для выбора тональности (как работающая кнопка)
+        import('../ui/overlay-manager.js').then(({ showMobileSongPreview }) => {
+            showMobileSongPreview(song);
         });
     });
     
