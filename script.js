@@ -35,7 +35,7 @@ import {
   cleanLyricsForSearch,
   filterAndDisplaySongs,
   startAddingSongs,
-  closeAddSongsOverlay
+  closeAddSongsOverlay as closeAddSongsOverlayModule
 } from './src/core/index.js';
 
 // ====================================
@@ -1928,13 +1928,10 @@ if (typeof window !== 'undefined') {
     });
     
     // ТЕСТОВЫЕ ФУНКЦИИ - экспортируем новые модульные функции для тестирования
-    import('./src/core/index.js').then(({ 
-        startAddingSongs: startAddingSongsModule,
-        closeAddSongsOverlay: closeAddSongsOverlayModule 
-    }) => {
-        window.startAddingSongsModule = startAddingSongsModule;
-        window.closeAddSongsOverlayModule = closeAddSongsOverlayModule;
-        console.log('🧪 [TEST] Модульные функции Setlist Manager доступны в window');
-        console.log('🧪 [TEST] Попробуйте: window.startAddingSongsModule("edit", "setlistId", "setlistName")');
-    });
+    window.startAddingSongsModule = startAddingSongs;
+    window.closeAddSongsOverlayModule = closeAddSongsOverlayModule;
+    console.log('🧪 [TEST] Модульные функции Setlist Manager доступны в window');
+    console.log('🧪 [TEST] Попробуйте: window.startAddingSongsModule("edit", "setlistId", "setlistName")');
+    console.log('🧪 [TEST] Старая функция: window.startAddingSongs');
+    console.log('🧪 [TEST] Новая функция: window.startAddingSongsModule');
 }
