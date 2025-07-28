@@ -1921,8 +1921,20 @@ if (typeof window !== 'undefined') {
     window.confirmAddSongWithKey = confirmAddSongWithKey;
     window.displaySongsGrid = displaySongsGrid;
     window.addedSongsToCurrentSetlist = addedSongsToCurrentSetlist;
+    window.refreshSongsDisplay = refreshSongsDisplay;
     // Импортируем cleanLyricsForSearch из модуля и экспортируем глобально
     import('./src/core/index.js').then(({ cleanLyricsForSearch: cleanLyricsForSearchModule }) => {
         window.cleanLyricsForSearch = cleanLyricsForSearchModule;
+    });
+    
+    // ТЕСТОВЫЕ ФУНКЦИИ - экспортируем новые модульные функции для тестирования
+    import('./src/core/index.js').then(({ 
+        startAddingSongs: startAddingSongsModule,
+        closeAddSongsOverlay: closeAddSongsOverlayModule 
+    }) => {
+        window.startAddingSongsModule = startAddingSongsModule;
+        window.closeAddSongsOverlayModule = closeAddSongsOverlayModule;
+        console.log('🧪 [TEST] Модульные функции Setlist Manager доступны в window');
+        console.log('🧪 [TEST] Попробуйте: window.startAddingSongsModule("edit", "setlistId", "setlistName")');
     });
 }
