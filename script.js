@@ -372,56 +372,47 @@ window.toggleRepertoirePanel = async function() {
     }
 };
 
-// ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ПАНЕЛЕЙ
+// ВОССТАНАВЛИВАЕМ ТОЧНО КАК В ОРИГИНАЛЕ
 window.refreshSetlists = async function() {
     console.log('📋 [Legacy] refreshSetlists called');
     
     try {
-        if (typeof api.loadSetlists === 'function') {
-            const setlists = await api.loadSetlists();
-            console.log('📋 [Legacy] Loaded setlists:', setlists.length);
-            
-            // Сохраняем в state
-            if (window.state && typeof window.state.setSetlists === 'function') {
-                window.state.setSetlists(setlists);
-            }
-            
-            // Отображаем сетлисты
-            if (typeof ui.renderSetlists === 'function') {
-                ui.renderSetlists(setlists, 
-                    window.handleSetlistSelect || function(setlist) {
-                        console.log('📋 [Legacy] Setlist selected:', setlist.name);
-                        // Выбираем сетлист
-                        if (window.state && typeof window.state.setCurrentSetlistId === 'function') {
-                            window.state.setCurrentSetlistId(setlist.id);
-                        }
-                        if (typeof ui.displaySelectedSetlist === 'function') {
-                            ui.displaySelectedSetlist(setlist, 
-                                window.handleFavoriteOrRepertoireSelect,
-                                window.handleRemoveSongFromSetlist
-                            );
-                        }
-                    },
-                    window.handleSetlistDelete || async function(setlistId, setlistName) {
-                        console.log('📋 [Legacy] Delete setlist:', setlistName);
-                        if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
-                            try {
-                                await api.deleteSetlist(setlistId);
-                                await window.refreshSetlists(); // Обновляем список
-                            } catch (error) {
-                                console.error('Ошибка удаления:', error);
-                                alert('Не удалось удалить сет-лист');
-                            }
-                        }
-                    }
-                );
-            }
-        }
+        const setlists = await api.loadSetlists();
+        console.log('📋 [Legacy] Loaded setlists:', setlists.length);
+        
+        // ТОЧНО КАК В ОРИГИНАЛЕ
+        window.state.setSetlists(setlists);
+        ui.renderSetlists(setlists, window.handleSetlistSelect, window.handleSetlistDelete);
+        
     } catch (error) {
-        console.error('📋 [Legacy] Error in refreshSetlists:', error);
-        // Показываем пустой список при ошибке
-        if (typeof ui.renderSetlists === 'function') {
-            ui.renderSetlists([], function(){}, function(){});
+        console.error("📋 [Legacy] Ошибка при загрузке сет-листов:", error);
+        ui.renderSetlists([], window.handleSetlistSelect, window.handleSetlistDelete); // Render empty list on error
+    }
+};
+
+// ОРИГИНАЛЬНЫЕ ОБРАБОТЧИКИ ТОЧНО КАК БЫЛИ
+window.handleSetlistSelect = function(setlist) {
+    console.log('📋 [Legacy] handleSetlistSelect:', setlist.name);
+    window.state.setCurrentSetlistId(setlist.id);
+    ui.displaySelectedSetlist(setlist, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
+};
+
+window.handleSetlistDelete = async function(setlistId, setlistName) {
+    console.log('📋 [Legacy] handleSetlistDelete:', setlistName);
+    if (confirm(`Вы уверены, что хотите удалить сет-лист "${setlistName}"?`)) {
+        try {
+            const wasSelected = window.state.currentSetlistId === setlistId;
+
+            await api.deleteSetlist(setlistId);
+            await window.refreshSetlists(); // This re-renders the list
+
+            if (wasSelected) {
+                window.state.setCurrentSetlistId(null);
+                ui.clearSetlistSelection();
+            }
+        } catch (error) {
+            console.error("Ошибка при удалении сет-листа:", error);
+            alert("Не удалось удалить сет-лист.");
         }
     }
 };
@@ -446,6 +437,34 @@ window.handleFavoriteOrRepertoireSelect = function(song) {
     // Закрываем панели
     if (typeof ui.closeAllSidePanels === 'function') {
         ui.closeAllSidePanels();
+    }
+};
+
+window.handleRemoveSongFromSetlist = async function(songId, songName) {
+    console.log('🗑️ [Legacy] handleRemoveSongFromSetlist:', songName);
+    const setlistId = window.state.currentSetlistId;
+    if (!setlistId) return;
+
+    if (confirm(`Удалить песню "${songName}" из текущего сет-листа?`)) {
+        try {
+            await api.removeSongFromSetlist(setlistId, songId);
+
+            // Refresh view
+            const updatedSetlists = await api.loadSetlists();
+            window.state.setSetlists(updatedSetlists);
+            const updatedCurrentSetlist = updatedSetlists.find(s => s.id === setlistId);
+            if (updatedCurrentSetlist) {
+                window.state.setCurrentSetlistId(updatedCurrentSetlist.id); // Re-set state
+                ui.displaySelectedSetlist(updatedCurrentSetlist, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
+            } else {
+                // This case handles if the setlist was somehow deleted in the process
+                window.state.setCurrentSetlistId(null);
+                ui.clearSetlistSelection();
+            }
+        } catch (error) {
+            console.error("Ошибка при удалении песни из сет-листа:", error);
+            alert("Не удалось удалить песню.");
+        }
     }
 };
 
