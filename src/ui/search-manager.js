@@ -290,12 +290,20 @@ export async function filterAndDisplaySongs(searchTerm = '', category = '', show
     const stateManagerSongs = stateManager.getAllSongs();
     const windowStateSongs = window.state?.allSongs || [];
     
-    console.log('🔍 [DEBUG] stateManager.getAllSongs() length:', stateManagerSongs.length);
-    console.log('🔍 [DEBUG] window.state?.allSongs length:', windowStateSongs.length);
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] stateManager.getAllSongs() length:', stateManagerSongs.length);
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] window.state?.allSongs length:', windowStateSongs.length);
     
     const allSongs = stateManagerSongs.length > 0 ? stateManagerSongs : windowStateSongs;
-    console.log('🔍 [DEBUG] Selected allSongs source:', stateManagerSongs.length > 0 ? 'stateManager' : 'window.state');
-    console.log('🔍 [DEBUG] Final allSongs length:', allSongs.length);
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] Selected allSongs source:', stateManagerSongs.length > 0 ? 'stateManager' : 'window.state');
+    console.log('🚨🚨🚨 [CRITICAL DEBUG] Final allSongs length:', allSongs.length);
+    
+    // ЭКСТРЕННАЯ ДИАГНОСТИКА
+    if (allSongs.length === 0) {
+        console.error('💥💥💥 EMPTY SONGS ARRAY! Checking all possible sources:');
+        console.error('💥 window.state:', window.state);
+        console.error('💥 stateManager:', window.stateManager);
+        console.error('💥 stateManager methods:', Object.getOwnPropertyNames(window.stateManager || {}));
+    }
     
     let filteredSongs = allSongs;
     
