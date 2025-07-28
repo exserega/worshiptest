@@ -92,18 +92,18 @@ async function performOverlayDropdownSearch(searchTerm) {
             showOverlaySearchResults(allResults, searchTerm);
         } else {
             // Fallback: обычный поиск
-            const query = normalizeSearchQuery(searchTerm);
+            const query = normalizeSearchQueryLocal(searchTerm);
             const allSongs = stateManager.getAllSongs().length > 0 ? stateManager.getAllSongs() : state.allSongs;
             let matchingSongs = allSongs.filter(song => {
-                const titleMatch = getNormalizedTitle(song).includes(query);
-                const lyricsMatch = getNormalizedLyrics(song).includes(query);
+                const titleMatch = getNormalizedTitleLocal(song).includes(query);
+                const lyricsMatch = getNormalizedLyricsLocal(song).includes(query);
                 return titleMatch || lyricsMatch;
             });
             
             // Применяем smart sorting
             matchingSongs.sort((a, b) => {
-                const aNormalizedTitle = getNormalizedTitle(a);
-                const bNormalizedTitle = getNormalizedTitle(b);
+                const aNormalizedTitle = getNormalizedTitleLocal(a);
+                const bNormalizedTitle = getNormalizedTitleLocal(b);
                 const aTitleMatch = aNormalizedTitle.includes(query);
                 const bTitleMatch = bNormalizedTitle.includes(query);
                 const aTitleStartsWith = aNormalizedTitle.startsWith(query);
@@ -182,7 +182,7 @@ function createOverlaySearchResultElement(song, query) {
     resultDiv.className = 'search-result'; // Используем тот же класс что и в главном меню
     
     // Нормализуем запрос для проверки
-    const normalizedQuery = normalizeSearchQuery(query);
+    const normalizedQuery = normalizeSearchQueryLocal(query);
     
     // Проверяем, найдено ли в названии или тексте
     const normalizedTitle = normalizeTextForSearch(song.name || '');
@@ -829,12 +829,12 @@ function displaySongsGrid(songs, searchTerm = '') {
         // Проверяем, есть ли поиск по тексту
         let textFragment = '';
         if (searchTerm) {
-            const normalizedQuery = normalizeSearchQuery(searchTerm);
-            const titleMatch = getNormalizedTitle(song).includes(normalizedQuery);
+            const normalizedQuery = normalizeSearchQueryLocal(searchTerm);
+            const titleMatch = getNormalizedTitleLocal(song).includes(normalizedQuery);
             
             // Если не найдено в названии, ищем в тексте
             if (!titleMatch) {
-                const cleanedLyrics = getCleanedLyrics(song);
+                const cleanedLyrics = getCleanedLyricsLocal(song);
                 
                 if (cleanedLyrics) {
                     textFragment = getHighlightedTextFragment(cleanedLyrics, searchTerm, 80);
@@ -1065,7 +1065,7 @@ function cleanLyricsForSearch(text) {
  * @param {string} query - Исходный запрос
  * @returns {string} Нормализованный запрос
  */
-function normalizeSearchQuery(query) {
+function normalizeSearchQueryLocal(query) {
     if (!query) return '';
     
     return query
@@ -1123,7 +1123,7 @@ function cacheNormalizedSongData(song) {
  * @param {Object} song - Объект песни
  * @returns {string} Нормализованное название
  */
-function getNormalizedTitle(song) {
+function getNormalizedTitleLocal(song) {
     cacheNormalizedSongData(song);
     return song._normalizedTitle;
 }
@@ -1133,7 +1133,7 @@ function getNormalizedTitle(song) {
  * @param {Object} song - Объект песни
  * @returns {string} Очищенный текст
  */
-function getCleanedLyrics(song) {
+function getCleanedLyricsLocal(song) {
     cacheNormalizedSongData(song);
     return song._cleanedLyrics;
 }
@@ -1143,7 +1143,7 @@ function getCleanedLyrics(song) {
  * @param {Object} song - Объект песни
  * @returns {string} Нормализованный текст
  */
-function getNormalizedLyrics(song) {
+function getNormalizedLyricsLocal(song) {
     cacheNormalizedSongData(song);
     return song._normalizedLyrics;
 }
@@ -1189,7 +1189,7 @@ window.getCleanedLyrics = getCleanedLyrics;
 function getHighlightedTextFragment(text, query, contextLength = 100) {
     if (!text || !query) return '';
     
-    const normalizedQuery = normalizeSearchQuery(query);
+    const normalizedQuery = normalizeSearchQueryLocal(query);
     const queryWords = normalizedQuery.split(' ').filter(w => w.length > 1);
     
     if (queryWords.length === 0) return '';
@@ -1292,14 +1292,14 @@ async function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOn
             console.error('❌ Ошибка Web Worker overlay поиска, fallback:', error);
             
             // Fallback: стандартный поиск
-            const query = normalizeSearchQuery(searchTerm);
+            const query = normalizeSearchQueryLocal(searchTerm);
             filteredSongs = filteredSongs.filter(song => {
                 // Поиск по названию (с кэшированием)
-                const normalizedTitle = getNormalizedTitle(song);
+                const normalizedTitle = getNormalizedTitleLocal(song);
                 const titleMatch = normalizedTitle.includes(query);
                 
                 // Поиск по тексту песни (с кэшированием)
-                const normalizedLyrics = getNormalizedLyrics(song);
+                const normalizedLyrics = getNormalizedLyricsLocal(song);
                 const lyricsMatch = normalizedLyrics.includes(query);
                 
                 return titleMatch || lyricsMatch;
@@ -1307,8 +1307,8 @@ async function filterAndDisplaySongs(searchTerm = '', category = '', showAddedOn
             
             // Умная сортировка для fallback
             filteredSongs.sort((a, b) => {
-                const aNormalizedTitle = getNormalizedTitle(a);
-                const bNormalizedTitle = getNormalizedTitle(b);
+                const aNormalizedTitle = getNormalizedTitleLocal(a);
+                const bNormalizedTitle = getNormalizedTitleLocal(b);
                 const aTitleMatch = aNormalizedTitle.includes(query);
                 const bTitleMatch = bNormalizedTitle.includes(query);
                 const aTitleStartsWith = aNormalizedTitle.startsWith(query);
@@ -1695,7 +1695,7 @@ function setupEventListeners() {
             return;
         }
         
-        const query = normalizeSearchQuery(rawQuery);
+        const query = normalizeSearchQueryLocal(rawQuery);
         if(!query) {
             if(ui.searchResults) ui.searchResults.innerHTML = '';
             return;
@@ -1760,11 +1760,11 @@ function setupEventListeners() {
             // Стандартный поиск
             allResults = state.allSongs.filter(song => {
                 // Поиск по названию (с кэшированием)
-                const normalizedTitle = getNormalizedTitle(song);
+                const normalizedTitle = getNormalizedTitleLocal(song);
                 const titleMatch = normalizedTitle.includes(query);
                 
                 // Поиск по тексту песни (с кэшированием)
-                const normalizedLyrics = getNormalizedLyrics(song);
+                const normalizedLyrics = getNormalizedLyricsLocal(song);
                 const lyricsMatch = normalizedLyrics.includes(query);
                 
                 return titleMatch || lyricsMatch;
@@ -1772,8 +1772,8 @@ function setupEventListeners() {
             
             // Умная сортировка: начинающиеся → содержащие в названии → по тексту
             allResults.sort((a, b) => {
-                const aNormalizedTitle = getNormalizedTitle(a);
-                const bNormalizedTitle = getNormalizedTitle(b);
+                const aNormalizedTitle = getNormalizedTitleLocal(a);
+                const bNormalizedTitle = getNormalizedTitleLocal(b);
                 const aTitleMatch = aNormalizedTitle.includes(query);
                 const bTitleMatch = bNormalizedTitle.includes(query);
                 const aTitleStartsWith = aNormalizedTitle.startsWith(query);
