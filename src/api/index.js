@@ -323,7 +323,7 @@ export async function removeSongFromSetlist(setlistId, songId) {
 }
 
 // ====================================
-// VOCALISTS API
+// VOCALISTS & REPERTOIRE API
 // ====================================
 
 /**
@@ -332,6 +332,7 @@ export async function removeSongFromSetlist(setlistId, songId) {
  */
 export async function loadVocalists() {
     try {
+        console.log("Загрузка списка вокалистов...");
         const querySnapshot = await getDocs(vocalistsCollection);
         const vocalists = [];
         
@@ -343,9 +344,118 @@ export async function loadVocalists() {
         });
         
         console.log(`✅ Загружено ${vocalists.length} вокалистов`);
+        console.log("Список вокалистов успешно загружен.");
         return vocalists;
     } catch (error) {
         console.error('❌ Ошибка загрузки вокалистов:', error);
+        throw error;
+    }
+}
+
+/**
+ * Загружает репертуар вокалиста с использованием callback для обновления UI
+ * @param {string} vocalistId - ID вокалиста
+ * @param {Function} onRepertoireUpdate - Callback для обновления UI
+ */
+export async function loadRepertoire(vocalistId, onRepertoireUpdate) {
+    try {
+        // Импортируем state для управления подписками
+        const state = await import('../../state.js');
+        
+        if (state.currentRepertoireUnsubscribe) {
+            state.currentRepertoireUnsubscribe();
+        }
+        
+        if (!vocalistId) {
+            onRepertoireUpdate({ data: [], error: null });
+            return;
+        }
+        
+        console.log(`📊 Загрузка репертуара для вокалиста: ${vocalistId}`);
+        const repertoireColRef = collection(db, "vocalists", vocalistId, "repertoire");
+        const q = query(repertoireColRef);
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            if (vocalistId !== state.currentVocalistId) return;
+            const songsData = snapshot.docs.map(doc => ({ 
+                ...doc.data(), 
+                repertoireDocId: doc.id 
+            }));
+            console.log(`✅ Загружено ${songsData.length} песен в репертуаре`);
+            onRepertoireUpdate({ data: songsData, error: null });
+        }, (error) => {
+            console.error(`!!! ОШИБКА Firestore onSnapshot для репертуара ${vocalistId}:`, error);
+            onRepertoireUpdate({ data: [], error });
+        });
+        
+        state.setCurrentRepertoireUnsubscribe(unsubscribe);
+    } catch (error) {
+        console.error('❌ Ошибка загрузки репертуара:', error);
+        onRepertoireUpdate({ data: [], error });
+    }
+}
+
+/**
+ * Добавляет или обновляет песню в репертуаре вокалиста
+ * @param {string} vocalistId - ID вокалиста
+ * @param {Object} song - Объект песни
+ * @param {string} preferredKey - Выбранная тональность
+ * @returns {Promise<Object>} Результат операции
+ */
+export async function addToRepertoire(vocalistId, song, preferredKey) {
+    try {
+        const repertoireCol = collection(db, 'vocalists', vocalistId, 'repertoire');
+        const q = query(repertoireCol, where("name", "==", song.name));
+
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            // Песня найдена, проверяем тональность
+            const repertoireDoc = querySnapshot.docs[0];
+            if (repertoireDoc.data().preferredKey !== preferredKey) {
+                // Обновляем тональность
+                await updateDoc(repertoireDoc.ref, { preferredKey: preferredKey });
+                console.log(`✅ Тональность песни "${song.name}" обновлена на ${preferredKey}`);
+                return { status: 'updated', key: preferredKey };
+            } else {
+                console.log(`ℹ️ Песня "${song.name}" уже есть в репертуаре с тональностью ${preferredKey}`);
+                return { status: 'exists', key: preferredKey };
+            }
+        } else {
+            // Песня не найдена, добавляем новую
+            const docRef = doc(db, 'vocalists', vocalistId, 'repertoire', song.id);
+            await setDoc(docRef, {
+                name: song.name,
+                sheet: song.sheet,
+                preferredKey: preferredKey,
+                addedAt: serverTimestamp()
+            });
+            console.log(`✅ Песня "${song.name}" добавлена в репертуар с тональностью ${preferredKey}`);
+            return { status: 'added', key: preferredKey };
+        }
+    } catch (error) {
+        console.error(`❌ Ошибка добавления песни в репертуар:`, error);
+        throw error;
+    }
+}
+
+/**
+ * Удаляет песню из репертуара вокалиста
+ * @param {string} vocalistId - ID вокалиста
+ * @param {string} repertoireDocId - ID документа в репертуаре
+ * @returns {Promise<void>}
+ */
+export async function removeFromRepertoire(vocalistId, repertoireDocId) {
+    if (!vocalistId || !repertoireDocId) {
+        throw new Error('vocalistId и repertoireDocId обязательны');
+    }
+    
+    try {
+        const docRef = doc(db, 'vocalists', vocalistId, 'repertoire', repertoireDocId);
+        await deleteDoc(docRef);
+        console.log(`✅ Песня удалена из репертуара вокалиста ${vocalistId}`);
+    } catch (error) {
+        console.error(`❌ Ошибка удаления песни из репертуара:`, error);
         throw error;
     }
 }
@@ -372,7 +482,10 @@ export const metadata = {
         'deleteSetlist',
         'addSongToSetlist',
         'removeSongFromSetlist',
-        'loadVocalists'
+        'loadVocalists',
+        'loadRepertoire',
+        'addToRepertoire',
+        'removeFromRepertoire'
     ],
     collections: [
         'songs',

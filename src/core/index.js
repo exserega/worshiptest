@@ -81,7 +81,10 @@ export {
   deleteSetlist,
   addSongToSetlist,
   removeSongFromSetlist,
-  loadVocalists
+  loadVocalists,
+  loadRepertoire,
+  addToRepertoire,
+  removeFromRepertoire
 } from '../api/index.js';
 
 // Транспонирование и обработка текста
