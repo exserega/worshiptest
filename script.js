@@ -258,6 +258,9 @@ function showMobileSongPreview(song) {
     overlay.classList.add('show');
     document.body.classList.add('overlay-active');
     
+    // Убеждаемся что обработчики кнопок подключены
+    setupMobileOverlayEventListeners();
+    
     console.log('✅ Мобильный overlay показан');
 }
 
@@ -304,18 +307,94 @@ function displaySongTextInMobileOverlay(song, selectedKey) {
     console.log(`🎵 Транспонирование: ${originalKey} → ${selectedKey}`);
     
     if (selectedKey !== originalKey) {
-        // Используем функцию транспонирования
-        const transposition = getTransposition(originalKey, selectedKey);
-        songText = transposeLyrics(songText, transposition);
+        // Используем функцию транспонирования из core модуля
+        const transposition = core.getTransposition(originalKey, selectedKey);
+        songText = core.transposeLyrics(songText, transposition);
         console.log('✅ Транспонирование выполнено');
     } else {
         console.log('⚪ Транспонирование не требуется');
     }
     
     // Обрабатываем и отображаем
-    const processedLyrics = processLyrics(songText);
+    const processedLyrics = core.processLyrics(songText);
     songTextElement.innerHTML = processedLyrics;
     console.log('📝 Текст песни отображен в mobile overlay');
+}
+
+/**
+ * Настройка обработчиков событий для мобильного overlay
+ */
+function setupMobileOverlayEventListeners() {
+    console.log('🔧 Настройка обработчиков для мобильного overlay');
+    
+    // Кнопка закрытия
+    const closeBtn = document.getElementById('close-mobile-song-preview');
+    if (closeBtn) {
+        // Удаляем старые обработчики
+        closeBtn.replaceWith(closeBtn.cloneNode(true));
+        const newCloseBtn = document.getElementById('close-mobile-song-preview');
+        
+        newCloseBtn.addEventListener('click', () => {
+            console.log('❌ Кнопка закрытия мобильного overlay нажата');
+            hideMobileSongPreview();
+        });
+        console.log('✅ Обработчик кнопки закрытия подключен');
+    } else {
+        console.error('❌ Кнопка close-mobile-song-preview не найдена');
+    }
+    
+    // Кнопка добавления
+    const addBtn = document.getElementById('add-song-to-setlist-mobile');
+    if (addBtn) {
+        // Удаляем старые обработчики
+        addBtn.replaceWith(addBtn.cloneNode(true));
+        const newAddBtn = document.getElementById('add-song-to-setlist-mobile');
+        
+        newAddBtn.addEventListener('click', async () => {
+            console.log('🎵 Кнопка "Добавить" нажата в мобильном overlay');
+            if (currentMobileSong) {
+                const selectedKey = document.getElementById('mobile-key-selector').value;
+                console.log('📝 Добавляем песню:', currentMobileSong.name, 'в тональности:', selectedKey);
+                
+                try {
+                    await addSongToSetlist(currentMobileSong, selectedKey);
+                    console.log('✅ Песня успешно добавлена');
+                    hideMobileSongPreview();
+                    showNotification('✅ Песня добавлена в сет-лист', 'success');
+                } catch (error) {
+                    console.error('❌ Ошибка добавления песни:', error);
+                    showNotification('❌ Ошибка добавления песни', 'error');
+                }
+            }
+        });
+        console.log('✅ Обработчик кнопки добавления подключен');
+    } else {
+        console.error('❌ Кнопка add-song-to-setlist-mobile не найдена');
+    }
+    
+    // Селектор тональности
+    const keySelector = document.getElementById('mobile-key-selector');
+    if (keySelector) {
+        // Удаляем старые обработчики
+        keySelector.replaceWith(keySelector.cloneNode(true));
+        const newKeySelector = document.getElementById('mobile-key-selector');
+        
+        // Восстанавливаем выбранное значение
+        if (currentMobileSong) {
+            const originalKey = getSongKey(currentMobileSong);
+            newKeySelector.value = originalKey;
+        }
+        
+        newKeySelector.addEventListener('change', (e) => {
+            console.log('🎵 Смена тональности на:', e.target.value);
+            if (currentMobileSong) {
+                displaySongTextInMobileOverlay(currentMobileSong, e.target.value);
+            }
+        });
+        console.log('✅ Обработчик селектора тональности подключен');
+    } else {
+        console.error('❌ Селектор mobile-key-selector не найден');
+    }
 }
 
 // --- HANDLERS ---
@@ -2372,60 +2451,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
 
     
-    // Обработчики событий для мобильного overlay
+    // Обработчики событий для мобильного overlay теперь настраиваются динамически
+    // в функции setupMobileOverlayEventListeners() при открытии overlay
     document.addEventListener('DOMContentLoaded', () => {
-        // Закрытие overlay
-        const closeBtn = document.getElementById('close-mobile-song-preview');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                console.log('❌ Кнопка закрытия мобильного overlay нажата');
-                hideMobileSongPreview();
-            });
-        } else {
-            console.error('❌ Кнопка close-mobile-song-preview не найдена');
-        }
-        
-        // Изменение тональности
-        const keySelector = document.getElementById('mobile-key-selector');
-        if (keySelector) {
-            keySelector.addEventListener('change', (e) => {
-                if (currentMobileSong) {
-                    displaySongTextInMobileOverlay(currentMobileSong, e.target.value);
-                }
-            });
-        }
-        
-        // Добавление песни в сет-лист
-        const addBtn = document.getElementById('add-song-to-setlist-mobile');
-        if (addBtn) {
-            addBtn.addEventListener('click', async () => {
-                console.log('🎵 Кнопка "Добавить" нажата в мобильном overlay');
-                if (currentMobileSong) {
-                    const selectedKey = document.getElementById('mobile-key-selector').value;
-                    console.log('📝 Добавляем песню:', currentMobileSong.name, 'в тональности:', selectedKey);
-                    
-                    try {
-                        await addSongToSetlist(currentMobileSong, selectedKey);
-                        console.log('✅ Песня успешно добавлена');
-                        hideMobileSongPreview();
-                        showNotification('✅ Песня добавлена в сет-лист', 'success');
-                    } catch (error) {
-                        console.error('❌ Ошибка добавления песни:', error);
-                        showNotification('❌ Ошибка добавления песни', 'error');
-                    }
-                }
-            });
-        }
-        
-        // Закрытие по клику на overlay (вне контента)
-        const overlay = document.getElementById('mobile-song-preview-overlay');
-        if (overlay) {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    hideMobileSongPreview();
-                }
-            });
-        }
         
         // ===== ОБРАБОТЧИКИ ДЛЯ DROPDOWN ПОИСКА =====
         
