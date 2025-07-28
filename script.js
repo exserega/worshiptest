@@ -2060,3 +2060,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 });
+
+// ===== GLOBAL EXPORTS FOR TEMPORARY COMPATIBILITY =====
+// Экспортируем функции в глобальную область для совместимости с модулями
+if (typeof window !== 'undefined') {
+    window.addSongToSetlist = addSongToSetlist;
+    window.confirmAddSongWithKey = confirmAddSongWithKey;
+}
