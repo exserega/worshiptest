@@ -287,7 +287,16 @@ export async function filterAndDisplaySongs(searchTerm = '', category = '', show
     }
     
     // Используем State Manager с fallback к старому state
-    const allSongs = stateManager.getAllSongs().length > 0 ? stateManager.getAllSongs() : window.state?.allSongs || [];
+    const stateManagerSongs = stateManager.getAllSongs();
+    const windowStateSongs = window.state?.allSongs || [];
+    
+    console.log('🔍 [DEBUG] stateManager.getAllSongs() length:', stateManagerSongs.length);
+    console.log('🔍 [DEBUG] window.state?.allSongs length:', windowStateSongs.length);
+    
+    const allSongs = stateManagerSongs.length > 0 ? stateManagerSongs : windowStateSongs;
+    console.log('🔍 [DEBUG] Selected allSongs source:', stateManagerSongs.length > 0 ? 'stateManager' : 'window.state');
+    console.log('🔍 [DEBUG] Final allSongs length:', allSongs.length);
+    
     let filteredSongs = allSongs;
     
     // Фильтр по поиску через Web Worker (если есть поисковый запрос)
