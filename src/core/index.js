@@ -14,6 +14,18 @@
 export { default as eventBus, EventBus } from './event-bus.js';
 export { default as stateManager, StateManager } from './state-manager.js';
 
+// UI Components
+export { 
+  elements as domElements,
+  validateDOMElements,
+  getElement,
+  isElementVisible,
+  setElementVisibility,
+  addClass,
+  removeClass,
+  toggleClass
+} from '../ui/dom-refs.js';
+
 // Транспонирование и обработка текста
 export { 
   getTransposition, 
@@ -155,7 +167,8 @@ export const metadata = {
   description: 'Central export for all core modules',
   modules: [
     'event-bus',
-    'state-manager', 
+    'state-manager',
+    'dom-refs',
     'transposition',
     'song-parser',
     'metronome',
@@ -164,6 +177,9 @@ export const metadata = {
   exports: [
     'eventBus',
     'stateManager',
+    'domElements',
+    'validateDOMElements',
+    'getElement',
     'getTransposition',
     'transposeLyrics',
     'processLyrics',
