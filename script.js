@@ -33,8 +33,8 @@ import {
   updateKeyButtons,
   performOverlayDropdownSearch,
   cleanLyricsForSearch,
-  filterAndDisplaySongs,
-  startAddingSongs,
+  filterAndDisplaySongs as filterAndDisplaySongsModule,
+  startAddingSongs as startAddingSongsModule,
   closeAddSongsOverlay as closeAddSongsOverlayModule
 } from './src/core/index.js';
 
@@ -1928,11 +1928,16 @@ if (typeof window !== 'undefined') {
     });
     
     // ТЕСТОВЫЕ ФУНКЦИИ - экспортируем новые модульные функции для тестирования
-    window.startAddingSongsModule = startAddingSongs;
+    window.startAddingSongsModule = startAddingSongsModule;  // Новая функция
     window.closeAddSongsOverlay = closeAddSongsOverlayOld;  // Старая функция
     window.closeAddSongsOverlayModule = closeAddSongsOverlayModule;  // Новая функция
+    window.filterAndDisplaySongsModule = filterAndDisplaySongsModule;  // Новая функция
     console.log('🧪 [TEST] Модульные функции Setlist Manager доступны в window');
-    console.log('🧪 [TEST] Попробуйте: window.startAddingSongsModule("edit", "setlistId", "setlistName")');
-    console.log('🧪 [TEST] Старая функция: window.startAddingSongs');
-    console.log('🧪 [TEST] Новая функция: window.startAddingSongsModule');
+    console.log('🧪 [TEST] Старые функции:');
+    console.log('🧪 [TEST] - window.startAddingSongs (старая)');
+    console.log('🧪 [TEST] - window.closeAddSongsOverlay (старая)');
+    console.log('🧪 [TEST] Новые функции:');
+    console.log('🧪 [TEST] - window.startAddingSongsModule (новая)');
+    console.log('🧪 [TEST] - window.closeAddSongsOverlayModule (новая)');
+    console.log('🧪 [TEST] - window.filterAndDisplaySongsModule (новая)');
 }
