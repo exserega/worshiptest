@@ -27,6 +27,9 @@
 @import url('./styles/color-system.css');
 @import url('./styles/spacing-system.css');
 @import url('./styles/cursor-navigation.css');
+@import url('./styles/ai-visual-context.css');
+@import url('./styles/ai-memory-system.css');
+@import url('./styles/ai-validation.css');
 @import url('./styles/base.css');
 @import url('./styles/header.css');
 @import url('./styles/headings.css');
