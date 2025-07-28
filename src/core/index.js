@@ -41,7 +41,6 @@ export {
 // Song display functionality
 export {
   displaySongDetails,
-  displaySongTextInMobileOverlay,
   createSongListItem,
   displaySongsList,
   toggleChordsVisibility,
