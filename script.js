@@ -58,6 +58,9 @@ import {
     cleanLyricsForSearch,
     getHighlightedTextFragment,
     filterAndDisplaySongs as filterAndDisplaySongsModule,
+    getNormalizedTitle,
+    getNormalizedLyrics,
+    getCleanedLyrics,
     
     // Setlist functions  
     startAddingSongs as startAddingSongsModule,
@@ -93,6 +96,9 @@ window.ui = ui;
 window.cleanLyricsForSearch = cleanLyricsForSearch;
 window.getHighlightedTextFragment = getHighlightedTextFragment;
 window.filterAndDisplaySongsModule = filterAndDisplaySongsModule;
+window.getNormalizedTitle = getNormalizedTitle;
+window.getNormalizedLyrics = getNormalizedLyrics;
+window.getCleanedLyrics = getCleanedLyrics;
 
 // Setlist functions
 window.startAddingSongsModule = startAddingSongsModule;
