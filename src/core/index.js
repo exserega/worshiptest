@@ -257,6 +257,23 @@ export {
     metadata as setlistManagerMetadata
 } from '../ui/setlist-manager.js';
 
+// Modal Manager exports
+export {
+    showNotification,
+    showSuccess,
+    showError,
+    showWarning,
+    showInfo,
+    showModal,
+    closeModal,
+    closeAllModals,
+    showConfirmDialog,
+    showToast,
+    isModalOpen,
+    getOpenModals,
+    metadata as modalManagerMetadata
+} from '../ui/modal-manager.js';
+
 /**
  * Core modules metadata
  * @readonly

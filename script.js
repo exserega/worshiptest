@@ -42,8 +42,8 @@ import {
 // ====================================
 // RESTRUCTURE STAGE INDICATOR
 // ====================================
-console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 5.3 - DEBUGGING CACHE v2');
-console.log('📋 Current Stage: UI Component Migration - Search Manager DONE');
+console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 5.4 - MODAL MANAGER');
+console.log('📋 Current Stage: UI Component Migration - Modal Manager CREATED');
 console.log('🔧 Event Bus: ✅ Integrated');
 console.log('🗃️ State Manager: ✅ Integrated');
 console.log('⚙️ Core Index: ✅ Created');
@@ -54,8 +54,10 @@ console.log('🛠️ UI Utils: ✅ Created');
 console.log('🔌 API Module: ✅ Created (saveSongEdit FIXED)');
 console.log('🎭 Overlay Manager: ✅ Created (mobile preview, key selection)');
 console.log('🔍 Search Manager: ✅ Created (overlay search, filtering, highlighting)');
-console.log('🧪 Testing: All search functions migrated to dedicated module');
-console.log('📊 Commit: Stage 5.2 - Search Manager Module COMPLETED');
+console.log('🎵 Setlist Manager: ✅ Created (song addition, display filtering)');
+console.log('🎭 Modal Manager: ✅ Created (notifications, dialogs, modals)');
+console.log('🧪 Testing: All UI components migrated to dedicated modules');
+console.log('📊 Commit: Stage 5.4 - Modal Manager Module COMPLETED');
 console.log('=====================================');
 
 // --- UTILITY FUNCTIONS ---
@@ -1936,6 +1938,31 @@ if (typeof window !== 'undefined') {
     // Импортируем cleanLyricsForSearch из модуля и экспортируем глобально
     import('./src/core/index.js').then(({ cleanLyricsForSearch: cleanLyricsForSearchModule }) => {
         window.cleanLyricsForSearch = cleanLyricsForSearchModule;
+    });
+    
+    // Импортируем Modal Manager функции для совместимости
+    import('./src/core/index.js').then(({ 
+        showNotification: showNotificationModule,
+        showSuccess: showSuccessModule,
+        showError: showErrorModule,
+        showWarning: showWarningModule,
+        showConfirmDialog: showConfirmDialogModule,
+        showToast: showToastModule 
+    }) => {
+        window.showNotificationModule = showNotificationModule;
+        window.showSuccessModule = showSuccessModule;
+        window.showErrorModule = showErrorModule;
+        window.showWarningModule = showWarningModule;
+        window.showConfirmDialogModule = showConfirmDialogModule;
+        window.showToastModule = showToastModule;
+        
+        console.log('🎭 [TEST] Modal Manager функции доступны в window');
+        console.log('🎭 [TEST] - window.showNotificationModule (новая)');
+        console.log('🎭 [TEST] - window.showSuccessModule (новая)');
+        console.log('🎭 [TEST] - window.showErrorModule (новая)');
+        console.log('🎭 [TEST] - window.showWarningModule (новая)');
+        console.log('🎭 [TEST] - window.showConfirmDialogModule (новая)');
+        console.log('🎭 [TEST] - window.showToastModule (новая)');
     });
     
     // ТЕСТОВЫЕ ФУНКЦИИ - экспортируем новые модульные функции для тестирования
