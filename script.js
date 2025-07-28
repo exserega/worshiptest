@@ -12,16 +12,17 @@ import * as metronomeUI from './metronome.js';
 import searchWorkerManager from './src/js/workers/workerManager.js';
 import { getTransposition, transposeLyrics, processLyrics, highlightChords } from './src/js/core/transposition.js';
 import eventBus from './src/core/event-bus.js';
+import stateManager from './src/core/state-manager.js';
 
 // ====================================
 // RESTRUCTURE STAGE INDICATOR
 // ====================================
-console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 2.3');
-console.log('📋 Current Stage: State Manager Created');
+console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 2.4');
+console.log('📋 Current Stage: State Manager Integration');
 console.log('🔧 Event Bus: ✅ Integrated');
-console.log('🗃️ State Manager: ✅ Created');
-console.log('🧪 Testing: Event Bus + State Manager');
-console.log('📊 Commit: Stage 2.3 - State Manager for centralized data management');
+console.log('🗃️ State Manager: ✅ Integrated');
+console.log('🧪 Testing: Hybrid state management (State Manager + fallback)');
+console.log('📊 Commit: Stage 2.4 - State Manager integration with fallback');
 console.log('=====================================');
 
 // --- UTILITY FUNCTIONS ---
@@ -65,7 +66,9 @@ async function performOverlayDropdownSearch(searchTerm) {
     try {
         // Используем Web Worker для поиска если доступен
         if (window.searchWorkerManager && typeof window.searchWorkerManager.overlaySearch === 'function') {
-            const { results } = await window.searchWorkerManager.overlaySearch(searchTerm, state.allSongs, {
+            // Используем State Manager с fallback к старому state
+            const allSongs = stateManager.getAllSongs().length > 0 ? stateManager.getAllSongs() : state.allSongs;
+            const { results } = await window.searchWorkerManager.overlaySearch(searchTerm, allSongs, {
                 enablePrioritySearch: true
             });
             
@@ -78,7 +81,8 @@ async function performOverlayDropdownSearch(searchTerm) {
         } else {
             // Fallback: обычный поиск
             const query = normalizeSearchQuery(searchTerm);
-            let matchingSongs = state.allSongs.filter(song => {
+            const allSongs = stateManager.getAllSongs().length > 0 ? stateManager.getAllSongs() : state.allSongs;
+            let matchingSongs = allSongs.filter(song => {
                 const titleMatch = getNormalizedTitle(song).includes(query);
                 const lyricsMatch = getNormalizedLyrics(song).includes(query);
                 return titleMatch || lyricsMatch;
@@ -754,8 +758,9 @@ async function startAddingSongs(mode = 'create', targetSetlistId = null, targetS
     
     console.log('Overlay shown, addedSongsToCurrentSetlist cleared');
     
-    // Загружаем все песни если еще не загружены
-    if (state.allSongs.length === 0) {
+        // Загружаем все песни если еще не загружены (проверяем оба хранилища)
+    const currentSongs = stateManager.getAllSongs().length > 0 ? stateManager.getAllSongs() : state.allSongs;
+    if (currentSongs.length === 0) {
         try {
             await songsApi.loadAllSongsFromFirestore();
         } catch (error) {
@@ -763,12 +768,13 @@ async function startAddingSongs(mode = 'create', targetSetlistId = null, targetS
             showNotification('❌ Ошибка загрузки песен', 'error');
         }
     }
-    
+
     // Заполняем фильтр категорий
     populateCategoryFilter();
-    
-    // Отображаем все песни
-    displaySongsGrid(state.allSongs, '');
+
+    // Отображаем все песни (используем актуальные данные)
+    const allSongs = stateManager.getAllSongs().length > 0 ? stateManager.getAllSongs() : state.allSongs;
+    displaySongsGrid(allSongs, '');
 }
 
 function populateCategoryFilter() {
