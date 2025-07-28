@@ -24,6 +24,9 @@
 
 /* Импорт модулей CSS в правильном порядке */
 @import url('./styles/variables.css');
+@import url('./styles/color-system.css');
+@import url('./styles/spacing-system.css');
+@import url('./styles/cursor-navigation.css');
 @import url('./styles/base.css');
 @import url('./styles/header.css');
 @import url('./styles/headings.css');

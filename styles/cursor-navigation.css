@@ -1,0 +1,97 @@
+/* ======================================== */
+/* CURSOR AI NAVIGATION SYSTEM             */
+/* ======================================== */
+/*
+ * ЦЕЛЬ: Помочь Cursor AI быстро находить нужные стили
+ * ПРИНЦИП: Четкие маркеры и индекс для навигации
+ */
+
+/* === NAVIGATION INDEX === */
+/*
+🎯 БЫСТРАЯ НАВИГАЦИЯ ДЛЯ CURSOR AI:
+
+📁 ОСНОВНЫЕ КОМПОНЕНТЫ:
+   🔍 SEARCH_STYLES → styles/components.css:1-50
+   🎵 SONG_DISPLAY → styles/song-display.css:1-100
+   🎭 PRESENTATION → styles/presentation.css:1-200
+   🎮 BUTTONS → styles/buttons.css:1-81
+   📱 PANELS → styles/panels.css:1-300
+   🎨 MODALS → styles/modals.css:1-400
+
+📱 АДАПТИВНОСТЬ:
+   📱 MOBILE_BREAKPOINTS → styles/responsive.css:1-100
+   📱 TABLET_BREAKPOINTS → styles/responsive.css:400-600
+   📱 DESKTOP_BREAKPOINTS → styles/responsive.css:700-883
+
+🎨 ЦВЕТА И ТЕМЫ:
+   🌙 DARK_THEME → styles/variables.css:1-25
+   ☀️ LIGHT_THEME → styles/variables.css:26-58
+   🎨 COLOR_SYSTEM → styles/color-system.css:1-90
+
+⚙️ СПЕЦИАЛЬНЫЕ ФУНКЦИИ:
+   🎼 METRONOME → styles/metronome.css:1-954
+   📝 FORMS → styles/forms.css:1-200
+   🏷️ HEADERS → styles/headings.css:1-100
+*/
+
+/* === CURSOR AI SEARCH MARKERS === */
+/*
+ПОИСК ПО МАРКЕРАМ:
+
+🔍 Найти стили кнопки:
+   /* CURSOR_MARKER: BUTTON_[название] */
+
+🔍 Найти размеры элемента:
+   /* CURSOR_MARKER: SIZE_[элемент] */
+
+🔍 Найти цвета компонента:
+   /* CURSOR_MARKER: COLOR_[компонент] */
+
+🔍 Найти адаптивность:
+   /* CURSOR_MARKER: RESPONSIVE_[элемент] */
+*/
+
+/* === COMPONENT LOCATION MAP === */
+/*
+КАРТА РАСПОЛОЖЕНИЯ КОМПОНЕНТОВ:
+
+🎮 КНОПКИ:
+   - Основные кнопки: styles/buttons.css:6-20
+   - Иконки кнопки: styles/buttons.css:22-30
+   - Кнопки панелей: styles/panels.css:100-150
+
+📱 ПАНЕЛИ:
+   - Сетлисты: styles/panels.css:1-100
+   - Репертуар: styles/panels.css:200-300
+   - Мои песни: styles/panels.css:300-400
+
+🎵 ОТОБРАЖЕНИЕ ПЕСЕН:
+   - Основное: styles/song-display.css:1-50
+   - Блоки песен: styles/components.css:30-100
+   - Аккорды: styles/song-display.css:100-200
+
+📱 МОБИЛЬНАЯ ВЕРСИЯ:
+   - Основные стили: styles/responsive.css:1-200
+   - Панели: styles/responsive.css:300-500
+   - Кнопки: styles/responsive.css:600-800
+*/
+
+/* === QUICK REFERENCE FOR CURSOR === */
+/*
+БЫСТРАЯ СПРАВКА:
+
+❓ Как изменить размер кнопки?
+   → styles/buttons.css:6-20 (padding, font-size)
+
+❓ Как изменить цвет иконки?
+   → Используй var(--icon-primary) из color-system.css
+
+❓ Как сделать элемент больше на мобильном?
+   → styles/responsive.css + медиа-запрос @media (max-width: 768px)
+
+❓ Как изменить отступы в панели?
+   → styles/panels.css + найди класс панели
+
+❓ Как поменять размер шрифта?
+   → styles/variables.css:20-25 (--font-xs до --font-xl)
+*/

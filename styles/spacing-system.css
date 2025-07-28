@@ -1,0 +1,148 @@
+/* ======================================== */
+/* SPACING & SIZING SYSTEM - Agape Worship */
+/* ======================================== */
+/*
+ * ЦЕЛЬ: Единая система размеров для легкого масштабирования
+ * ПРИНЦИП: Базовая единица 4px, логичная прогрессия
+ * ДЛЯ CURSOR AI: Простые правила изменения размеров
+ */
+
+/* === BASE SPACING UNIT === */
+:root {
+    /* Базовая единица - 4px */
+    --space-unit: 4px;
+    
+    /* === SPACING SCALE === */
+    --space-xs: calc(var(--space-unit) * 1);   /* 4px */
+    --space-sm: calc(var(--space-unit) * 2);   /* 8px */
+    --space-md: calc(var(--space-unit) * 3);   /* 12px */
+    --space-lg: calc(var(--space-unit) * 4);   /* 16px */
+    --space-xl: calc(var(--space-unit) * 6);   /* 24px */
+    --space-xxl: calc(var(--space-unit) * 8);  /* 32px */
+    
+    /* === COMPONENT SIZES === */
+    --size-button-sm: calc(var(--space-unit) * 8);   /* 32px */
+    --size-button-md: calc(var(--space-unit) * 10);  /* 40px */
+    --size-button-lg: calc(var(--space-unit) * 12);  /* 48px */
+    
+    --size-icon-sm: calc(var(--space-unit) * 4);     /* 16px */
+    --size-icon-md: calc(var(--space-unit) * 5);     /* 20px */
+    --size-icon-lg: calc(var(--space-unit) * 6);     /* 24px */
+    
+    /* === BORDER RADIUS SCALE === */
+    --radius-sm: calc(var(--space-unit) * 1);   /* 4px */
+    --radius-md: calc(var(--space-unit) * 2);   /* 8px */
+    --radius-lg: calc(var(--space-unit) * 3);   /* 12px */
+    --radius-xl: calc(var(--space-unit) * 4);   /* 16px */
+}
+
+/* === UTILITY CLASSES FOR CURSOR AI === */
+
+/* PADDING UTILITIES */
+.p-xs { padding: var(--space-xs) !important; }
+.p-sm { padding: var(--space-sm) !important; }
+.p-md { padding: var(--space-md) !important; }
+.p-lg { padding: var(--space-lg) !important; }
+.p-xl { padding: var(--space-xl) !important; }
+
+.px-xs { padding-left: var(--space-xs) !important; padding-right: var(--space-xs) !important; }
+.px-sm { padding-left: var(--space-sm) !important; padding-right: var(--space-sm) !important; }
+.px-md { padding-left: var(--space-md) !important; padding-right: var(--space-md) !important; }
+.px-lg { padding-left: var(--space-lg) !important; padding-right: var(--space-lg) !important; }
+
+.py-xs { padding-top: var(--space-xs) !important; padding-bottom: var(--space-xs) !important; }
+.py-sm { padding-top: var(--space-sm) !important; padding-bottom: var(--space-sm) !important; }
+.py-md { padding-top: var(--space-md) !important; padding-bottom: var(--space-md) !important; }
+.py-lg { padding-top: var(--space-lg) !important; padding-bottom: var(--space-lg) !important; }
+
+/* MARGIN UTILITIES */
+.m-xs { margin: var(--space-xs) !important; }
+.m-sm { margin: var(--space-sm) !important; }
+.m-md { margin: var(--space-md) !important; }
+.m-lg { margin: var(--space-lg) !important; }
+.m-xl { margin: var(--space-xl) !important; }
+
+.mx-xs { margin-left: var(--space-xs) !important; margin-right: var(--space-xs) !important; }
+.mx-sm { margin-left: var(--space-sm) !important; margin-right: var(--space-sm) !important; }
+.mx-md { margin-left: var(--space-md) !important; margin-right: var(--space-md) !important; }
+
+.my-xs { margin-top: var(--space-xs) !important; margin-bottom: var(--space-xs) !important; }
+.my-sm { margin-top: var(--space-sm) !important; margin-bottom: var(--space-sm) !important; }
+.my-md { margin-top: var(--space-md) !important; margin-bottom: var(--space-md) !important; }
+
+/* GAP UTILITIES */
+.gap-xs { gap: var(--space-xs) !important; }
+.gap-sm { gap: var(--space-sm) !important; }
+.gap-md { gap: var(--space-md) !important; }
+.gap-lg { gap: var(--space-lg) !important; }
+
+/* SIZE UTILITIES */
+.btn-sm { 
+    height: var(--size-button-sm) !important;
+    padding: var(--space-xs) var(--space-md) !important;
+    font-size: var(--font-sm) !important;
+}
+.btn-md { 
+    height: var(--size-button-md) !important;
+    padding: var(--space-sm) var(--space-lg) !important;
+    font-size: var(--font-md) !important;
+}
+.btn-lg { 
+    height: var(--size-button-lg) !important;
+    padding: var(--space-md) var(--space-xl) !important;
+    font-size: var(--font-lg) !important;
+}
+
+.icon-sm { 
+    width: var(--size-icon-sm) !important;
+    height: var(--size-icon-sm) !important;
+    font-size: var(--size-icon-sm) !important;
+}
+.icon-md { 
+    width: var(--size-icon-md) !important;
+    height: var(--size-icon-md) !important;
+    font-size: var(--size-icon-md) !important;
+}
+.icon-lg { 
+    width: var(--size-icon-lg) !important;
+    height: var(--size-icon-lg) !important;
+    font-size: var(--size-icon-lg) !important;
+}
+
+/* === CURSOR AI SCALING GUIDELINES === */
+/*
+ПРАВИЛА МАСШТАБИРОВАНИЯ ДЛЯ CURSOR AI:
+
+🎯 РАЗМЕРЫ КНОПОК:
+   - Маленькие: .btn-sm (32px высота)
+   - Средние: .btn-md (40px высота) 
+   - Большие: .btn-lg (48px высота)
+
+🎯 ОТСТУПЫ:
+   - Очень маленькие: var(--space-xs) = 4px
+   - Маленькие: var(--space-sm) = 8px
+   - Средние: var(--space-md) = 12px
+   - Большие: var(--space-lg) = 16px
+   - Очень большие: var(--space-xl) = 24px
+
+🎯 ИКОНКИ:
+   - Маленькие: .icon-sm (16px)
+   - Средние: .icon-md (20px)
+   - Большие: .icon-lg (24px)
+
+🎯 КАК УВЕЛИЧИТЬ/УМЕНЬШИТЬ:
+   1. Для кнопки: измени .btn-sm → .btn-md → .btn-lg
+   2. Для отступов: измени var(--space-sm) → var(--space-md)
+   3. Для иконок: измени .icon-sm → .icon-md
+   4. Для gap: измени .gap-sm → .gap-md
+
+🚫 НЕ ДЕЛАЙ:
+   - НЕ используй магические числа (padding: 13px)
+   - НЕ смешивай px и rem без системы
+   - НЕ создавай новые размеры без переменных
+
+✅ ДЕЛАЙ:
+   - Используй переменные --space-* и --size-*
+   - Применяй utility классы .p-md, .m-lg
+   - Следуй системе 4px базовой единицы
+*/

@@ -1,0 +1,91 @@
+/* ======================================== */
+/* SEMANTIC COLOR SYSTEM - Agape Worship   */
+/* ======================================== */
+/* 
+ * ЦЕЛЬ: Устранить путаницу с цветами в темах
+ * ПРИНЦИП: Семантические имена вместо прямых цветов
+ * ДЛЯ CURSOR AI: Четкие правила для каждого элемента
+ */
+
+/* === БАЗОВЫЕ ЦВЕТОВЫЕ РОЛИ === */
+:root {
+    /* === SURFACE COLORS (Поверхности) === */
+    --surface-primary: var(--background-color);
+    --surface-secondary: var(--container-background-color);
+    --surface-elevated: var(--hover-color);
+    
+    /* === TEXT COLORS (Текст) === */
+    --text-primary: var(--text-color);
+    --text-secondary: var(--label-color);
+    --text-accent: var(--primary-color);
+    --text-danger: var(--danger-color);
+    --text-on-primary: var(--button-text-color);
+    
+    /* === ICON COLORS (Иконки) === */
+    --icon-primary: var(--text-color);
+    --icon-secondary: var(--label-color);
+    --icon-accent: var(--primary-color);
+    --icon-on-primary: var(--button-text-color);
+    --icon-on-surface: var(--text-color);
+    
+    /* === BUTTON COLORS (Кнопки) === */
+    --btn-primary-bg: var(--primary-color);
+    --btn-primary-text: var(--button-text-color);
+    --btn-secondary-bg: transparent;
+    --btn-secondary-text: var(--text-color);
+    --btn-secondary-border: var(--border-color);
+    
+    /* === INTERACTIVE COLORS (Интерактивные элементы) === */
+    --interactive-hover: var(--hover-color);
+    --interactive-active: var(--primary-color);
+    --interactive-focus: var(--accent-color);
+    
+    /* === SEMANTIC OVERRIDES FOR LIGHT THEME === */
+}
+
+body[data-theme="light"] {
+    /* Переопределения для светлой темы если нужны */
+    --icon-secondary: #64748b; /* Более контрастные иконки на светлом */
+}
+
+/* === UTILITY CLASSES FOR CURSOR AI === */
+/* Четкие классы для использования в коде */
+
+.text-primary { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-accent { color: var(--text-accent) !important; }
+.text-on-primary { color: var(--text-on-primary) !important; }
+
+.icon-primary { color: var(--icon-primary) !important; }
+.icon-secondary { color: var(--icon-secondary) !important; }
+.icon-accent { color: var(--icon-accent) !important; }
+.icon-on-primary { color: var(--icon-on-primary) !important; }
+
+.bg-primary { background-color: var(--btn-primary-bg) !important; }
+.bg-secondary { background-color: var(--surface-secondary) !important; }
+
+/* === CURSOR AI GUIDELINES === */
+/*
+ПРАВИЛА ДЛЯ CURSOR AI:
+
+1. НИКОГДА не используй:
+   - color: white
+   - color: black  
+   - color: #ffffff
+   - color: #000000
+
+2. ВСЕГДА используй:
+   - color: var(--text-primary) - для основного текста
+   - color: var(--text-secondary) - для вторичного текста
+   - color: var(--icon-primary) - для иконок
+   - color: var(--text-on-primary) - для текста на цветном фоне
+
+3. ДЛЯ ИКОНОК НА КНОПКАХ:
+   - Основные кнопки: var(--icon-on-primary)
+   - Вторичные кнопки: var(--icon-primary)
+   - Акцентные элементы: var(--icon-accent)
+
+4. ПРОВЕРКА КОНТРАСТНОСТИ:
+   - Светлая тема: темные иконки на светлом фоне
+   - Темная тема: светлые иконки на темном фоне
+*/
