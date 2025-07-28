@@ -33,7 +33,9 @@ import {
   updateKeyButtons,
   performOverlayDropdownSearch,
   cleanLyricsForSearch,
-  filterAndDisplaySongs
+  filterAndDisplaySongs,
+  startAddingSongs,
+  closeAddSongsOverlay
 } from './src/core/index.js';
 
 // ====================================

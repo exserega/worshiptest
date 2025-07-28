@@ -245,6 +245,18 @@ export {
     metadata as searchManagerMetadata
 } from '../ui/search-manager.js';
 
+// Setlist Manager exports
+export {
+    startAddingSongs,
+    closeAddSongsOverlay,
+    addSongToSetlist,
+    confirmAddSongWithKey,
+    getCurrentCreatedSetlistId,
+    getCurrentCreatedSetlistName,
+    setCurrentCreatedSetlist,
+    metadata as setlistManagerMetadata
+} from '../ui/setlist-manager.js';
+
 /**
  * Core modules metadata
  * @readonly
