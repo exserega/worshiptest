@@ -293,10 +293,8 @@ export async function filterAndDisplaySongs(searchTerm = '', category = '', show
     const importedStateManagerSongs = stateManager?.getAllSongs() || [];
     const importedStateSongs = state?.allSongs || [];
     
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] window.state?.allSongs length:', globalStateSongs.length);
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] window.stateManager?.getAllSongs() length:', globalStateManagerSongs.length);
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] imported stateManager?.getAllSongs() length:', importedStateManagerSongs.length);
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] imported state?.allSongs length:', importedStateSongs.length);
+    // Диагностические логи (можно удалить после стабилизации)
+    console.log('🔍 [DEBUG] Data sources - window.state:', globalStateSongs.length, 'imported state:', importedStateSongs.length);
     
     // Выбираем первый непустой источник
     let allSongs = [];
@@ -316,8 +314,7 @@ export async function filterAndDisplaySongs(searchTerm = '', category = '', show
         selectedSource = 'imported state.allSongs';
     }
     
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] Selected source:', selectedSource);
-    console.log('🚨🚨🚨 [CRITICAL DEBUG] Final allSongs length:', allSongs.length);
+    console.log('🔍 [DEBUG] Selected source:', selectedSource, 'with', allSongs.length, 'songs');
     
     let filteredSongs = allSongs;
     

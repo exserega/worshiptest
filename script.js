@@ -532,10 +532,8 @@ function refreshSongsDisplay() {
     const currentCategory = ui.categoryFilter ? ui.categoryFilter.value : '';
     const showAddedOnly = ui.showAddedOnly ? ui.showAddedOnly.classList.contains('active') : false;
     
-    console.log('🔄 [DEBUG] refreshSongsDisplay called:');
-    console.log('🔄 [DEBUG] currentSearch:', currentSearch);
-    console.log('🔄 [DEBUG] currentCategory:', currentCategory);
-    console.log('🔄 [DEBUG] showAddedOnly:', showAddedOnly);
+    // Диагностические логи (можно удалить после стабилизации)
+    console.log('🔄 [DEBUG] refreshSongsDisplay:', {currentSearch, currentCategory, showAddedOnly});
     
     filterAndDisplaySongsModule(currentSearch, currentCategory, showAddedOnly);
 }
