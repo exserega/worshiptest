@@ -218,6 +218,23 @@ export const STRUCTURE_MARKERS = [
 // MODULE METADATA
 // ====================================
 
+// Overlay Manager exports
+export {
+    showMobileSongPreview,
+    hideMobileSongPreview,
+    displaySongTextInMobileOverlay,
+    setupMobileOverlayEventListeners,
+    closeKeySelectionModal,
+    showKeySelectionModal,
+    updateSongTextInModal,
+    updateKeyButtons,
+    getCurrentMobileSong,
+    getCurrentSongForKey,
+    getCurrentSelectedKey,
+    setCurrentSelectedKey,
+    metadata as overlayManagerMetadata
+} from '../ui/overlay-manager.js';
+
 /**
  * Core modules metadata
  * @readonly
@@ -233,6 +250,7 @@ export const metadata = {
     'search',
     'song-display',
     'ui-utils',
+    'overlay-manager',
     'api',
     'transposition',
     'song-parser',
@@ -250,6 +268,14 @@ export const metadata = {
     'processLyrics',
     'highlightChords',
     'wrapSongBlocks',
+    'showMobileSongPreview',
+    'hideMobileSongPreview',
+    'displaySongTextInMobileOverlay',
+    'setupMobileOverlayEventListeners',
+    'closeKeySelectionModal',
+    'showKeySelectionModal',
+    'updateSongTextInModal',
+    'updateKeyButtons',
     'isMobileDevice',
     'normalizeSearchQuery',
     'getNormalizedTitle',

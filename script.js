@@ -22,14 +22,22 @@ import {
   getCleanedLyrics,
   getSongKey,
   normalizeSearchQuery,
-  isMobileDevice as isMobileCore
+  isMobileDevice as isMobileCore,
+  showMobileSongPreview,
+  hideMobileSongPreview,
+  displaySongTextInMobileOverlay,
+  setupMobileOverlayEventListeners,
+  closeKeySelectionModal,
+  showKeySelectionModal,
+  updateSongTextInModal,
+  updateKeyButtons
 } from './src/core/index.js';
 
 // ====================================
 // RESTRUCTURE STAGE INDICATOR
 // ====================================
-console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 4 - FINAL');
-console.log('📋 Current Stage: Complete Modular Architecture');
+console.log('🏗️ AGAPE WORSHIP - RESTRUCTURE STAGE 5.1');
+console.log('📋 Current Stage: UI Component Migration - Overlay Manager');
 console.log('🔧 Event Bus: ✅ Integrated');
 console.log('🗃️ State Manager: ✅ Integrated');
 console.log('⚙️ Core Index: ✅ Created');
@@ -38,8 +46,9 @@ console.log('🔍 Search Module: ✅ Created');
 console.log('📺 Song Display: ✅ Created');
 console.log('🛠️ UI Utils: ✅ Created');
 console.log('🔌 API Module: ✅ Created (saveSongEdit FIXED)');
-console.log('🧪 Testing: Complete modular architecture');
-console.log('📊 Commit: Stage 4 - API Layer Complete + saveSongEdit Fixed');
+console.log('🎭 Overlay Manager: ✅ Created (mobile preview, key selection)');
+console.log('🧪 Testing: Overlay functions migrated to dedicated module');
+console.log('📊 Commit: Stage 5.1 - Overlay Manager Module Created');
 console.log('=====================================');
 
 // --- UTILITY FUNCTIONS ---
@@ -250,9 +259,7 @@ function createOverlaySearchResultElement(song, query) {
 
 
 
-// ===== MOBILE PREVIEW FUNCTIONS (MOVED UP FOR HOISTING) =====
-
-let currentMobileSong = null;
+// ===== OVERLAY FUNCTIONS MOVED TO src/ui/overlay-manager.js =====
 
 /**
  * Показ мобильного overlay для просмотра песни
