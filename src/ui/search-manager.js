@@ -367,10 +367,20 @@ export async function filterAndDisplaySongs(searchTerm = '', category = '', show
         console.log('🔍 filterAndDisplaySongs: showAddedOnly=true');
         console.log('🔍 addedSongs size:', addedSongs.size);
         console.log('🔍 addedSongs contents:', Array.from(addedSongs));
-        filteredSongs = filteredSongs.filter(song => 
-            addedSongs.has(song.id)
-        );
+        console.log('🔍 Total songs before filter:', filteredSongs.length);
+        console.log('🔍 First 3 song IDs in filteredSongs:', filteredSongs.slice(0, 3).map(s => s.id));
+        
+        filteredSongs = filteredSongs.filter(song => {
+            const hasMatch = addedSongs.has(song.id);
+            if (hasMatch) {
+                console.log('🎯 MATCH FOUND:', song.id, song.name);
+            }
+            return hasMatch;
+        });
         console.log('🔍 Filtered songs count:', filteredSongs.length);
+        if (filteredSongs.length > 0) {
+            console.log('🔍 Filtered songs:', filteredSongs.map(s => ({id: s.id, name: s.name})));
+        }
     }
     
     // Вызываем displaySongsGrid через глобальную область

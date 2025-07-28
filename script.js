@@ -35,7 +35,8 @@ import {
   cleanLyricsForSearch,
   filterAndDisplaySongs as filterAndDisplaySongsModule,
   startAddingSongs as startAddingSongsModule,
-  closeAddSongsOverlay as closeAddSongsOverlayModule
+  closeAddSongsOverlay as closeAddSongsOverlayModule,
+  hideOverlaySearchResults
 } from './src/core/index.js';
 
 // ====================================
