@@ -247,37 +247,78 @@ window.handleMainSearch = function() {
     }
 };
 
-// ВОССТАНАВЛИВАЕМ РЕАЛЬНУЮ ФУНКЦИОНАЛЬНОСТЬ ПАНЕЛЕЙ
-window.toggleSetlistsPanel = async function() {
-    console.log('📋 [Legacy] toggleSetlistsPanel called');
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ИЗ ОРИГИНАЛА
+window.addedSongsToCurrentSetlist = new Set();
+
+// ДОБАВЛЯЕМ НЕДОСТАЮЩУЮ ФУНКЦИЮ displaySongsGrid ИЗ ОРИГИНАЛА
+window.displaySongsGrid = function(songs, searchTerm = '') {
+    console.log('🎵 [Legacy] displaySongsGrid called with', songs.length, 'songs');
     
-    if (!ui.setlistsPanel || !ui.toggleSetlistsButton) {
-        console.error('📋 [Legacy] UI elements not found');
+    if (!ui.songsGrid) {
+        console.error('🎵 [Legacy] ui.songsGrid not found');
         return;
     }
     
-    try {
-        const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
-        
-        // Закрываем все панели
-        if (typeof ui.closeAllSidePanels === 'function') {
-            ui.closeAllSidePanels();
-        }
-        
-        if (!isAlreadyOpen) {
-            ui.toggleSetlistsButton.classList.add('loading');
-            ui.setlistsPanel.classList.add('open');
-            
-            // Вызываем refreshSetlists (нужно создать)
-            await window.refreshSetlists();
-        }
-    } catch (error) {
-        console.error('📋 [Legacy] Error:', error);
-    } finally {
-        if (ui.toggleSetlistsButton) {
-            ui.toggleSetlistsButton.classList.remove('loading');
-        }
+    if (!songs || songs.length === 0) {
+        ui.songsGrid.innerHTML = `
+            <div class="loading-state">
+                <i class="fas fa-music"></i>
+                <p>Песни не найдены</p>
+            </div>
+        `;
+        return;
     }
+    
+    ui.songsGrid.innerHTML = '';
+    
+    songs.forEach(song => {
+        // Проверяем добавлена ли песня (используем глобальную переменную)
+        const isAdded = window.addedSongsToCurrentSetlist && window.addedSongsToCurrentSetlist.has(song.id);
+        
+        // Получаем правильную тональность из данных песни
+        const originalKey = window.getSongKeyLocal ? window.getSongKeyLocal(song) : (song['Оригинальная тональность'] || 'C');
+        
+        // Проверяем, есть ли поиск по тексту
+        let textFragment = '';
+        if (searchTerm) {
+            const normalizedQuery = window.normalizeSearchQuery ? window.normalizeSearchQuery(searchTerm) : searchTerm.toLowerCase();
+            const titleMatch = song.name.toLowerCase().includes(normalizedQuery);
+            
+            // Если не найдено в названии, ищем в тексте
+            if (!titleMatch) {
+                const cleanedLyrics = song['Текст и аккорды'] || '';
+                
+                if (cleanedLyrics) {
+                    textFragment = window.getHighlightedTextFragment ? 
+                        window.getHighlightedTextFragment(cleanedLyrics, searchTerm, 80) : 
+                        cleanedLyrics.substring(0, 80) + '...';
+                }
+            }
+        }
+        
+        const songCard = document.createElement('div');
+        songCard.className = `song-card ${isAdded ? 'added' : ''}`;
+        songCard.innerHTML = `
+            <div class="song-card-header">
+                <div>
+                    <h4 class="song-title">${song.name}</h4>
+                    <div class="song-category">${song.sheet || 'Без категории'}</div>
+                    <div class="song-key-display">
+                        Тональность: <span class="song-key-badge">${originalKey}</span>
+                    </div>
+                    ${textFragment ? `<div class="song-text-fragment">${textFragment}</div>` : ''}
+                </div>
+                <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
+                    <i class="fas fa-${isAdded ? 'check' : 'plus'}"></i>
+                    ${isAdded ? 'Добавлена' : 'Добавить'}
+                </button>
+            </div>
+        `;
+        
+        ui.songsGrid.appendChild(songCard);
+    });
+    
+    console.log('🎵 [Legacy] displaySongsGrid completed, rendered', songs.length, 'songs');
 };
 
 window.toggleMyListPanel = async function() {

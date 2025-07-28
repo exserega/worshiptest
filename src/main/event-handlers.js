@@ -424,11 +424,18 @@ function setupSetlistEventHandlers() {
         }
     });
     
-    // Переключение панелей
+    // Переключение панелей - ТОЧНО КАК В ОРИГИНАЛЕ
     if (ui.toggleSetlistsButton) {
         ui.toggleSetlistsButton.addEventListener('click', async () => {
-            if (typeof window.toggleSetlistsPanel === 'function') {
-                await window.toggleSetlistsPanel();
+            console.log('📋 [EventHandlers] Setlists button clicked');
+            const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
+            if (!isAlreadyOpen) {
+                ui.toggleSetlistsButton.classList.add('loading');
+                ui.setlistsPanel.classList.add('open');
+                await window.refreshSetlists();
+                ui.toggleSetlistsButton.classList.remove('loading');
+            } else {
+                ui.closeAllSidePanels();
             }
         });
     }
