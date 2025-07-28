@@ -190,6 +190,26 @@ window.showChordsOnly = function() {
     }
 };
 
+// МИНИМАЛЬНАЯ функция поиска - НЕ ТРОГАЕМ СЛОЖНУЮ ЛОГИКУ!
+window.handleMainSearch = function() {
+    console.log('🔍 [Legacy] handleMainSearch called - STUB');
+    // Пока просто заглушка, чтобы не было ошибок
+    // Основной поиск работал раньше, оставляем как есть
+};
+
+// МИНИМАЛЬНЫЕ заглушки для панелей - НЕ ЛОМАЕМ НИЧЕГО!
+window.toggleSetlistsPanel = function() {
+    console.log('📋 [Legacy] toggleSetlistsPanel - STUB');
+};
+
+window.toggleMyListPanel = function() {
+    console.log('⭐ [Legacy] toggleMyListPanel - STUB');
+};
+
+window.toggleRepertoirePanel = function() {
+    console.log('🎭 [Legacy] toggleRepertoirePanel - STUB');
+};
+
 // ====================================
 // 🚀 APPLICATION STARTUP
 // ====================================
