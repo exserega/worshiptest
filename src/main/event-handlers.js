@@ -995,6 +995,8 @@ function setupSongEventHandlers() {
     console.log('🎼 [EventHandlers] setupSongEventHandlers');
     
     // Кнопка добавления песни в сетлист
+    // ВРЕМЕННО ОТКЛЮЧЕНО - используется радикальное решение в script.js
+    /*
     if (ui.addToSetlistButton) {
         console.log('📋 [EventHandlers] Add to setlist button found, attaching handler');
         ui.addToSetlistButton.addEventListener('click', async () => {
@@ -1008,6 +1010,8 @@ function setupSongEventHandlers() {
     } else {
         console.warn('⚠️ [EventHandlers] Add to setlist button not found');
     }
+    */
+    console.log('📋 [EventHandlers] Add to setlist button handler SKIPPED - using radical fix');
     
     // Обработчик обновления сет-листа
     window.addEventListener('setlist-updated', async (event) => {

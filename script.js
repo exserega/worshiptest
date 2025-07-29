@@ -695,61 +695,73 @@ window.showNotification = function(message, type = 'info') {
     }, 3000);
 };
 
-// Простой тест - ждем загрузку и добавляем обработчик напрямую
-window.addEventListener('load', () => {
-    console.log('🚀 [Debug] Window loaded, waiting 1 second...');
-    
-    setTimeout(() => {
-        const btn = document.getElementById('add-to-setlist-button');
-        console.log('🎯 [Debug] Looking for add-to-setlist-button...');
-        console.log('🎯 [Debug] Button found:', btn);
+// РАДИКАЛЬНОЕ РЕШЕНИЕ - полностью переопределяем кнопку после загрузки всего
+let fixButtonInterval = setInterval(() => {
+    const btn = document.getElementById('add-to-setlist-button');
+    if (btn) {
+        console.log('🔧 [FIX] Found button, fixing it...');
         
-        if (btn) {
-            // Удаляем все существующие обработчики
-            const newBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn, btn);
+        // Полностью заменяем кнопку на новую
+        const newBtn = document.createElement('button');
+        newBtn.id = 'add-to-setlist-button';
+        newBtn.className = btn.className;
+        newBtn.innerHTML = btn.innerHTML;
+        newBtn.setAttribute('aria-label', btn.getAttribute('aria-label'));
+        newBtn.setAttribute('title', btn.getAttribute('title'));
+        
+        // Делаем её яркой для теста
+        newBtn.style.backgroundColor = '#ff0000';
+        newBtn.style.color = '#ffffff';
+        newBtn.style.border = '3px solid #ffff00';
+        newBtn.style.cursor = 'pointer';
+        newBtn.style.position = 'relative';
+        newBtn.style.zIndex = '99999';
+        
+        // Простой обработчик
+        newBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
             
-            // Добавляем новый простой обработчик
-            newBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('🔥🔥🔥 [Debug] BUTTON CLICKED! 🔥🔥🔥');
-                console.log('🔥 [Debug] handleAddSongToSetlist exists?', typeof window.handleAddSongToSetlist);
-                
-                if (window.handleAddSongToSetlist) {
-                    window.handleAddSongToSetlist();
+            console.log('🎉🎉🎉 NEW BUTTON CLICKED! 🎉🎉🎉');
+            
+            // Проверяем, выбрана ли песня
+            const songSelect = document.getElementById('song-select');
+            if (!songSelect || !songSelect.value) {
+                alert('Сначала выберите песню!');
+                return;
+            }
+            
+            // Вызываем функцию напрямую
+            if (window.handleAddSongToSetlist) {
+                window.handleAddSongToSetlist();
+            } else if (window.openSetlistSelector) {
+                // Если handleAddSongToSetlist не работает, пробуем напрямую
+                const songId = songSelect.value;
+                const songData = window.state?.allSongs?.find(s => s.id === songId);
+                if (songData) {
+                    window.openSetlistSelector(songData);
                 } else {
-                    console.error('❌ handleAddSongToSetlist not found!');
+                    alert('Песня не найдена!');
                 }
-            });
-            
-            // Делаем кнопку очень заметной
-            newBtn.style.backgroundColor = 'red';
-            newBtn.style.color = 'white';
-            newBtn.style.border = '5px solid yellow';
-            newBtn.style.fontSize = '20px';
-            newBtn.style.zIndex = '99999';
-            newBtn.style.position = 'relative';
-            
-            console.log('✅ [Debug] New handler attached to button!');
-            console.log('✅ [Debug] Button should be RED with YELLOW border now');
-        } else {
-            console.error('❌ [Debug] Button not found!');
-            
-            // Попробуем найти все кнопки
-            const allBtns = document.querySelectorAll('button');
-            console.log('🔍 [Debug] Total buttons on page:', allBtns.length);
-            
-            allBtns.forEach(b => {
-                if (b.textContent.includes('лист') || b.title.includes('лист') || b.id.includes('setlist')) {
-                    console.log('🔍 [Debug] Possible setlist button:', b.id, b.className, b.textContent);
-                }
-            });
-        }
-    }, 1000);
-});
+            } else {
+                alert('Функция добавления в сет-лист не найдена!');
+            }
+        };
+        
+        // Заменяем старую кнопку
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        console.log('✅ [FIX] Button replaced! It should be RED now');
+        clearInterval(fixButtonInterval);
+    }
+}, 500); // Проверяем каждые 500мс
 
-// Этот код удален, так как новый более простой код выше его заменяет
+// Останавливаем через 10 секунд если кнопка не найдена
+setTimeout(() => {
+    clearInterval(fixButtonInterval);
+    console.log('⏱️ [FIX] Stopped looking for button');
+}, 10000);
 
 // ФУНКЦИЯ ДОБАВЛЕНИЯ ПЕСНИ В СЕТ-ЛИСТ
 window.handleAddSongToSetlist = async function() {
