@@ -33,6 +33,7 @@
     font-size: 0.9rem !important;
     background: transparent !important;
     border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
     border-radius: 6px !important;
 }
 
@@ -173,8 +174,16 @@
 
 #add-songs-overlay .filter-btn.active {
     background: var(--primary-color) !important;
-    color: var(--color-button-text) !important;
     border-color: var(--primary-color) !important;
+}
+
+#add-songs-overlay .filter-btn.active span {
+    color: var(--color-button-text) !important;
+}
+
+#add-songs-overlay .filter-btn.active .added-count-badge {
+    background: var(--color-button-text) !important;
+    color: var(--primary-color) !important;
 }
 
 /* === РЕЗУЛЬТАТЫ ПОИСКА - КОМПАКТНЫЕ === */

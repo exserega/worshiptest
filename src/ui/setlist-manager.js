@@ -71,7 +71,7 @@ export async function startAddingSongs(mode = 'create', targetSetlistId = null, 
     }
     
     // Очищаем и инициализируем состояние
-    const addedSongsToCurrentSetlist = window.addedSongsToCurrentSetlist || new Set();
+    const addedSongsToCurrentSetlist = window.addedSongsToCurrentSetlist || new Map();
     addedSongsToCurrentSetlist.clear();
     
     if (ui.addedSongsCount) {
@@ -174,8 +174,8 @@ export async function addSongToSetlist(song, key) {
             console.log('✅ Song added successfully, updating UI...');
             
             // Обновляем локальное состояние
-            const addedSongsToCurrentSetlist = window.addedSongsToCurrentSetlist || new Set();
-            addedSongsToCurrentSetlist.add(song.id);
+            const addedSongsToCurrentSetlist = window.addedSongsToCurrentSetlist || new Map();
+            addedSongsToCurrentSetlist.set(song.id, key); // Сохраняем песню с выбранной тональностью
             
             // Показываем уведомление
             if (typeof window.showNotification === 'function') {

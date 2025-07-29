@@ -250,7 +250,7 @@ window.handleMainSearch = function() {
 // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ИЗ ОРИГИНАЛА - ТОЧНО КАК В РАБОЧЕМ КОДЕ
 window.currentCreatedSetlistId = null;
 window.currentCreatedSetlistName = '';
-window.addedSongsToCurrentSetlist = new Set();
+window.addedSongsToCurrentSetlist = new Map(); // Map для хранения песен с их тональностями
 
 // ДОБАВЛЯЕМ НЕДОСТАЮЩУЮ ФУНКЦИЮ displaySongsGrid ИЗ ОРИГИНАЛА
 window.displaySongsGrid = function(songs, searchTerm = '') {
@@ -276,6 +276,7 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
     songs.forEach(song => {
         // Проверяем добавлена ли песня (используем глобальную переменную)
         const isAdded = window.addedSongsToCurrentSetlist && window.addedSongsToCurrentSetlist.has(song.id);
+        const addedKey = isAdded ? window.addedSongsToCurrentSetlist.get(song.id) : null;
         
         // Получаем правильную тональность из данных песни
         const originalKey = window.getSongKeyLocal ? window.getSongKeyLocal(song) : (song['Оригинальная тональность'] || 'C');
@@ -305,7 +306,7 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
                 <div class="song-info">
                     <h4 class="song-title">${song.name}</h4>
                     <div class="song-meta-info">
-                        <span class="song-key">${originalKey}</span>
+                        <span class="song-key">${addedKey || originalKey}</span>
                         ${song.BPM && song.BPM !== 'NA' ? `<span class="song-bpm"><i class="fas fa-tachometer-alt"></i>${song.BPM}</span>` : ''}
                         <span class="song-category">${song.sheet || 'Без категории'}</span>
                     </div>
