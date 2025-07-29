@@ -885,13 +885,13 @@ function setupSetlistEventHandlers() {
     // Фильтр категорий в оверлее
     const categoryFilter = document.getElementById('category-filter');
     if (categoryFilter) {
-        categoryFilter.addEventListener('change', (e) => {
+        categoryFilter.addEventListener('change', async (e) => {
             console.log('📂 [EventHandlers] Category filter changed:', e.target.value);
             // Применяем фильтр к текущим результатам
-            if (typeof filterAndDisplaySongsModule === 'function') {
-                const searchTerm = document.getElementById('song-search-input')?.value || '';
-                filterAndDisplaySongsModule(searchTerm, e.target.value);
-            }
+            const { filterAndDisplaySongs: filterAndDisplaySongsModule } = await import('../ui/search-manager.js');
+            const searchTerm = document.getElementById('song-search-input')?.value || '';
+            const showAddedOnly = document.getElementById('show-added-only')?.classList.contains('active') || false;
+            filterAndDisplaySongsModule(searchTerm, e.target.value, showAddedOnly);
         });
         console.log('📂 [EventHandlers] Category filter attached');
     }

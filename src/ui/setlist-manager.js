@@ -91,6 +91,11 @@ export async function startAddingSongs(mode = 'create', targetSetlistId = null, 
         ui.addSongsOverlay.classList.add('show');
     }
     
+    // Заполняем фильтр категорий
+    if (typeof window.populateCategoryFilter === 'function') {
+        window.populateCategoryFilter();
+    }
+    
     console.log('🎵 Overlay shown, addedSongsToCurrentSetlist cleared');
     
     // Загружаем все песни если еще не загружены
@@ -103,13 +108,25 @@ export async function startAddingSongs(mode = 'create', targetSetlistId = null, 
         }
     }
     
+    // Сбрасываем фильтр категорий на "Все категории"
+    const categoryFilter = document.getElementById('category-filter');
+    if (categoryFilter) {
+        categoryFilter.value = '';
+    }
+    
+    // Сбрасываем состояние кнопки "Показать добавленные"
+    const showAddedOnlyBtn = document.getElementById('show-added-only');
+    if (showAddedOnlyBtn) {
+        showAddedOnlyBtn.classList.remove('active');
+    }
+    
     // Отображаем песни
     if (typeof window.filterAndDisplaySongs === 'function') {
-        await window.filterAndDisplaySongs();
+        await window.filterAndDisplaySongs('', '');
     } else {
         // Импортируем функцию динамически
         const { filterAndDisplaySongs } = await import('./search-manager.js');
-        await filterAndDisplaySongs();
+        await filterAndDisplaySongs('', '');
     }
     
     console.log('🎵 [SetlistManager] startAddingSongs END');

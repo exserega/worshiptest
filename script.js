@@ -268,6 +268,47 @@ window.updateAddedSongsCount = function() {
     console.log('🔢 [Legacy] Updated counter to:', count);
 };
 
+// Функция заполнения фильтра категорий в overlay
+window.populateCategoryFilter = function() {
+    const categoryFilter = document.getElementById('category-filter');
+    if (!categoryFilter) {
+        console.error('❌ [Legacy] category-filter не найден!');
+        return;
+    }
+    
+    categoryFilter.innerHTML = '<option value="">Все категории</option>';
+    
+    // Используем порядок категорий из constants
+    const SONG_CATEGORIES_ORDER = window.SONG_CATEGORIES_ORDER || [
+        'Поклонение', 'Прославление', 'Причастие', 
+        'Крещение', 'Детские', 'Разное'
+    ];
+    
+    // Сначала добавляем категории в заданном порядке
+    SONG_CATEGORIES_ORDER.forEach(categoryName => {
+        if (state.songsBySheet && state.songsBySheet[categoryName] && state.songsBySheet[categoryName].length > 0) {
+            const option = document.createElement('option');
+            option.value = categoryName;
+            option.textContent = categoryName;
+            categoryFilter.appendChild(option);
+        }
+    });
+    
+    // Затем добавляем остальные категории
+    if (state.songsBySheet) {
+        Object.keys(state.songsBySheet).forEach(categoryName => {
+            if (!SONG_CATEGORIES_ORDER.includes(categoryName)) {
+                const option = document.createElement('option');
+                option.value = categoryName;
+                option.textContent = categoryName;
+                categoryFilter.appendChild(option);
+            }
+        });
+    }
+    
+    console.log('📂 [Legacy] Категории в фильтре обновлены');
+};
+
 // ДОБАВЛЯЕМ НЕДОСТАЮЩУЮ ФУНКЦИЮ displaySongsGrid ИЗ ОРИГИНАЛА
 window.displaySongsGrid = function(songs, searchTerm = '') {
     console.log('🎵 [Legacy] displaySongsGrid called with', songs.length, 'songs');
