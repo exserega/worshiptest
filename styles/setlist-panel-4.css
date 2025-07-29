@@ -233,3 +233,69 @@ body[data-theme="light"] .global-overlay .key-btn,
 body[data-theme="light"] button.key-btn {
     color: #0f172a !important; /* Темный текст для светлой темы */
 }
+
+/* === МОБИЛЬНАЯ ОПТИМИЗАЦИЯ UI СЕКЦИЙ === */
+
+/* Компактные UI секции */
+.ui-section {
+    padding: 10px 12px !important;
+    margin-bottom: 8px !important;
+}
+
+.ui-section:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Заголовки секций без CAPS */
+.section-label {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: var(--label-color) !important;
+    text-transform: none !important;
+    margin-bottom: 6px !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* Компактная кнопка создания */
+.create-btn-modern {
+    padding: 10px !important;
+    min-height: 36px !important;
+    background: var(--primary-color) !important;
+    font-size: 0.875rem !important;
+}
+
+.create-btn-modern:hover {
+    background: var(--color-button-hover-bg) !important;
+}
+
+/* Убираем лишний блеск */
+.btn-shine {
+    display: none !important;
+}
+
+/* Компактный селектор */
+.selector-btn {
+    padding: 8px 12px !important;
+    font-size: 0.875rem !important;
+    min-height: 36px !important;
+}
+
+/* Компактный блок управления */
+.active-section {
+    padding: 8px 12px !important;
+}
+
+.list-status {
+    font-size: 0.8rem !important;
+}
+
+/* Унифицированные кнопки действий */
+.action-btn {
+    padding: 8px 12px !important;
+    font-size: 0.8rem !important;
+    min-height: 32px !important;
+}
+
+.action-btn i {
+    font-size: 0.75rem !important;
+}

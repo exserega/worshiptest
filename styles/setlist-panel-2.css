@@ -4,11 +4,11 @@
 
 /* === СПИСОК ПЕСЕН В SETLIST === */
 
-/* Список песен */
+/* Список песен - оптимизирован для мобильных */
 .songs-list {
     flex: 1;
     overflow-y: auto;
-    padding: 15px;
+    padding: 8px 12px; /* Уменьшены отступы */
     min-height: 0;
     background: var(--background-color);
 }
@@ -16,15 +16,14 @@
 .songs-list .setlist-song-item {
     display: flex;
     align-items: center;
-    padding: 4px 6px;
-    margin-bottom: 2px;
+    padding: 8px 10px; /* Увеличены для лучшего тача */
+    margin-bottom: 4px; /* Больше пространства между элементами */
     background: var(--container-background-color);
     border: 1px solid var(--border-color);
-    border-radius: 2px;
+    border-radius: 6px; /* Более современный радиус */
     transition: all 0.2s ease;
     cursor: pointer;
-    font-size: 0.7rem;
-    color: var(--text-color);
+    position: relative;
 }
 
 .songs-list .setlist-song-item:hover {
@@ -49,41 +48,41 @@
 .song-name {
     font-weight: 600;
     color: var(--text-color);
-    font-size: 0.65rem;
-    display: flex;
-    align-items: center;
-    gap: 3px;
+    font-size: 0.875rem; /* Увеличен для читаемости */
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .song-meta {
     display: flex;
-    gap: 4px;
+    gap: 8px; /* Больше пространства */
     align-items: center;
-    font-size: 0.55rem;
+    font-size: 0.75rem; /* Увеличен размер */
 }
 
 .song-key {
     background: var(--primary-color);
-    color: var(--button-text-color);
-    padding: 1px 3px;
-    border-radius: 1px;
+    color: var(--color-button-text);
+    padding: 2px 6px; /* Больше отступы */
+    border-radius: 4px; /* Более современный радиус */
     font-weight: 600;
-    font-size: 0.5rem;
-    letter-spacing: 0.1px;
+    font-size: 0.7rem; /* Увеличен размер */
 }
 
 .song-bpm {
     display: flex;
     align-items: center;
-    gap: 1px;
+    gap: 4px; /* Больше пространства */
     color: var(--label-color);
     font-weight: 500;
-    font-size: 0.5rem;
+    font-size: 0.7rem; /* Увеличен размер */
 }
 
 .song-bpm i {
     color: var(--primary-color);
-    font-size: 0.5rem;
+    font-size: 0.7rem; /* Увеличен размер */
 }
 
 .song-actions {
@@ -98,25 +97,34 @@
 }
 
 .song-action-btn {
-    padding: 1px 3px;
-    background: var(--container-background-color);
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-color);
     border: 1px solid var(--border-color);
-    border-radius: 1px;
-    color: var(--text-color);
+    border-radius: 4px;
+    color: var(--label-color); /* Менее навязчивый цвет */
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.5rem;
+    font-size: 0.75rem;
 }
 
 .song-action-btn:hover {
-    background: var(--primary-color);
-    color: var(--button-text-color);
+    background: var(--hover-color);
+    color: var(--text-color);
     border-color: var(--primary-color);
+}
+
+.song-action-btn.danger {
+    color: var(--label-color); /* Не красный по умолчанию */
 }
 
 .song-action-btn.danger:hover {
     background: var(--danger-color);
-    color: var(--button-text-color);
+    color: var(--color-error-text);
     border-color: var(--danger-color);
 }
 
