@@ -349,6 +349,8 @@ window.refreshSetlists = async function() {
 window.handleSetlistSelect = function(setlist) {
     console.log('📋 [Legacy] handleSetlistSelect:', setlist.name);
     window.state.setCurrentSetlistId(setlist.id);
+    // ИСПРАВЛЕНО: Устанавливаем также название сетлиста
+    window.state.currentSetlistName = setlist.name;
     ui.displaySelectedSetlist(setlist, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
 };
 
@@ -486,9 +488,9 @@ export const metadata = {
 window.showNotification = function(message, type = 'info') {
     console.log('📢 [EntryPoint] showNotification:', message, type);
     
-    // Используем модульную функцию если доступна
-    if (typeof modal?.showNotification === 'function') {
-        modal.showNotification(message, type);
+    // Используем импортированную модульную функцию - ИСПРАВЛЕНО!
+    if (typeof showNotificationModule === 'function') {
+        showNotificationModule(message, type);
         return;
     }
     
