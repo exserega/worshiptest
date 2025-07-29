@@ -36,17 +36,26 @@
     border-radius: 6px !important;
 }
 
-/* Счетчик добавленных - компактный */
+/* Счетчик добавленных - скрываем в заголовке */
 #add-songs-overlay .added-counter {
-    padding: 4px 8px !important;
-    font-size: 0.75rem !important;
-    border-radius: 12px !important;
-    background: var(--hover-color) !important;
-    border: 1px solid var(--border-color) !important;
+    display: none !important;
 }
 
-#add-songs-overlay .added-counter i {
+/* Бейдж счетчика в кнопке фильтра */
+#add-songs-overlay .added-count-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    padding: 0 4px !important;
+    margin-left: 4px !important;
+    background: var(--primary-color) !important;
+    color: var(--color-button-text) !important;
+    border-radius: 9px !important;
     font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
 }
 
 /* Кнопка "Готово" - в стиле панели */
@@ -116,27 +125,35 @@
 
 #add-songs-overlay .search-filters {
     gap: 6px !important;
+    display: flex !important;
+    flex-wrap: nowrap !important; /* Не переносить на новую строку */
 }
 
 #add-songs-overlay .filter-select,
 #add-songs-overlay .filter-btn {
     height: 34px !important;
-    padding: 0 10px !important;
+    padding: 0 8px !important; /* Еще меньше отступы */
     font-size: 0.8rem !important;
     border-radius: 6px !important;
     min-width: 0 !important;
 }
 
-/* Селект категорий */
+/* Селект категорий - фиксированная ширина */
 #add-songs-overlay .filter-select {
-    flex: 1 !important;
+    flex: 0 0 45% !important; /* Занимает 45% ширины */
     background: var(--background-color) !important;
+    min-width: 120px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
 /* Кнопка фильтра */
 #add-songs-overlay .filter-btn {
     gap: 4px !important;
     white-space: nowrap !important;
+    flex: 1 !important; /* Занимает оставшееся место */
+    position: relative !important;
 }
 
 #add-songs-overlay .filter-btn i {
@@ -314,8 +331,21 @@
         display: none !important; /* Только иконка */
     }
     
-    #add-songs-overlay .filter-btn span {
-        display: none !important; /* Только иконка */
+    /* Селект категорий на маленьких экранах */
+    #add-songs-overlay .filter-select {
+        flex: 0 0 40% !important; /* Еще меньше */
+        font-size: 0.75rem !important;
+        padding: 0 6px !important;
+    }
+    
+    /* Кнопка фильтра - только иконка и бейдж */
+    #add-songs-overlay .filter-btn span:not(.added-count-badge) {
+        display: none !important; /* Скрываем текст, но не бейдж */
+    }
+    
+    #add-songs-overlay .filter-btn {
+        padding: 0 8px !important;
+        min-width: 60px !important;
     }
     
     #add-songs-overlay .song-add-btn span {

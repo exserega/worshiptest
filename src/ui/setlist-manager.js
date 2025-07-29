@@ -77,6 +77,11 @@ export async function startAddingSongs(mode = 'create', targetSetlistId = null, 
     if (ui.addedSongsCount) {
         ui.addedSongsCount.textContent = '0';
     }
+    // Обнуляем бейдж в кнопке фильтра
+    if (ui.addedSongsCountBadge) {
+        ui.addedSongsCountBadge.textContent = '0';
+        ui.addedSongsCountBadge.style.display = 'none';
+    }
     
     // Показываем полноэкранный overlay
     if (ui.targetSetlistName) {
@@ -178,10 +183,16 @@ export async function addSongToSetlist(song, key) {
             }
             
             // Обновляем счетчик
+            const count = addedSongsToCurrentSetlist.size;
             if (ui.addedSongsCount) {
-                ui.addedSongsCount.textContent = addedSongsToCurrentSetlist.size;
-                console.log('Updated counter to:', addedSongsToCurrentSetlist.size);
+                ui.addedSongsCount.textContent = count;
             }
+            // Обновляем бейдж в кнопке фильтра
+            if (ui.addedSongsCountBadge) {
+                ui.addedSongsCountBadge.textContent = count;
+                ui.addedSongsCountBadge.style.display = count > 0 ? 'inline-flex' : 'none';
+            }
+            console.log('Updated counter to:', count);
             
             // Обновляем отображение
             if (typeof window.refreshSongsDisplay === 'function') {

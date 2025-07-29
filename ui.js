@@ -102,6 +102,7 @@ export const addSongsOverlay = document.getElementById('add-songs-overlay');
 export const closeAddSongs = document.getElementById('close-add-songs');
 export const targetSetlistName = document.getElementById('target-setlist-name');
 export const addedSongsCount = document.getElementById('added-songs-count');
+export const addedSongsCountBadge = document.getElementById('added-songs-count-badge');
 export const finishAddingSongs = document.getElementById('finish-adding-songs');
 export const songSearchInput = document.getElementById('song-search-input');
 export const clearSearch = document.getElementById('clear-search');
