@@ -312,13 +312,13 @@
 
 .close-metronome-btn:hover {
     background: var(--danger-color);
-    color: var(--color-error-text);
+    color: white;
     border-color: var(--danger-color);
     transform: translateY(-50%);
 }
 
 .close-metronome-btn:hover i {
-    color: var(--color-error-text);
+    color: white;
 }
 
 /* ======================================== */
@@ -609,13 +609,13 @@ body[data-theme="light"] .metronome-play-toggle {
 
 body[data-theme="dark"] .metronome-button,
 body[data-theme="dark"] .metronome-play-toggle {
-    color: var(--color-text-primary) !important;
+    color: #ffffff !important;
 }
 
 /* Fix close button hover states */
 body[data-theme="light"] .close-metronome-btn:hover i,
 body[data-theme="dark"] .close-metronome-btn:hover i {
-    color: var(--color-error-text) !important;
+    color: white !important;
 }
 
 /* Fix play button hover states */
@@ -843,7 +843,7 @@ body[data-theme="light"] .metronome-modal {
     }
     
     .close-metronome-btn:hover i {
-        color: var(--color-error-text);
+        color: white;
     }
     
     .bpm-input-large {

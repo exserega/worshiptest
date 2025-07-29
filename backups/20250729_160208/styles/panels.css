@@ -185,14 +185,14 @@
 #setlists-panel #delete-setlist-button {
     background: var(--danger-color) !important; /* Ярко-красный фон */
     border: none !important;                 /* Убираем границу, если есть */
-    color: var(--color-error-text) !important;  /* Семантический цвет для ошибок/удаления */
+    color: white !important;                 /* Белый текст */
     /* Убираем тень, если она есть у базовой кнопки и мешает */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
 #setlists-panel #delete-setlist-button:hover {
     background: color-mix(in srgb, var(--danger-color) 85%, black) !important; /* Чуть темнее при наведении */
-    color: var(--color-error-text) !important;
+    color: white !important;
     transform: none !important; /* Отключаем подпрыгивание, если не нужно */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important; /* Небольшая тень при наведении */
 }

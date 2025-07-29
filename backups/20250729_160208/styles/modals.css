@@ -3,7 +3,7 @@
 /* ======================================== */
 
 /* --- Loading Indicator --- */
-#loading-indicator { display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background-color: rgba(40, 40, 40, 0.9); color: var(--color-notification-text); padding: 8px 18px; border-radius: var(--radius); z-index: 1002; font-size: 0.9rem; box-shadow: none; border: 1px solid var(--border-color); }
+#loading-indicator { display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background-color: rgba(40, 40, 40, 0.9); color: white; padding: 8px 18px; border-radius: var(--radius); z-index: 1002; font-size: 0.9rem; box-shadow: none; border: 1px solid var(--border-color); }
 
 /* --- Стили для модального окна --- */
 .modal-overlay {
@@ -222,7 +222,7 @@
 body[data-theme="light"] #copy-text-button.copied {
      background-color: var(--secondary-color) !important;
      border-color: var(--secondary-color) !important;
-     color: var(--color-button-text) !important;
+     color: white !important;
 }
 
 /* --- SONG EDITOR STYLES --- */
@@ -420,7 +420,7 @@ body[data-theme="light"] #copy-text-button.copied {
 
 .editor-button.save {
     background: var(--accent-color);
-    color: var(--color-button-text);
+    color: white;
 }
 
 .editor-button.save:hover {
@@ -438,7 +438,7 @@ body[data-theme="light"] #copy-text-button.copied {
 
 .editor-button.revert {
     background: #e74c3c;
-    color: var(--color-error-text);
+    color: white;
 }
 
 .editor-button.revert:hover {

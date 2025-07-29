@@ -97,16 +97,16 @@ body[data-theme="light"] .presentation-song .chord {
 /* --- КОНЕЦ ИЗМЕНЕНИЙ ДЛЯ ПРЕЗЕНТАЦИИ --- */
 
 /* Управление Презентацией */
-.presentation-close-btn { position: fixed; top: 15px; right: 15px; z-index: 2003; background: var(--presentation-controls-bg); color: var(--presentation-controls-text); border: 1px solid var(--presentation-controls-border); border-radius: 50%; width: 38px; height: 38px; font-size: 1.4rem; line-height: 1; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: none; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+.presentation-close-btn { position: fixed; top: 15px; right: 15px; z-index: 2003; background: rgba(80, 80, 80, 0.8); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; width: 38px; height: 38px; font-size: 1.4rem; line-height: 1; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: none; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
 .presentation-close-btn:hover { background-color: rgba(100, 100, 100, 0.9); border-color: rgba(255, 255, 255, 0.5); }
 .presentation-close-btn:active { background-color: rgba(60, 60, 60, 0.9); }
-.presentation-control-btn { position: fixed; top: 15px; z-index: 2001; background: var(--presentation-controls-bg); color: var(--presentation-controls-text); border: 1px solid var(--presentation-controls-border); border-radius: 50%; width: 38px; height: 38px; font-size: 1rem; line-height: 1; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: none; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+.presentation-control-btn { position: fixed; top: 15px; z-index: 2001; background: rgba(80, 80, 80, 0.8); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; width: 38px; height: 38px; font-size: 1rem; line-height: 1; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: none; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
 .presentation-control-btn:hover { background-color: rgba(100, 100, 100, 0.9); border-color: rgba(255, 255, 255, 0.5); }
 .presentation-control-btn:active { background-color: rgba(60, 60, 60, 0.9); }
 #pres-split-text-btn { right: 63px; }
 /* Стили для светлой темы кнопок презентации */
 body[data-theme="light"] .presentation-close-btn,
-body[data-theme="light"] .presentation-control-btn { background: var(--presentation-controls-bg); color: var(--presentation-controls-text); border: 1px solid var(--presentation-controls-border); }
+body[data-theme="light"] .presentation-control-btn { background: rgba(50, 50, 50, 0.8); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); }
 body[data-theme="light"] .presentation-close-btn:hover,
 body[data-theme="light"] .presentation-control-btn:hover { background-color: rgba(80, 80, 80, 0.9); border-color: rgba(255, 255, 255, 0.4); }
 body[data-theme="light"] .presentation-close-btn:active,

@@ -222,8 +222,8 @@ body[data-theme="light"] .song-block.low-confidence .song-block-legend {
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--color-tooltip-bg);
-    color: var(--color-tooltip-text);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.7rem;
@@ -411,7 +411,7 @@ body[data-theme="light"] .legend-icon-btn.mic i {
 .legend-icon-btn:active {
     transform: translateY(0);
     background: var(--primary-color);
-    color: var(--color-text-inverse);
+    color: white;
 }
 
 .legend-icon-btn i {
