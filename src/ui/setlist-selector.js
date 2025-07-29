@@ -80,6 +80,8 @@ class SetlistSelector {
         this.currentSong = song;
         this.currentSong.selectedKey = key || song.keys?.[0] || 'C';
         
+        console.log('📋 [SetlistSelector] Opening with key:', this.currentSong.selectedKey);
+        
         // Отображаем информацию о песне
         if (this.songNameDisplay) {
             this.songNameDisplay.textContent = song.name || 'Без названия';
@@ -87,6 +89,9 @@ class SetlistSelector {
         
         if (this.songKeyDisplay) {
             this.songKeyDisplay.textContent = this.currentSong.selectedKey;
+            console.log('📋 [SetlistSelector] Key display element:', this.songKeyDisplay);
+        } else {
+            console.error('❌ [SetlistSelector] Key display element not found!');
         }
         
         // Сбрасываем состояние
@@ -109,15 +114,20 @@ class SetlistSelector {
     close() {
         this.overlay?.classList.remove('visible');
         this.currentSong = null;
+        this.selectedSetlistId = null;
         
         // Очищаем форму
         if (this.newNameInput) {
             this.newNameInput.value = '';
+            this.createButton.disabled = true;
         }
-        if (this.dropdown) {
-            this.dropdown.value = '';
+        
+        // Убираем выделение с сет-листов
+        if (this.setlistsGrid) {
+            this.setlistsGrid.querySelectorAll('.setlist-item').forEach(item => {
+                item.classList.remove('selected');
+            });
         }
-        this.updateConfirmButton();
     }
     
     /**

@@ -526,9 +526,10 @@ body[data-theme="light"] #copy-text-button.copied {
     color: var(--text-secondary);
 }
 
-.song-details .song-key span {
+.song-details .song-key #adding-song-key {
     color: var(--primary-color);
     font-weight: 600;
+    font-size: 0.9rem;
 }
 
 /* Секция существующих сет-листов */
