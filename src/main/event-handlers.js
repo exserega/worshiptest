@@ -466,11 +466,16 @@ function setupSetlistEventHandlers() {
                             }
                         );
                         
-                        // КРИТИЧЕСКИ ВАЖНО: Показываем dropdown с сетлистами!
+                        // Показываем dropdown только если сет-лист не выбран
                         const dropdown = document.getElementById('setlist-dropdown-menu');
                         if (dropdown) {
-                            dropdown.classList.add('show');
-                            console.log('📋 [EventHandlers] Dropdown показан для отображения сетлистов');
+                            const currentSetlistId = window.state?.getCurrentSetlistId?.();
+                            if (!currentSetlistId) {
+                                dropdown.classList.add('show');
+                                console.log('📋 [EventHandlers] Dropdown показан - сет-лист не выбран');
+                            } else {
+                                console.log('📋 [EventHandlers] Dropdown скрыт - сет-лист уже выбран');
+                            }
                         } else {
                             console.error('📋 [EventHandlers] setlist-dropdown-menu не найден!');
                         }
