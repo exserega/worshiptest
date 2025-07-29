@@ -13,6 +13,7 @@ let lookahead = 25.0; // Интервал планирования в милли
 let scheduleAheadTime = 0.1; // Насколько вперед планировать аудио (в секундах)
 let timerWorker = null;
 let currentBeatsPerMeasure = 4; // Текущий размер
+let accentEnabled = true; // Включен ли акцент на первой доле
 
 // Настройки звука - более яркий метроном
 const SOUND_CONFIG = {
@@ -114,8 +115,9 @@ function createClick(isAccent, time) {
     try {
         // Выбираем частоты в зависимости от типа звука
         const frequencies = SOUND_CONFIG[currentSoundType] || SOUND_CONFIG.click;
-        const frequency = isAccent ? frequencies.high : frequencies.low;
-        const volume = isAccent ? SOUND_CONFIG.volume.accent : SOUND_CONFIG.volume.normal;
+        // Если акцент отключен, используем низкую частоту для всех долей
+        const frequency = (isAccent && accentEnabled) ? frequencies.high : frequencies.low;
+        const volume = (isAccent && accentEnabled) ? SOUND_CONFIG.volume.accent : SOUND_CONFIG.volume.normal;
         
         // Создаем осциллятор
         const oscillator = audioContext.createOscillator();
@@ -169,7 +171,7 @@ function createClick(isAccent, time) {
         const clickFilter = audioContext.createBiquadFilter();
         
         clickOsc.type = 'sawtooth'; // Более яркий щелчок
-        clickOsc.frequency.value = isAccent ? 150 : 100;
+        clickOsc.frequency.value = (isAccent && accentEnabled) ? 150 : 100;
         
         clickFilter.type = 'bandpass';
         clickFilter.frequency.value = 2000; // Высокочастотный щелчок
@@ -309,6 +311,14 @@ function setSoundType(type) {
 }
 
 /**
+ * Включение/выключение акцента на первой доле
+ */
+function setAccentEnabled(enabled) {
+    accentEnabled = enabled;
+    console.log(`Акцент метронома ${enabled ? 'включен' : 'выключен'}`);
+}
+
+/**
  * Получение состояния метронома
  */
 function getMetronomeState() {
@@ -353,7 +363,8 @@ export {
     toggleMetronome,
     getMetronomeState,
     initAudioOnUserGesture,
-    setSoundType
+    setSoundType,
+    setAccentEnabled
 };
 
 // Экспортируем переменные состояния для совместимости

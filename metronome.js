@@ -39,12 +39,18 @@ class MetronomeController {
             sliderHandle: document.getElementById('bpm-slider-handle'),
             
             // Visual indicator elements
-            beatDotsContainer: document.getElementById('beat-dots-container')
+            beatDotsContainer: document.getElementById('beat-dots-container'),
+            
+            // Settings elements
+            accentCheckbox: document.getElementById('metronome-accent-enabled')
         };
         
         // Visual indicator state
         this.currentVisualBeat = 0;
         this.visualUpdateInterval = null;
+        
+        // Settings state
+        this.accentEnabled = localStorage.getItem('metronome-accent-enabled') !== 'false';
         
         this.init();
     }
@@ -70,6 +76,7 @@ class MetronomeController {
             this.updateDisplay();
             this.updateSliderVisuals();
             this.setupVisualIndicator();
+            this.setupAccentToggle();
             console.log('Metronome initialized successfully');
         } catch (error) {
             console.error('Error initializing metronome:', error);
@@ -532,6 +539,30 @@ class MetronomeController {
         }
         
         this.currentVisualBeat = 0;
+    }
+
+    setupAccentToggle() {
+        if (!this.elements.accentCheckbox) return;
+        
+        // Set initial state
+        this.elements.accentCheckbox.checked = this.accentEnabled;
+        
+        // Listen for changes
+        this.elements.accentCheckbox.addEventListener('change', (e) => {
+            this.accentEnabled = e.target.checked;
+            localStorage.setItem('metronome-accent-enabled', this.accentEnabled);
+            
+            // Update accent mode in core
+            core.setAccentEnabled(this.accentEnabled);
+            
+            // If metronome is running, restart it to apply changes
+            if (this.isActive) {
+                this.restartMetronome();
+            }
+        });
+        
+        // Set initial accent mode in core
+        core.setAccentEnabled(this.accentEnabled);
     }
 }
 

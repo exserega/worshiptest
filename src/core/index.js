@@ -105,7 +105,8 @@ export {
   toggleMetronome,
   getMetronomeState,
   initAudioOnUserGesture,
-  setSoundType
+  setSoundType,
+  setAccentEnabled
 } from '../js/core/metronome.js';
 
 // ====================================

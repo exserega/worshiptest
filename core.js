@@ -16,6 +16,7 @@ import {
     getMetronomeState as getMetronomeStateNew,
     initAudioOnUserGesture as initAudioOnUserGestureNew,
     setSoundType as setSoundTypeNew,
+    setAccentEnabled as setAccentEnabledNew,
     wrapSongBlocks as wrapSongBlocksNew,
     correctBlockType as correctBlockTypeNew,
     demonstrateParser as demonstrateParserNew,
@@ -193,6 +194,7 @@ const toggleMetronome = toggleMetronomeNew;
 const getMetronomeState = getMetronomeStateNew;
 const initAudioOnUserGesture = initAudioOnUserGestureNew;
 const setSoundType = setSoundTypeNew;
+const setAccentEnabled = setAccentEnabledNew;
 
 export {
     getTransposition,
@@ -214,5 +216,6 @@ export {
     getMetronomeState,
     initAudioOnUserGesture,
     setSoundType,
+    setAccentEnabled,
     distributeSongBlocksToColumns
 }; 

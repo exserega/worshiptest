@@ -959,6 +959,89 @@ body[data-theme="light"] .metronome-modal {
 }
 
 /* ======================================== */
+/* Metronome Settings                       */
+/* ======================================== */
+
+.metronome-settings {
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.metronome-accent-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.metronome-accent-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    background: var(--border-color);
+    border-radius: 24px;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.toggle-slider::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.metronome-accent-toggle input[type="checkbox"]:checked + .toggle-slider {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.metronome-accent-toggle input[type="checkbox"]:checked + .toggle-slider::after {
+    transform: translateX(24px);
+    background: #ffffff;
+}
+
+.toggle-label {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.metronome-accent-toggle:hover .toggle-label {
+    color: var(--text-primary);
+}
+
+/* Адаптация под темы */
+[data-theme="light"] .toggle-slider {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .toggle-slider::after {
+    background: #ffffff;
+}
+
+[data-theme="light"] .metronome-accent-toggle input[type="checkbox"]:checked + .toggle-slider {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ======================================== */
 /* Visual Metronome Indicator               */
 /* ======================================== */
 
