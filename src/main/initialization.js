@@ -36,40 +36,12 @@ function setupPanelHandlers() {
                 ui.toggleSetlistsButton.classList.add('loading');
                 try {
                     ui.setlistsPanel.classList.add('open');
-                    // Используем API напрямую - КРИТИЧЕСКИ ВАЖНО!
-                    const setlists = await api.loadSetlists();
-                    console.log('📋 [Initialization] Loaded setlists:', setlists.length);
-                    // Сохраняем в state
-                    if (window.state && typeof window.state.setSetlists === 'function') {
-                        window.state.setSetlists(setlists);
-                    }
-                    // Отображаем сетлисты с правильными обработчиками
-                    if (typeof ui.renderSetlists === 'function') {
-                        ui.renderSetlists(setlists, 
-                            window.handleSetlistSelect || function(setlist) {
-                                console.log('📋 Setlist selected:', setlist.name);
-                                if (window.state) window.state.setCurrentSetlistId(setlist.id);
-                                if (ui.displaySelectedSetlist) {
-                                    ui.displaySelectedSetlist(setlist, 
-                                        window.handleFavoriteOrRepertoireSelect,
-                                        window.handleRemoveSongFromSetlist
-                                    );
-                                }
-                            },
-                            window.handleSetlistDelete || async function(setlistId, setlistName) {
-                                console.log('📋 Delete setlist:', setlistName);
-                                if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
-                                    try {
-                                        await api.deleteSetlist(setlistId);
-                                        // Перезагружаем панель
-                                        ui.toggleSetlistsButton.click();
-                                    } catch (error) {
-                                        console.error('Ошибка удаления:', error);
-                                        alert('Не удалось удалить сет-лист');
-                                    }
-                                }
-                            }
-                        );
+                    // ИСПОЛЬЗУЕМ РАБОЧУЮ ФУНКЦИЮ ИЗ script.js - КРИТИЧЕСКИ ВАЖНО!
+                    if (typeof window.refreshSetlists === 'function') {
+                        await window.refreshSetlists();
+                        console.log('📋 [Initialization] Called working refreshSetlists from script.js');
+                    } else {
+                        console.error('📋 [Initialization] window.refreshSetlists not found!');
                     }
                 } catch (error) {
                     console.error('Ошибка загрузки сет-листов:', error);
@@ -93,7 +65,7 @@ function setupPanelHandlers() {
                 ui.toggleMyListButton.classList.add('loading');
                 try {
                     ui.myListPanel.classList.add('open');
-                    // Logic to load and render favorites - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+                    // ПРОСТАЯ РАБОЧАЯ ЛОГИКА - КАК В ОРИГИНАЛЕ
                     if (window.state && window.state.allSongs && window.state.favorites) {
                         const favoriteSongs = window.state.allSongs.filter(song => 
                             window.state.favorites.some(fav => fav.songId === song.id)
@@ -101,16 +73,14 @@ function setupPanelHandlers() {
                             const fav = window.state.favorites.find(f => f.songId === song.id);
                             return { ...song, preferredKey: fav.preferredKey };
                         });
+                        console.log('⭐ [Initialization] Rendering favorites:', favoriteSongs.length);
                         ui.renderFavorites(favoriteSongs, 
-                            window.handleFavoriteOrRepertoireSelect || function(song) {
-                                console.log('⭐ Favorite selected:', song.name);
-                            },
+                            window.handleFavoriteOrRepertoireSelect,
                             async function(songId) {
                                 if(confirm("Удалить песню из 'Моих'?")) {
                                     try {
                                         await api.removeFromFavorites(songId);
-                                        // Refresh list after deletion
-                                        ui.toggleMyListButton.click();
+                                        ui.toggleMyListButton.click(); // Refresh panel
                                     } catch (error) {
                                         console.error('Ошибка удаления из избранного:', error);
                                         alert('Не удалось удалить песню из списка');
@@ -118,6 +88,8 @@ function setupPanelHandlers() {
                                 }
                             }
                         );
+                    } else {
+                        console.log('⭐ [Initialization] No favorites data available');
                     }
                 } catch (error) {
                     console.error('Ошибка загрузки избранных:', error);
@@ -141,11 +113,11 @@ function setupPanelHandlers() {
                 ui.toggleRepertoireButton.classList.add('loading');
                 try {
                     ui.repertoirePanel.classList.add('open');
+                    // ИСПОЛЬЗУЕМ РАБОЧУЮ ФУНКЦИЮ ИЗ script.js
+                    console.log('🎭 [Initialization] Loading repertoire...');
                     api.loadRepertoire(
                         window.state ? window.state.currentVocalistId : null, 
-                        window.handleRepertoireUpdate || function(data) {
-                            console.log('🎭 Repertoire loaded:', data);
-                        }
+                        window.handleRepertoireUpdate
                     );
                 } catch (error) {
                     console.error('Ошибка загрузки репертуара:', error);

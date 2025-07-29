@@ -47,6 +47,11 @@ export async function handleCreateSetlist(name) {
         eventBus.setState('currentCreatedSetlistId', setlistId);
         eventBus.setState('currentCreatedSetlistName', name.trim());
         
+        // КРИТИЧЕСКИ ВАЖНО: Синхронизируем с window для совместимости
+        window.currentCreatedSetlistId = setlistId;
+        window.currentCreatedSetlistName = name.trim();
+        console.log('🎯 [Controller] Synced with window:', window.currentCreatedSetlistId, window.currentCreatedSetlistName);
+        
         // Обновляем список сетлистов
         await refreshSetlists();
         
