@@ -615,6 +615,78 @@ function setupSetlistEventHandlers() {
         console.error('🎵 [EventHandlers] create-new-setlist-header-btn не найден!');
     }
     
+    // ОБРАБОТЧИКИ КНОПОК ОВЕРЛЕЕВ - КРИТИЧЕСКИ ВАЖНО!
+    
+    // Кнопка закрытия overlay добавления песен
+    const closeAddSongsBtn = document.getElementById('close-add-songs');
+    if (closeAddSongsBtn) {
+        closeAddSongsBtn.addEventListener('click', () => {
+            console.log('❌ [EventHandlers] Close add songs overlay clicked');
+            const overlay = document.getElementById('add-songs-overlay');
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+        });
+        console.log('❌ [EventHandlers] Close add songs button attached');
+    }
+    
+    // Кнопка "Готово" в overlay добавления песен
+    const finishAddingSongsBtn = document.getElementById('finish-adding-songs');
+    if (finishAddingSongsBtn) {
+        finishAddingSongsBtn.addEventListener('click', () => {
+            console.log('✅ [EventHandlers] Finish adding songs clicked');
+            const overlay = document.getElementById('add-songs-overlay');
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+            // Показываем уведомление
+            if (typeof window.showNotification === 'function') {
+                const count = document.getElementById('added-songs-count')?.textContent || '0';
+                window.showNotification(`✅ Добавлено ${count} песен в сет-лист`, 'success');
+            }
+        });
+        console.log('✅ [EventHandlers] Finish adding songs button attached');
+    }
+    
+    // Кнопка подтверждения выбора тональности
+    const confirmKeyBtn = document.getElementById('confirm-key-selection');
+    if (confirmKeyBtn) {
+        confirmKeyBtn.addEventListener('click', () => {
+            console.log('🎯 [EventHandlers] Confirm key selection clicked');
+            // Логика подтверждения будет в overlay-manager.js
+            if (typeof window.confirmAddSongWithKey === 'function') {
+                window.confirmAddSongWithKey();
+            }
+        });
+        console.log('🎯 [EventHandlers] Confirm key selection button attached');
+    }
+    
+    // Кнопка закрытия key selection modal
+    const closeKeyModalBtn = document.getElementById('close-key-modal');
+    if (closeKeyModalBtn) {
+        closeKeyModalBtn.addEventListener('click', () => {
+            console.log('❌ [EventHandlers] Close key modal clicked');
+            const modal = document.getElementById('key-selection-modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        });
+        console.log('❌ [EventHandlers] Close key modal button attached');
+    }
+    
+    // Кнопка закрытия мобильного preview
+    const closeMobilePreviewBtn = document.getElementById('close-mobile-song-preview');
+    if (closeMobilePreviewBtn) {
+        closeMobilePreviewBtn.addEventListener('click', () => {
+            console.log('❌ [EventHandlers] Close mobile preview clicked');
+            const overlay = document.getElementById('mobile-song-preview-overlay');
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+        });
+        console.log('❌ [EventHandlers] Close mobile preview button attached');
+    }
+    
     // Селектор вокалистов
     if (ui.vocalistSelect) {
         ui.vocalistSelect.addEventListener('change', (e) => {
