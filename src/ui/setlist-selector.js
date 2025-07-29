@@ -94,8 +94,14 @@ class SetlistSelector {
         }
         
         if (this.songKeyDisplay) {
-            this.songKeyDisplay.textContent = this.currentSong.selectedKey;
             console.log('📋 [SetlistSelector] Key display element:', this.songKeyDisplay);
+            console.log('📋 [SetlistSelector] Key display HTML before:', this.songKeyDisplay.outerHTML);
+            console.log('📋 [SetlistSelector] Setting key value:', this.currentSong.selectedKey);
+            this.songKeyDisplay.textContent = this.currentSong.selectedKey;
+            console.log('📋 [SetlistSelector] Key display HTML after:', this.songKeyDisplay.outerHTML);
+            // Убедимся что элемент видим
+            this.songKeyDisplay.style.display = 'inline-block';
+            this.songKeyDisplay.style.visibility = 'visible';
         } else {
             console.error('❌ [SetlistSelector] Key display element not found!');
         }
@@ -219,26 +225,39 @@ class SetlistSelector {
             const setlistsPanel = document.getElementById('setlists-panel');
             if (setlistsPanel?.classList.contains('open')) {
                 console.log('📋 [SetlistSelector] Setlist panel is open, triggering update');
-                // Даем время на обновление данных в Firebase
+                
+                // Если текущий сет-лист совпадает с тем, куда добавляем - обновляем сразу
+                if (window.state?.currentSetlistId === setlistId && window.handleSetlistSelect) {
+                    // Добавляем песню в локальное состояние для мгновенного отображения
+                    const currentSetlist = window.state?.currentSetlist;
+                    if (currentSetlist) {
+                        const songToAdd = {
+                            id: this.currentSong.id,
+                            name: this.currentSong.name,
+                            key: this.currentSong.selectedKey,
+                            category: this.currentSong.category
+                        };
+                        
+                        // Добавляем в локальное состояние
+                        if (!currentSetlist.songs) currentSetlist.songs = [];
+                        currentSetlist.songs.push(songToAdd);
+                        
+                        // Обновляем отображение сразу
+                        if (typeof window.ui?.displaySelectedSetlist === 'function') {
+                            window.ui.displaySelectedSetlist(currentSetlist, 
+                                window.handleFavoriteOrRepertoireSelect,
+                                window.handleRemoveSongFromSetlist
+                            );
+                        }
+                    }
+                }
+                
+                // Все равно отправляем событие и делаем полное обновление через время
                 setTimeout(async () => {
-                    // Сначала отправляем событие
                     window.dispatchEvent(new CustomEvent('setlist-updated', { 
                         detail: { setlistId } 
                     }));
-                    
-                    // Если есть функция прямого обновления, вызываем её
-                    if (window.handleSetlistSelect && window.state?.currentSetlistId === setlistId) {
-                        try {
-                            const setlists = await loadSetlists();
-                            const currentSetlist = setlists.find(s => s.id === setlistId);
-                            if (currentSetlist) {
-                                window.handleSetlistSelect(currentSetlist);
-                            }
-                        } catch (error) {
-                            console.error('Error updating setlist display:', error);
-                        }
-                    }
-                }, 1000);
+                }, 500);
             }
             
             // Закрываем overlay
