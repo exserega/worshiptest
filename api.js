@@ -64,6 +64,13 @@ const createSetlist = api.createSetlist;
 const deleteSetlist = api.deleteSetlist;
 
 /**
+ * Обновляет название сетлиста.
+ * @param {string} setlistId - ID сетлиста.
+ * @param {string} newName - Новое название.
+ */
+const updateSetlistName = api.updateSetlistName;
+
+/**
  * Добавляет песню в массив `songs` документа сетлиста или предлагает обновить ключ.
  * @param {string} setlistId
  * @param {string} songId
@@ -131,6 +138,7 @@ export {
     loadSetlists,
     createSetlist,
     deleteSetlist,
+    updateSetlistName,
     addSongToSetlist,
     updateSongKeyInSetlist,
     removeSongFromSetlist,

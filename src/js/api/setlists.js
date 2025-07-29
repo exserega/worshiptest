@@ -48,6 +48,25 @@ async function deleteSetlist(setlistId) {
 }
 
 /**
+ * Обновляет название сетлиста.
+ * @param {string} setlistId - ID сетлиста.
+ * @param {string} newName - Новое название.
+ */
+async function updateSetlistName(setlistId, newName) {
+    if (!setlistId || !newName || newName.trim() === '') {
+        throw new Error("Setlist ID and name cannot be empty.");
+    }
+    const setlistRef = doc(db, 'worship_setlists', setlistId);
+    return await runTransaction(db, async (transaction) => {
+        const setlistDoc = await transaction.get(setlistRef);
+        if (!setlistDoc.exists()) {
+            throw new Error("Setlist does not exist!");
+        }
+        transaction.update(setlistRef, { name: newName.trim() });
+    });
+}
+
+/**
  * Добавляет песню в массив `songs` документа сетлиста или предлагает обновить ключ.
  * @param {string} setlistId
  * @param {string} songId
@@ -152,6 +171,7 @@ export {
     loadSetlists,
     createSetlist,
     deleteSetlist,
+    updateSetlistName,
     addSongToSetlist,
     updateSongKeyInSetlist,
     removeSongFromSetlist

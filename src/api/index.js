@@ -236,6 +236,29 @@ export async function deleteSetlist(setlistId) {
 }
 
 /**
+ * Обновляет название сетлиста
+ * @param {string} setlistId - ID сетлиста
+ * @param {string} newName - Новое название
+ * @returns {Promise<void>}
+ */
+export async function updateSetlistName(setlistId, newName) {
+    if (!setlistId || !newName || newName.trim() === '') {
+        throw new Error('setlistId и newName обязательны');
+    }
+    
+    try {
+        const setlistRef = doc(setlistsCollection, setlistId);
+        await updateDoc(setlistRef, {
+            name: newName.trim()
+        });
+        console.log(`✅ Сетлист ${setlistId} переименован в "${newName.trim()}"`);
+    } catch (error) {
+        console.error(`❌ Ошибка переименования сетлиста ${setlistId}:`, error);
+        throw error;
+    }
+}
+
+/**
  * Добавляет песню в сетлист
  * @param {string} setlistId - ID сетлиста
  * @param {string} songId - ID песни
@@ -497,6 +520,7 @@ export const metadata = {
         'loadSetlists',
         'createSetlist',
         'deleteSetlist',
+        'updateSetlistName',
         'addSongToSetlist',
         'removeSongFromSetlist',
         'loadVocalists',

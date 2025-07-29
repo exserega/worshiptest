@@ -1122,6 +1122,29 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         nameSpan.textContent = setlist.name;
         item.appendChild(nameSpan);
 
+        // Кнопка редактирования
+        const editBtn = document.createElement('button');
+        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+        editBtn.className = 'edit-button';
+        editBtn.title = 'Редактировать название';
+        editBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const newName = prompt('Введите новое название сет-листа:', setlist.name);
+            if (newName && newName.trim() && newName !== setlist.name) {
+                try {
+                    await api.updateSetlistName(setlist.id, newName.trim());
+                    if (typeof window.refreshSetlists === 'function') {
+                        await window.refreshSetlists();
+                    }
+                    window.showNotification(`Сет-лист переименован в "${newName.trim()}"`, 'success');
+                } catch (error) {
+                    console.error('Ошибка переименования:', error);
+                    window.showNotification('Ошибка при переименовании сет-листа', 'error');
+                }
+            }
+        });
+        item.appendChild(editBtn);
+
         const deleteBtn = document.createElement('button');
         deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
         deleteBtn.className = 'remove-button';
