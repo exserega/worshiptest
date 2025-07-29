@@ -127,6 +127,17 @@
     gap: 6px !important;
     display: flex !important;
     flex-wrap: nowrap !important; /* Не переносить на новую строку */
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Специальное правило для экранов < 480px */
+@media (max-width: 480px) {
+    #add-songs-overlay .search-filters {
+        flex-wrap: nowrap !important; /* ВАЖНО: не давать элементам переноситься */
+        flex-direction: row !important; /* Всегда в строку */
+        align-items: stretch !important; /* Одинаковая высота */
+    }
 }
 
 #add-songs-overlay .filter-select,
@@ -146,6 +157,7 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
+    min-height: 34px !important; /* Минимальная высота */
 }
 
 /* Кнопка фильтра */
@@ -154,6 +166,7 @@
     white-space: nowrap !important;
     flex: 1 !important; /* Занимает оставшееся место */
     position: relative !important;
+    min-height: 34px !important; /* Минимальная высота */
 }
 
 #add-songs-overlay .filter-btn i {
@@ -318,6 +331,30 @@
 #add-songs-overlay .loading-state i {
     font-size: 1.2rem !important;
     margin-bottom: 8px !important;
+}
+
+/* === АДАПТАЦИЯ ДЛЯ ЭКРАНОВ < 480px === */
+
+@media (max-width: 480px) {
+    /* Оптимизация фильтров для экранов 380-480px */
+    #add-songs-overlay .filter-select {
+        flex: 0 0 50% !important; /* Половина ширины */
+        font-size: 0.8rem !important;
+        padding: 0 8px !important;
+        min-width: 0 !important;
+    }
+    
+    #add-songs-overlay .filter-btn {
+        flex: 1 !important; /* Занимает оставшееся место */
+        font-size: 0.8rem !important;
+        padding: 0 8px !important;
+        min-width: 0 !important;
+    }
+    
+    /* Сокращаем текст кнопки */
+    #add-songs-overlay .filter-btn span:not(.added-count-badge) {
+        display: inline !important; /* Показываем текст */
+    }
 }
 
 /* === АДАПТАЦИЯ ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ === */
