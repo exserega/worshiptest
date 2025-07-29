@@ -18,6 +18,7 @@ import * as api from '../api/index.js';
 import * as ui from '../../ui.js';
 import * as metronomeUI from '../../metronome.js';
 import searchWorkerManager from '../../src/js/workers/workerManager.js';
+import * as constants from '../../constants.js';
 
 // ====================================
 // MAIN INITIALIZATION FUNCTION
@@ -150,7 +151,8 @@ function setupSwipeToClose() {
             startTime = Date.now();
             isScrolling = null; // Сбрасываем флаг скроллинга
             
-            // Проверяем, не начался ли тач на скроллируемом элементе
+            // Временно отключаем проверку скроллируемых элементов для отладки
+            /*
             const target = e.target;
             const scrollableElements = [
                 '.songs-list',
@@ -168,6 +170,7 @@ function setupSwipeToClose() {
             if (isOnScrollableElement) {
                 isScrolling = true; // Предполагаем скроллинг если касание на скроллируемом элементе
             }
+            */
         });
         
         panel.addEventListener('touchmove', (e) => {
@@ -189,17 +192,34 @@ function setupSwipeToClose() {
             const deltaX = startX - endX;
             const duration = Date.now() - startTime;
             
+            console.log('👆 [Swipe Debug]', {
+                panel: panel.id || panel.className,
+                deltaX,
+                deltaY,
+                duration,
+                isScrolling,
+                threshold: constants.SWIPE_THRESHOLD
+            });
+            
             // Если это был скроллинг, не закрываем панель
             if (isScrolling) {
+                console.log('👆 [Swipe] Игнорируем - это был скроллинг');
                 return;
             }
             
             // Для боковых панелей (setlists-panel) - только свайп вправо
             if (panel.id === 'setlists-panel' || panel.classList.contains('side-panel')) {
                 // Свайп вправо для закрытия (deltaX отрицательный)
-                const isRightSwipe = deltaX < -constants.SWIPE_THRESHOLD;
-                const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * constants.SWIPE_RATIO;
-                const isFastSwipe = duration < constants.SWIPE_TIME_LIMIT;
+                const isRightSwipe = deltaX < -80; // Уменьшил с 100 до 80
+                const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5; // Уменьшил с 2 до 1.5
+                const isFastSwipe = duration < 800; // Увеличил с 500 до 800мс
+                
+                console.log('👆 [Swipe Panel Check]', {
+                    isRightSwipe,
+                    isHorizontalDominant,
+                    isFastSwipe,
+                    wouldClose: isRightSwipe && isHorizontalDominant && isFastSwipe
+                });
                 
                 if (isRightSwipe && isHorizontalDominant && isFastSwipe) {
                     if (panel.classList.contains('show') || panel.classList.contains('open')) {
@@ -212,9 +232,16 @@ function setupSwipeToClose() {
             // Для оверлеев (add-songs-overlay, mobile-song-preview) - свайп вниз
             if (panel.classList.contains('global-fullscreen-overlay')) {
                 // Свайп вниз для закрытия (deltaY отрицательный)
-                const isDownSwipe = deltaY < -constants.SWIPE_THRESHOLD;
-                const isVerticalDominant = Math.abs(deltaY) > Math.abs(deltaX) * constants.SWIPE_RATIO;
-                const isFastSwipe = duration < constants.SWIPE_TIME_LIMIT;
+                const isDownSwipe = deltaY < -80; // Уменьшил с 100 до 80
+                const isVerticalDominant = Math.abs(deltaY) > Math.abs(deltaX) * 1.5; // Уменьшил с 2 до 1.5
+                const isFastSwipe = duration < 800; // Увеличил с 500 до 800мс
+                
+                console.log('👆 [Swipe Overlay Check]', {
+                    isDownSwipe,
+                    isVerticalDominant,
+                    isFastSwipe,
+                    wouldClose: isDownSwipe && isVerticalDominant && isFastSwipe
+                });
                 
                 if (isDownSwipe && isVerticalDominant && isFastSwipe) {
                     if (panel.classList.contains('show')) {
