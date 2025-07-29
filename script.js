@@ -695,6 +695,26 @@ window.showNotification = function(message, type = 'info') {
     }, 3000);
 };
 
+// Временная проверка доступности кнопки
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const btn = document.getElementById('add-to-setlist-button');
+        console.log('🔍 [Debug] Add to setlist button:', btn);
+        console.log('🔍 [Debug] Button visible:', btn ? window.getComputedStyle(btn).display : 'not found');
+        console.log('🔍 [Debug] Button clickable:', btn ? !btn.disabled : 'not found');
+        
+        if (btn) {
+            // Добавляем прямой обработчик для теста
+            btn.onclick = () => {
+                console.log('🔍 [Debug] Direct onclick triggered!');
+                if (window.handleAddSongToSetlist) {
+                    window.handleAddSongToSetlist();
+                }
+            };
+        }
+    }, 2000); // Ждем 2 секунды для полной загрузки
+});
+
 // ФУНКЦИЯ ДОБАВЛЕНИЯ ПЕСНИ В СЕТ-ЛИСТ
 window.handleAddSongToSetlist = async function() {
     console.log('📋 [EntryPoint] handleAddSongToSetlist called');
