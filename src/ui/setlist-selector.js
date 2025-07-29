@@ -40,7 +40,7 @@ class SetlistSelector {
         
         // Закрытие по Escape
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.overlay?.classList.contains('show')) {
+            if (e.key === 'Escape' && this.overlay?.classList.contains('visible')) {
                 this.close();
             }
         });
@@ -80,7 +80,7 @@ class SetlistSelector {
         }
         
         // Показываем overlay
-        this.overlay?.classList.add('show');
+        this.overlay?.classList.add('visible');
         
         // Загружаем сет-листы
         await this.loadSetlists();
@@ -93,7 +93,7 @@ class SetlistSelector {
      * Закрывает overlay
      */
     close() {
-        this.overlay?.classList.remove('show');
+        this.overlay?.classList.remove('visible');
         this.currentSong = null;
         
         // Очищаем форму
