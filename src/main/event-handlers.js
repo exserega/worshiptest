@@ -350,8 +350,8 @@ function setupModalEventHandlers() {
     }
     
     if (ui.finishAddingSongs) {
-        ui.finishAddingSongs.addEventListener('click', () => {
-            controller.finishAddingSongs();
+        ui.finishAddingSongs.addEventListener('click', async () => {
+            await controller.finishAddingSongs();
         });
     }
 }

@@ -124,9 +124,12 @@ export function handleSetlistSelect(setlist) {
     eventBus.setState('currentSetlistSongs', setlist.songs || []);
     
     // Обновляем UI
-    if (typeof window.updateCurrentSetlistUI === 'function') {
-        window.updateCurrentSetlistUI(setlist);
-    }
+    console.log('🔄 [Controller] Обновляем отображение выбранного сет-листа');
+    ui.displaySelectedSetlist(
+        setlist,
+        window.handleFavoriteOrRepertoireSelect || function() {},
+        window.handleRemoveSongFromSetlist || function() {}
+    );
 }
 
 /**
@@ -211,17 +214,22 @@ export async function handleRemoveSongFromSetlist(songId, songName) {
     try {
         await api.removeSongFromSetlist(state.currentSetlistId, songId);
         
-        // Обновляем локальное состояние
-        state.currentSetlistSongs = state.currentSetlistSongs.filter(song => song.id !== songId);
-        eventBus.setState('currentSetlistSongs', state.currentSetlistSongs);
+        // Загружаем обновленные данные сет-листа
+        const setlists = await api.loadSetlists();
+        const updatedSetlist = setlists.find(s => s.id === state.currentSetlistId);
         
-        // Обновляем UI
-        if (typeof window.updateCurrentSetlistUI === 'function') {
-            window.updateCurrentSetlistUI({
-                id: state.currentSetlistId,
-                name: state.currentSetlistName,
-                songs: state.currentSetlistSongs
-            });
+        if (updatedSetlist) {
+            // Обновляем локальное состояние
+            state.currentSetlistSongs = updatedSetlist.songs || [];
+            eventBus.setState('currentSetlistSongs', state.currentSetlistSongs);
+            
+            // Обновляем UI
+            console.log('🔄 [Controller] Обновляем отображение после удаления песни');
+            ui.displaySelectedSetlist(
+                updatedSetlist,
+                window.handleFavoriteOrRepertoireSelect || function() {},
+                window.handleRemoveSongFromSetlist || function() {}
+            );
         }
         
         showNotification(`➖ "${songName}" удалена из сет-листа`, 'info');
@@ -311,13 +319,15 @@ export async function handleAddToRepertoire(song) {
 /**
  * Завершает процесс добавления песен
  */
-export function finishAddingSongs() {
+export async function finishAddingSongs() {
     console.log('🏁 [Controller] finishAddingSongs');
     
     const addedCount = window.addedSongsToCurrentSetlist?.size || 0;
     const setlistName = eventBus.getState('currentCreatedSetlistName') || 
                        eventBus.getState('currentSetlistName') || 
                        state.currentSetlistName;
+    
+    const currentSetlistId = eventBus.getState('currentSetlistId') || state.currentSetlistId;
     
     // Закрываем overlay
     if (ui.addSongsOverlay) {
@@ -336,6 +346,27 @@ export function finishAddingSongs() {
             showNotification(`✅ Сет-лист "${setlistName}" готов к использованию!`, 'success');
         } else {
             showNotification(`✅ Редактирование "${setlistName}" завершено!`, 'success');
+        }
+    }
+    
+    // Обновляем отображение сет-листа если панель открыта
+    if (currentSetlistId && ui.setlistsPanel && ui.setlistsPanel.classList.contains('open')) {
+        try {
+            // Загружаем обновленные данные сет-листа
+            const setlists = await api.loadSetlists();
+            const updatedSetlist = setlists.find(s => s.id === currentSetlistId);
+            
+            if (updatedSetlist) {
+                console.log('🔄 [Controller] Обновляем отображение сет-листа:', updatedSetlist.name);
+                // Используем те же функции что и при выборе сет-листа
+                ui.displaySelectedSetlist(
+                    updatedSetlist,
+                    window.handleFavoriteOrRepertoireSelect || function() {},
+                    window.handleRemoveSongFromSetlist || function() {}
+                );
+            }
+        } catch (error) {
+            console.error('❌ [Controller] Ошибка обновления сет-листа:', error);
         }
     }
     
