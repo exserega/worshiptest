@@ -247,5 +247,4 @@ export {
 
 // Экспортируем переменные состояния для совместимости
 export { audioContext, isMetronomeActive, currentBeat };
-export const audioBuffer = null; // Больше не используется
-export const metronomeInterval = null; // Для совместимости 
+export const audioBuffer = null; // Больше не используется 
