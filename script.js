@@ -305,7 +305,10 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
                 <div class="song-info">
                     <h4 class="song-title">${song.name}</h4>
                     <div class="song-meta-info">
-                        <span class="song-key">${originalKey}</span>
+                        <span class="song-key-wrapper">
+                            <i class="fas fa-music"></i>
+                            <span class="song-key">${originalKey}</span>
+                        </span>
                         ${song.BPM && song.BPM !== 'NA' ? `<span class="song-bpm"><i class="fas fa-tachometer-alt"></i>${song.BPM}</span>` : ''}
                         <span class="song-category">${song.sheet || 'Без категории'}</span>
                     </div>

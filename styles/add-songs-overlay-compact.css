@@ -252,14 +252,23 @@
     display: none !important; /* Скрываем категорию для экономии места */
 }
 
-/* Тональность - точно как в панели сет-листов */
-#add-songs-overlay .song-key {
-    background: var(--primary-color) !important;
-    color: var(--color-button-text) !important;
-    padding: 2px 6px !important;
-    border-radius: 4px !important;
+/* Обертка тональности */
+#add-songs-overlay .song-key-wrapper {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+#add-songs-overlay .song-key-wrapper i {
+    color: var(--primary-color) !important;
     font-size: 0.7rem !important;
+}
+
+/* Тональность - как BPM, только цветной текст */
+#add-songs-overlay .song-key {
+    color: var(--label-color) !important;
     font-weight: 600 !important;
+    font-size: 0.7rem !important;
 }
 
 /* BPM - как в панели сет-листов */
