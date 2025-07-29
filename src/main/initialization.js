@@ -207,24 +207,48 @@ function setupSwipeToClose() {
                 return;
             }
             
-            // Для боковых панелей (setlists-panel) - только свайп вправо
-            if (panel.id === 'setlists-panel' || panel.classList.contains('side-panel')) {
-                // Свайп вправо для закрытия (deltaX отрицательный)
-                const isRightSwipe = deltaX < -80; // Уменьшил с 100 до 80
-                const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5; // Уменьшил с 2 до 1.5
-                const isFastSwipe = duration < 800; // Увеличил с 500 до 800мс
+            // Для боковых панелей - проверяем с какой стороны панель
+            if (panel.classList.contains('side-panel')) {
+                const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
+                const isFastSwipe = duration < 800;
                 
-                console.log('👆 [Swipe Panel Check]', {
-                    isRightSwipe,
-                    isHorizontalDominant,
-                    isFastSwipe,
-                    wouldClose: isRightSwipe && isHorizontalDominant && isFastSwipe
-                });
+                // Левые панели (setlists-panel, my-list-panel) - закрываются свайпом влево
+                if (panel.id === 'setlists-panel' || panel.id === 'my-list-panel') {
+                    const isLeftSwipe = deltaX > 80; // Свайп влево (deltaX положительный)
+                    
+                    console.log('👆 [Swipe Left Panel Check]', {
+                        panelId: panel.id,
+                        isLeftSwipe,
+                        isHorizontalDominant,
+                        isFastSwipe,
+                        wouldClose: isLeftSwipe && isHorizontalDominant && isFastSwipe
+                    });
+                    
+                    if (isLeftSwipe && isHorizontalDominant && isFastSwipe) {
+                        if (panel.classList.contains('show') || panel.classList.contains('open')) {
+                            panel.classList.remove('show', 'open');
+                            console.log('👆 [Swipe] Закрытие левой панели свайпом влево');
+                        }
+                    }
+                }
                 
-                if (isRightSwipe && isHorizontalDominant && isFastSwipe) {
-                    if (panel.classList.contains('show') || panel.classList.contains('open')) {
-                        panel.classList.remove('show', 'open');
-                        console.log('👆 [Swipe] Закрытие панели свайпом вправо');
+                // Правая панель (repertoire-panel) - закрывается свайпом вправо
+                if (panel.id === 'repertoire-panel') {
+                    const isRightSwipe = deltaX < -80; // Свайп вправо (deltaX отрицательный)
+                    
+                    console.log('👆 [Swipe Right Panel Check]', {
+                        panelId: panel.id,
+                        isRightSwipe,
+                        isHorizontalDominant,
+                        isFastSwipe,
+                        wouldClose: isRightSwipe && isHorizontalDominant && isFastSwipe
+                    });
+                    
+                    if (isRightSwipe && isHorizontalDominant && isFastSwipe) {
+                        if (panel.classList.contains('show') || panel.classList.contains('open')) {
+                            panel.classList.remove('show', 'open');
+                            console.log('👆 [Swipe] Закрытие правой панели свайпом вправо');
+                        }
                     }
                 }
             }
