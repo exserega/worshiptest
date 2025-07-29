@@ -752,7 +752,7 @@ function setupSetlistEventHandlers() {
             if (song) {
                 try {
                     // Импортируем и обновляем текст песни
-                    const { displaySongTextInMobileOverlay } = await import('../../ui/overlay-manager.js');
+                                         const { displaySongTextInMobileOverlay } = await import('../ui/overlay-manager.js');
                     displaySongTextInMobileOverlay(song, e.target.value);
                     console.log('✅ [EventHandlers] Song text updated for new key');
                 } catch (error) {
@@ -858,7 +858,7 @@ function setupSetlistEventHandlers() {
                 if (searchTerm.length >= 2) {
                     // Импортируем и вызываем поиск
                     try {
-                        const { performOverlayDropdownSearch } = await import('../../ui/search-manager.js');
+                        const { performOverlayDropdownSearch } = await import('../ui/search-manager.js');
                         await performOverlayDropdownSearch(searchTerm);
                         console.log('🔍 [EventHandlers] Overlay search completed');
                     } catch (error) {
@@ -961,7 +961,7 @@ function setupSetlistEventHandlers() {
                         
                         // Показываем оверлей выбора тональности
                         try {
-                            const { showMobileSongPreview } = await import('../../ui/overlay-manager.js');
+                            const { showMobileSongPreview } = await import('../ui/overlay-manager.js');
                             showMobileSongPreview(song);
                             console.log('🎵 [EventHandlers] Mobile song preview shown');
                         } catch (error) {
