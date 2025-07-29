@@ -719,6 +719,10 @@ window.handleAddSongToSetlist = async function() {
     
     // Получаем выбранную тональность
     const keySelect = ui.keySelect;
+    console.log('📋 [EntryPoint] keySelect element:', keySelect);
+    console.log('📋 [EntryPoint] keySelect value:', keySelect?.value);
+    console.log('📋 [EntryPoint] song keys:', currentSong.keys);
+    
     const selectedKey = keySelect?.value || currentSong.keys?.[0] || 'C';
     
     console.log('📋 [EntryPoint] Adding song to setlist:', currentSong.name, 'in key:', selectedKey);

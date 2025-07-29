@@ -24,6 +24,12 @@ class SetlistSelector {
         
         // Инициализация
         this.init();
+        
+        // Проверяем наличие элементов
+        console.log('📋 [SetlistSelector] Constructor - Key display element:', this.songKeyDisplay);
+        if (!this.songKeyDisplay) {
+            console.error('❌ [SetlistSelector] Key display element not found on init!');
+        }
     }
     
     init() {
@@ -202,26 +208,41 @@ class SetlistSelector {
         
         try {
             // Добавляем песню с выбранной тональностью
-            const songToAdd = {
-                ...this.currentSong,
-                key: this.currentSong.selectedKey
-            };
+            console.log('📋 [SetlistSelector] Adding song:', this.currentSong.id, 'to setlist:', setlistId, 'in key:', this.currentSong.selectedKey);
             
-            await addSongToSetlist(setlistId, songToAdd);
+            await addSongToSetlist(setlistId, this.currentSong.id, this.currentSong.selectedKey);
             
             // Показываем уведомление
             this.showNotification('✅ Песня успешно добавлена в сет-лист!', 'success');
             
-            // Закрываем overlay
-            this.close();
-            
             // Обновляем UI если панель сет-листов открыта
             const setlistsPanel = document.getElementById('setlists-panel');
             if (setlistsPanel?.classList.contains('open')) {
-                window.dispatchEvent(new CustomEvent('setlist-updated', { 
-                    detail: { setlistId } 
-                }));
+                console.log('📋 [SetlistSelector] Setlist panel is open, triggering update');
+                // Даем время на обновление данных в Firebase
+                setTimeout(async () => {
+                    // Сначала отправляем событие
+                    window.dispatchEvent(new CustomEvent('setlist-updated', { 
+                        detail: { setlistId } 
+                    }));
+                    
+                    // Если есть функция прямого обновления, вызываем её
+                    if (window.handleSetlistSelect && window.state?.currentSetlistId === setlistId) {
+                        try {
+                            const setlists = await loadSetlists();
+                            const currentSetlist = setlists.find(s => s.id === setlistId);
+                            if (currentSetlist) {
+                                window.handleSetlistSelect(currentSetlist);
+                            }
+                        } catch (error) {
+                            console.error('Error updating setlist display:', error);
+                        }
+                    }
+                }, 1000);
             }
+            
+            // Закрываем overlay
+            this.close();
             
         } catch (error) {
             console.error('Error adding song to setlist:', error);
