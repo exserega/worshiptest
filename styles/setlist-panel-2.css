@@ -22,7 +22,7 @@
     border: 1px solid var(--border-color);
     border-radius: 6px; /* Более современный радиус */
     transition: all 0.2s ease;
-    cursor: pointer;
+    cursor: pointer; /* Курсор для всего блока */
     position: relative;
 }
 
@@ -53,6 +53,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    cursor: inherit; /* Наследует курсор от родителя */
 }
 
 .song-meta {

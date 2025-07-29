@@ -943,6 +943,7 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
     fullSongsData.forEach(song => {
         const songItem = document.createElement('div');
         songItem.className = 'setlist-song-item';
+        songItem.addEventListener('click', () => onSongSelect(song)); // Клик на весь блок
         
         // Контейнер для информации о песне
         const songInfo = document.createElement('div');
@@ -952,7 +953,6 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         const songName = document.createElement('div');
         songName.className = 'song-name';
         songName.textContent = song.name;
-        songName.addEventListener('click', () => onSongSelect(song));
         
         // Метаданные песни (тональность и BPM)
         const songMeta = document.createElement('div');
