@@ -37,6 +37,7 @@
 @import url('./styles/components.css');
 @import url('./styles/metronome.css');
 @import url('./styles/responsive.css');
+@import url('./styles/setlist-panel-compact.css'); /* Компактные стили для мобильных */
 
 /* ======================================== */
 /* МИНИМАЛИСТИЧНАЯ СТРУКТУРА СЕТ-ЛИСТОВ */
@@ -67,40 +68,42 @@
 
 /* === ПРЕМИУМ UI ДИЗАЙН ПАНЕЛИ === */
 
-/* Базовая система для секций */
+/* Базовая система для секций - оптимизировано для мобильных */
 .ui-section {
-    margin-bottom: 8px;
+    margin-bottom: 6px; /* Меньше пространства между секциями */
     position: relative;
+    padding: 8px 10px; /* Компактные отступы */
+    background: var(--container-background-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
 }
 
-/* СЕКЦИЯ 1: Создание списка - Сдержанный дизайн */
+/* СЕКЦИЯ 1: Создание списка - Компактный дизайн */
 .create-section {
-    padding: 0 12px;
-    margin-bottom: 12px;
+    padding: 8px 10px; /* Компактные отступы */
+    margin-bottom: 6px;
+    border: none; /* Убираем двойную границу */
+    background: transparent; /* Прозрачный фон */
 }
 
 .create-btn-modern {
     width: 100%;
     position: relative;
-    background: linear-gradient(135deg, 
-        color-mix(in srgb, var(--primary-color) 70%, var(--container-background-color)), 
-        color-mix(in srgb, var(--primary-color) 60%, var(--container-background-color)));
-    border: 1px solid color-mix(in srgb, var(--primary-color) 40%, var(--border-color));
-    border-radius: 8px;
-    padding: 12px 16px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    padding: 10px 12px; /* Компактнее */
     cursor: pointer;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 3px color-mix(in srgb, var(--primary-color) 10%, transparent);
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    min-height: 36px; /* Фиксированная минимальная высота */
 }
 
 .create-btn-modern:hover {
     transform: translateY(-1px);
-    background: linear-gradient(135deg, 
-        color-mix(in srgb, var(--primary-color) 80%, var(--container-background-color)), 
-        color-mix(in srgb, var(--primary-color) 70%, var(--container-background-color)));
-    border-color: color-mix(in srgb, var(--primary-color) 60%, var(--border-color));
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 15%, transparent);
+    background: var(--color-button-hover-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .create-btn-modern:active {
@@ -117,14 +120,14 @@
 }
 
 .btn-content i {
-    font-size: 1rem;
-    color: var(--text-color);
+    font-size: 0.875rem; /* Уменьшена иконка */
+    color: var(--color-button-text);
 }
 
 .btn-content span {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--text-color);
+    color: var(--color-button-text);
     letter-spacing: 0.3px;
 }
 
@@ -142,19 +145,19 @@
     left: 100%;
 }
 
-/* СЕКЦИЯ 2: Выбор списка - Современный дизайн */
+/* СЕКЦИЯ 2: Выбор списка - Компактный дизайн */
 .selection-section {
-    margin: 0 12px 12px 12px;
+    margin: 0;
 }
 
 .section-label {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--label-color);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    text-transform: none; /* Убираем CAPS для мобильных */
+    letter-spacing: 0.3px;
     margin-bottom: 6px;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .modern-selector {
@@ -166,13 +169,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px;
-    background: var(--container-background-color);
+    padding: 8px 10px; /* Компактнее */
+    background: var(--background-color);
     border: 1px solid var(--border-color);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: 40px;
+    min-height: 36px; /* Меньше высота */
+    font-size: 0.875rem;
 }
 
 .selector-btn:hover {
@@ -187,7 +191,7 @@
 }
 
 .selector-content i {
-    font-size: 1rem;
+    font-size: 0.875rem; /* Меньше иконка */
     color: var(--primary-color);
 }
 
@@ -234,29 +238,17 @@
     padding: 4px;
 }
 
-/* СЕКЦИЯ 3: Управление списком - Элегантный дизайн */
+/* СЕКЦИЯ 3: Управление списком - Компактный дизайн */
 .active-section {
-    margin: 0 12px 12px 12px;
-    padding: 12px;
-    background: linear-gradient(135deg, 
-        var(--container-background-color), 
-        color-mix(in srgb, var(--container-background-color) 98%, var(--primary-color)));
-    border: 1px solid color-mix(in srgb, var(--primary-color) 15%, var(--border-color));
+    margin: 0;
+    padding: 8px 10px; /* Компактные отступы */
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 8%, transparent);
     position: relative;
 }
 
-.active-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    opacity: 0.4;
-}
+/* Убираем декоративную линию для компактности */
 
 .section-header {
     margin-bottom: 8px;
@@ -269,12 +261,12 @@
 }
 
 .list-status i {
-    font-size: 1rem;
+    font-size: 0.8rem; /* Меньше иконка */
     color: var(--primary-color);
 }
 
 .count-text {
-    font-size: 0.875rem;
+    font-size: 0.8rem; /* Меньше текст */
     font-weight: 600;
     color: var(--text-color);
     opacity: 0.9;
@@ -302,20 +294,16 @@
 }
 
 .primary-action {
-    background: linear-gradient(135deg, 
-        color-mix(in srgb, var(--primary-color) 75%, var(--container-background-color)), 
-        color-mix(in srgb, var(--primary-color) 65%, var(--container-background-color)));
-    color: var(--text-color) !important;
-    border: 1px solid color-mix(in srgb, var(--primary-color) 50%, var(--border-color));
-    box-shadow: 0 1px 3px color-mix(in srgb, var(--primary-color) 12%, transparent);
+    background: var(--primary-color);
+    color: var(--color-button-text) !important;
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .primary-action:hover {
-    background: linear-gradient(135deg, 
-        color-mix(in srgb, var(--primary-color) 85%, var(--container-background-color)), 
-        color-mix(in srgb, var(--primary-color) 75%, var(--container-background-color)));
-    border-color: color-mix(in srgb, var(--primary-color) 70%, var(--border-color));
-    box-shadow: 0 2px 6px color-mix(in srgb, var(--primary-color) 18%, transparent);
+    background: var(--color-button-hover-bg);
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
 }
 

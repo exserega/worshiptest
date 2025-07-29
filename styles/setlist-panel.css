@@ -216,8 +216,8 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--label-color);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    text-transform: none; /* Убираем CAPS */
+    letter-spacing: 0.3px;
 }
 
 /* Кнопка создания нового списка */
