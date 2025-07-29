@@ -455,6 +455,50 @@ window.handleRepertoireUpdate = function(data) {
     }
 };
 
+// КРИТИЧЕСКИ ВАЖНАЯ ФУНКЦИЯ ДЛЯ РЕПЕРТУАРА - ОТСУТСТВОВАЛА!
+window.handleVocalistChange = function(vocalistId) {
+    console.log('🎭 [Legacy] handleVocalistChange called:', vocalistId);
+    
+    // Устанавливаем текущего вокалиста в state
+    if (window.state && typeof window.state.setCurrentVocalistId === 'function') {
+        window.state.setCurrentVocalistId(vocalistId);
+        console.log('🎭 [Legacy] Current vocalist ID set:', vocalistId);
+    }
+    
+    // Если выбран вокалист и панель репертуара открыта, обновляем данные
+    if (vocalistId && ui.repertoirePanel && ui.repertoirePanel.classList.contains('open')) {
+        console.log('🎭 [Legacy] Repertoire panel is open, reloading data...');
+        
+        // Показываем индикатор загрузки
+        if (ui.toggleRepertoireButton) {
+            ui.toggleRepertoireButton.classList.add('loading');
+        }
+        
+        // Загружаем репертуар для нового вокалиста
+        if (typeof api.loadRepertoire === 'function') {
+            api.loadRepertoire(vocalistId, window.handleRepertoireUpdate);
+        } else {
+            console.error('🎭 [Legacy] api.loadRepertoire not found');
+            if (ui.toggleRepertoireButton) {
+                ui.toggleRepertoireButton.classList.remove('loading');
+            }
+        }
+    } else if (!vocalistId) {
+        // Если вокалист не выбран, очищаем репертуар
+        console.log('🎭 [Legacy] No vocalist selected, clearing repertoire');
+        if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
+            window.state.setCurrentRepertoireSongsData([]);
+        }
+        
+        // Обновляем отображение если панель открыта
+        if (ui.repertoirePanel && ui.repertoirePanel.classList.contains('open')) {
+            if (typeof ui.renderRepertoire === 'function') {
+                ui.renderRepertoire(window.handleFavoriteOrRepertoireSelect);
+            }
+        }
+    }
+};
+
 // ====================================
 // 🚀 APPLICATION STARTUP
 // ====================================
