@@ -695,90 +695,61 @@ window.showNotification = function(message, type = 'info') {
     }, 3000);
 };
 
-// Глобальный перехватчик всех кликов для отладки
-document.addEventListener('click', (e) => {
-    // Логируем все клики по элементам с определенными классами
-    if (e.target.closest('.legend-icon-btn') || 
-        e.target.closest('.song-legend-action') ||
-        e.target.id === 'add-to-setlist-button' ||
-        e.target.closest('#add-to-setlist-button')) {
-        
-        console.log('🎯 [Debug] Click detected!');
-        console.log('🎯 [Debug] Clicked element:', e.target);
-        console.log('🎯 [Debug] Element ID:', e.target.id);
-        console.log('🎯 [Debug] Element classes:', e.target.className);
-        console.log('🎯 [Debug] Parent button:', e.target.closest('button'));
-        console.log('🎯 [Debug] Event phase:', e.eventPhase);
-        console.log('🎯 [Debug] Event bubbles:', e.bubbles);
-        console.log('🎯 [Debug] Default prevented:', e.defaultPrevented);
-    }
-}, true); // true = capture phase
-
-// Временная проверка доступности кнопки
-document.addEventListener('DOMContentLoaded', () => {
+// Простой тест - ждем загрузку и добавляем обработчик напрямую
+window.addEventListener('load', () => {
+    console.log('🚀 [Debug] Window loaded, waiting 1 second...');
+    
     setTimeout(() => {
         const btn = document.getElementById('add-to-setlist-button');
-        console.log('🔍 [Debug] Add to setlist button:', btn);
-        console.log('🔍 [Debug] Button visible:', btn ? window.getComputedStyle(btn).display : 'not found');
-        console.log('🔍 [Debug] Button disabled:', btn ? btn.disabled : 'not found');
-        console.log('🔍 [Debug] Button parent visible:', btn?.parentElement ? window.getComputedStyle(btn.parentElement).display : 'not found');
-        console.log('🔍 [Debug] Button z-index:', btn ? window.getComputedStyle(btn).zIndex : 'not found');
-        console.log('🔍 [Debug] Button pointer-events:', btn ? window.getComputedStyle(btn).pointerEvents : 'not found');
+        console.log('🎯 [Debug] Looking for add-to-setlist-button...');
+        console.log('🎯 [Debug] Button found:', btn);
         
-        // Проверяем все обработчики
         if (btn) {
-            const listeners = getEventListeners ? getEventListeners(btn) : null;
-            console.log('🔍 [Debug] Event listeners:', listeners);
+            // Удаляем все существующие обработчики
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
             
-            // Добавляем несколько обработчиков для теста
-            btn.onclick = (e) => {
-                console.log('🔥 [Debug] onclick fired!', e);
+            // Добавляем новый простой обработчик
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🔥🔥🔥 [Debug] BUTTON CLICKED! 🔥🔥🔥');
+                console.log('🔥 [Debug] handleAddSongToSetlist exists?', typeof window.handleAddSongToSetlist);
+                
                 if (window.handleAddSongToSetlist) {
                     window.handleAddSongToSetlist();
+                } else {
+                    console.error('❌ handleAddSongToSetlist not found!');
                 }
-            };
+            });
             
-            btn.addEventListener('click', (e) => {
-                console.log('🔥 [Debug] addEventListener click fired!', e);
-            }, true);
+            // Делаем кнопку очень заметной
+            newBtn.style.backgroundColor = 'red';
+            newBtn.style.color = 'white';
+            newBtn.style.border = '5px solid yellow';
+            newBtn.style.fontSize = '20px';
+            newBtn.style.zIndex = '99999';
+            newBtn.style.position = 'relative';
             
-            // Проверяем родительские элементы
-            let parent = btn.parentElement;
-            while (parent && parent !== document.body) {
-                console.log('🔍 [Debug] Parent element:', parent.tagName, parent.className, 'display:', window.getComputedStyle(parent).display);
-                parent = parent.parentElement;
-            }
+            console.log('✅ [Debug] New handler attached to button!');
+            console.log('✅ [Debug] Button should be RED with YELLOW border now');
+        } else {
+            console.error('❌ [Debug] Button not found!');
             
-            // Добавляем визуальную индикацию
-            btn.style.border = '3px solid red';
-            btn.style.backgroundColor = 'yellow';
-            console.log('🎨 [Debug] Added red border and yellow background to button for visibility');
+            // Попробуем найти все кнопки
+            const allBtns = document.querySelectorAll('button');
+            console.log('🔍 [Debug] Total buttons on page:', allBtns.length);
+            
+            allBtns.forEach(b => {
+                if (b.textContent.includes('лист') || b.title.includes('лист') || b.id.includes('setlist')) {
+                    console.log('🔍 [Debug] Possible setlist button:', b.id, b.className, b.textContent);
+                }
+            });
         }
-        
-        // Проверяем наличие функции
-        console.log('🔍 [Debug] window.handleAddSongToSetlist exists:', typeof window.handleAddSongToSetlist);
-        console.log('🔍 [Debug] window.openSetlistSelector exists:', typeof window.openSetlistSelector);
-        
-        // Проверяем состояние выбора песни
-        const songSelect = document.getElementById('song-select');
-        console.log('🔍 [Debug] Song selector:', songSelect);
-        console.log('🔍 [Debug] Selected song:', songSelect?.value);
-        console.log('🔍 [Debug] Song selector options:', songSelect?.options.length);
-        
-        // Проверяем видимость контейнера песни
-        const songContent = document.getElementById('song-content');
-        console.log('🔍 [Debug] Song content container:', songContent);
-        console.log('🔍 [Debug] Song content visible:', songContent ? window.getComputedStyle(songContent).display : 'not found');
-        
-        // Ищем все кнопки с похожими классами
-        const allButtons = document.querySelectorAll('.legend-icon-btn');
-        console.log('🔍 [Debug] All legend buttons found:', allButtons.length);
-        allButtons.forEach((btn, index) => {
-            console.log(`🔍 [Debug] Button ${index}:`, btn.id, btn.className, 'visible:', window.getComputedStyle(btn).display);
-        });
-        
-    }, 2000); // Ждем 2 секунды для полной загрузки
+    }, 1000);
 });
+
+// Этот код удален, так как новый более простой код выше его заменяет
 
 // ФУНКЦИЯ ДОБАВЛЕНИЯ ПЕСНИ В СЕТ-ЛИСТ
 window.handleAddSongToSetlist = async function() {
