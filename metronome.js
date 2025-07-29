@@ -127,6 +127,19 @@ class MetronomeController {
             });
         }
 
+        // Time signature change
+        if (this.elements.timeSignature) {
+            this.elements.timeSignature.addEventListener('change', () => {
+                if (this.isActive) {
+                    // Перезапускаем метроном с новым размером
+                    this.toggleMetronome(); // Остановить
+                    setTimeout(() => {
+                        this.toggleMetronome(); // Запустить снова
+                    }, 50);
+                }
+            });
+        }
+
         // Slider events
         this.setupSliderEvents();
         

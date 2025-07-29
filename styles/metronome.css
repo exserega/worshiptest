@@ -111,11 +111,11 @@
 .metronome-play-toggle.active {
     background: var(--primary-color);
     border-color: var(--primary-color);
-    color: var(--button-text-color);
+    color: #ffffff !important; /* Всегда белый текст на активной кнопке */
 }
 
 .metronome-play-toggle.active i {
-    color: var(--button-text-color);
+    color: #ffffff !important; /* Всегда белая иконка на активной кнопке */
 }
 
 .metronome-play-toggle.active:hover {
@@ -540,9 +540,13 @@
 
 .metronome-play-button-large.active {
     background: var(--primary-color);
-    color: var(--button-text-color);
+    color: #ffffff !important; /* Всегда белый цвет для активной кнопки */
     box-shadow: 0 0 0 4px var(--glow-color), 0 8px 24px var(--glow-color);
     animation: pulse 2s infinite;
+}
+
+.metronome-play-button-large.active i {
+    color: #ffffff !important; /* Всегда белая иконка */
 }
 
 .metronome-play-button-large.active:hover {
