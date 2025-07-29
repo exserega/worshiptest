@@ -1,0 +1,191 @@
+/* ======================================== */
+/* AI VALIDATION SYSTEM                    */
+/* ======================================== */
+/*
+ * ЦЕЛЬ: Автоматическая проверка UI решений AI
+ * ПРИНЦИП: Визуальные индикаторы проблем в браузере
+ */
+
+/* === ACCESSIBILITY VALIDATION === */
+
+/* CURSOR_MARKER: VALIDATION_CONTRAST */
+/*
+ПРОВЕРКА КОНТРАСТНОСТИ:
+Эти стили покажут проблемы с контрастом прямо в браузере
+*/
+
+/* Выделяем элементы с плохим контрастом */
+*[style*="color: white"][style*="background: white"],
+*[style*="color: black"][style*="background: black"],
+*[style*="color: #fff"][style*="background: #fff"],
+*[style*="color: #000"][style*="background: #000"] {
+    /* ВНИМАНИЕ AI: Плохой контраст! */
+    outline: 3px solid red !important;
+    position: relative;
+}
+
+*[style*="color: white"][style*="background: white"]::before,
+*[style*="color: black"][style*="background: black"]::before,
+*[style*="color: #fff"][style*="background: #fff"]::before,
+*[style*="color: #000"][style*="background: #000"]::before {
+    content: "⚠️ ПЛОХОЙ КОНТРАСТ!";
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: red;
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    z-index: 9999;
+}
+
+/* === SIZE VALIDATION === */
+
+/* CURSOR_MARKER: VALIDATION_TOUCH_TARGETS */
+/*
+ПРОВЕРКА РАЗМЕРОВ TOUCH TARGETS:
+Выделяем слишком маленькие кнопки
+*/
+
+button:not(.validation-exempt),
+.button:not(.validation-exempt),
+[role="button"]:not(.validation-exempt) {
+    /* Проверяем минимальный размер */
+    min-height: var(--touch-target-min);
+}
+
+/* Выделяем кнопки меньше 44px */
+button[style*="height"][style*="px"]:not([style*="44px"]):not([style*="4[5-9]px"]):not([style*="5"]):not([style*="6"]):not([style*="7"]):not([style*="8"]):not([style*="9"]),
+.button[style*="height"][style*="px"]:not([style*="44px"]):not([style*="4[5-9]px"]):not([style*="5"]):not([style*="6"]):not([style*="7"]):not([style*="8"]):not([style*="9"]) {
+    outline: 2px solid orange !important;
+    position: relative;
+}
+
+/* === THEME VALIDATION === */
+
+/* CURSOR_MARKER: VALIDATION_HARDCODED_COLORS */
+/*
+ПРОВЕРКА ХАРДКОД ЦВЕТОВ:
+Выделяем элементы с хардкод цветами
+*/
+
+/* Выделяем хардкод белого/черного */
+*[style*="color: white"]:not(.validation-exempt),
+*[style*="color: black"]:not(.validation-exempt),
+*[style*="color: #fff"]:not(.validation-exempt),
+*[style*="color: #000"]:not(.validation-exempt),
+*[style*="color: #ffffff"]:not(.validation-exempt),
+*[style*="color: #000000"]:not(.validation-exempt) {
+    outline: 2px dashed yellow !important;
+    position: relative;
+}
+
+*[style*="color: white"]:not(.validation-exempt)::after,
+*[style*="color: black"]:not(.validation-exempt)::after,
+*[style*="color: #fff"]:not(.validation-exempt)::after,
+*[style*="color: #000"]:not(.validation-exempt)::after,
+*[style*="color: #ffffff"]:not(.validation-exempt)::after,
+*[style*="color: #000000"]:not(.validation-exempt)::after {
+    content: "⚠️ ХАРДКОД!";
+    position: absolute;
+    top: -20px;
+    right: 0;
+    background: orange;
+    color: black;
+    padding: 1px 4px;
+    font-size: 9px;
+    z-index: 9999;
+}
+
+/* === RESPONSIVE VALIDATION === */
+
+/* CURSOR_MARKER: VALIDATION_MOBILE */
+/*
+ПРОВЕРКА МОБИЛЬНОЙ ВЕРСИИ:
+Показываем проблемы на маленьких экранах
+*/
+
+@media (max-width: 768px) {
+    /* Выделяем слишком маленькие элементы на мобильном */
+    button:not(.validation-exempt),
+    .button:not(.validation-exempt),
+    [role="button"]:not(.validation-exempt) {
+        min-height: 44px !important;
+    }
+    
+    /* Выделяем элементы с мелким текстом */
+    *[style*="font-size"][style*="px"]:not([style*="16px"]):not([style*="1[7-9]px"]):not([style*="2"]):not([style*="3"]) {
+        background: rgba(255, 0, 0, 0.1) !important;
+    }
+}
+
+/* === AI DEBUGGING HELPERS === */
+
+/* CURSOR_MARKER: DEBUG_HELPERS */
+/*
+ПОМОЩНИКИ ОТЛАДКИ ДЛЯ AI:
+Включи эти стили для визуализации проблем
+*/
+
+/* Показать все boundaries (включать при отладке) */
+.ai-debug * {
+    outline: 1px solid rgba(255, 0, 0, 0.3) !important;
+}
+
+/* Показать flex/grid контейнеры */
+.ai-debug [style*="display: flex"],
+.ai-debug [style*="display: grid"],
+.ai-debug .flex,
+.ai-debug .grid {
+    background: rgba(0, 255, 0, 0.1) !important;
+}
+
+/* Показать переполнения */
+.ai-debug * {
+    overflow: visible !important;
+}
+
+/* === VALIDATION CHECKLIST === */
+/*
+🤖 АВТОМАТИЧЕСКАЯ ПРОВЕРКА ДЛЯ AI:
+
+После любых изменений UI, AI должен мысленно проверить:
+
+✅ ЦВЕТА:
+□ Нет красных outline (плохой контраст)?
+□ Нет желтых outline (хардкод цвета)?
+□ Элемент видим в обеих темах?
+
+✅ РАЗМЕРЫ:
+□ Нет оранжевых outline (маленькая кнопка)?
+□ Touch target >= 44px на мобильном?
+□ Текст читаемый на маленьком экране?
+
+✅ АДАПТИВНОСТЬ:
+□ Элемент помещается на 320px ширине?
+□ Не нужна горизонтальная прокрутка?
+□ Все интерактивные элементы доступны?
+
+КАК ИСПОЛЬЗОВАТЬ:
+1. Добавь класс .ai-debug к body для визуализации
+2. Проверь нет ли цветных outline вокруг элементов
+3. Протестируй на мобильном размере экрана
+4. Убери .ai-debug перед коммитом
+*/
+
+/* === QUICK FIXES === */
+/*
+🚀 БЫСТРЫЕ ИСПРАВЛЕНИЯ:
+
+КРАСНЫЙ OUTLINE (плохой контраст):
+→ Замени хардкод цвет на var(--text-contrast)
+
+ЖЕЛТЫЙ OUTLINE (хардкод):
+→ Замени color: white на color: var(--icon-contrast)
+
+ОРАНЖЕВЫЙ OUTLINE (маленькая кнопка):
+→ Добавь min-height: var(--touch-target-min)
+
+КРАСНЫЙ ФОН НА МОБИЛЬНОМ (мелкий текст):
+→ Увеличь font-size до 16px минимум
+*/
