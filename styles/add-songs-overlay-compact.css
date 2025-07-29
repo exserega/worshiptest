@@ -252,19 +252,7 @@
     display: none !important; /* Скрываем категорию для экономии места */
 }
 
-/* Обертка тональности */
-#add-songs-overlay .song-key-wrapper {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 4px !important;
-}
-
-#add-songs-overlay .song-key-wrapper i {
-    color: var(--primary-color) !important;
-    font-size: 0.7rem !important;
-}
-
-/* Тональность - как BPM, только цветной текст */
+/* Тональность - пока простой текст */
 #add-songs-overlay .song-key {
     color: var(--label-color) !important;
     font-weight: 600 !important;
