@@ -169,9 +169,7 @@
     min-height: 34px !important; /* Минимальная высота */
 }
 
-#add-songs-overlay .filter-btn i {
-    font-size: 0.75rem !important;
-}
+/* Иконка убрана из кнопки фильтра */
 
 #add-songs-overlay .filter-btn.active {
     background: var(--primary-color) !important;
