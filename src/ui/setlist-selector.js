@@ -4,6 +4,8 @@
 
 import { loadSetlists, createSetlist, addSongToSetlist } from '../api/index.js';
 
+console.log('📋 [SetlistSelector] Module loading...');
+
 class SetlistSelector {
     constructor() {
         // DOM элементы
@@ -227,11 +229,14 @@ class SetlistSelector {
 
 // Создаем экземпляр
 const setlistSelector = new SetlistSelector();
+console.log('📋 [SetlistSelector] Instance created');
 
 // Экспортируем функцию открытия
 export function openSetlistSelector(song) {
+    console.log('📋 [SetlistSelector] openSetlistSelector called with song:', song?.name);
     return setlistSelector.open(song);
 }
 
 // Экспортируем для глобального доступа
 window.openSetlistSelector = openSetlistSelector;
+console.log('📋 [SetlistSelector] Module initialized, window.openSetlistSelector =', typeof window.openSetlistSelector);

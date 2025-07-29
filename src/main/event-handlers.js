@@ -996,11 +996,17 @@ function setupSongEventHandlers() {
     
     // Кнопка добавления песни в сетлист
     if (ui.addToSetlistButton) {
+        console.log('📋 [EventHandlers] Add to setlist button found, attaching handler');
         ui.addToSetlistButton.addEventListener('click', async () => {
+            console.log('📋 [EventHandlers] Add to setlist button clicked');
             if (typeof window.handleAddSongToSetlist === 'function') {
                 await window.handleAddSongToSetlist();
+            } else {
+                console.error('❌ [EventHandlers] handleAddSongToSetlist function not found');
             }
         });
+    } else {
+        console.warn('⚠️ [EventHandlers] Add to setlist button not found');
     }
     
     // Обработчик обновления сет-листа

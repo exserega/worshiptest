@@ -20,6 +20,9 @@ import * as metronomeUI from '../../metronome.js';
 import searchWorkerManager from '../../src/js/workers/workerManager.js';
 import * as constants from '../../constants.js';
 
+// Импортируем модуль setlist-selector для его инициализации
+import '../ui/setlist-selector.js';
+
 // ====================================
 // MAIN INITIALIZATION FUNCTION
 // ====================================
