@@ -465,6 +465,15 @@ function setupSetlistEventHandlers() {
                                 }
                             }
                         );
+                        
+                        // КРИТИЧЕСКИ ВАЖНО: Показываем dropdown с сетлистами!
+                        const dropdown = document.getElementById('setlist-dropdown-menu');
+                        if (dropdown) {
+                            dropdown.classList.add('show');
+                            console.log('📋 [EventHandlers] Dropdown показан для отображения сетлистов');
+                        } else {
+                            console.error('📋 [EventHandlers] setlist-dropdown-menu не найден!');
+                        }
                     }
                 } catch (error) {
                     console.error('Ошибка загрузки сет-листов:', error);
@@ -560,6 +569,22 @@ function setupSetlistEventHandlers() {
             }
         });
         console.log('🎭 [EventHandlers] Repertoire panel handler attached');
+    }
+    
+    // ОБРАБОТЧИК DROPDOWN СЕТЛИСТОВ - КРИТИЧЕСКИ ВАЖНО!
+    const setlistDropdownBtn = document.getElementById('setlist-dropdown-btn');
+    if (setlistDropdownBtn) {
+        setlistDropdownBtn.addEventListener('click', () => {
+            console.log('📋 [EventHandlers] Dropdown button clicked');
+            const dropdown = document.getElementById('setlist-dropdown-menu');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+                console.log('📋 [EventHandlers] Dropdown toggled:', dropdown.classList.contains('show'));
+            }
+        });
+        console.log('📋 [EventHandlers] Dropdown button handler attached');
+    } else {
+        console.error('📋 [EventHandlers] setlist-dropdown-btn не найден!');
     }
     
     // Селектор вокалистов
