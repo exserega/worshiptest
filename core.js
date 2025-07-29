@@ -14,6 +14,7 @@ import {
     playClick as playClickNew,
     toggleMetronome as toggleMetronomeNew,
     getMetronomeState as getMetronomeStateNew,
+    initAudioOnUserGesture as initAudioOnUserGestureNew,
     wrapSongBlocks as wrapSongBlocksNew,
     correctBlockType as correctBlockTypeNew,
     demonstrateParser as demonstrateParserNew,
@@ -189,6 +190,7 @@ const resumeAudioContext = resumeAudioContextNew;
 const loadAudioFile = loadAudioFileNew;
 const toggleMetronome = toggleMetronomeNew;
 const getMetronomeState = getMetronomeStateNew;
+const initAudioOnUserGesture = initAudioOnUserGestureNew;
 
 export {
     getTransposition,
@@ -208,5 +210,6 @@ export {
     loadAudioFile,
     toggleMetronome,
     getMetronomeState,
+    initAudioOnUserGesture,
     distributeSongBlocksToColumns
 }; 
