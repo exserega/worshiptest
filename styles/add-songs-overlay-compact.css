@@ -252,9 +252,9 @@
     display: none !important; /* Скрываем категорию для экономии места */
 }
 
-/* Тональность - с темным фоном как BPM */
+/* Тональность - с правильным темным фоном */
 #add-songs-overlay .song-key {
-    background: var(--hover-color) !important;
+    background: rgba(0, 0, 0, 0.3) !important; /* Более темный фон */
     color: var(--text-color) !important;
     padding: 2px 6px !important;
     border-radius: 4px !important;
@@ -263,12 +263,12 @@
     display: inline-block !important;
 }
 
-/* BPM - с темным фоном как в панели */
+/* BPM - с тем же темным фоном */
 #add-songs-overlay .song-bpm {
     display: inline-flex !important;
     align-items: center !important;
     gap: 3px !important;
-    background: var(--hover-color) !important;
+    background: rgba(0, 0, 0, 0.3) !important; /* Более темный фон */
     color: var(--text-color) !important;
     padding: 2px 6px !important;
     border-radius: 4px !important;
@@ -279,6 +279,12 @@
 #add-songs-overlay .song-bpm i {
     color: var(--primary-color) !important;
     font-size: 0.65rem !important;
+}
+
+/* Адаптация для светлой темы */
+body[data-theme="light"] #add-songs-overlay .song-key,
+body[data-theme="light"] #add-songs-overlay .song-bpm {
+    background: rgba(0, 0, 0, 0.1) !important; /* Светлее для светлой темы */
 }
 
 /* Кнопка добавления - компактная */
