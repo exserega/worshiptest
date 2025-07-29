@@ -248,6 +248,11 @@ export function displaySongDetails(songData, keyToSelect) {
         }
         keySelect.dataset.songId = '';
         if (keyDisplay) keyDisplay.style.display = 'none';
+        
+        // Скрываем элементы управления
+        if (typeof window.toggleSongControls === 'function') {
+            window.toggleSongControls(false);
+        }
         favoriteButton.disabled = true;
         addToSetlistButton.disabled = true;
         repertoireButton.disabled = true;
@@ -353,6 +358,11 @@ export function displaySongDetails(songData, keyToSelect) {
     updateToggleChordsButton();
     updateChordsOnlyButton();
     updateRepertoireButton(songData);
+    
+    // Показываем элементы управления
+    if (typeof window.toggleSongControls === 'function') {
+        window.toggleSongControls(true);
+    }
 }
 
 /** Обновление размера шрифта текста песни */

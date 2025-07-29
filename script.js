@@ -252,6 +252,50 @@ window.currentCreatedSetlistId = null;
 window.currentCreatedSetlistName = '';
 window.addedSongsToCurrentSetlist = new Map(); // Map для хранения песен с их тональностями
 
+// Функция для управления видимостью элементов управления
+window.toggleSongControls = function(show) {
+    const elementsToToggle = [
+        '.control-group',           // Группа с тональностью и кнопками
+        '.song-legend-action',      // Кнопки добавления в списки
+        '.metronome-control-bar',   // Панель метронома
+        '#edit-song-button',        // Кнопка редактирования
+        '#copy-text-button'         // Кнопка копирования
+    ];
+    
+    elementsToToggle.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            element.style.display = show ? '' : 'none';
+        });
+    });
+    
+    // Также скрываем/показываем заголовок песни
+    const songTitle = document.querySelector('.song-title-text');
+    if (songTitle && !show) {
+        songTitle.textContent = 'Выберите песню';
+    }
+    
+    // Обновляем стиль fieldset с контентом песни
+    const songContent = document.getElementById('song-content');
+    if (songContent) {
+        if (!show) {
+            songContent.style.minHeight = '200px';
+            songContent.style.display = 'flex';
+            songContent.style.alignItems = 'center';
+            songContent.style.justifyContent = 'center';
+            songContent.style.color = 'var(--label-color)';
+            songContent.style.fontSize = '1.1rem';
+        } else {
+            songContent.style.minHeight = '';
+            songContent.style.display = '';
+            songContent.style.alignItems = '';
+            songContent.style.justifyContent = '';
+            songContent.style.color = '';
+            songContent.style.fontSize = '';
+        }
+    }
+};
+
 // Функция обновления счетчика добавленных песен
 window.updateAddedSongsCount = function() {
     const count = window.addedSongsToCurrentSetlist.size;

@@ -129,6 +129,11 @@ function setupUI() {
     if (typeof ui.updateSplitButton === 'function') {
         ui.updateSplitButton();
     }
+    
+    // Скрываем элементы управления пока не выбрана песня
+    if (typeof window.toggleSongControls === 'function') {
+        window.toggleSongControls(false);
+    }
 }
 
 /**
