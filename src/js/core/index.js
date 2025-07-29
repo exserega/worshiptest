@@ -16,7 +16,8 @@ export {
     playClick,
     toggleMetronome, 
     getMetronomeState,
-    initAudioOnUserGesture
+    initAudioOnUserGesture,
+    setSoundType
 } from './metronome.js';
 
 export { 

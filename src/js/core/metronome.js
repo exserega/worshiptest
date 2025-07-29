@@ -1,6 +1,6 @@
 // Agape Worship App - metronome.js
 // Модуль для работы с метрономом и аудио
-// Версия 2.0 - Программная генерация звука без внешних файлов
+// Версия 2.1 - Улучшенный звук метронома
 
 // --- AUDIO CONTEXT & METRONOME ---
 
@@ -13,14 +13,43 @@ let lookahead = 25.0; // Интервал планирования в милли
 let scheduleAheadTime = 0.1; // Насколько вперед планировать аудио (в секундах)
 let timerWorker = null;
 
-// Настройки звука
-const FREQUENCIES = {
-    high: 1000, // Частота для сильной доли (Гц)
-    low: 800    // Частота для слабых долей (Гц)
+// Настройки звука - классический метроном
+const SOUND_CONFIG = {
+    // Используем более низкие частоты для более приятного звука
+    frequencies: {
+        high: 440,    // A4 - для сильной доли (классическая нота Ля)
+        low: 220      // A3 - для слабых долей (октавой ниже)
+    },
+    
+    // Настройки для разных типов звука
+    woodblock: {
+        high: 800,    // Более высокий тон для акцента
+        low: 400      // Более низкий для обычных долей
+    },
+    
+    click: {
+        high: 600,    // Компромиссный вариант
+        low: 300      // Не слишком высокий, не слишком низкий
+    },
+    
+    // Параметры огибающей для более мягкого звука
+    envelope: {
+        attackTime: 0.001,    // Очень быстрая атака (1мс)
+        decayTime: 0.01,      // Быстрое затухание (10мс)
+        sustainLevel: 0.3,    // Уровень поддержки
+        releaseTime: 0.03     // Общее время звучания (30мс)
+    },
+    
+    // Громкость
+    volume: {
+        accent: 1.0,          // Громкость акцентированной доли
+        normal: 0.7,          // Громкость обычной доли
+        master: 0.5           // Общая громкость (снижена для комфорта)
+    }
 };
 
-const SOUND_DURATION = 0.03; // Длительность звука в секундах
-const MASTER_VOLUME = 0.8;   // Общая громкость
+// Текущий тип звука
+let currentSoundType = 'click'; // 'click', 'woodblock', или 'classic'
 
 /**
  * Настройка AudioContext с учетом всех браузеров
@@ -76,32 +105,80 @@ async function resumeAudioContext() {
 }
 
 /**
- * Создание одного клика метронома с программно сгенерированным звуком
+ * Создание одного клика метронома с улучшенным звуком
  */
-function createClick(frequency, time) {
+function createClick(isAccent, time) {
     if (!audioContext || audioContext.state !== 'running') return;
     
     try {
+        // Выбираем частоты в зависимости от типа звука
+        const frequencies = SOUND_CONFIG[currentSoundType] || SOUND_CONFIG.click;
+        const frequency = isAccent ? frequencies.high : frequencies.low;
+        const volume = isAccent ? SOUND_CONFIG.volume.accent : SOUND_CONFIG.volume.normal;
+        
         // Создаем осциллятор
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
         
+        // Добавляем фильтр для более мягкого звука
+        const filter = audioContext.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 2000; // Срезаем высокие частоты для мягкости
+        filter.Q.value = 1;
+        
         // Настройка осциллятора
         oscillator.frequency.value = frequency;
-        oscillator.type = 'sine'; // Можно попробовать 'square' или 'triangle'
         
-        // Настройка огибающей громкости (ADSR)
+        // Используем разные типы волн для разных звуков
+        if (currentSoundType === 'woodblock') {
+            oscillator.type = 'square'; // Более резкий звук
+        } else if (currentSoundType === 'classic') {
+            oscillator.type = 'sine'; // Чистый тон
+        } else {
+            oscillator.type = 'triangle'; // Мягкий клик
+        }
+        
+        // Настройка огибающей громкости (ADSR) для естественного звука
+        const env = SOUND_CONFIG.envelope;
+        const finalVolume = volume * SOUND_CONFIG.volume.master;
+        
         gainNode.gain.setValueAtTime(0, time);
-        gainNode.gain.linearRampToValueAtTime(MASTER_VOLUME, time + 0.001); // Атака
-        gainNode.gain.exponentialRampToValueAtTime(0.01, time + SOUND_DURATION); // Затухание
+        gainNode.gain.linearRampToValueAtTime(finalVolume, time + env.attackTime);
+        gainNode.gain.exponentialRampToValueAtTime(
+            finalVolume * env.sustainLevel, 
+            time + env.attackTime + env.decayTime
+        );
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.001, 
+            time + env.attackTime + env.decayTime + env.releaseTime
+        );
         
         // Подключение узлов
-        oscillator.connect(gainNode);
+        oscillator.connect(filter);
+        filter.connect(gainNode);
         gainNode.connect(audioContext.destination);
         
         // Запуск и остановка
         oscillator.start(time);
-        oscillator.stop(time + SOUND_DURATION);
+        oscillator.stop(time + env.attackTime + env.decayTime + env.releaseTime);
+        
+        // Добавляем небольшой "щелчок" для реалистичности
+        if (currentSoundType === 'click' || currentSoundType === 'woodblock') {
+            const clickOsc = audioContext.createOscillator();
+            const clickGain = audioContext.createGain();
+            
+            clickOsc.type = 'square';
+            clickOsc.frequency.value = isAccent ? 80 : 60; // Низкочастотный щелчок
+            
+            clickGain.gain.setValueAtTime(finalVolume * 0.5, time);
+            clickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.005);
+            
+            clickOsc.connect(clickGain);
+            clickGain.connect(audioContext.destination);
+            
+            clickOsc.start(time);
+            clickOsc.stop(time + 0.005);
+        }
         
     } catch (error) {
         console.error("Ошибка создания клика:", error);
@@ -127,9 +204,8 @@ function scheduler() {
 function scheduleNote(time) {
     const beatsPerMeasure = 4; // Можно сделать настраиваемым
     const isAccent = currentBeat % beatsPerMeasure === 0;
-    const frequency = isAccent ? FREQUENCIES.high : FREQUENCIES.low;
     
-    createClick(frequency, time);
+    createClick(isAccent, time);
 }
 
 /**
@@ -195,8 +271,18 @@ async function toggleMetronome(bpm = 120, beatsPerMeasure = 4) {
         // Web Workers не всегда доступны и могут создавать проблемы
         metronomeInterval = setInterval(scheduler, lookahead);
         
-        console.log(`Метроном запущен: ${bpm} BPM`);
+        console.log(`Метроном запущен: ${bpm} BPM, тип звука: ${currentSoundType}`);
         return { isActive: true };
+    }
+}
+
+/**
+ * Изменение типа звука метронома
+ */
+function setSoundType(type) {
+    if (['click', 'woodblock', 'classic'].includes(type)) {
+        currentSoundType = type;
+        console.log(`Тип звука метронома изменен на: ${type}`);
     }
 }
 
@@ -208,6 +294,7 @@ function getMetronomeState() {
         isActive: isMetronomeActive,
         audioContext: audioContext,
         currentTempo: currentTempo,
+        soundType: currentSoundType,
         supported: !!(window.AudioContext || window.webkitAudioContext)
     };
 }
@@ -242,7 +329,8 @@ export {
     playClick,
     toggleMetronome,
     getMetronomeState,
-    initAudioOnUserGesture
+    initAudioOnUserGesture,
+    setSoundType
 };
 
 // Экспортируем переменные состояния для совместимости
