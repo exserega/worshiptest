@@ -424,17 +424,143 @@ function setupSetlistEventHandlers() {
         }
     });
     
-    // Переключение панелей - УБРАЛИ ИЗ event-handlers.js!
-    // Логика перенесена в script.js где есть доступ ко всем функциям
-    // ui.toggleSetlistsButton обработчик теперь в script.js
+    // Переключение панелей - ПРЯМАЯ ЛОГИКА БЕЗ WINDOW ФУНКЦИЙ
+    if (ui.toggleSetlistsButton) {
+        ui.toggleSetlistsButton.addEventListener('click', async () => {
+            console.log('📋 [EventHandlers] Setlists button clicked');
+            const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleSetlistsButton.classList.add('loading');
+                try {
+                    ui.setlistsPanel.classList.add('open');
+                    // Прямой вызов API и UI функций
+                    const setlists = await api.loadSetlists();
+                    console.log('📋 [EventHandlers] Loaded setlists:', setlists.length);
+                    if (window.state && typeof window.state.setSetlists === 'function') {
+                        window.state.setSetlists(setlists);
+                    }
+                    if (typeof ui.renderSetlists === 'function') {
+                        ui.renderSetlists(setlists, 
+                            window.handleSetlistSelect || function(setlist) {
+                                console.log('📋 Setlist selected:', setlist.name);
+                                if (window.state) window.state.setCurrentSetlistId(setlist.id);
+                                if (ui.displaySelectedSetlist) {
+                                    ui.displaySelectedSetlist(setlist, 
+                                        window.handleFavoriteOrRepertoireSelect,
+                                        window.handleRemoveSongFromSetlist
+                                    );
+                                }
+                            },
+                            window.handleSetlistDelete || async function(setlistId, setlistName) {
+                                console.log('📋 Delete setlist:', setlistName);
+                                if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
+                                    try {
+                                        await api.deleteSetlist(setlistId);
+                                        ui.toggleSetlistsButton.click(); // Refresh panel
+                                    } catch (error) {
+                                        console.error('Ошибка удаления:', error);
+                                        alert('Не удалось удалить сет-лист');
+                                    }
+                                }
+                            }
+                        );
+                    }
+                } catch (error) {
+                    console.error('Ошибка загрузки сет-листов:', error);
+                } finally {
+                    ui.toggleSetlistsButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('📋 [EventHandlers] Setlists panel handler attached');
+    }
     
-    // Панель "Мои" - УБРАЛИ ИЗ event-handlers.js!
-    // Логика перенесена в script.js где есть доступ ко всем функциям
-    // ui.toggleMyListButton обработчик теперь в script.js
+    // Панель "Мои" - ПРЯМАЯ ЛОГИКА
+    if (ui.toggleMyListButton) {
+        ui.toggleMyListButton.addEventListener('click', async () => {
+            console.log('⭐ [EventHandlers] My List button clicked');
+            const isAlreadyOpen = ui.myListPanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleMyListButton.classList.add('loading');
+                try {
+                    ui.myListPanel.classList.add('open');
+                    if (window.state && window.state.allSongs && window.state.favorites) {
+                        const favoriteSongs = window.state.allSongs.filter(song => 
+                            window.state.favorites.some(fav => fav.songId === song.id)
+                        ).map(song => {
+                            const fav = window.state.favorites.find(f => f.songId === song.id);
+                            return { ...song, preferredKey: fav.preferredKey };
+                        });
+                        console.log('⭐ [EventHandlers] Rendering favorites:', favoriteSongs.length);
+                        ui.renderFavorites(favoriteSongs, 
+                            window.handleFavoriteOrRepertoireSelect,
+                            async function(songId) {
+                                if(confirm("Удалить песню из 'Моих'?")) {
+                                    try {
+                                        await api.removeFromFavorites(songId);
+                                        ui.toggleMyListButton.click(); // Refresh panel
+                                    } catch (error) {
+                                        console.error('Ошибка удаления из избранного:', error);
+                                        alert('Не удалось удалить песню из списка');
+                                    }
+                                }
+                            }
+                        );
+                    } else {
+                        console.log('⭐ [EventHandlers] No favorites data available');
+                    }
+                } catch (error) {
+                    console.error('Ошибка загрузки избранных:', error);
+                } finally {
+                    ui.toggleMyListButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('⭐ [EventHandlers] My List panel handler attached');
+    }
     
-    // Панель "Репертуар" - УБРАЛИ ИЗ event-handlers.js!
-    // Логика перенесена в script.js где есть доступ ко всем функциям
-    // ui.toggleRepertoireButton обработчик теперь в script.js
+    // Панель "Репертуар" - ПРЯМАЯ ЛОГИКА
+    if (ui.toggleRepertoireButton) {
+        ui.toggleRepertoireButton.addEventListener('click', async () => {
+            console.log('🎭 [EventHandlers] Repertoire button clicked');
+            const isAlreadyOpen = ui.repertoirePanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleRepertoireButton.classList.add('loading');
+                try {
+                    ui.repertoirePanel.classList.add('open');
+                    console.log('🎭 [EventHandlers] Loading repertoire...');
+                    api.loadRepertoire(
+                        window.state ? window.state.currentVocalistId : null, 
+                        window.handleRepertoireUpdate || function(data) {
+                            console.log('🎭 Repertoire loaded:', data);
+                            if (data.error) {
+                                console.error('🎭 Repertoire error:', data.error);
+                                if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
+                                    window.state.setCurrentRepertoireSongsData([]);
+                                }
+                            } else {
+                                console.log('🎭 Repertoire data loaded:', data.data?.length || 0);
+                                if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
+                                    window.state.setCurrentRepertoireSongsData(data.data || []);
+                                }
+                            }
+                            if (typeof ui.renderRepertoire === 'function') {
+                                ui.renderRepertoire(window.handleFavoriteOrRepertoireSelect);
+                            }
+                        }
+                    );
+                } catch (error) {
+                    console.error('Ошибка загрузки репертуара:', error);
+                } finally {
+                    ui.toggleRepertoireButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('🎭 [EventHandlers] Repertoire panel handler attached');
+    }
     
     // Селектор вокалистов
     if (ui.vocalistSelect) {
