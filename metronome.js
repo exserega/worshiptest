@@ -289,8 +289,7 @@ class MetronomeController {
         try {
             // Инициализируем аудио контекст при первом клике (важно для мобильных)
             if (!this.audioInitialized) {
-                await core.setupAudioContext();
-                await core.loadAudioFile();
+                await core.initAudioOnUserGesture();
                 this.audioInitialized = true;
             }
             
@@ -298,7 +297,8 @@ class MetronomeController {
             const result = await core.toggleMetronome(this.currentBPM, beats);
             
             if (result.error) {
-                alert(`Ошибка метронома: ${result.error}`);
+                console.error('Ошибка метронома:', result.error);
+                // Не показываем alert для лучшего UX
                 return;
             }
             
@@ -307,7 +307,7 @@ class MetronomeController {
             
         } catch (error) {
             console.error('Metronome toggle error:', error);
-            alert('Не удалось переключить метроном');
+            // Не показываем alert для лучшего UX
         }
     }
 
