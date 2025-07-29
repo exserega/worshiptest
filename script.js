@@ -695,23 +695,88 @@ window.showNotification = function(message, type = 'info') {
     }, 3000);
 };
 
+// Глобальный перехватчик всех кликов для отладки
+document.addEventListener('click', (e) => {
+    // Логируем все клики по элементам с определенными классами
+    if (e.target.closest('.legend-icon-btn') || 
+        e.target.closest('.song-legend-action') ||
+        e.target.id === 'add-to-setlist-button' ||
+        e.target.closest('#add-to-setlist-button')) {
+        
+        console.log('🎯 [Debug] Click detected!');
+        console.log('🎯 [Debug] Clicked element:', e.target);
+        console.log('🎯 [Debug] Element ID:', e.target.id);
+        console.log('🎯 [Debug] Element classes:', e.target.className);
+        console.log('🎯 [Debug] Parent button:', e.target.closest('button'));
+        console.log('🎯 [Debug] Event phase:', e.eventPhase);
+        console.log('🎯 [Debug] Event bubbles:', e.bubbles);
+        console.log('🎯 [Debug] Default prevented:', e.defaultPrevented);
+    }
+}, true); // true = capture phase
+
 // Временная проверка доступности кнопки
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         const btn = document.getElementById('add-to-setlist-button');
         console.log('🔍 [Debug] Add to setlist button:', btn);
         console.log('🔍 [Debug] Button visible:', btn ? window.getComputedStyle(btn).display : 'not found');
-        console.log('🔍 [Debug] Button clickable:', btn ? !btn.disabled : 'not found');
+        console.log('🔍 [Debug] Button disabled:', btn ? btn.disabled : 'not found');
+        console.log('🔍 [Debug] Button parent visible:', btn?.parentElement ? window.getComputedStyle(btn.parentElement).display : 'not found');
+        console.log('🔍 [Debug] Button z-index:', btn ? window.getComputedStyle(btn).zIndex : 'not found');
+        console.log('🔍 [Debug] Button pointer-events:', btn ? window.getComputedStyle(btn).pointerEvents : 'not found');
         
+        // Проверяем все обработчики
         if (btn) {
-            // Добавляем прямой обработчик для теста
-            btn.onclick = () => {
-                console.log('🔍 [Debug] Direct onclick triggered!');
+            const listeners = getEventListeners ? getEventListeners(btn) : null;
+            console.log('🔍 [Debug] Event listeners:', listeners);
+            
+            // Добавляем несколько обработчиков для теста
+            btn.onclick = (e) => {
+                console.log('🔥 [Debug] onclick fired!', e);
                 if (window.handleAddSongToSetlist) {
                     window.handleAddSongToSetlist();
                 }
             };
+            
+            btn.addEventListener('click', (e) => {
+                console.log('🔥 [Debug] addEventListener click fired!', e);
+            }, true);
+            
+            // Проверяем родительские элементы
+            let parent = btn.parentElement;
+            while (parent && parent !== document.body) {
+                console.log('🔍 [Debug] Parent element:', parent.tagName, parent.className, 'display:', window.getComputedStyle(parent).display);
+                parent = parent.parentElement;
+            }
+            
+            // Добавляем визуальную индикацию
+            btn.style.border = '3px solid red';
+            btn.style.backgroundColor = 'yellow';
+            console.log('🎨 [Debug] Added red border and yellow background to button for visibility');
         }
+        
+        // Проверяем наличие функции
+        console.log('🔍 [Debug] window.handleAddSongToSetlist exists:', typeof window.handleAddSongToSetlist);
+        console.log('🔍 [Debug] window.openSetlistSelector exists:', typeof window.openSetlistSelector);
+        
+        // Проверяем состояние выбора песни
+        const songSelect = document.getElementById('song-select');
+        console.log('🔍 [Debug] Song selector:', songSelect);
+        console.log('🔍 [Debug] Selected song:', songSelect?.value);
+        console.log('🔍 [Debug] Song selector options:', songSelect?.options.length);
+        
+        // Проверяем видимость контейнера песни
+        const songContent = document.getElementById('song-content');
+        console.log('🔍 [Debug] Song content container:', songContent);
+        console.log('🔍 [Debug] Song content visible:', songContent ? window.getComputedStyle(songContent).display : 'not found');
+        
+        // Ищем все кнопки с похожими классами
+        const allButtons = document.querySelectorAll('.legend-icon-btn');
+        console.log('🔍 [Debug] All legend buttons found:', allButtons.length);
+        allButtons.forEach((btn, index) => {
+            console.log(`🔍 [Debug] Button ${index}:`, btn.id, btn.className, 'visible:', window.getComputedStyle(btn).display);
+        });
+        
     }, 2000); // Ждем 2 секунды для полной загрузки
 });
 
