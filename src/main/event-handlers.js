@@ -687,6 +687,84 @@ function setupSetlistEventHandlers() {
         console.log('❌ [EventHandlers] Close mobile preview button attached');
     }
     
+    // ОБРАБОТЧИКИ МОБИЛЬНОГО ОВЕРЛЕЯ ВЫБОРА ТОНАЛЬНОСТИ - КРИТИЧЕСКИ ВАЖНО!
+    
+    // Кнопка добавления в мобильном оверлее
+    const addSongToSetlistMobileBtn = document.getElementById('add-song-to-setlist-mobile');
+    if (addSongToSetlistMobileBtn) {
+        addSongToSetlistMobileBtn.addEventListener('click', async () => {
+            console.log('🎵 [EventHandlers] Mobile add song button clicked');
+            
+            const songTitle = document.getElementById('mobile-song-title')?.textContent;
+            const selectedKey = document.getElementById('mobile-key-selector')?.value;
+            
+            console.log('🎵 [EventHandlers] Song:', songTitle, 'Key:', selectedKey);
+            
+            // Находим песню по названию
+            const allSongs = window.state?.allSongs || [];
+            const song = allSongs.find(s => s.name === songTitle);
+            
+            if (song && selectedKey) {
+                try {
+                    // Добавляем песню в сетлист
+                    if (typeof window.addSongToSetlist === 'function') {
+                        await window.addSongToSetlist(song, selectedKey);
+                        console.log('✅ [EventHandlers] Song added successfully');
+                        
+                        // Закрываем мобильный оверлей
+                        const mobileOverlay = document.getElementById('mobile-song-preview-overlay');
+                        if (mobileOverlay) {
+                            mobileOverlay.classList.remove('show');
+                        }
+                        
+                        // Показываем уведомление
+                        if (typeof window.showNotification === 'function') {
+                            window.showNotification('✅ Песня добавлена в сет-лист', 'success');
+                        }
+                    } else {
+                        console.error('🎵 [EventHandlers] addSongToSetlist function not found');
+                    }
+                } catch (error) {
+                    console.error('🎵 [EventHandlers] Error adding song:', error);
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification('❌ Ошибка добавления песни', 'error');
+                    }
+                }
+            } else {
+                console.error('🎵 [EventHandlers] Song or key not found:', song, selectedKey);
+            }
+        });
+        console.log('🎵 [EventHandlers] Mobile add song button attached');
+    } else {
+        console.error('🎵 [EventHandlers] add-song-to-setlist-mobile не найден!');
+    }
+    
+    // Селектор тональности в мобильном оверлее
+    const mobileKeySelector = document.getElementById('mobile-key-selector');
+    if (mobileKeySelector) {
+        mobileKeySelector.addEventListener('change', async (e) => {
+            console.log('🎵 [EventHandlers] Mobile key selector changed:', e.target.value);
+            
+            const songTitle = document.getElementById('mobile-song-title')?.textContent;
+            const allSongs = window.state?.allSongs || [];
+            const song = allSongs.find(s => s.name === songTitle);
+            
+            if (song) {
+                try {
+                    // Импортируем и обновляем текст песни
+                    const { displaySongTextInMobileOverlay } = await import('../../ui/overlay-manager.js');
+                    displaySongTextInMobileOverlay(song, e.target.value);
+                    console.log('✅ [EventHandlers] Song text updated for new key');
+                } catch (error) {
+                    console.error('🎵 [EventHandlers] Error updating song text:', error);
+                }
+            }
+        });
+        console.log('🎵 [EventHandlers] Mobile key selector attached');
+    } else {
+        console.error('🎵 [EventHandlers] mobile-key-selector не найден!');
+    }
+    
     // ОБРАБОТЧИКИ КНОПОК ДОБАВЛЕНИЯ ПЕСЕН - КРИТИЧЕСКИ ВАЖНО!
     
     // Кнопка "Добавить" в панели сетлистов
