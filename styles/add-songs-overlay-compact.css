@@ -181,6 +181,7 @@
 
 #add-songs-overlay .results-section {
     padding: 8px 10px !important;
+    background: var(--background-color) !important; /* Как в панели сет-листов */
 }
 
 /* Сетка песен - мобильная */
@@ -191,7 +192,7 @@
     max-width: 100% !important;
 }
 
-/* Карточка песни - компактная */
+/* Карточка песни - как в панели сет-листов */
 #add-songs-overlay .song-card {
     padding: 8px 10px !important;
     border-radius: 6px !important;
@@ -199,11 +200,15 @@
     align-items: center !important;
     justify-content: space-between !important;
     min-height: 44px !important;
+    background: var(--container-background-color) !important;
+    border: 1px solid var(--border-color) !important;
 }
 
 #add-songs-overlay .song-card:hover {
+    background: var(--hover-color) !important;
+    border-color: var(--primary-color) !important;
     transform: none !important;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: none !important;
 }
 
 /* Заголовок карточки - в одну строку */
@@ -247,15 +252,29 @@
     display: none !important; /* Скрываем категорию для экономии места */
 }
 
-/* Тональность - как в панели сет-листов */
-#add-songs-overlay .preferred-key {
+/* Тональность - точно как в панели сет-листов */
+#add-songs-overlay .song-key {
     background: var(--primary-color) !important;
     color: var(--color-button-text) !important;
     padding: 2px 6px !important;
     border-radius: 4px !important;
     font-size: 0.7rem !important;
     font-weight: 600 !important;
-    line-height: 1 !important;
+}
+
+/* BPM - как в панели сет-листов */
+#add-songs-overlay .song-bpm {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    color: var(--label-color) !important;
+    font-weight: 500 !important;
+    font-size: 0.7rem !important;
+}
+
+#add-songs-overlay .song-bpm i {
+    color: var(--primary-color) !important;
+    font-size: 0.7rem !important;
 }
 
 /* Кнопка добавления - компактная */
@@ -282,10 +301,11 @@
     border-color: var(--success-color) !important;
 }
 
-/* Карточка добавленной песни - менее яркая */
+/* Карточка добавленной песни - унифицированная с панелью */
 #add-songs-overlay .song-card.added {
     background: var(--hover-color) !important;
-    opacity: 0.8;
+    opacity: 0.7 !important;
+    border-color: var(--border-color) !important;
 }
 
 #add-songs-overlay .song-add-btn i {
@@ -293,8 +313,7 @@
 }
 
 /* Убираем лишние элементы для мобильных */
-#add-songs-overlay .song-vocalist,
-#add-songs-overlay .song-bpm-info {
+#add-songs-overlay .song-vocalist {
     display: none !important;
 }
 
