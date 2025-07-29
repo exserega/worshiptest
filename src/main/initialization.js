@@ -141,10 +141,45 @@ function setupSwipeToClose() {
     panels.forEach(panel => {
         let startY = 0;
         let startX = 0;
+        let startTime = 0;
+        let isScrolling = null;
         
         panel.addEventListener('touchstart', (e) => {
             startY = e.touches[0].clientY;
             startX = e.touches[0].clientX;
+            startTime = Date.now();
+            isScrolling = null; // Сбрасываем флаг скроллинга
+            
+            // Проверяем, не начался ли тач на скроллируемом элементе
+            const target = e.target;
+            const scrollableElements = [
+                '.songs-list',
+                '.results-section',
+                '.search-results-container',
+                '.setlist-songs-container',
+                '.fullscreen-body',
+                '.repertoire-list'
+            ];
+            
+            const isOnScrollableElement = scrollableElements.some(selector => 
+                target.closest(selector) !== null
+            );
+            
+            if (isOnScrollableElement) {
+                isScrolling = true; // Предполагаем скроллинг если касание на скроллируемом элементе
+            }
+        });
+        
+        panel.addEventListener('touchmove', (e) => {
+            if (isScrolling === null) {
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                const deltaX = Math.abs(currentX - startX);
+                const deltaY = Math.abs(currentY - startY);
+                
+                // Определяем направление движения на основе первых движений
+                isScrolling = deltaY > deltaX;
+            }
         });
         
         panel.addEventListener('touchend', (e) => {
@@ -152,18 +187,40 @@ function setupSwipeToClose() {
             const endX = e.changedTouches[0].clientX;
             const deltaY = startY - endY;
             const deltaX = startX - endX;
+            const duration = Date.now() - startTime;
             
-            // Swipe up to close (вертикальные панели)
-            if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > 50) {
-                if (panel.classList.contains('show') || panel.classList.contains('open')) {
-                    panel.classList.remove('show', 'open');
+            // Если это был скроллинг, не закрываем панель
+            if (isScrolling) {
+                return;
+            }
+            
+            // Для боковых панелей (setlists-panel) - только свайп вправо
+            if (panel.id === 'setlists-panel' || panel.classList.contains('side-panel')) {
+                // Свайп вправо для закрытия (deltaX отрицательный)
+                const isRightSwipe = deltaX < -constants.SWIPE_THRESHOLD;
+                const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * constants.SWIPE_RATIO;
+                const isFastSwipe = duration < constants.SWIPE_TIME_LIMIT;
+                
+                if (isRightSwipe && isHorizontalDominant && isFastSwipe) {
+                    if (panel.classList.contains('show') || panel.classList.contains('open')) {
+                        panel.classList.remove('show', 'open');
+                        console.log('👆 [Swipe] Закрытие панели свайпом вправо');
+                    }
                 }
             }
             
-            // Swipe left to close (боковые панели)
-            if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX > 50) {
-                if (panel.classList.contains('show') || panel.classList.contains('open')) {
-                    panel.classList.remove('show', 'open');
+            // Для оверлеев (add-songs-overlay, mobile-song-preview) - свайп вниз
+            if (panel.classList.contains('global-fullscreen-overlay')) {
+                // Свайп вниз для закрытия (deltaY отрицательный)
+                const isDownSwipe = deltaY < -constants.SWIPE_THRESHOLD;
+                const isVerticalDominant = Math.abs(deltaY) > Math.abs(deltaX) * constants.SWIPE_RATIO;
+                const isFastSwipe = duration < constants.SWIPE_TIME_LIMIT;
+                
+                if (isDownSwipe && isVerticalDominant && isFastSwipe) {
+                    if (panel.classList.contains('show')) {
+                        panel.classList.remove('show');
+                        console.log('👆 [Swipe] Закрытие оверлея свайпом вниз');
+                    }
                 }
             }
         });

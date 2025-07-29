@@ -1118,25 +1118,7 @@ function setupPresentationEventHandlers() {
 function setupTouchEventHandlers() {
     console.log('👆 [EventHandlers] setupTouchEventHandlers');
     
-    // Swipe to close для панелей
-    const panels = document.querySelectorAll('.swipe-panel');
-    panels.forEach(panel => {
-        let startY = 0;
-        
-        panel.addEventListener('touchstart', (e) => {
-            startY = e.touches[0].clientY;
-        });
-        
-        panel.addEventListener('touchend', (e) => {
-            const endY = e.changedTouches[0].clientY;
-            const deltaY = startY - endY;
-            
-            // Swipe up to close
-            if (deltaY > 50) {
-                panel.classList.remove('show');
-            }
-        });
-    });
+    // Удаляем дублирующий обработчик свайпов - они уже настроены в initialization.js
 }
 
 // ====================================

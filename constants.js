@@ -25,5 +25,7 @@ export const MAX_SHARED_SONGS = 8;
 export const CONTROLS_HIDE_DELAY = 3000; // 3 секунды
 
 // Константы для свайпов
-export const SWIPE_THRESHOLD = 50; // Минимальная длина свайпа
-export const SWIPE_VERTICAL_LIMIT = 75; // Макс. отклонение по вертикали 
+export const SWIPE_THRESHOLD = 100; // Минимальная длина свайпа (увеличено для предотвращения случайных закрытий)
+export const SWIPE_VERTICAL_LIMIT = 75; // Макс. отклонение по вертикали
+export const SWIPE_TIME_LIMIT = 500; // Максимальное время свайпа в мс
+export const SWIPE_RATIO = 2; // Минимальное соотношение основной оси к второстепенной 
