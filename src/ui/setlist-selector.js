@@ -11,14 +11,15 @@ class SetlistSelector {
         // DOM элементы
         this.overlay = document.getElementById('setlist-select-overlay');
         this.songNameDisplay = document.getElementById('adding-song-name');
-        this.dropdown = document.getElementById('setlist-select-dropdown');
+        this.songKeyDisplay = document.getElementById('adding-song-key');
+        this.setlistsGrid = document.getElementById('setlists-grid');
         this.newNameInput = document.getElementById('new-setlist-name-modal');
-        this.confirmButton = document.getElementById('confirm-add-to-setlist');
-        this.cancelButton = document.getElementById('cancel-setlist-select');
+        this.createButton = document.getElementById('create-and-add');
         this.closeButton = document.getElementById('close-setlist-select');
         
         // Состояние
         this.currentSong = null;
+        this.selectedSetlistId = null;
         this.setlists = [];
         
         // Инициализация
@@ -27,8 +28,7 @@ class SetlistSelector {
     
     init() {
         // Обработчики событий
-        this.confirmButton?.addEventListener('click', () => this.handleConfirm());
-        this.cancelButton?.addEventListener('click', () => this.close());
+        this.createButton?.addEventListener('click', () => this.handleCreateNew());
         this.closeButton?.addEventListener('click', () => this.close());
         
         // Закрытие по клику на фон
@@ -45,14 +45,23 @@ class SetlistSelector {
             }
         });
         
-        // Обработчики изменений
-        this.dropdown?.addEventListener('change', () => this.updateConfirmButton());
-        this.newNameInput?.addEventListener('input', () => this.updateConfirmButton());
+        // Обработчик изменения в поле нового сет-листа
+        this.newNameInput?.addEventListener('input', () => {
+            this.createButton.disabled = !this.newNameInput.value.trim();
+        });
         
         // Enter в поле ввода
         this.newNameInput?.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !this.confirmButton.disabled) {
-                this.handleConfirm();
+            if (e.key === 'Enter' && !this.createButton.disabled) {
+                this.handleCreateNew();
+            }
+        });
+        
+        // Клик по сет-листу
+        this.setlistsGrid?.addEventListener('click', (e) => {
+            const item = e.target.closest('.setlist-item');
+            if (item) {
+                this.selectSetlist(item.dataset.id);
             }
         });
     }
@@ -60,23 +69,31 @@ class SetlistSelector {
     /**
      * Открывает overlay для выбора сет-листа
      * @param {Object} song - Объект песни для добавления
+     * @param {string} key - Выбранная тональность
      */
-    async open(song) {
+    async open(song, key) {
         if (!song) {
             console.error('No song provided to SetlistSelector');
             return;
         }
         
         this.currentSong = song;
+        this.currentSong.selectedKey = key || song.keys?.[0] || 'C';
         
-        // Отображаем название песни
+        // Отображаем информацию о песне
         if (this.songNameDisplay) {
             this.songNameDisplay.textContent = song.name || 'Без названия';
         }
         
-        // Сбрасываем форму
+        if (this.songKeyDisplay) {
+            this.songKeyDisplay.textContent = this.currentSong.selectedKey;
+        }
+        
+        // Сбрасываем состояние
+        this.selectedSetlistId = null;
         if (this.newNameInput) {
             this.newNameInput.value = '';
+            this.createButton.disabled = true;
         }
         
         // Показываем overlay
@@ -84,9 +101,6 @@ class SetlistSelector {
         
         // Загружаем сет-листы
         await this.loadSetlists();
-        
-        // Фокус на dropdown
-        this.dropdown?.focus();
     }
     
     /**
@@ -112,78 +126,78 @@ class SetlistSelector {
     async loadSetlists() {
         try {
             // Показываем загрузку
-            if (this.dropdown) {
-                this.dropdown.innerHTML = '<option value="">Загрузка...</option>';
-                this.dropdown.disabled = true;
+            if (this.setlistsGrid) {
+                this.setlistsGrid.innerHTML = '<div class="loading-text">Загрузка...</div>';
             }
             
             // Загружаем сет-листы
             this.setlists = await loadSetlists();
             
-            // Обновляем dropdown
-            if (this.dropdown) {
-                this.dropdown.innerHTML = '<option value="">Выберите сет-лист</option>';
+            // Обновляем сетку
+            if (this.setlistsGrid) {
+                this.setlistsGrid.innerHTML = '';
                 
-                this.setlists.forEach(setlist => {
-                    const option = document.createElement('option');
-                    option.value = setlist.id;
-                    option.textContent = setlist.name;
-                    this.dropdown.appendChild(option);
-                });
-                
-                this.dropdown.disabled = false;
+                if (this.setlists.length === 0) {
+                    this.setlistsGrid.innerHTML = '<div class="empty-text">Нет сет-листов</div>';
+                } else {
+                    this.setlists.forEach(setlist => {
+                        const item = document.createElement('div');
+                        item.className = 'setlist-item';
+                        item.dataset.id = setlist.id;
+                        
+                        const songsCount = setlist.songs?.length || 0;
+                        item.innerHTML = `
+                            <span class="setlist-name">${setlist.name}</span>
+                            <span class="setlist-songs-count">${songsCount} песен</span>
+                        `;
+                        
+                        this.setlistsGrid.appendChild(item);
+                    });
+                }
             }
             
         } catch (error) {
             console.error('Error loading setlists:', error);
-            if (this.dropdown) {
-                this.dropdown.innerHTML = '<option value="">Ошибка загрузки</option>';
+            if (this.setlistsGrid) {
+                this.setlistsGrid.innerHTML = '<div class="error-text">Ошибка загрузки</div>';
             }
         }
     }
     
     /**
-     * Обновляет состояние кнопки подтверждения
+     * Выбирает сет-лист
      */
-    updateConfirmButton() {
-        if (!this.confirmButton) return;
+    selectSetlist(setlistId) {
+        // Убираем выделение со всех
+        this.setlistsGrid.querySelectorAll('.setlist-item').forEach(item => {
+            item.classList.remove('selected');
+        });
         
-        const hasSelectedSetlist = this.dropdown?.value;
-        const hasNewName = this.newNameInput?.value.trim();
-        
-        this.confirmButton.disabled = !hasSelectedSetlist && !hasNewName;
+        // Добавляем выделение выбранному
+        const selectedItem = this.setlistsGrid.querySelector(`[data-id="${setlistId}"]`);
+        if (selectedItem) {
+            selectedItem.classList.add('selected');
+            this.selectedSetlistId = setlistId;
+            
+            // Сразу добавляем песню
+            this.addToSetlist(setlistId);
+        }
     }
     
     /**
-     * Обрабатывает подтверждение добавления
+     * Добавляет песню в выбранный сет-лист
      */
-    async handleConfirm() {
-        if (!this.currentSong) return;
+    async addToSetlist(setlistId) {
+        if (!this.currentSong || !setlistId) return;
         
         try {
-            // Блокируем кнопку
-            if (this.confirmButton) {
-                this.confirmButton.disabled = true;
-                this.confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Добавление...';
-            }
+            // Добавляем песню с выбранной тональностью
+            const songToAdd = {
+                ...this.currentSong,
+                key: this.currentSong.selectedKey
+            };
             
-            let setlistId = this.dropdown?.value;
-            
-            // Если нужно создать новый сет-лист
-            if (!setlistId && this.newNameInput?.value.trim()) {
-                const newName = this.newNameInput.value.trim();
-                console.log('Creating new setlist:', newName);
-                
-                setlistId = await createSetlist(newName);
-                console.log('Created setlist with ID:', setlistId);
-            }
-            
-            if (!setlistId) {
-                throw new Error('No setlist selected or created');
-            }
-            
-            // Добавляем песню в сет-лист
-            await addSongToSetlist(setlistId, this.currentSong);
+            await addSongToSetlist(setlistId, songToAdd);
             
             // Показываем уведомление
             this.showNotification('✅ Песня успешно добавлена в сет-лист!', 'success');
@@ -194,7 +208,6 @@ class SetlistSelector {
             // Обновляем UI если панель сет-листов открыта
             const setlistsPanel = document.getElementById('setlists-panel');
             if (setlistsPanel?.classList.contains('open')) {
-                // Триггерим обновление через событие
                 window.dispatchEvent(new CustomEvent('setlist-updated', { 
                     detail: { setlistId } 
                 }));
@@ -203,11 +216,40 @@ class SetlistSelector {
         } catch (error) {
             console.error('Error adding song to setlist:', error);
             this.showNotification('❌ Ошибка при добавлении песни', 'error');
+        }
+    }
+    
+    /**
+     * Обрабатывает создание нового сет-листа и добавление песни
+     */
+    async handleCreateNew() {
+        if (!this.currentSong || !this.newNameInput?.value.trim()) return;
+        
+        try {
+            // Блокируем кнопку
+            if (this.createButton) {
+                this.createButton.disabled = true;
+                this.createButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Создание...';
+            }
+            
+            const newName = this.newNameInput.value.trim();
+            console.log('Creating new setlist:', newName);
+            
+            // Создаем новый сет-лист
+            const setlistId = await createSetlist(newName);
+            console.log('Created setlist with ID:', setlistId);
+            
+            // Добавляем песню
+            await this.addToSetlist(setlistId);
+            
+        } catch (error) {
+            console.error('Error creating setlist:', error);
+            this.showNotification('❌ Ошибка при создании сет-листа', 'error');
         } finally {
             // Восстанавливаем кнопку
-            if (this.confirmButton) {
-                this.confirmButton.innerHTML = '<i class="fas fa-plus"></i> Добавить';
-                this.updateConfirmButton();
+            if (this.createButton) {
+                this.createButton.innerHTML = '<i class="fas fa-plus"></i> Создать';
+                this.createButton.disabled = !this.newNameInput?.value.trim();
             }
         }
     }
@@ -232,9 +274,9 @@ const setlistSelector = new SetlistSelector();
 console.log('📋 [SetlistSelector] Instance created');
 
 // Экспортируем функцию открытия
-export function openSetlistSelector(song) {
-    console.log('📋 [SetlistSelector] openSetlistSelector called with song:', song?.name);
-    return setlistSelector.open(song);
+export function openSetlistSelector(song, key) {
+    console.log('📋 [SetlistSelector] openSetlistSelector called with song:', song?.name, 'key:', key);
+    return setlistSelector.open(song, key);
 }
 
 // Экспортируем для глобального доступа

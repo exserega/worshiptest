@@ -717,11 +717,15 @@ window.handleAddSongToSetlist = async function() {
         return;
     }
     
-    console.log('📋 [EntryPoint] Adding song to setlist:', currentSong.name);
+    // Получаем выбранную тональность
+    const keySelect = ui.keySelect;
+    const selectedKey = keySelect?.value || currentSong.keys?.[0] || 'C';
     
-    // Открываем overlay выбора сет-листа
+    console.log('📋 [EntryPoint] Adding song to setlist:', currentSong.name, 'in key:', selectedKey);
+    
+    // Открываем overlay выбора сет-листа с тональностью
     if (typeof window.openSetlistSelector === 'function') {
-        await window.openSetlistSelector(currentSong);
+        await window.openSetlistSelector(currentSong, selectedKey);
     } else {
         console.error('openSetlistSelector function not found');
         window.showNotification('❌ Ошибка: модуль выбора сет-листа не загружен', 'error');

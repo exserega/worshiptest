@@ -469,46 +469,140 @@ body[data-theme="light"] #copy-text-button.copied {
 }
 
 /* ======================================== */
-/* Setlist Select Overlay                   */
+/* Setlist Select Overlay - Compact Design  */
 /* ======================================== */
 
-.setlist-select-modal {
-    max-width: 400px;
+.setlist-select-modal.compact {
+    max-width: 420px;
     width: 90%;
+    padding: 0;
 }
 
-.current-song-info {
-    background: var(--bg-secondary);
+.modal-header.compact {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header.compact h3 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.modal-body.compact {
     padding: 1rem;
+}
+
+/* Компактная информация о песне */
+.song-info-compact {
+    background: var(--bg-secondary);
+    padding: 0.75rem;
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     border: 1px solid var(--border-color);
 }
 
-.current-song-info i {
+.song-info-compact i {
     color: var(--primary-color);
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
-.current-song-info .song-name {
+.song-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.song-details .song-name {
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
 }
 
-.setlist-select-section {
-    margin-bottom: 1.5rem;
-}
-
-.setlist-select-section .section-label {
-    display: block;
-    margin-bottom: 0.5rem;
+.song-details .song-key {
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+}
+
+.song-details .song-key span {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Секция существующих сет-листов */
+.existing-setlists-section {
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
     font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Сетка сет-листов */
+.setlists-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+/* Стилизация скроллбара */
+.setlists-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.setlists-grid::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 3px;
+}
+
+.setlists-grid::-webkit-scrollbar-thumb {
+    background: var(--text-tertiary);
+    border-radius: 3px;
+}
+
+.setlists-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.setlist-item {
+    background: var(--bg-secondary);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.setlist-item:hover {
+    border-color: var(--primary-color);
+    background: var(--bg-tertiary);
+}
+
+.setlist-item.selected {
+    border-color: var(--primary-color);
+    background: rgba(var(--primary-rgb), 0.1);
+}
+
+.setlist-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.setlist-songs-count {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
 }
 
 .modern-select {
@@ -534,33 +628,80 @@ body[data-theme="light"] #copy-text-button.copied {
     box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
 }
 
-.create-new-setlist-section {
-    position: relative;
+/* Компактное создание нового сет-листа */
+.create-new-compact {
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.75rem;
 }
 
-.divider {
-    text-align: center;
-    position: relative;
-    margin: 1.5rem 0 1rem;
+.or-text {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    display: block;
+    margin-bottom: 0.5rem;
 }
 
-.divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--border-color);
+.new-setlist-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
 }
 
-.divider span {
-    background: var(--bg-primary);
-    padding: 0 1rem;
-    position: relative;
-    color: var(--text-secondary);
+.compact-input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
     font-size: 0.85rem;
-    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.compact-input:hover {
+    border-color: var(--primary-color);
+}
+
+.compact-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+}
+
+.compact-input::placeholder {
+    color: var(--text-tertiary);
+    font-size: 0.8rem;
+}
+
+.compact-button {
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.compact-button:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.compact-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.compact-button i {
+    font-size: 0.75rem;
 }
 
 .modern-input {
@@ -640,18 +781,39 @@ body[data-theme="light"] #copy-text-button.copied {
     border-color: var(--text-tertiary);
 }
 
-/* Адаптация под светлую тему */
-[data-theme="light"] .modern-select,
-[data-theme="light"] .modern-input {
-    background: #ffffff;
+/* Текстовые сообщения в сетке */
+.loading-text,
+.empty-text,
+.error-text {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
 }
 
-[data-theme="light"] .current-song-info {
+.error-text {
+    color: var(--error-color, #dc2626);
+}
+
+/* Адаптация под светлую тему */
+[data-theme="light"] .song-info-compact {
     background: #f8f9fa;
 }
 
-[data-theme="light"] .secondary-button {
+[data-theme="light"] .setlist-item {
     background: #ffffff;
+}
+
+[data-theme="light"] .compact-input {
+    background: #ffffff;
+}
+
+[data-theme="light"] .setlist-item:hover {
+    background: #f3f4f6;
+}
+
+[data-theme="light"] .setlist-item.selected {
+    background: rgba(99, 102, 241, 0.05);
 }
 
 /* Мобильная адаптация */

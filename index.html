@@ -173,46 +173,46 @@
 
     <!-- Overlay выбора сет-листа -->
     <div id="setlist-select-overlay" class="modal-overlay">
-        <div class="modal-content setlist-select-modal">
-            <div class="modal-header">
+        <div class="modal-content setlist-select-modal compact">
+            <div class="modal-header compact">
                 <h3>Добавить в сет-лист</h3>
                 <button id="close-setlist-select" class="icon-button simple" title="Закрыть">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div class="modal-body">
-                <div class="current-song-info">
+            <div class="modal-body compact">
+                <!-- Компактная информация о песне -->
+                <div class="song-info-compact">
                     <i class="fas fa-music"></i>
-                    <span id="adding-song-name" class="song-name">Песня</span>
-                </div>
-                
-                <div class="setlist-select-section">
-                    <label for="setlist-select-dropdown" class="section-label">Выберите сет-лист:</label>
-                    <select id="setlist-select-dropdown" class="modern-select">
-                        <option value="">Загрузка...</option>
-                    </select>
-                </div>
-                
-                <div class="create-new-setlist-section">
-                    <div class="divider">
-                        <span>или создайте новый</span>
+                    <div class="song-details">
+                        <span id="adding-song-name" class="song-name">Песня</span>
+                        <span class="song-key">Тональность: <span id="adding-song-key">C</span></span>
                     </div>
-                    <input type="text" 
-                           id="new-setlist-name-modal" 
-                           class="modern-input" 
-                           placeholder="Название нового сет-листа">
                 </div>
-            </div>
-            
-            <div class="modal-footer">
-                <button id="confirm-add-to-setlist" class="primary-button" disabled>
-                    <i class="fas fa-plus"></i>
-                    Добавить
-                </button>
-                <button id="cancel-setlist-select" class="secondary-button">
-                    Отмена
-                </button>
+                
+                <!-- Основной блок - существующие сет-листы -->
+                <div class="existing-setlists-section">
+                    <div class="section-title">Выберите сет-лист:</div>
+                    <div id="setlists-grid" class="setlists-grid">
+                        <!-- Сет-листы будут добавлены динамически -->
+                    </div>
+                </div>
+                
+                <!-- Создание нового - компактно внизу -->
+                <div class="create-new-compact">
+                    <span class="or-text">или создайте новый</span>
+                    <div class="new-setlist-row">
+                        <input type="text" 
+                               id="new-setlist-name-modal" 
+                               class="compact-input" 
+                               placeholder="Название нового сет-листа">
+                        <button id="create-and-add" class="compact-button" disabled>
+                            <i class="fas fa-plus"></i>
+                            Создать
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
