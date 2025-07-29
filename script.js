@@ -395,6 +395,12 @@ window.handleFavoriteOrRepertoireSelect = function(song) {
     if (typeof ui.closeAllSidePanels === 'function') {
         ui.closeAllSidePanels();
     }
+    
+    // КРИТИЧЕСКИ ВАЖНО: Убираем анимацию загрузки с кнопки репертуара
+    if (ui.toggleRepertoireButton) {
+        ui.toggleRepertoireButton.classList.remove('loading');
+        console.log('🎭 [Legacy] Repertoire loading animation removed');
+    }
 };
 
 window.handleRemoveSongFromSetlist = async function(songId, songName) {
@@ -452,6 +458,12 @@ window.handleRepertoireUpdate = function(data) {
         if (currentSong && typeof ui.updateRepertoireButton === 'function') {
             ui.updateRepertoireButton(currentSong);
         }
+    }
+    
+    // КРИТИЧЕСКИ ВАЖНО: Убираем анимацию загрузки после обновления данных
+    if (ui.toggleRepertoireButton) {
+        ui.toggleRepertoireButton.classList.remove('loading');
+        console.log('🎭 [Legacy] Repertoire loading animation removed after data update');
     }
 };
 
