@@ -20,119 +20,6 @@ import * as metronomeUI from '../../metronome.js';
 import searchWorkerManager from '../../src/js/workers/workerManager.js';
 
 // ====================================
-// PANEL HANDLERS SETUP - КРИТИЧЕСКИ ВАЖНО!
-// ====================================
-
-function setupPanelHandlers() {
-    console.log('📋 [Initialization] Setting up panel handlers...');
-    
-    // ПАНЕЛЬ СЕТЛИСТОВ - ТОЧНО КАК В РАБОЧЕМ КОДЕ
-    if (ui.toggleSetlistsButton) {
-        ui.toggleSetlistsButton.addEventListener('click', async () => {
-            console.log('📋 [Initialization] Setlists button clicked');
-            const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
-            ui.closeAllSidePanels();
-            if (!isAlreadyOpen) {
-                ui.toggleSetlistsButton.classList.add('loading');
-                try {
-                    ui.setlistsPanel.classList.add('open');
-                    // ИСПОЛЬЗУЕМ РАБОЧУЮ ФУНКЦИЮ ИЗ script.js - КРИТИЧЕСКИ ВАЖНО!
-                    if (typeof window.refreshSetlists === 'function') {
-                        await window.refreshSetlists();
-                        console.log('📋 [Initialization] Called working refreshSetlists from script.js');
-                    } else {
-                        console.error('📋 [Initialization] window.refreshSetlists not found!');
-                    }
-                } catch (error) {
-                    console.error('Ошибка загрузки сет-листов:', error);
-                } finally {
-                    ui.toggleSetlistsButton.classList.remove('loading');
-                }
-            }
-        });
-        console.log('📋 [Initialization] Setlists panel handler attached');
-    } else {
-        console.error('📋 [Initialization] ui.toggleSetlistsButton not found!');
-    }
-    
-    // ПАНЕЛЬ "МОИ" - ТОЧНО КАК В РАБОЧЕМ КОДЕ
-    if (ui.toggleMyListButton) {
-        ui.toggleMyListButton.addEventListener('click', async () => {
-            console.log('⭐ [Initialization] My List button clicked');
-            const isAlreadyOpen = ui.myListPanel.classList.contains('open');
-            ui.closeAllSidePanels();
-            if (!isAlreadyOpen) {
-                ui.toggleMyListButton.classList.add('loading');
-                try {
-                    ui.myListPanel.classList.add('open');
-                    // ПРОСТАЯ РАБОЧАЯ ЛОГИКА - КАК В ОРИГИНАЛЕ
-                    if (window.state && window.state.allSongs && window.state.favorites) {
-                        const favoriteSongs = window.state.allSongs.filter(song => 
-                            window.state.favorites.some(fav => fav.songId === song.id)
-                        ).map(song => {
-                            const fav = window.state.favorites.find(f => f.songId === song.id);
-                            return { ...song, preferredKey: fav.preferredKey };
-                        });
-                        console.log('⭐ [Initialization] Rendering favorites:', favoriteSongs.length);
-                        ui.renderFavorites(favoriteSongs, 
-                            window.handleFavoriteOrRepertoireSelect,
-                            async function(songId) {
-                                if(confirm("Удалить песню из 'Моих'?")) {
-                                    try {
-                                        await api.removeFromFavorites(songId);
-                                        ui.toggleMyListButton.click(); // Refresh panel
-                                    } catch (error) {
-                                        console.error('Ошибка удаления из избранного:', error);
-                                        alert('Не удалось удалить песню из списка');
-                                    }
-                                }
-                            }
-                        );
-                    } else {
-                        console.log('⭐ [Initialization] No favorites data available');
-                    }
-                } catch (error) {
-                    console.error('Ошибка загрузки избранных:', error);
-                } finally {
-                    ui.toggleMyListButton.classList.remove('loading');
-                }
-            }
-        });
-        console.log('⭐ [Initialization] My List panel handler attached');
-    } else {
-        console.error('⭐ [Initialization] ui.toggleMyListButton not found!');
-    }
-    
-    // ПАНЕЛЬ РЕПЕРТУАР - ТОЧНО КАК В РАБОЧЕМ КОДЕ
-    if (ui.toggleRepertoireButton) {
-        ui.toggleRepertoireButton.addEventListener('click', async () => {
-            console.log('🎭 [Initialization] Repertoire button clicked');
-            const isAlreadyOpen = ui.repertoirePanel.classList.contains('open');
-            ui.closeAllSidePanels();
-            if (!isAlreadyOpen) {
-                ui.toggleRepertoireButton.classList.add('loading');
-                try {
-                    ui.repertoirePanel.classList.add('open');
-                    // ИСПОЛЬЗУЕМ РАБОЧУЮ ФУНКЦИЮ ИЗ script.js
-                    console.log('🎭 [Initialization] Loading repertoire...');
-                    api.loadRepertoire(
-                        window.state ? window.state.currentVocalistId : null, 
-                        window.handleRepertoireUpdate
-                    );
-                } catch (error) {
-                    console.error('Ошибка загрузки репертуара:', error);
-                } finally {
-                    ui.toggleRepertoireButton.classList.remove('loading');
-                }
-            }
-        });
-        console.log('🎭 [Initialization] Repertoire panel handler attached');
-    } else {
-        console.error('🎭 [Initialization] ui.toggleRepertoireButton not found!');
-    }
-}
-
-// ====================================
 // MAIN INITIALIZATION FUNCTION
 // ====================================
 
@@ -155,8 +42,7 @@ export async function initializeApp() {
         // Настройка обработчиков событий
         setupEventListeners();
         
-        // КРИТИЧЕСКИ ВАЖНО: Настройка панелей ПОСЛЕ основных обработчиков
-        setupPanelHandlers();
+        // ПАНЕЛИ НАСТРАИВАЮТСЯ В script.js - НЕ ЗДЕСЬ!
         
         // Настройка swipe жестов
         setupSwipeToClose();

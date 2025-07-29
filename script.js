@@ -579,5 +579,95 @@ window.handleCreateSetlist = async function() {
 
 console.log('✨ [EntryPoint] Agape Worship App v2.0 - Modular Architecture Ready!');
 
-// ОБРАБОТЧИКИ ПАНЕЛЕЙ ПЕРЕНЕСЕНЫ В initialization.js - КРИТИЧЕСКИ ВАЖНО!
-// Они должны быть там для правильного порядка загрузки
+// ОБРАБОТЧИКИ ПАНЕЛЕЙ - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+// (должны быть в script.js для доступа ко всем функциям)
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('📋 [EntryPoint] Setting up panel handlers...');
+    
+    // ПАНЕЛЬ СЕТЛИСТОВ - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+    if (ui.toggleSetlistsButton) {
+        ui.toggleSetlistsButton.addEventListener('click', async () => {
+            console.log('📋 [EntryPoint] Setlists button clicked');
+            const isAlreadyOpen = ui.setlistsPanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleSetlistsButton.classList.add('loading');
+                try {
+                    ui.setlistsPanel.classList.add('open');
+                    await window.refreshSetlists(); // ← ЭТА ФУНКЦИЯ ЕСТЬ В script.js!
+                } catch (error) {
+                    console.error('Ошибка загрузки сет-листов:', error);
+                } finally {
+                    ui.toggleSetlistsButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('📋 [EntryPoint] Setlists panel handler attached');
+    } else {
+        console.error('📋 [EntryPoint] ui.toggleSetlistsButton not found!');
+    }
+    
+    // ПАНЕЛЬ "МОИ" - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+    if (ui.toggleMyListButton) {
+        ui.toggleMyListButton.addEventListener('click', async () => {
+            console.log('⭐ [EntryPoint] My List button clicked');
+            const isAlreadyOpen = ui.myListPanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleMyListButton.classList.add('loading');
+                try {
+                    ui.myListPanel.classList.add('open');
+                    // Logic to load and render favorites - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+                    const favoriteSongs = window.state.allSongs.filter(song => 
+                        window.state.favorites.some(fav => fav.songId === song.id)
+                    ).map(song => {
+                        const fav = window.state.favorites.find(f => f.songId === song.id);
+                        return { ...song, preferredKey: fav.preferredKey };
+                    });
+                    ui.renderFavorites(favoriteSongs, window.handleFavoriteOrRepertoireSelect, async (songId) => {
+                        if(confirm("Удалить песню из 'Моих'?")) {
+                            try {
+                                await api.removeFromFavorites(songId);
+                                // Refresh list after deletion
+                                ui.toggleMyListButton.click();
+                            } catch (error) {
+                                console.error('Ошибка удаления из избранного:', error);
+                                alert('Не удалось удалить песню из списка');
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error('Ошибка загрузки избранных:', error);
+                } finally {
+                    ui.toggleMyListButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('⭐ [EntryPoint] My List panel handler attached');
+    } else {
+        console.error('⭐ [EntryPoint] ui.toggleMyListButton not found!');
+    }
+    
+    // ПАНЕЛЬ РЕПЕРТУАР - ТОЧНО КАК В РАБОЧЕМ КОДЕ
+    if (ui.toggleRepertoireButton) {
+        ui.toggleRepertoireButton.addEventListener('click', async () => {
+            console.log('🎭 [EntryPoint] Repertoire button clicked');
+            const isAlreadyOpen = ui.repertoirePanel.classList.contains('open');
+            ui.closeAllSidePanels();
+            if (!isAlreadyOpen) {
+                ui.toggleRepertoireButton.classList.add('loading');
+                try {
+                    ui.repertoirePanel.classList.add('open');
+                    api.loadRepertoire(window.state.currentVocalistId, window.handleRepertoireUpdate);
+                } catch (error) {
+                    console.error('Ошибка загрузки репертуара:', error);
+                } finally {
+                    ui.toggleRepertoireButton.classList.remove('loading');
+                }
+            }
+        });
+        console.log('🎭 [EntryPoint] Repertoire panel handler attached');
+    } else {
+        console.error('🎭 [EntryPoint] ui.toggleRepertoireButton not found!');
+    }
+});
