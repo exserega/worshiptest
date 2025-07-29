@@ -630,23 +630,7 @@ function setupSetlistEventHandlers() {
         console.log('❌ [EventHandlers] Close add songs button attached');
     }
     
-    // Кнопка "Готово" в overlay добавления песен
-    const finishAddingSongsBtn = document.getElementById('finish-adding-songs');
-    if (finishAddingSongsBtn) {
-        finishAddingSongsBtn.addEventListener('click', () => {
-            console.log('✅ [EventHandlers] Finish adding songs clicked');
-            const overlay = document.getElementById('add-songs-overlay');
-            if (overlay) {
-                overlay.classList.remove('show');
-            }
-            // Показываем уведомление
-            if (typeof window.showNotification === 'function') {
-                const count = document.getElementById('added-songs-count')?.textContent || '0';
-                window.showNotification(`✅ Добавлено ${count} песен в сет-лист`, 'success');
-            }
-        });
-        console.log('✅ [EventHandlers] Finish adding songs button attached');
-    }
+    // УДАЛЕН ДУБЛИРУЮЩИЙ ОБРАБОТЧИК - уже есть в setupModalEventHandlers
     
     // Кнопка подтверждения выбора тональности
     const confirmKeyBtn = document.getElementById('confirm-key-selection');
@@ -907,30 +891,20 @@ function setupSetlistEventHandlers() {
         console.log('📂 [EventHandlers] Category filter attached');
     }
     
-    // Кнопка "Показать добавленные"
-    const showAddedOnlyBtn = document.getElementById('show-added-only');
-    if (showAddedOnlyBtn) {
-        showAddedOnlyBtn.addEventListener('click', () => {
-            console.log('✅ [EventHandlers] Show added only clicked');
-            // Переключаем фильтр добавленных песен
-            const isActive = showAddedOnlyBtn.classList.contains('active');
-            if (isActive) {
-                showAddedOnlyBtn.classList.remove('active');
-                // Показываем все песни
-                if (typeof filterAndDisplaySongsModule === 'function') {
-                    const searchTerm = document.getElementById('song-search-input')?.value || '';
-                    const categoryFilter = document.getElementById('category-filter')?.value || '';
-                    filterAndDisplaySongsModule(searchTerm, categoryFilter);
-                }
-            } else {
-                showAddedOnlyBtn.classList.add('active');
-                // Показываем только добавленные
-                if (typeof filterAndDisplaySongsModule === 'function') {
-                    filterAndDisplaySongsModule('', '', true); // true = только добавленные
-                }
+    // УДАЛЕН ДУБЛИРУЮЩИЙ ОБРАБОТЧИК - уже есть в setupSearchEventHandlers
+    
+    // Фильтр категорий в оверлее - ВОССТАНОВЛЕН!
+    const categoryFilter = document.getElementById('category-filter');
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', (e) => {
+            console.log('📂 [EventHandlers] Category filter changed:', e.target.value);
+            // Применяем фильтр к текущим результатам
+            if (typeof filterAndDisplaySongsModule === 'function') {
+                const searchTerm = document.getElementById('song-search-input')?.value || '';
+                filterAndDisplaySongsModule(searchTerm, e.target.value);
             }
         });
-        console.log('✅ [EventHandlers] Show added only button attached');
+        console.log('📂 [EventHandlers] Category filter attached');
     }
     
     // ДЕЛЕГИРОВАНИЕ СОБЫТИЙ ДЛЯ ДИНАМИЧЕСКИХ КНОПОК ДОБАВЛЕНИЯ ПЕСЕН
