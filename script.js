@@ -349,8 +349,8 @@ window.refreshSetlists = async function() {
 window.handleSetlistSelect = function(setlist) {
     console.log('📋 [Legacy] handleSetlistSelect:', setlist.name);
     window.state.setCurrentSetlistId(setlist.id);
-    // ИСПРАВЛЕНО: Устанавливаем также название сетлиста
-    window.state.currentSetlistName = setlist.name;
+    // ИСПРАВЛЕНО: Используем правильную функцию для установки названия
+    window.state.setCurrentSetlistName(setlist.name);
     ui.displaySelectedSetlist(setlist, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
 };
 
