@@ -38,6 +38,7 @@
 @import url('./styles/metronome.css');
 @import url('./styles/responsive.css');
 @import url('./styles/setlist-panel-compact.css'); /* Компактные стили для мобильных */
+@import url('./styles/add-songs-overlay-compact.css'); /* Компактные стили для overlay добавления песен */
 
 /* ======================================== */
 /* МИНИМАЛИСТИЧНАЯ СТРУКТУРА СЕТ-ЛИСТОВ */

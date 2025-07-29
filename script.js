@@ -302,17 +302,17 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
         songCard.className = `song-card ${isAdded ? 'added' : ''}`;
         songCard.innerHTML = `
             <div class="song-card-header">
-                <div>
+                <div class="song-info">
                     <h4 class="song-title">${song.name}</h4>
-                    <div class="song-category">${song.sheet || 'Без категории'}</div>
-                    <div class="song-key-display">
-                        Тональность: <span class="song-key-badge">${originalKey}</span>
+                    <div class="song-meta-info">
+                        <span class="preferred-key">${originalKey}</span>
+                        <span class="song-category">${song.sheet || 'Без категории'}</span>
                     </div>
                     ${textFragment ? `<div class="song-text-fragment">${textFragment}</div>` : ''}
                 </div>
                 <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
                     <i class="fas fa-${isAdded ? 'check' : 'plus'}"></i>
-                    ${isAdded ? 'Добавлена' : 'Добавить'}
+                    <span>${isAdded ? 'Добавлена' : 'Добавить'}</span>
                 </button>
             </div>
         `;
