@@ -687,6 +687,83 @@ function setupSetlistEventHandlers() {
         console.log('❌ [EventHandlers] Close mobile preview button attached');
     }
     
+    // ОБРАБОТЧИКИ КНОПОК ДОБАВЛЕНИЯ ПЕСЕН - КРИТИЧЕСКИ ВАЖНО!
+    
+    // Кнопка "Добавить" в панели сетлистов
+    const addSongBtn = document.getElementById('add-song-btn');
+    if (addSongBtn) {
+        addSongBtn.addEventListener('click', () => {
+            console.log('🎵 [EventHandlers] Add song button clicked');
+            // Проверяем есть ли выбранный сетлист
+            const currentSetlistId = window.state?.currentSetlistId;
+            if (currentSetlistId) {
+                // Открываем overlay для добавления в существующий сетлист
+                if (typeof startAddingSongsModule === 'function') {
+                    startAddingSongsModule('edit', currentSetlistId, window.state?.currentSetlistName);
+                }
+            } else {
+                console.warn('🎵 [EventHandlers] No setlist selected for adding songs');
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification('❌ Сначала выберите сет-лист', 'warning');
+                }
+            }
+        });
+        console.log('🎵 [EventHandlers] Add song button attached');
+    } else {
+        console.error('🎵 [EventHandlers] add-song-btn не найден!');
+    }
+    
+    // Кнопка "Добавить песни" в модале подтверждения (после создания сетлиста)
+    const startAddSongsBtn = document.getElementById('start-add-songs');
+    if (startAddSongsBtn) {
+        startAddSongsBtn.addEventListener('click', () => {
+            console.log('🎵 [EventHandlers] Start add songs button clicked');
+            // Закрываем модал подтверждения
+            const confirmModal = document.getElementById('add-songs-confirm-modal');
+            if (confirmModal) {
+                confirmModal.classList.remove('show');
+            }
+            // Открываем overlay для добавления в новый сетлист
+            if (typeof startAddingSongsModule === 'function') {
+                startAddingSongsModule('create');
+            }
+        });
+        console.log('🎵 [EventHandlers] Start add songs button attached');
+    } else {
+        console.error('🎵 [EventHandlers] start-add-songs не найден!');
+    }
+    
+    // Кнопка "Пока нет" в модале подтверждения
+    const skipAddSongsBtn = document.getElementById('skip-add-songs');
+    if (skipAddSongsBtn) {
+        skipAddSongsBtn.addEventListener('click', () => {
+            console.log('🎵 [EventHandlers] Skip add songs button clicked');
+            // Просто закрываем модал подтверждения
+            const confirmModal = document.getElementById('add-songs-confirm-modal');
+            if (confirmModal) {
+                confirmModal.classList.remove('show');
+            }
+        });
+        console.log('🎵 [EventHandlers] Skip add songs button attached');
+    } else {
+        console.error('🎵 [EventHandlers] skip-add-songs не найден!');
+    }
+    
+    // Кнопка закрытия модала подтверждения
+    const closeConfirmModalBtn = document.getElementById('close-confirm-modal');
+    if (closeConfirmModalBtn) {
+        closeConfirmModalBtn.addEventListener('click', () => {
+            console.log('❌ [EventHandlers] Close confirm modal button clicked');
+            const confirmModal = document.getElementById('add-songs-confirm-modal');
+            if (confirmModal) {
+                confirmModal.classList.remove('show');
+            }
+        });
+        console.log('❌ [EventHandlers] Close confirm modal button attached');
+    } else {
+        console.error('❌ [EventHandlers] close-confirm-modal не найден!');
+    }
+    
     // Селектор вокалистов
     if (ui.vocalistSelect) {
         ui.vocalistSelect.addEventListener('change', (e) => {
