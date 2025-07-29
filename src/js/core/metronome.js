@@ -209,6 +209,17 @@ function scheduler() {
 function scheduleNote(time) {
     const isAccent = currentBeat === 0; // Акцент только на первой доле
     createClick(isAccent, time);
+    
+    // Отправляем событие для визуального индикатора
+    // Используем setTimeout для синхронизации с аудио
+    const delay = (time - audioContext.currentTime) * 1000;
+    if (delay >= 0) {
+        setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('metronome-beat', { 
+                detail: { beat: currentBeat, isAccent: isAccent }
+            }));
+        }, delay);
+    }
 }
 
 /**

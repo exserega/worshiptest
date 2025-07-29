@@ -36,8 +36,15 @@ class MetronomeController {
             // Slider elements
             sliderTrack: document.querySelector('.bpm-slider-track'),
             sliderProgress: document.getElementById('bpm-slider-progress'),
-            sliderHandle: document.getElementById('bpm-slider-handle')
+            sliderHandle: document.getElementById('bpm-slider-handle'),
+            
+            // Visual indicator elements
+            beatDotsContainer: document.getElementById('beat-dots-container')
         };
+        
+        // Visual indicator state
+        this.currentVisualBeat = 0;
+        this.visualUpdateInterval = null;
         
         this.init();
     }
@@ -62,6 +69,7 @@ class MetronomeController {
             this.setupEventListeners();
             this.updateDisplay();
             this.updateSliderVisuals();
+            this.setupVisualIndicator();
             console.log('Metronome initialized successfully');
         } catch (error) {
             console.error('Error initializing metronome:', error);
@@ -318,6 +326,13 @@ class MetronomeController {
             this.isActive = result.isActive;
             this.updatePlayButtons();
             
+            // Управление визуальным индикатором
+            if (this.isActive) {
+                this.startVisualIndicator();
+            } else {
+                this.stopVisualIndicator();
+            }
+            
         } catch (error) {
             console.error('Metronome toggle error:', error);
             // Не показываем alert для лучшего UX
@@ -330,6 +345,12 @@ class MetronomeController {
             const beats = parseInt(this.elements.timeSignature?.value || '4', 10);
             const result = await core.toggleMetronome(this.currentBPM, beats);
             this.isActive = result.isActive;
+            
+            // Перезапуск визуального индикатора с новым BPM
+            if (this.isActive) {
+                this.stopVisualIndicator();
+                this.startVisualIndicator();
+            }
         }
     }
 
@@ -427,6 +448,90 @@ class MetronomeController {
         if (this.isActive) {
             this.toggleMetronome();
         }
+    }
+
+    // Visual indicator methods
+    setupVisualIndicator() {
+        this.updateVisualBeats();
+        
+        // Listen for time signature changes
+        if (this.elements.timeSignature) {
+            this.elements.timeSignature.addEventListener('change', () => {
+                this.updateVisualBeats();
+            });
+        }
+    }
+
+    updateVisualBeats() {
+        if (!this.elements.beatDotsContainer) return;
+        
+        const beats = parseInt(this.elements.timeSignature?.value || '4', 10);
+        
+        // Clear existing dots
+        this.elements.beatDotsContainer.innerHTML = '';
+        
+        // Create new dots
+        for (let i = 0; i < beats; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'beat-dot';
+            if (i === 0) {
+                dot.classList.add('accent'); // First beat is accented
+            }
+            dot.dataset.beat = i;
+            this.elements.beatDotsContainer.appendChild(dot);
+        }
+    }
+
+    updateVisualBeat(beatNumber) {
+        if (!this.elements.beatDotsContainer) return;
+        
+        const dots = this.elements.beatDotsContainer.querySelectorAll('.beat-dot');
+        
+        // Remove active class from all dots
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // Add active class to current beat
+        if (dots[beatNumber]) {
+            dots[beatNumber].classList.add('active');
+        }
+    }
+
+    startVisualIndicator() {
+        if (!this.elements.beatDotsContainer) return;
+        
+        // Reset to first beat
+        this.currentVisualBeat = 0;
+        this.updateVisualBeat(0);
+        
+        // Remove any existing listener
+        if (this.beatEventListener) {
+            window.removeEventListener('metronome-beat', this.beatEventListener);
+        }
+        
+        // Create event listener for beat events
+        this.beatEventListener = (event) => {
+            const beatNumber = event.detail.beat;
+            this.updateVisualBeat(beatNumber);
+        };
+        
+        // Listen for beat events from the core metronome
+        window.addEventListener('metronome-beat', this.beatEventListener);
+    }
+
+    stopVisualIndicator() {
+        // Remove event listener
+        if (this.beatEventListener) {
+            window.removeEventListener('metronome-beat', this.beatEventListener);
+            this.beatEventListener = null;
+        }
+        
+        // Clear all active states
+        if (this.elements.beatDotsContainer) {
+            const dots = this.elements.beatDotsContainer.querySelectorAll('.beat-dot');
+            dots.forEach(dot => dot.classList.remove('active'));
+        }
+        
+        this.currentVisualBeat = 0;
     }
 }
 
