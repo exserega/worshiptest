@@ -211,6 +211,13 @@ function distributeSongBlocksToColumns(processedHTML) {
     return column1HTML + column2HTML;
 }
 
+// Переопределяем функции для экспорта
+const setupAudioContext = setupAudioContextNew;
+const resumeAudioContext = resumeAudioContextNew;
+const loadAudioFile = loadAudioFileNew;
+const toggleMetronome = toggleMetronomeNew;
+const getMetronomeState = getMetronomeStateNew;
+
 export {
     getTransposition,
     transposeLyrics,

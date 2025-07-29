@@ -11,6 +11,7 @@ class MetronomeController {
         this.isActive = false;
         this.isDragging = false;
         this.currentSongBPM = null;
+        this.audioInitialized = false;
         
         // DOM elements
         this.elements = {
@@ -286,6 +287,13 @@ class MetronomeController {
 
     async toggleMetronome() {
         try {
+            // Инициализируем аудио контекст при первом клике (важно для мобильных)
+            if (!this.audioInitialized) {
+                await core.setupAudioContext();
+                await core.loadAudioFile();
+                this.audioInitialized = true;
+            }
+            
             const beats = parseInt(this.elements.timeSignature?.value || '4', 10);
             const result = await core.toggleMetronome(this.currentBPM, beats);
             
