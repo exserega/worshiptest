@@ -587,6 +587,34 @@ function setupSetlistEventHandlers() {
         console.error('📋 [EventHandlers] setlist-dropdown-btn не найден!');
     }
     
+    // ОБРАБОТЧИКИ КНОПОК ЗАКРЫТИЯ ПАНЕЛЕЙ - КРИТИЧЕСКИ ВАЖНО!
+    const sidePanelCloseBtns = document.querySelectorAll('.side-panel-close-btn');
+    sidePanelCloseBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            console.log('❌ [EventHandlers] Panel close button clicked');
+            ui.closeAllSidePanels();
+        });
+    });
+    console.log('❌ [EventHandlers] Panel close buttons attached:', sidePanelCloseBtns.length);
+    
+    // ОБРАБОТЧИК КНОПКИ СОЗДАНИЯ СЕТЛИСТА - КРИТИЧЕСКИ ВАЖНО!
+    const createSetlistBtn = document.getElementById('create-new-setlist-header-btn');
+    if (createSetlistBtn) {
+        createSetlistBtn.addEventListener('click', () => {
+            console.log('🎵 [EventHandlers] Create setlist button clicked');
+            // Открываем модал создания сетлиста
+            if (ui.createSetlistModal) {
+                ui.createSetlistModal.classList.add('show');
+                if (ui.newSetlistNameInput) {
+                    ui.newSetlistNameInput.focus();
+                }
+            }
+        });
+        console.log('🎵 [EventHandlers] Create setlist button handler attached');
+    } else {
+        console.error('🎵 [EventHandlers] create-new-setlist-header-btn не найден!');
+    }
+    
     // Селектор вокалистов
     if (ui.vocalistSelect) {
         ui.vocalistSelect.addEventListener('change', (e) => {

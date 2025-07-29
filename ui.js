@@ -871,9 +871,11 @@ export function updatePresentationSplitButtonState() {
 
 
 // --- FAVORITES PANEL ---
-export function renderFavorites(onSelect, onRemove) {
+export function renderFavorites(favoriteSongs, onSelect, onRemove) {
+    console.log('⭐ [UI] renderFavorites called with:', favoriteSongs?.length, 'favorites');
     favoritesList.innerHTML = '';
-    const favorites = state.favorites;
+    // Используем переданные данные или данные из state
+    const favorites = favoriteSongs || state.favorites;
 
     if (favorites.length === 0) {
         favoritesList.innerHTML = '<div class="empty-message">В "Моих" пока нет песен.</div>';
@@ -1105,10 +1107,13 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         item.className = 'setlist-item';
         item.dataset.setlistId = setlist.id;
         item.addEventListener('click', () => {
+            console.log('📋 [UI] Setlist item clicked:', setlist.name);
             onSelect(setlist);
             // Закрываем dropdown после выбора
-            setlistDropdownMenu.classList.remove('show');
-            setlistDropdownBtn.classList.remove('active');
+            const dropdown = document.getElementById('setlist-dropdown-menu');
+            const dropdownBtn = document.getElementById('setlist-dropdown-btn');
+            if (dropdown) dropdown.classList.remove('show');
+            if (dropdownBtn) dropdownBtn.classList.remove('active');
         });
 
         const nameSpan = document.createElement('span');
