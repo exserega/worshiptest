@@ -186,6 +186,19 @@
     color: var(--primary-color) !important;
 }
 
+/* Стили для кнопки удаления в режиме "Показать добавленные" */
+#add-songs-overlay .filter-btn.active ~ .results-section .song-add-btn.added {
+    background: var(--danger-color) !important;
+    color: var(--color-button-text) !important;
+    border-color: var(--danger-color) !important;
+}
+
+#add-songs-overlay .filter-btn.active ~ .results-section .song-add-btn.added:hover {
+    background: color-mix(in srgb, var(--danger-color) 80%, black) !important;
+    border-color: color-mix(in srgb, var(--danger-color) 80%, black) !important;
+    transform: translateY(-1px) !important;
+}
+
 /* === РЕЗУЛЬТАТЫ ПОИСКА - КОМПАКТНЫЕ === */
 
 #add-songs-overlay .results-section {

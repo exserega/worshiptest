@@ -919,7 +919,32 @@ function setupSetlistEventHandlers() {
                         
                         // Проверяем не добавлена ли уже
                         const isAdded = window.addedSongsToCurrentSetlist?.has(songId);
-                        if (isAdded) {
+                        
+                        // Проверяем режим "Показать добавленные"
+                        const showAddedOnly = document.getElementById('show-added-only');
+                        const isShowingAddedOnly = showAddedOnly && showAddedOnly.classList.contains('active');
+                        
+                        if (isAdded && isShowingAddedOnly) {
+                            // В режиме "Показать добавленные" удаляем песню
+                            console.log('🎵 [EventHandlers] Removing song from added list:', song.name);
+                            window.addedSongsToCurrentSetlist.delete(songId);
+                            
+                            // Обновляем счетчик
+                            if (typeof window.updateAddedSongsCount === 'function') {
+                                window.updateAddedSongsCount();
+                            }
+                            
+                            // Обновляем отображение
+                            const searchTerm = document.getElementById('search-input')?.value || '';
+                            const currentCategory = document.getElementById('category-select')?.value || '';
+                            const { filterAndDisplaySongs: filterAndDisplaySongsModule } = await import('../ui/search-manager.js');
+                            filterAndDisplaySongsModule(searchTerm, currentCategory, true);
+                            
+                            if (typeof window.showNotification === 'function') {
+                                window.showNotification(`➖ "${song.name}" удалена из списка`, 'info');
+                            }
+                            return;
+                        } else if (isAdded) {
                             console.log('🎵 [EventHandlers] Song already added');
                             return;
                         }

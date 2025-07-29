@@ -252,6 +252,22 @@ window.currentCreatedSetlistId = null;
 window.currentCreatedSetlistName = '';
 window.addedSongsToCurrentSetlist = new Map(); // Map для хранения песен с их тональностями
 
+// Функция обновления счетчика добавленных песен
+window.updateAddedSongsCount = function() {
+    const count = window.addedSongsToCurrentSetlist.size;
+    
+    if (ui.addedSongsCount) {
+        ui.addedSongsCount.textContent = count;
+    }
+    
+    if (ui.addedSongsCountBadge) {
+        ui.addedSongsCountBadge.textContent = count;
+        ui.addedSongsCountBadge.style.display = count > 0 ? 'inline-flex' : 'none';
+    }
+    
+    console.log('🔢 [Legacy] Updated counter to:', count);
+};
+
 // ДОБАВЛЯЕМ НЕДОСТАЮЩУЮ ФУНКЦИЮ displaySongsGrid ИЗ ОРИГИНАЛА
 window.displaySongsGrid = function(songs, searchTerm = '') {
     console.log('🎵 [Legacy] displaySongsGrid called with', songs.length, 'songs');
@@ -272,6 +288,9 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
     }
     
     ui.songsGrid.innerHTML = '';
+    
+    // Проверяем режим "Показать добавленные"
+    const isShowingAddedOnly = ui.showAddedOnly && ui.showAddedOnly.classList.contains('active');
     
     songs.forEach(song => {
         // Проверяем добавлена ли песня (используем глобальную переменную)
@@ -313,8 +332,8 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
                     ${textFragment ? `<div class="song-text-fragment">${textFragment}</div>` : ''}
                 </div>
                 <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
-                    <i class="fas fa-${isAdded ? 'check' : 'plus'}"></i>
-                    <span>${isAdded ? 'Добавлена' : 'Добавить'}</span>
+                    <i class="fas fa-${isAdded ? (isShowingAddedOnly ? 'times' : 'check') : 'plus'}"></i>
+                    <span>${isAdded ? (isShowingAddedOnly ? 'Удалить' : 'Добавлена') : 'Добавить'}</span>
                 </button>
             </div>
         `;
