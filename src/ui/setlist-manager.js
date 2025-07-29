@@ -46,10 +46,11 @@ export async function startAddingSongs(mode = 'create', targetSetlistId = null, 
     let activeSetlistId, activeSetlistName;
     
     if (mode === 'create') {
-        // Режим создания нового списка
-        activeSetlistId = currentCreatedSetlistId;
-        activeSetlistName = currentCreatedSetlistName;
+        // Режим создания нового списка - ИСПОЛЬЗУЕМ WINDOW ДЛЯ СИНХРОНИЗАЦИИ!
+        activeSetlistId = window.currentCreatedSetlistId || currentCreatedSetlistId;
+        activeSetlistName = window.currentCreatedSetlistName || currentCreatedSetlistName;
         console.log('CREATE mode - using currentCreated:', activeSetlistId, activeSetlistName);
+        console.log('🎯 [DEBUG] window.currentCreated:', window.currentCreatedSetlistId, window.currentCreatedSetlistName);
     } else if (mode === 'edit') {
         // Режим редактирования существующего списка
         activeSetlistId = targetSetlistId || state.currentSetlistId;

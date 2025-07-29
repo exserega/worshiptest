@@ -1083,8 +1083,14 @@ function getSongCountText(count) {
  * @param {function} onDelete - Функция обратного вызова при удалении сетлиста.
  */
 export function renderSetlists(setlists, onSelect, onDelete) {
-    if (!setlistsListContainer) return;
+    console.log('📋 [UI] renderSetlists called with:', setlists?.length, 'setlists');
+    console.log('📋 [UI] setlistsListContainer:', setlistsListContainer);
+    if (!setlistsListContainer) {
+        console.error('📋 [UI] setlistsListContainer not found!');
+        return;
+    }
     setlistsListContainer.innerHTML = '';
+    console.log('📋 [UI] Rendering setlists...');
 
     if (!setlists || setlists.length === 0) {
         setlistsListContainer.innerHTML = `
@@ -1122,6 +1128,7 @@ export function renderSetlists(setlists, onSelect, onDelete) {
 
         setlistsListContainer.appendChild(item);
     });
+    console.log('📋 [UI] renderSetlists completed, rendered', setlists.length, 'setlists');
 }
 
 // Функция позиционирования кнопки копирования удалена - 
