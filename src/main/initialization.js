@@ -76,20 +76,29 @@ export async function initializeApp() {
 function setupTheme() {
     console.log('🎨 [Initialization] setupTheme');
     
+    // По умолчанию всегда темная тема
     let initialTheme = 'dark';
     
     try {
+        // Проверяем, сохранял ли пользователь выбор темы
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light' || savedTheme === 'dark') {
+            // Используем сохраненный выбор пользователя
             initialTheme = savedTheme;
+            console.log('🎨 [Initialization] Загружена сохраненная тема:', savedTheme);
         } else {
-            // Определяем по системным настройкам
-            const prefersDark = !window.matchMedia?.('(prefers-color-scheme: light)')?.matches;
-            initialTheme = prefersDark ? 'dark' : 'light';
+            // Если выбор не сохранен - используем темную тему по умолчанию
+            console.log('🎨 [Initialization] Тема не сохранена, используем темную по умолчанию');
+            initialTheme = 'dark';
         }
     } catch (error) {
         console.error('❌ [Initialization] Ошибка определения темы:', error);
+        // При ошибке также используем темную тему
+        initialTheme = 'dark';
     }
+    
+    // Удаляем временный атрибут загрузки
+    document.documentElement.removeAttribute('data-theme-loading');
     
     if (typeof ui.applyTheme === 'function') {
         ui.applyTheme(initialTheme);
