@@ -469,12 +469,12 @@ function setupSetlistEventHandlers() {
                         // Показываем dropdown только если сет-лист не выбран
                         const dropdown = document.getElementById('setlist-dropdown-menu');
                         if (dropdown) {
-                            const currentSetlistId = window.state?.getCurrentSetlistId?.();
+                            const currentSetlistId = window.state?.currentSetlistId;
                             if (!currentSetlistId) {
                                 dropdown.classList.add('show');
                                 console.log('📋 [EventHandlers] Dropdown показан - сет-лист не выбран');
                             } else {
-                                console.log('📋 [EventHandlers] Dropdown скрыт - сет-лист уже выбран');
+                                console.log('📋 [EventHandlers] Dropdown скрыт - сет-лист уже выбран:', currentSetlistId);
                             }
                         } else {
                             console.error('📋 [EventHandlers] setlist-dropdown-menu не найден!');
