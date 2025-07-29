@@ -893,20 +893,6 @@ function setupSetlistEventHandlers() {
     
     // УДАЛЕН ДУБЛИРУЮЩИЙ ОБРАБОТЧИК - уже есть в setupSearchEventHandlers
     
-    // Фильтр категорий в оверлее - ВОССТАНОВЛЕН!
-    const categoryFilter = document.getElementById('category-filter');
-    if (categoryFilter) {
-        categoryFilter.addEventListener('change', (e) => {
-            console.log('📂 [EventHandlers] Category filter changed:', e.target.value);
-            // Применяем фильтр к текущим результатам
-            if (typeof filterAndDisplaySongsModule === 'function') {
-                const searchTerm = document.getElementById('song-search-input')?.value || '';
-                filterAndDisplaySongsModule(searchTerm, e.target.value);
-            }
-        });
-        console.log('📂 [EventHandlers] Category filter attached');
-    }
-    
     // ДЕЛЕГИРОВАНИЕ СОБЫТИЙ ДЛЯ ДИНАМИЧЕСКИХ КНОПОК ДОБАВЛЕНИЯ ПЕСЕН
     const songsGrid = document.getElementById('songs-grid');
     if (songsGrid) {
