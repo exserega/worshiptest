@@ -128,35 +128,7 @@ function isMobileView() {
 
 // --- METRONOME ---
 // Переменные метронома теперь управляются в модуле metronome.js
-
-/** Настройка AudioContext */
-function setupAudioContext() {
-    return setupAudioContextNew();
-}
-
-/** Возобновление AudioContext */
-function resumeAudioContext() {
-    return resumeAudioContextNew();
-}
-
-/** Загрузка аудиофайла для метронома */
-async function loadAudioFile() {
-    return loadAudioFileNew();
-}
-
-/** Воспроизведение одного клика метронома */
-function playClick(beatsPerMeasure = 4) {
-    return playClickNew(beatsPerMeasure);
-}
-
-/** Включение/выключение метронома. Возвращает новое состояние. */
-async function toggleMetronome(bpm, beatsPerMeasure) {
-    return toggleMetronomeNew(bpm, beatsPerMeasure);
-}
-
-function getMetronomeState() {
-    return getMetronomeStateNew();
-}
+// Функции переопределены ниже перед экспортом как константы
 
 /** Правильное распределение блоков по колонкам С СОХРАНЕНИЕМ ПОРЯДКА */
 function distributeSongBlocksToColumns(processedHTML) {
