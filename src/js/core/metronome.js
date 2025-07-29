@@ -208,6 +208,8 @@ function scheduler() {
  */
 function scheduleNote(time) {
     const isAccent = currentBeat === 0; // Акцент только на первой доле
+    const beatNumber = currentBeat; // Сохраняем текущее значение beat
+    
     createClick(isAccent, time);
     
     // Отправляем событие для визуального индикатора
@@ -216,7 +218,7 @@ function scheduleNote(time) {
     if (delay >= 0) {
         setTimeout(() => {
             window.dispatchEvent(new CustomEvent('metronome-beat', { 
-                detail: { beat: currentBeat, isAccent: isAccent }
+                detail: { beat: beatNumber, isAccent: isAccent }
             }));
         }, delay);
     }
@@ -281,6 +283,11 @@ async function toggleMetronome(bpm = 120, beatsPerMeasure = 4) {
         currentBeat = 0;
         nextNoteTime = audioContext.currentTime;
         isMetronomeActive = true;
+        
+        // Отправляем событие для первого beat сразу
+        window.dispatchEvent(new CustomEvent('metronome-beat', { 
+            detail: { beat: 0, isAccent: true }
+        }));
         
         // Используем setInterval как основной метод
         // Web Workers не всегда доступны и могут создавать проблемы
