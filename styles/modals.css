@@ -467,3 +467,208 @@ body[data-theme="light"] #copy-text-button.copied {
         padding: 12px 16px;
     }
 }
+
+/* ======================================== */
+/* Setlist Select Overlay                   */
+/* ======================================== */
+
+.setlist-select-modal {
+    max-width: 400px;
+    width: 90%;
+}
+
+.current-song-info {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.current-song-info i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.current-song-info .song-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.setlist-select-section {
+    margin-bottom: 1.5rem;
+}
+
+.setlist-select-section .section-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.modern-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.modern-select:hover {
+    border-color: var(--primary-color);
+}
+
+.modern-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+.create-new-setlist-section {
+    position: relative;
+}
+
+.divider {
+    text-align: center;
+    position: relative;
+    margin: 1.5rem 0 1rem;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.divider span {
+    background: var(--bg-primary);
+    padding: 0 1rem;
+    position: relative;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.modern-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.modern-input:hover {
+    border-color: var(--primary-color);
+}
+
+.modern-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+.modern-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* Кнопки в footer */
+.modal-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.primary-button,
+.secondary-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: inherit;
+}
+
+.primary-button {
+    background: var(--primary-color);
+    color: #ffffff;
+}
+
+.primary-button:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+}
+
+.primary-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.secondary-button {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.secondary-button:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--text-tertiary);
+}
+
+/* Адаптация под светлую тему */
+[data-theme="light"] .modern-select,
+[data-theme="light"] .modern-input {
+    background: #ffffff;
+}
+
+[data-theme="light"] .current-song-info {
+    background: #f8f9fa;
+}
+
+[data-theme="light"] .secondary-button {
+    background: #ffffff;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .setlist-select-modal {
+        max-width: 100%;
+        width: calc(100% - 2rem);
+        margin: 1rem;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .primary-button,
+    .secondary-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

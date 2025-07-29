@@ -272,6 +272,13 @@ export {
     metadata as modalManagerMetadata
 } from '../ui/modal-manager.js';
 
+// ====================================
+// СЕЛЕКТОР СЕТ-ЛИСТОВ
+// ====================================
+export {
+    openSetlistSelector
+} from '../ui/setlist-selector.js';
+
 /**
  * Core modules metadata
  * @readonly

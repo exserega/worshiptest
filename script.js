@@ -695,6 +695,37 @@ window.showNotification = function(message, type = 'info') {
     }, 3000);
 };
 
+// ФУНКЦИЯ ДОБАВЛЕНИЯ ПЕСНИ В СЕТ-ЛИСТ
+window.handleAddSongToSetlist = async function() {
+    console.log('📋 [EntryPoint] handleAddSongToSetlist called');
+    
+    // Получаем ID текущей выбранной песни
+    const songId = ui.songSelect?.value;
+    
+    if (!songId) {
+        window.showNotification('❌ Сначала выберите песню', 'error');
+        return;
+    }
+    
+    // Находим данные песни
+    const currentSong = window.state?.allSongs?.find(s => s.id === songId);
+    
+    if (!currentSong) {
+        window.showNotification('❌ Песня не найдена', 'error');
+        return;
+    }
+    
+    console.log('📋 [EntryPoint] Adding song to setlist:', currentSong.name);
+    
+    // Открываем overlay выбора сет-листа
+    if (typeof window.openSetlistSelector === 'function') {
+        await window.openSetlistSelector(currentSong);
+    } else {
+        console.error('openSetlistSelector function not found');
+        window.showNotification('❌ Ошибка: модуль выбора сет-листа не загружен', 'error');
+    }
+};
+
 // ФУНКЦИЯ СОЗДАНИЯ СЕТЛИСТА - ТОЧНО КАК В РАБОЧЕМ КОДЕ
 window.handleCreateSetlist = async function() {
     console.log('🎵 [EntryPoint] handleCreateSetlist called');

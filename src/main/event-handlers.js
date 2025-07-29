@@ -1003,6 +1003,43 @@ function setupSongEventHandlers() {
         });
     }
     
+    // Обработчик обновления сет-листа
+    window.addEventListener('setlist-updated', async (event) => {
+        console.log('📋 [EventHandlers] Setlist updated event:', event.detail);
+        
+        // Если панель сет-листов открыта, обновляем её
+        if (ui.setlistsPanel?.classList.contains('open')) {
+            try {
+                const setlists = await api.loadSetlists();
+                if (window.state && typeof window.state.setSetlists === 'function') {
+                    window.state.setSetlists(setlists);
+                }
+                
+                // Обновляем отображение
+                if (typeof ui.renderSetlists === 'function') {
+                    ui.renderSetlists(setlists, 
+                        window.handleSetlistSelect,
+                        window.handleSetlistDelete
+                    );
+                }
+                
+                // Если есть выбранный сет-лист, обновляем его
+                const currentSetlistId = window.state?.currentSetlistId;
+                if (currentSetlistId === event.detail?.setlistId) {
+                    const currentSetlist = setlists.find(s => s.id === currentSetlistId);
+                    if (currentSetlist && typeof ui.displaySelectedSetlist === 'function') {
+                        ui.displaySelectedSetlist(currentSetlist, 
+                            window.handleFavoriteOrRepertoireSelect,
+                            window.handleRemoveSongFromSetlist
+                        );
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating setlist panel:', error);
+            }
+        }
+    });
+    
     // Кнопка добавления в репертуар
     if (ui.repertoireButton) {
         ui.repertoireButton.addEventListener('click', async () => {

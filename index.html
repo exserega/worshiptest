@@ -171,6 +171,52 @@
         </button>
     </div>
 
+    <!-- Overlay выбора сет-листа -->
+    <div id="setlist-select-overlay" class="modal-overlay">
+        <div class="modal-content setlist-select-modal">
+            <div class="modal-header">
+                <h3>Добавить в сет-лист</h3>
+                <button id="close-setlist-select" class="icon-button simple" title="Закрыть">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="current-song-info">
+                    <i class="fas fa-music"></i>
+                    <span id="adding-song-name" class="song-name">Песня</span>
+                </div>
+                
+                <div class="setlist-select-section">
+                    <label for="setlist-select-dropdown" class="section-label">Выберите сет-лист:</label>
+                    <select id="setlist-select-dropdown" class="modern-select">
+                        <option value="">Загрузка...</option>
+                    </select>
+                </div>
+                
+                <div class="create-new-setlist-section">
+                    <div class="divider">
+                        <span>или создайте новый</span>
+                    </div>
+                    <input type="text" 
+                           id="new-setlist-name-modal" 
+                           class="modern-input" 
+                           placeholder="Название нового сет-листа">
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button id="confirm-add-to-setlist" class="primary-button" disabled>
+                    <i class="fas fa-plus"></i>
+                    Добавить
+                </button>
+                <button id="cancel-setlist-select" class="secondary-button">
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Модальное окно редактора -->
     <div id="song-editor-overlay" class="song-editor-overlay">
         <div class="song-editor-modal">
