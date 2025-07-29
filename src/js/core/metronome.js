@@ -1,128 +1,238 @@
 // Agape Worship App - metronome.js
 // Модуль для работы с метрономом и аудио
+// Версия 2.0 - Программная генерация звука без внешних файлов
 
 // --- AUDIO CONTEXT & METRONOME ---
 
-let audioContext;
-let audioBuffer;
-let metronomeInterval = null;
+let audioContext = null;
 let isMetronomeActive = false;
+let metronomeInterval = null;
+let nextNoteTime = 0.0;
 let currentBeat = 0;
+let lookahead = 25.0; // Интервал планирования в миллисекундах
+let scheduleAheadTime = 0.1; // Насколько вперед планировать аудио (в секундах)
+let timerWorker = null;
 
-/** Настройка AudioContext */
+// Настройки звука
+const FREQUENCIES = {
+    high: 1000, // Частота для сильной доли (Гц)
+    low: 800    // Частота для слабых долей (Гц)
+};
+
+const SOUND_DURATION = 0.03; // Длительность звука в секундах
+const MASTER_VOLUME = 0.8;   // Общая громкость
+
+/**
+ * Настройка AudioContext с учетом всех браузеров
+ */
 function setupAudioContext() {
-    if (audioContext) return;
-    try {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        console.log("AudioContext успешно создан. State:", audioContext.state);
-        resumeAudioContext();
-    } catch(e) {
-        console.error("Не удалось создать AudioContext:", e);
-        alert("Ошибка: Ваш браузер не поддерживает Web Audio API, метроном не будет работать.");
-        audioContext = null;
-    }
-}
-
-/** Возобновление AudioContext */
-function resumeAudioContext() {
-    if (audioContext && audioContext.state === 'suspended') {
-        audioContext.resume().then(() => {
-            console.log('AudioContext успешно возобновлен.');
-        }).catch((error) => {
-            console.error('Ошибка возобновления AudioContext:', error);
-        });
-    }
-}
-
-/** Загрузка аудиофайла для метронома */
-async function loadAudioFile() {
-    if (!audioContext) {
-         setupAudioContext();
-         if (!audioContext) return;
-    }
-    if (audioBuffer) return;
-
-    const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688%20(mp3cut.net).mp3?alt=media&token=97b66349-7568-43eb-80c3-c2278ff38c10';
-    try {
-        const response = await fetch(fileUrl);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const arrayBuffer = await response.arrayBuffer();
-        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        console.log("Аудиофайл метронома успешно загружен и декодирован.");
-    } catch (error) {
-        console.error('Ошибка загрузки или декодирования аудиофайла:', error);
-        alert("Не удалось загрузить звук метронома. Метроном может не работать.");
-        audioBuffer = null;
-    }
-}
-
-/** Воспроизведение одного клика метронома */
-function playClick(beatsPerMeasure = 4) {
-    if (!audioContext || !audioBuffer || audioContext.state !== 'running') {
-         if (audioContext?.state === 'suspended') resumeAudioContext();
-         if (isMetronomeActive) toggleMetronome(0); // Stop
-         return;
-    }
-
-    try {
-        const source = audioContext.createBufferSource();
-        source.buffer = audioBuffer;
-        const gainNode = audioContext.createGain();
-        gainNode.gain.setValueAtTime((currentBeat % beatsPerMeasure === 0) ? 1.0 : 0.6, audioContext.currentTime);
-        source.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        source.start(audioContext.currentTime);
-        currentBeat = (currentBeat + 1) % beatsPerMeasure;
-    } catch (error) {
-        console.error("!!! Error during playClick execution:", error);
-        if(isMetronomeActive) toggleMetronome(0); // Stop
-    }
-}
-
-/** Включение/выключение метронома. Возвращает новое состояние. */
-async function toggleMetronome(bpm, beatsPerMeasure) {
-    if (!audioContext) setupAudioContext();
-    if (!audioContext) return { isActive: false, error: "AudioContext not available" };
+    if (audioContext) return true;
     
-    resumeAudioContext();
+    try {
+        // Создаем AudioContext с учетом префиксов браузеров
+        const AudioContextClass = window.AudioContext || 
+                                  window.webkitAudioContext || 
+                                  window.mozAudioContext || 
+                                  window.oAudioContext || 
+                                  window.msAudioContext;
+        
+        if (!AudioContextClass) {
+            console.error("Web Audio API не поддерживается в этом браузере");
+            return false;
+        }
+        
+        audioContext = new AudioContextClass();
+        console.log("AudioContext создан. State:", audioContext.state);
+        
+        // Для Safari и iOS требуется resume после взаимодействия пользователя
+        if (audioContext.state === 'suspended') {
+            resumeAudioContext();
+        }
+        
+        return true;
+    } catch (e) {
+        console.error("Не удалось создать AudioContext:", e);
+        return false;
+    }
+}
 
+/**
+ * Возобновление AudioContext (требуется для Safari/iOS)
+ */
+async function resumeAudioContext() {
+    if (!audioContext) return false;
+    
+    if (audioContext.state === 'suspended') {
+        try {
+            await audioContext.resume();
+            console.log('AudioContext возобновлен');
+            return true;
+        } catch (error) {
+            console.error('Ошибка возобновления AudioContext:', error);
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Создание одного клика метронома с программно сгенерированным звуком
+ */
+function createClick(frequency, time) {
+    if (!audioContext || audioContext.state !== 'running') return;
+    
+    try {
+        // Создаем осциллятор
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        // Настройка осциллятора
+        oscillator.frequency.value = frequency;
+        oscillator.type = 'sine'; // Можно попробовать 'square' или 'triangle'
+        
+        // Настройка огибающей громкости (ADSR)
+        gainNode.gain.setValueAtTime(0, time);
+        gainNode.gain.linearRampToValueAtTime(MASTER_VOLUME, time + 0.001); // Атака
+        gainNode.gain.exponentialRampToValueAtTime(0.01, time + SOUND_DURATION); // Затухание
+        
+        // Подключение узлов
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // Запуск и остановка
+        oscillator.start(time);
+        oscillator.stop(time + SOUND_DURATION);
+        
+    } catch (error) {
+        console.error("Ошибка создания клика:", error);
+    }
+}
+
+/**
+ * Планировщик нот метронома
+ */
+function scheduler() {
+    if (!audioContext || !isMetronomeActive) return;
+    
+    // Планируем все ноты, которые должны прозвучать до следующего вызова
+    while (nextNoteTime < audioContext.currentTime + scheduleAheadTime) {
+        scheduleNote(nextNoteTime);
+        nextNote();
+    }
+}
+
+/**
+ * Планирование одной ноты
+ */
+function scheduleNote(time) {
+    const beatsPerMeasure = 4; // Можно сделать настраиваемым
+    const isAccent = currentBeat % beatsPerMeasure === 0;
+    const frequency = isAccent ? FREQUENCIES.high : FREQUENCIES.low;
+    
+    createClick(frequency, time);
+}
+
+/**
+ * Переход к следующей ноте
+ */
+function nextNote() {
+    const secondsPerBeat = 60.0 / currentTempo;
+    nextNoteTime += secondsPerBeat;
+    currentBeat = (currentBeat + 1) % 4; // Можно сделать настраиваемым
+}
+
+let currentTempo = 120; // BPM по умолчанию
+
+/**
+ * Включение/выключение метронома
+ */
+async function toggleMetronome(bpm = 120, beatsPerMeasure = 4) {
+    if (!setupAudioContext()) {
+        return { 
+            isActive: false, 
+            error: "Web Audio API не поддерживается в вашем браузере" 
+        };
+    }
+    
+    // Обязательно пытаемся возобновить контекст при каждом клике
+    await resumeAudioContext();
+    
     if (isMetronomeActive) {
-        clearInterval(metronomeInterval);
-        metronomeInterval = null;
+        // Останавливаем метроном
         isMetronomeActive = false;
+        
+        if (metronomeInterval) {
+            clearInterval(metronomeInterval);
+            metronomeInterval = null;
+        }
+        
+        if (timerWorker) {
+            timerWorker.postMessage("stop");
+        }
+        
         currentBeat = 0;
-        console.log("Metronome: Stopped.");
+        console.log("Метроном остановлен");
         return { isActive: false };
-    } else if (bpm > 0) {
-        if (!audioBuffer) await loadAudioFile();
-        if (!audioBuffer || audioContext.state !== 'running') {
-            const error = "Metronome audio not ready or context not running.";
-            console.warn(error);
-            return { isActive: false, error };
+        
+    } else {
+        // Запускаем метроном
+        if (audioContext.state !== 'running') {
+            await resumeAudioContext();
+            if (audioContext.state !== 'running') {
+                return { 
+                    isActive: false, 
+                    error: "Не удалось запустить аудио контекст. Попробуйте еще раз." 
+                };
+            }
         }
-
-        const intervalMilliseconds = 60000 / bpm;
-        if (intervalMilliseconds <= 0 || !isFinite(intervalMilliseconds)) {
-             console.error("Metronome: Invalid interval calculated.");
-             return { isActive: false, error: "Invalid BPM" };
-        }
-
+        
+        currentTempo = bpm;
         currentBeat = 0;
+        nextNoteTime = audioContext.currentTime;
         isMetronomeActive = true;
-        metronomeInterval = setInterval(() => playClick(beatsPerMeasure), intervalMilliseconds);
-        playClick(beatsPerMeasure); // First click
-        console.log("Metronome: Started.");
+        
+        // Используем setInterval как основной метод
+        // Web Workers не всегда доступны и могут создавать проблемы
+        metronomeInterval = setInterval(scheduler, lookahead);
+        
+        console.log(`Метроном запущен: ${bpm} BPM`);
         return { isActive: true };
     }
-    return { isActive: false }; // No action taken
 }
 
+/**
+ * Получение состояния метронома
+ */
 function getMetronomeState() {
     return {
         isActive: isMetronomeActive,
-        audioBuffer: audioBuffer,
         audioContext: audioContext,
+        currentTempo: currentTempo,
+        supported: !!(window.AudioContext || window.webkitAudioContext)
     };
+}
+
+/**
+ * Инициализация при первом взаимодействии пользователя
+ * Важно для Safari/iOS
+ */
+async function initAudioOnUserGesture() {
+    if (!audioContext) {
+        setupAudioContext();
+    }
+    if (audioContext) {
+        await resumeAudioContext();
+    }
+}
+
+// Не используется в новой версии, но оставляем для совместимости
+async function loadAudioFile() {
+    console.log("loadAudioFile: Больше не требуется в новой версии");
+    return true;
+}
+
+function playClick(beatsPerMeasure = 4) {
+    console.log("playClick: Используйте toggleMetronome для управления метрономом");
 }
 
 export {
@@ -131,8 +241,11 @@ export {
     loadAudioFile,
     playClick,
     toggleMetronome,
-    getMetronomeState
+    getMetronomeState,
+    initAudioOnUserGesture
 };
 
 // Экспортируем переменные состояния для совместимости
-export { audioContext, audioBuffer, metronomeInterval, isMetronomeActive, currentBeat }; 
+export { audioContext, isMetronomeActive, currentBeat };
+export const audioBuffer = null; // Больше не используется
+export const metronomeInterval = null; // Для совместимости 

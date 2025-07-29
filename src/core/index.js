@@ -103,7 +103,8 @@ export {
   loadAudioFile,
   playClick,
   toggleMetronome,
-  getMetronomeState
+  getMetronomeState,
+  initAudioOnUserGesture
 } from '../js/core/metronome.js';
 
 // ====================================
