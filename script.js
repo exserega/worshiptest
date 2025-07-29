@@ -5,6 +5,8 @@
 // Все функциональность вынесена в специализированные модули
 // =====================================================================
 
+console.log('🔥🔥🔥 SCRIPT.JS LOADED - FIX WILL START! 🔥🔥🔥');
+
 // ====================================
 // 📋 RESTRUCTURE STAGE INDICATOR
 // ====================================
@@ -695,8 +697,18 @@ window.showNotification = function(message, type = 'info') {
     }, 3000);
 };
 
-// РАДИКАЛЬНОЕ РЕШЕНИЕ - полностью переопределяем кнопку после загрузки всего
-let fixButtonInterval = setInterval(() => {
+// РАДИКАЛЬНОЕ РЕШЕНИЕ - ждем полной загрузки DOM и начинаем фикс
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀🚀🚀 [FIX] DOM loaded, starting button fix in 1 second...');
+    
+    setTimeout(() => {
+        console.log('🔥🔥🔥 [FIX] Starting button fix NOW!');
+        
+        let fixAttempts = 0;
+        let fixButtonInterval = setInterval(() => {
+    fixAttempts++;
+    console.log(`🔍 [FIX] Attempt ${fixAttempts} - looking for button...`);
+    
     const btn = document.getElementById('add-to-setlist-button');
     if (btn) {
         console.log('🔧 [FIX] Found button, fixing it...');
@@ -754,14 +766,44 @@ let fixButtonInterval = setInterval(() => {
         
         console.log('✅ [FIX] Button replaced! It should be RED now');
         clearInterval(fixButtonInterval);
+    } else {
+        // Попробуем найти кнопку другими способами
+        const btnByClass = document.querySelector('.legend-icon-btn.setlist');
+        const btnByTitle = document.querySelector('button[title*="сет-лист"]');
+        const btnByAria = document.querySelector('button[aria-label*="сет-лист"]');
+        
+        if (btnByClass || btnByTitle || btnByAria) {
+            console.log('🔍 [FIX] Found button by alternative selector!');
+            console.log('🔍 [FIX] By class:', btnByClass);
+            console.log('🔍 [FIX] By title:', btnByTitle);
+            console.log('🔍 [FIX] By aria:', btnByAria);
+        }
+        
+        // Покажем все кнопки на странице для отладки
+        if (fixAttempts === 5) {
+            const allButtons = document.querySelectorAll('button');
+            console.log(`🔍 [FIX] Total buttons on page: ${allButtons.length}`);
+            allButtons.forEach((b, i) => {
+                if (b.id || b.className.includes('setlist') || b.title.toLowerCase().includes('лист')) {
+                    console.log(`🔍 [FIX] Button ${i}:`, {
+                        id: b.id,
+                        className: b.className,
+                        title: b.title,
+                        text: b.textContent.trim()
+                    });
+                }
+            });
+        }
     }
-}, 500); // Проверяем каждые 500мс
+        }, 500); // Проверяем каждые 500мс
 
-// Останавливаем через 10 секунд если кнопка не найдена
-setTimeout(() => {
-    clearInterval(fixButtonInterval);
-    console.log('⏱️ [FIX] Stopped looking for button');
-}, 10000);
+        // Останавливаем через 10 секунд если кнопка не найдена
+        setTimeout(() => {
+            clearInterval(fixButtonInterval);
+            console.log('⏱️ [FIX] Stopped looking for button');
+        }, 10000);
+    }, 1000); // Ждем 1 секунду после DOMContentLoaded
+});
 
 // ФУНКЦИЯ ДОБАВЛЕНИЯ ПЕСНИ В СЕТ-ЛИСТ
 window.handleAddSongToSetlist = async function() {
