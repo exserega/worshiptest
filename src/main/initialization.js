@@ -63,6 +63,10 @@ export async function initializeApp() {
         // Инициализируем навигацию пользователя
         initUserNavigation();
         
+        // Проверяем, нужно ли предложить стать администратором
+        const { checkAndShowFirstAdminModal } = await import('../modules/auth/firstAdminModal.js');
+        checkAndShowFirstAdminModal();
+        
         // ====================================
         // THEME SETUP
         // ====================================
