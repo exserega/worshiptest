@@ -296,7 +296,13 @@ function getAvatarPlaceholder(user) {
         </svg>
     `;
     
-    return `data:image/svg+xml;base64,${btoa(svg)}`;
+    // Кодируем SVG с поддержкой Unicode
+    try {
+        const encoded = btoa(unescape(encodeURIComponent(svg)));
+        return `data:image/svg+xml;base64,${encoded}`;
+    } catch (e) {
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    }
 }
 
 /**

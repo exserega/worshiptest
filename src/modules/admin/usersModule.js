@@ -371,7 +371,15 @@ function getAvatarPlaceholder(user) {
         </svg>
     `;
     
-    return `data:image/svg+xml;base64,${btoa(svg)}`;
+    // Кодируем SVG с поддержкой Unicode
+    try {
+        // Для поддержки кириллицы и других Unicode символов
+        const encoded = btoa(unescape(encodeURIComponent(svg)));
+        return `data:image/svg+xml;base64,${encoded}`;
+    } catch (e) {
+        // Если не удалось закодировать, возвращаем URL-encoded версию
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    }
 }
 
 function getRoleBadgeClass(role) {
