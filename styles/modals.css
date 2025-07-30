@@ -521,29 +521,31 @@ body[data-theme="light"] #copy-text-button.copied {
     font-size: 0.95rem;
 }
 
+/* Текст "Тональность:" в overlay добавления в сет-лист */
 .song-details .song-key {
     font-size: 0.85rem;
     color: var(--text-color);
-    opacity: 0.7;
-    background: none !important;
+    opacity: 0.7; /* Делаем текст чуть прозрачнее для визуального разделения */
+    background: none !important; /* Убираем фон у текста "Тональность:" */
     border: none !important;
     padding: 0 !important;
-    text-transform: none !important;
+    text-transform: none !important; /* Отменяем uppercase из родительских стилей */
 }
 
+/* Блок с отображением выбранной тональности (G, Eb и т.д.) */
 .song-details .song-key #adding-song-key {
-    color: var(--accent-color);
+    color: var(--accent-color); /* Яркий цвет для выделения тональности */
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.95rem; /* Чуть больше основного текста */
     margin-left: 0.35rem;
     padding: 0.2rem 0.6rem;
-    background: var(--hover-color);
+    background: var(--hover-color); /* Нейтральный фон для контраста */
     border: 1px solid var(--border-color);
     border-radius: 4px;
     display: inline-block;
-    text-transform: none !important;
-    letter-spacing: normal;
-    opacity: 1;
+    text-transform: none !important; /* ВАЖНО: отменяем uppercase для корректного отображения Eb, Ab и т.д. */
+    letter-spacing: normal; /* Отменяем letter-spacing из общих стилей */
+    opacity: 1; /* Полная непрозрачность для самой тональности */
 }
 
 /* Секция существующих сет-листов */
@@ -558,13 +560,13 @@ body[data-theme="light"] #copy-text-button.copied {
     margin-bottom: 0.5rem;
 }
 
-/* Сетка сет-листов */
+/* Сетка сет-листов в overlay добавления - вертикальный список */
 .setlists-grid {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: 200px;
-    overflow-y: auto;
+    max-height: 200px; /* Ограничиваем высоту для компактности */
+    overflow-y: auto; /* Скролл при большом количестве сет-листов */
     padding-right: 0.5rem;
 }
 
@@ -604,6 +606,7 @@ body[data-theme="light"] #copy-text-button.copied {
     background: var(--bg-tertiary);
 }
 
+/* Визуальная индикация выбранного сет-листа при клике */
 .setlist-item.selected {
     border-color: var(--primary-color);
     background: rgba(var(--primary-rgb), 0.1);
@@ -851,8 +854,9 @@ body[data-theme="light"] #copy-text-button.copied {
 }
 
 /* === Light Theme Overrides for Setlist Selector === */
+/* Адаптация блока тональности для светлой темы - используем те же переменные, которые автоматически меняются */
 body[data-theme="light"] .song-details .song-key #adding-song-key {
-    color: var(--text-color);
-    background: var(--hover-color);
-    border-color: var(--border-color);
+    color: var(--text-color); /* В светлой теме это будет темный текст */
+    background: var(--hover-color); /* В светлой теме это будет светло-серый фон */
+    border-color: var(--border-color); /* В светлой теме это будет светлая рамка */
 }

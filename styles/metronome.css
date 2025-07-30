@@ -970,16 +970,18 @@ body[data-theme="light"] .metronome-modal {
     gap: 1rem;
 }
 
+/* Контейнер для переключателя акцента сильной доли */
 .metronome-accent-toggle {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     cursor: pointer;
-    user-select: none;
+    user-select: none; /* Предотвращаем выделение текста при клике */
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
 
+/* Скрываем стандартный checkbox, будем использовать кастомный слайдер */
 .metronome-accent-toggle input[type="checkbox"] {
     display: none;
 }
@@ -1007,14 +1009,16 @@ body[data-theme="light"] .metronome-modal {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Состояние включенного переключателя - меняем цвет на акцентный */
 .metronome-accent-toggle input[type="checkbox"]:checked + .toggle-slider {
     background: var(--primary-color);
     border-color: var(--primary-color);
 }
 
+/* Двигаем кружок вправо при включенном состоянии */
 .metronome-accent-toggle input[type="checkbox"]:checked + .toggle-slider::after {
-    transform: translateX(24px);
-    background: #ffffff;
+    transform: translateX(24px); /* Сдвигаем на 24px (ширина слайдера минус кружок и отступы) */
+    background: #ffffff; /* Белый кружок на цветном фоне для контраста */
 }
 
 .toggle-label {
