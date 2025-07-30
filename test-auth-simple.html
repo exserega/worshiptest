@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Auth Test</title>
+    
+    <!-- Firebase SDK - точно такой же как в settings.html -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .status {
+            padding: 20px;
+            margin: 10px 0;
+            background: #2a2a2a;
+            border-radius: 10px;
+        }
+        .success { background: #4caf50; }
+        .error { background: #f44336; }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Simple Auth Test</h1>
+    
+    <div class="status" id="status">Initializing...</div>
+    
+    <div style="margin-top: 20px;">
+        <button onclick="window.location.href='/settings.html'">Go to Settings</button>
+        <button onclick="window.location.href='/admin.html'">Go to Admin</button>
+        <button onclick="testAuth()">Test Auth</button>
+    </div>
+    
+    <pre id="log"></pre>
+
+    <!-- Firebase Init - точно как в settings.html -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzDxg3S9cfseoozmZSksUh1aLbkVBG--Q",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "660585697058",
+            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40",
+            measurementId: "G-Z6QYH5YD2E"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    
+    <!-- Test Script - точно как в settings.js -->
+    <script>
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const logEl = document.getElementById('log');
+        
+        function log(msg) {
+            console.log(msg);
+            logEl.textContent += new Date().toISOString() + ' - ' + msg + '\n';
+        }
+        
+        log('Script loaded');
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            log('DOM loaded');
+            
+            // Точно такой же код как в settings.js
+            auth.onAuthStateChanged(async (user) => {
+                log('Auth state changed: ' + (user ? user.uid : 'null'));
+                
+                const statusEl = document.getElementById('status');
+                
+                if (user) {
+                    statusEl.className = 'status success';
+                    statusEl.textContent = '✅ Authorized as: ' + user.email;
+                    
+                    // Загружаем данные из Firestore
+                    try {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        if (userDoc.exists) {
+                            const data = userDoc.data();
+                            log('User data: ' + JSON.stringify(data));
+                            statusEl.textContent += ' | Role: ' + data.role;
+                        } else {
+                            log('No user document in Firestore');
+                        }
+                    } catch (error) {
+                        log('Firestore error: ' + error.message);
+                    }
+                } else {
+                    statusEl.className = 'status error';
+                    statusEl.textContent = '❌ Not authorized';
+                }
+            });
+        });
+        
+        function testAuth() {
+            log('Current user: ' + (auth.currentUser ? auth.currentUser.uid : 'null'));
+            if (auth.currentUser) {
+                auth.currentUser.getIdToken().then(token => {
+                    log('Token obtained, length: ' + token.length);
+                }).catch(error => {
+                    log('Token error: ' + error.message);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

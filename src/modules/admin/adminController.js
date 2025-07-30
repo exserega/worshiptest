@@ -8,9 +8,11 @@
  * - Управление заявками
  */
 
-// Firebase - будут инициализированы после загрузки
-let auth;
-let db;
+// Firebase - инициализируем сразу как в settings.js
+console.log('🔥 AdminController module loading, firebase available:', typeof firebase !== 'undefined');
+const auth = firebase.auth();
+const db = firebase.firestore();
+console.log('🔥 Firebase services initialized in adminController');
 
 // Импорты модулей
 import { initUserManagement, updateFilter, changeUserRole, changeUserStatus, assignUserToBranch, exportUsersToCSV } from './userManagement.js';
@@ -652,33 +654,47 @@ window.adminController = {
 document.addEventListener('DOMContentLoaded', () => {
     // Отмечаем что контроллер загружен
     window._adminControllerLoaded = true;
-    
-    // Инициализируем Firebase переменные
-    if (typeof firebase !== 'undefined') {
-        auth = firebase.auth();
-        db = firebase.firestore();
-        console.log('🔥 Firebase initialized in adminController');
-    } else {
-        console.error('❌ Firebase not found!');
-        showAccessDenied('Firebase не инициализирован');
-        return;
-    }
+    console.log('🔥 Admin controller loaded');
     
     // Ждем обычной авторизации как в settings.html
     let initialized = false;
+    let authCheckTimeout = null;
+    
+    console.log('🔄 Setting up onAuthStateChanged listener');
+    
     auth.onAuthStateChanged((user) => {
+        console.log('🔔 Auth state changed, user:', user ? user.uid : 'null', 'initialized:', initialized);
+        
         if (initialized) return; // Предотвращаем множественные вызовы
+        
+        // Отменяем таймаут если он был
+        if (authCheckTimeout) {
+            clearTimeout(authCheckTimeout);
+            authCheckTimeout = null;
+        }
         
         if (user) {
             initialized = true;
-            console.log('🔐 User detected:', user.uid);
+            console.log('🔐 User detected:', user.uid, user.email);
             // Небольшая задержка для синхронизации данных
             setTimeout(() => {
                 initAdminPanel();
             }, 500);
         } else {
-            console.log('❌ No user authenticated');
-            showAccessDenied('Требуется авторизация');
+            console.log('⏳ No user yet, waiting...');
+            // Даем Firebase время восстановить сессию
+            authCheckTimeout = setTimeout(() => {
+                // Проверяем еще раз
+                const currentUser = auth.currentUser;
+                if (!currentUser) {
+                    console.log('❌ No user authenticated after timeout');
+                    showAccessDenied('Требуется авторизация');
+                } else {
+                    console.log('✅ User found after timeout:', currentUser.uid);
+                    initialized = true;
+                    initAdminPanel();
+                }
+            }, 2000); // Ждем 2 секунды
         }
     });
 });
