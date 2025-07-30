@@ -22,6 +22,7 @@ const forms = {
 const elements = {
     googleBtn: document.getElementById('google-login-btn'),
     phoneBtn: document.getElementById('phone-login-btn'),
+    guestBtn: document.getElementById('guest-login-btn'),
     showRegister: document.getElementById('show-register'),
     showLogin: document.getElementById('show-login'),
     backToLogin: document.getElementById('back-to-login'),
@@ -223,6 +224,44 @@ async function handleGoogleLogin() {
     }
 }
 
+// Guest Login
+async function handleGuestLogin() {
+    showLoading();
+    
+    try {
+        // Импортируем модуль гостевой авторизации
+        const { createGuestSession, showBranchSelectionModal } = await import('./guestAuth.js');
+        
+        // Создаем гостевую сессию
+        const result = await createGuestSession();
+        
+        if (result.success) {
+            // Загружаем список филиалов
+            const branchesSnapshot = await db.collection('branches').get();
+            const branches = [];
+            branchesSnapshot.forEach(doc => {
+                branches.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // Показываем модальное окно выбора филиала
+            await showBranchSelectionModal(branches, (selectedBranchId) => {
+                console.log('Guest selected branch:', selectedBranchId);
+                // Перенаправляем на главную страницу
+                window.location.replace('/');
+            });
+            
+            showLoading(false);
+        } else {
+            throw new Error(result.error);
+        }
+        
+    } catch (error) {
+        console.error('Guest login error:', error);
+        showMessage('Ошибка при входе как гость: ' + error.message);
+        showLoading(false);
+    }
+}
+
 // Phone Login - Step 1: Send SMS
 async function handlePhoneSend(e) {
     e.preventDefault();
@@ -325,6 +364,7 @@ forms.phone.addEventListener('submit', handlePhoneSend);
 // Button clicks
 elements.googleBtn.addEventListener('click', handleGoogleLogin);
 elements.phoneBtn.addEventListener('click', () => switchForm('phone'));
+elements.guestBtn.addEventListener('click', handleGuestLogin);
 elements.showRegister.addEventListener('click', (e) => {
     e.preventDefault();
     switchForm('register');

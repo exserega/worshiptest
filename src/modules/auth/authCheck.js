@@ -23,6 +23,16 @@ let authCheckPromise = null;
  * @returns {Promise<{user: Object|null, isAuthenticated: boolean}>}
  */
 export function checkAuth() {
+    // Проверяем гостевую сессию
+    if (localStorage.getItem('isGuestSession') === 'true') {
+        const guestUser = JSON.parse(localStorage.getItem('guestUser') || '{}');
+        return Promise.resolve({ 
+            user: guestUser, 
+            isAuthenticated: true,
+            isGuest: true 
+        });
+    }
+    
     // Проверяем что Firebase инициализирован
     if (!auth || !db) {
         console.error('Firebase not initialized');
