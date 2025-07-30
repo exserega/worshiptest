@@ -156,8 +156,8 @@
         console.log('🔥 Firebase initialized in admin.html');
     </script>
     
-    <!-- Admin Controller - загружаем как обычный скрипт, как в settings.html -->
-    <script type="module" src="src/modules/admin/adminController.js"></script>
+    <!-- Admin Controller - загружаем через обертку для правильной инициализации -->
+    <script type="module" src="src/modules/admin/adminWrapper.js"></script>
     
     <!-- Backup loading logic -->
     <script>
