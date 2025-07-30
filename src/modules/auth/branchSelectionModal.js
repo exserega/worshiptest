@@ -3,9 +3,10 @@
 // Модальное окно выбора филиала для новых пользователей
 // ====================================
 
-import { createJoinRequest } from '../requests/requestsAPI.js';
-import { db } from '../../firebase-config.js';
-import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { createJoinRequest } from '/src/modules/requests/requestsAPI.js';
+
+// Firebase из глобального объекта (v8)
+const db = window.firebase?.firestore?.() || null;
 
 /**
  * Показывает модальное окно выбора филиала для нового пользователя
@@ -110,10 +111,10 @@ async function handleBranchSelection(userId, userData, branchId) {
         
         if (result.success) {
             // Обновляем профиль пользователя
-            await updateDoc(doc(db, 'users', userId), {
+            await db.collection('users').doc(userId).update({
                 branchId: branchId,
                 status: 'pending',
-                updatedAt: new Date()
+                updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
             });
             
             // Показываем успешное сообщение

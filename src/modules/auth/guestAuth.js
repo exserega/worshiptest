@@ -3,10 +3,8 @@
 // Модуль для входа в систему как гость
 // ====================================
 
-import { db } from '../../firebase-config.js';
-import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-// Firebase Auth из глобального объекта
+// Firebase из глобального объекта (v8)
+const db = window.firebase?.firestore?.() || null;
 const auth = window.firebase?.auth?.() || null;
 
 /**
@@ -28,9 +26,9 @@ export async function createGuestSession() {
             status: 'active',
             branchId: null, // Гость выберет филиал после входа
             isGuest: true,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-            lastLoginAt: serverTimestamp()
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            lastLoginAt: new Date()
         };
         
         // Сохраняем гостя в localStorage (не в Firestore, т.к. это временная сессия)
@@ -163,8 +161,12 @@ export function endGuestSession() {
  */
 export async function convertGuestToUser(guestId, userData) {
     try {
+        if (!db) {
+            throw new Error('Firebase not initialized');
+        }
+        
         // Создаем профиль пользователя в Firestore
-        const userRef = doc(db, 'users', userData.uid);
+        const userRef = db.collection('users').doc(userData.uid);
         
         // Сохраняем данные гостя для переноса
         const guestUser = getGuestUser();
@@ -174,10 +176,10 @@ export async function convertGuestToUser(guestId, userData) {
             branchId: guestUser?.branchId || null,
             previousGuestId: guestId,
             convertedFromGuest: true,
-            convertedAt: serverTimestamp()
+            convertedAt: window.firebase.firestore.FieldValue.serverTimestamp()
         };
         
-        await setDoc(userRef, newUserData, { merge: true });
+        await userRef.set(newUserData, { merge: true });
         
         // Очищаем гостевую сессию
         endGuestSession();

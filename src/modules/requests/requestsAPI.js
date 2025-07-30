@@ -3,20 +3,9 @@
 // Модуль для работы с заявками на филиалы
 // ====================================
 
-import { db } from '../../firebase-config.js';
-import { 
-    collection, 
-    addDoc, 
-    updateDoc, 
-    doc, 
-    query, 
-    where, 
-    getDocs,
-    serverTimestamp,
-    orderBy,
-    limit,
-    deleteDoc
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+// Firebase из глобального объекта (v8)
+const db = window.firebase?.firestore?.() || null;
+const serverTimestamp = () => window.firebase?.firestore?.FieldValue?.serverTimestamp?.() || new Date();
 
 // Типы заявок
 export const REQUEST_TYPES = {
@@ -52,7 +41,7 @@ export async function createTransferRequest(userId, fromBranchId, toBranchId, re
             updatedAt: serverTimestamp()
         };
 
-        const docRef = await addDoc(collection(db, 'requests'), requestData);
+        const docRef = await db.collection('requests').add(requestData);
         console.log('✅ Transfer request created:', docRef.id);
         return { success: true, requestId: docRef.id };
     } catch (error) {
@@ -80,7 +69,7 @@ export async function createJoinRequest(userId, branchId, userData = {}) {
             updatedAt: serverTimestamp()
         };
 
-        const docRef = await addDoc(collection(db, 'requests'), requestData);
+        const docRef = await db.collection('requests').add(requestData);
         console.log('✅ Join request created:', docRef.id);
         return { success: true, requestId: docRef.id };
     } catch (error) {
@@ -109,7 +98,7 @@ export async function createBranchRequest(userId, branchData) {
             updatedAt: serverTimestamp()
         };
 
-        const docRef = await addDoc(collection(db, 'requests'), requestData);
+        const docRef = await db.collection('requests').add(requestData);
         console.log('✅ Branch creation request created:', docRef.id);
         return { success: true, requestId: docRef.id };
     } catch (error) {
@@ -127,15 +116,12 @@ export async function createBranchRequest(userId, branchData) {
  */
 export async function getUserRequests(userId) {
     try {
-        const q = query(
-            collection(db, 'requests'),
-            where('userId', '==', userId),
-            orderBy('createdAt', 'desc')
-        );
+        const querySnapshot = await db.collection('requests')
+            .where('userId', '==', userId)
+            .orderBy('createdAt', 'desc')
+            .get();
         
-        const querySnapshot = await getDocs(q);
         const requests = [];
-        
         querySnapshot.forEach((doc) => {
             requests.push({
                 id: doc.id,
@@ -155,18 +141,16 @@ export async function getUserRequests(userId) {
  */
 export async function getRequestsByType(type, status = null) {
     try {
-        let q = query(
-            collection(db, 'requests'),
-            where('type', '==', type)
-        );
+        let query = db.collection('requests')
+            .where('type', '==', type);
         
         if (status) {
-            q = query(q, where('status', '==', status));
+            query = query.where('status', '==', status);
         }
         
-        q = query(q, orderBy('createdAt', 'desc'));
+        query = query.orderBy('createdAt', 'desc');
         
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await query.get();
         const requests = [];
         
         querySnapshot.forEach((doc) => {
@@ -188,15 +172,12 @@ export async function getRequestsByType(type, status = null) {
  */
 export async function getActiveUserRequest(userId, type) {
     try {
-        const q = query(
-            collection(db, 'requests'),
-            where('userId', '==', userId),
-            where('type', '==', type),
-            where('status', '==', REQUEST_STATUS.PENDING),
-            limit(1)
-        );
-        
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await db.collection('requests')
+            .where('userId', '==', userId)
+            .where('type', '==', type)
+            .where('status', '==', REQUEST_STATUS.PENDING)
+            .limit(1)
+            .get();
         
         if (!querySnapshot.empty) {
             const doc = querySnapshot.docs[0];
@@ -234,7 +215,7 @@ export async function approveRequest(requestId, adminId, additionalData = {}) {
             ...additionalData
         };
 
-        await updateDoc(doc(db, 'requests', requestId), updateData);
+        await db.collection('requests').doc(requestId).update(updateData);
         console.log('✅ Request approved:', requestId);
         return { success: true };
     } catch (error) {
@@ -256,7 +237,7 @@ export async function rejectRequest(requestId, adminId, reason = '') {
             updatedAt: serverTimestamp()
         };
 
-        await updateDoc(doc(db, 'requests', requestId), updateData);
+        await db.collection('requests').doc(requestId).update(updateData);
         console.log('✅ Request rejected:', requestId);
         return { success: true };
     } catch (error) {
@@ -270,7 +251,7 @@ export async function rejectRequest(requestId, adminId, reason = '') {
  */
 export async function deleteRequest(requestId) {
     try {
-        await deleteDoc(doc(db, 'requests', requestId));
+        await db.collection('requests').doc(requestId).delete();
         console.log('✅ Request deleted:', requestId);
         return { success: true };
     } catch (error) {

@@ -219,9 +219,16 @@ async function handleGoogleLogin() {
         const userDoc = await db.collection('users').doc(result.user.uid).get();
         const userData = userDoc.data();
         
+        console.log('🔍 Checking user after Google login:', {
+            exists: userDoc.exists,
+            branchId: userData?.branchId,
+            role: userData?.role,
+            needsBranch: !userData?.branchId && userData?.role !== 'admin'
+        });
+        
         if (!userData.branchId && userData.role !== 'admin') {
             console.log('🏢 New user needs to select branch');
-            const { showNewUserBranchSelection } = await import('./branchSelectionModal.js');
+            const { showNewUserBranchSelection } = await import('/src/modules/auth/branchSelectionModal.js');
             await showNewUserBranchSelection(result.user.uid, userData);
             showLoading(false);
             return;
@@ -432,10 +439,16 @@ auth.onAuthStateChanged(async (user) => {
                 }
                 
                 // Проверяем, есть ли у пользователя филиал
+                console.log('🔍 Checking existing user:', {
+                    branchId: userData.branchId,
+                    role: userData.role,
+                    needsBranch: !userData.branchId && userData.role !== 'admin'
+                });
+                
                 if (!userData.branchId && userData.role !== 'admin') {
                     console.log('🏢 User needs to select branch');
                     // Импортируем и показываем выбор филиала
-                    const { showNewUserBranchSelection } = await import('./branchSelectionModal.js');
+                    const { showNewUserBranchSelection } = await import('/src/modules/auth/branchSelectionModal.js');
                     await showNewUserBranchSelection(user.uid, userData);
                     checkingAuth = false;
                     return;
