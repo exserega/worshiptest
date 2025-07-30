@@ -650,6 +650,9 @@ window.adminController = {
 
 // Запускаем при загрузке
 document.addEventListener('DOMContentLoaded', () => {
+    // Отмечаем что контроллер загружен
+    window._adminControllerLoaded = true;
+    
     // Инициализируем Firebase переменные
     if (typeof firebase !== 'undefined') {
         auth = firebase.auth();
@@ -661,29 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    // Проверяем принудительный режим админа
-    if (window._forceAdminMode && window._authToken && window._authUid === 'm4L5O5rs2phMHtfcVuWnCAkXJBD2') {
-        console.log('🔐 Running in forced admin mode');
-        // Устанавливаем состояние напрямую
-        state.currentUser = {
-            id: 'm4L5O5rs2phMHtfcVuWnCAkXJBD2',
-            email: '19exxtazzy96@gmail.com',
-            role: 'admin',
-            status: 'active',
-            isFounder: true,
-            isRootAdmin: true
-        };
-        state.isRootAdmin = true;
-        
-        // Инициализируем панель
-        initAdminPanel().catch(error => {
-            console.error('❌ Error in forced mode:', error);
-            showAccessDenied('Ошибка инициализации: ' + error.message);
-        });
-        return;
-    }
-    
-    // Иначе ждем обычной авторизации
+    // Ждем обычной авторизации как в settings.html
     let initialized = false;
     auth.onAuthStateChanged((user) => {
         if (initialized) return; // Предотвращаем множественные вызовы
