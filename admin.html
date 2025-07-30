@@ -143,26 +143,30 @@
         window.auth = firebase.auth();
         window.db = firebase.firestore();
         
+        // Делаем Firebase доступным глобально для отладки
+        window.firebase = firebase;
+        window.auth = firebase.auth();
+        window.db = firebase.firestore();
+        
         // Устанавливаем persistence для сохранения сессии
         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             .then(() => {
                 console.log('✅ Firebase persistence set to LOCAL');
                 
-                // Проверка состояния аутентификации для отладки
-                firebase.auth().onAuthStateChanged((user) => {
-                    console.log('🔐 [admin.html] Auth state changed:', user ? user.uid : 'No user');
-                    if (user) {
-                        console.log('📧 User email:', user.email);
-                        console.log('🆔 User ID:', user.uid);
-                    }
-                });
-                
-                // Проверяем текущего пользователя
-                const currentUser = firebase.auth().currentUser;
-                console.log('👤 Current user immediately:', currentUser ? currentUser.uid : 'None');
+                // Принудительно восстанавливаем сессию
+                return firebase.auth().getRedirectResult();
+            })
+            .then(() => {
+                // Проверяем токен
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    console.log('✅ User already authenticated:', user.uid);
+                } else {
+                    console.log('⏳ Waiting for auth state...');
+                }
             })
             .catch((error) => {
-                console.error('❌ Error setting persistence:', error);
+                console.error('❌ Error:', error);
             });
     </script>
 
@@ -170,38 +174,84 @@
     <script>
         // Ждем полной инициализации Firebase и загрузки пользователя
         let controllerLoaded = false;
+        let authChecked = false;
+        let retryCount = 0;
+        const maxRetries = 3;
         
-        firebase.auth().onAuthStateChanged((user) => {
-            if (!controllerLoaded) {
-                if (user) {
-                    console.log('🔐 User detected before controller load:', user.uid);
-                    // Загружаем контроллер только после подтверждения авторизации
-                    setTimeout(() => {
-                        const script = document.createElement('script');
-                        script.type = 'module';
-                        script.src = 'src/modules/admin/adminController.js';
-                        document.body.appendChild(script);
-                        console.log('📜 Admin controller loaded after auth confirmed');
-                        controllerLoaded = true;
-                    }, 500);
+        function showAuthError() {
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 50px; background: #1a1a1a; color: #fff; min-height: 100vh;">
+                    <h1>⚠️ Проблема с авторизацией</h1>
+                    <p>Не удается загрузить данные авторизации. Попробуйте:</p>
+                    <div style="margin: 30px auto; max-width: 400px; text-align: left;">
+                        <ol>
+                            <li>Обновить страницу (F5)</li>
+                            <li>Вернуться на главную и зайти снова</li>
+                            <li>Проверить подключение к интернету</li>
+                        </ol>
+                    </div>
+                    <button onclick="location.reload()" style="background: #ff6b6b; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
+                        🔄 Обновить страницу
+                    </button>
+                    <button onclick="window.location.href='/'" style="background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
+                        🏠 На главную
+                    </button>
+                    <button onclick="window.location.href='/debug-auth.html'" style="background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
+                        🔍 Диагностика
+                    </button>
+                </div>
+            `;
+        }
+        
+        function checkAuthWithRetry() {
+            console.log(`🔄 Auth check attempt ${retryCount + 1}/${maxRetries}`);
+            
+            const user = firebase.auth().currentUser;
+            
+            if (user) {
+                console.log('✅ User found:', user.uid);
+                loadAdminController();
+            } else {
+                retryCount++;
+                if (retryCount < maxRetries) {
+                    console.log('⏳ No user yet, retrying in 2 seconds...');
+                    setTimeout(checkAuthWithRetry, 2000);
                 } else {
-                    console.log('❌ No user detected, redirecting to login...');
-                    setTimeout(() => {
-                        if (!firebase.auth().currentUser) {
-                            window.location.href = '/login.html';
-                        }
-                    }, 2000);
+                    console.log('❌ Max retries reached, showing error');
+                    showAuthError();
                 }
             }
-        });
+        }
         
-        // Fallback: если пользователь не загрузился через 3 секунды
-        setTimeout(() => {
-            if (!controllerLoaded && !firebase.auth().currentUser) {
-                console.log('⏰ Timeout: no user loaded, redirecting...');
-                window.location.href = '/login.html';
+        function loadAdminController() {
+            if (!controllerLoaded) {
+                const script = document.createElement('script');
+                script.type = 'module';
+                script.src = 'src/modules/admin/adminController.js';
+                document.body.appendChild(script);
+                console.log('📜 Admin controller loaded');
+                controllerLoaded = true;
             }
-        }, 3000);
+        }
+        
+        // Начинаем проверку после загрузки страницы
+        window.addEventListener('load', () => {
+            console.log('🔄 Starting auth verification...');
+            
+            // Слушаем изменения состояния
+            firebase.auth().onAuthStateChanged((user) => {
+                if (!authChecked) {
+                    authChecked = true;
+                    if (user) {
+                        console.log('✅ Auth state changed: User authenticated', user.uid);
+                        loadAdminController();
+                    } else {
+                        console.log('⚠️ Auth state changed: No user, starting retry...');
+                        setTimeout(checkAuthWithRetry, 1000);
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>

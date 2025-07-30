@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Auth</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+        pre {
+            background: #111;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug Authentication</h1>
+        
+        <div class="section">
+            <h2>1. Current Page Info</h2>
+            <p><strong>URL:</strong> <span id="current-url"></span></p>
+            <p><strong>Domain:</strong> <span id="current-domain"></span></p>
+            <p><strong>Protocol:</strong> <span id="current-protocol"></span></p>
+        </div>
+        
+        <div class="section">
+            <h2>2. Firebase Auth State</h2>
+            <div id="auth-state">Checking...</div>
+        </div>
+        
+        <div class="section">
+            <h2>3. Storage Check</h2>
+            <h3>LocalStorage Auth Keys:</h3>
+            <pre id="local-storage"></pre>
+            <h3>SessionStorage Auth Keys:</h3>
+            <pre id="session-storage"></pre>
+        </div>
+        
+        <div class="section">
+            <h2>4. Cookies</h2>
+            <pre id="cookies"></pre>
+        </div>
+        
+        <div class="section">
+            <h2>5. Actions</h2>
+            <button onclick="testAuth()">Test Auth</button>
+            <button onclick="forceReauth()">Force Re-auth</button>
+            <button onclick="clearStorage()">Clear Storage</button>
+            <button onclick="window.location.href='/settings.html'">Go to Settings</button>
+            <button onclick="window.location.href='/admin.html'">Go to Admin</button>
+        </div>
+        
+        <div class="section">
+            <h2>6. Live Log</h2>
+            <pre id="live-log"></pre>
+        </div>
+    </div>
+
+    <script>
+        const log = (msg) => {
+            console.log(msg);
+            const logEl = document.getElementById('live-log');
+            logEl.textContent = new Date().toISOString() + ' - ' + msg + '\n' + logEl.textContent;
+        };
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzDxg3S9cfseoozmZSksUh1aLbkVBG--Q",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "660585697058",
+            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40"
+        };
+
+        // Show page info
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('current-domain').textContent = window.location.hostname;
+        document.getElementById('current-protocol').textContent = window.location.protocol;
+
+        // Initialize Firebase
+        log('Initializing Firebase...');
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        
+        // Set persistence
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                log('✅ Persistence set to LOCAL');
+                checkAuth();
+            })
+            .catch((error) => {
+                log('❌ Persistence error: ' + error.message);
+            });
+
+        function checkAuth() {
+            // Check immediate state
+            const currentUser = auth.currentUser;
+            log('Immediate currentUser: ' + (currentUser ? currentUser.uid : 'null'));
+            
+            // Listen for auth state
+            auth.onAuthStateChanged((user) => {
+                const stateDiv = document.getElementById('auth-state');
+                if (user) {
+                    log('✅ Auth state changed: User ' + user.uid);
+                    stateDiv.innerHTML = `
+                        <p class="success">✅ Authenticated</p>
+                        <p><strong>UID:</strong> ${user.uid}</p>
+                        <p><strong>Email:</strong> ${user.email || 'N/A'}</p>
+                        <p><strong>Provider:</strong> ${user.providerData[0]?.providerId || 'N/A'}</p>
+                        <p><strong>Token expires:</strong> ${new Date(user.stsTokenManager.expirationTime).toISOString()}</p>
+                    `;
+                } else {
+                    log('❌ Auth state changed: No user');
+                    stateDiv.innerHTML = '<p class="error">❌ Not authenticated</p>';
+                }
+            });
+        }
+
+        function checkStorage() {
+            // Check localStorage
+            const localKeys = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('firebase') || key.includes('auth')) {
+                    localKeys[key] = localStorage.getItem(key).substring(0, 100) + '...';
+                }
+            }
+            document.getElementById('local-storage').textContent = JSON.stringify(localKeys, null, 2);
+            
+            // Check sessionStorage
+            const sessionKeys = {};
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key.includes('firebase') || key.includes('auth')) {
+                    sessionKeys[key] = sessionStorage.getItem(key).substring(0, 100) + '...';
+                }
+            }
+            document.getElementById('session-storage').textContent = JSON.stringify(sessionKeys, null, 2);
+            
+            // Check cookies
+            document.getElementById('cookies').textContent = document.cookie || 'No cookies';
+        }
+
+        function testAuth() {
+            log('Testing authentication...');
+            const user = auth.currentUser;
+            if (user) {
+                user.getIdToken(true).then((token) => {
+                    log('✅ Token refreshed successfully');
+                    alert('Auth working! Token: ' + token.substring(0, 20) + '...');
+                }).catch((error) => {
+                    log('❌ Token refresh error: ' + error.message);
+                    alert('Token error: ' + error.message);
+                });
+            } else {
+                log('❌ No current user');
+                alert('No user authenticated!');
+            }
+        }
+
+        function forceReauth() {
+            log('Forcing re-authentication...');
+            const user = auth.currentUser;
+            if (user) {
+                user.reload().then(() => {
+                    log('✅ User reloaded');
+                    checkAuth();
+                }).catch((error) => {
+                    log('❌ Reload error: ' + error.message);
+                });
+            } else {
+                log('❌ No user to reload');
+            }
+        }
+
+        function clearStorage() {
+            if (confirm('Clear all auth storage?')) {
+                log('Clearing storage...');
+                // Clear firebase keys from localStorage
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.includes('firebase') || key.includes('auth'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                // Clear sessionStorage
+                sessionStorage.clear();
+                
+                log('✅ Storage cleared');
+                checkStorage();
+            }
+        }
+
+        // Initial checks
+        window.addEventListener('load', () => {
+            checkStorage();
+            setInterval(checkStorage, 5000); // Update every 5 seconds
+        });
+    </script>
+</body>
+</html>
