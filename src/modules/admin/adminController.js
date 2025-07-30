@@ -8,9 +8,9 @@
  * - Управление заявками
  */
 
-// Firebase
-const auth = firebase.auth();
-const db = firebase.firestore();
+// Firebase - будут инициализированы после загрузки
+let auth;
+let db;
 
 // Импорты модулей
 import { initUserManagement, updateFilter, changeUserRole, changeUserStatus, assignUserToBranch, exportUsersToCSV } from './userManagement.js';
@@ -617,6 +617,17 @@ window.adminController = {
 
 // Запускаем при загрузке
 document.addEventListener('DOMContentLoaded', () => {
+    // Инициализируем Firebase переменные
+    if (typeof firebase !== 'undefined') {
+        auth = firebase.auth();
+        db = firebase.firestore();
+        console.log('🔥 Firebase initialized in adminController');
+    } else {
+        console.error('❌ Firebase not found!');
+        showAccessDenied('Firebase не инициализирован');
+        return;
+    }
+    
     // Ждем загрузки пользователя Firebase
     let initialized = false;
     auth.onAuthStateChanged((user) => {

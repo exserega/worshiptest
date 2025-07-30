@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест админ доступа</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .status {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #333;
+        }
+        .success { background: #4caf50; }
+        .error { background: #f44336; }
+        .info { background: #2196f3; }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔐 Тест админ доступа</h1>
+    
+    <div id="firebase-status" class="status">Проверка Firebase...</div>
+    <div id="auth-status" class="status">Проверка авторизации...</div>
+    <div id="user-info" class="status">Загрузка данных пользователя...</div>
+    <div id="admin-status" class="status">Проверка прав администратора...</div>
+    
+    <div style="margin-top: 20px;">
+        <button onclick="testAdminAccess()">Проверить админ доступ</button>
+        <button onclick="window.location.href='/admin.html'">Открыть админ панель</button>
+        <button onclick="window.location.href='/'">На главную</button>
+    </div>
+    
+    <div id="log" style="margin-top: 20px; background: #222; padding: 20px; border-radius: 5px;">
+        <h3>Логи:</h3>
+        <pre id="log-content"></pre>
+    </div>
+
+    <script>
+        const log = (message) => {
+            console.log(message);
+            const logContent = document.getElementById('log-content');
+            logContent.textContent += message + '\n';
+        };
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzDxg3S9cfseoozmZSksUh1aLbkVBG--Q",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "660585697058",
+            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40"
+        };
+
+        // Initialize Firebase
+        log('🔥 Инициализация Firebase...');
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Глобальные переменные для отладки
+        window.firebase = firebase;
+        window.auth = auth;
+        window.db = db;
+        
+        document.getElementById('firebase-status').className = 'status success';
+        document.getElementById('firebase-status').textContent = '✅ Firebase инициализирован';
+        log('✅ Firebase инициализирован');
+        
+        // Устанавливаем persistence
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                log('✅ Persistence установлен на LOCAL');
+            })
+            .catch((error) => {
+                log('❌ Ошибка установки persistence: ' + error.message);
+            });
+        
+        // Проверка авторизации
+        auth.onAuthStateChanged(async (user) => {
+            const authStatus = document.getElementById('auth-status');
+            const userInfo = document.getElementById('user-info');
+            const adminStatus = document.getElementById('admin-status');
+            
+            if (user) {
+                log('🔐 Пользователь обнаружен: ' + user.uid);
+                authStatus.className = 'status success';
+                authStatus.textContent = '✅ Пользователь авторизован';
+                
+                // Информация о пользователе
+                userInfo.innerHTML = `
+                    <strong>UID:</strong> ${user.uid}<br>
+                    <strong>Email:</strong> ${user.email || 'Не указан'}<br>
+                    <strong>Phone:</strong> ${user.phoneNumber || 'Не указан'}
+                `;
+                userInfo.className = 'status info';
+                
+                // Проверка данных в Firestore
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        log('📄 Данные из Firestore: ' + JSON.stringify(userData));
+                        
+                        userInfo.innerHTML += `<br><br><strong>Firestore данные:</strong><br>
+                            Роль: ${userData.role}<br>
+                            Статус: ${userData.status}<br>
+                            Филиал: ${userData.branchId || 'Не назначен'}`;
+                        
+                        // Проверка админских прав
+                        const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
+                        const MAIN_ADMIN_EMAIL = '19exxtazzy96@gmail.com';
+                        
+                        if (user.uid === MAIN_ADMIN_ID || user.email === MAIN_ADMIN_EMAIL || userData.role === 'admin') {
+                            adminStatus.className = 'status success';
+                            adminStatus.textContent = '✅ Права администратора подтверждены';
+                            log('✅ Администратор подтвержден');
+                        } else {
+                            adminStatus.className = 'status error';
+                            adminStatus.textContent = '❌ Нет прав администратора';
+                            log('❌ Не администратор');
+                        }
+                    } else {
+                        log('❌ Профиль не найден в Firestore');
+                        userInfo.innerHTML += '<br><br>❌ Профиль не найден в Firestore';
+                    }
+                } catch (error) {
+                    log('❌ Ошибка Firestore: ' + error.message);
+                }
+            } else {
+                log('❌ Пользователь не авторизован');
+                authStatus.className = 'status error';
+                authStatus.textContent = '❌ Пользователь не авторизован';
+                userInfo.textContent = '';
+                adminStatus.textContent = '';
+            }
+        });
+        
+        function testAdminAccess() {
+            const user = auth.currentUser;
+            if (user) {
+                log('🔍 Тестирование доступа для: ' + user.uid);
+                alert('Текущий пользователь: ' + user.email + '\nUID: ' + user.uid);
+            } else {
+                log('❌ Нет авторизованного пользователя');
+                alert('Пользователь не авторизован!');
+            }
+        }
+    </script>
+</body>
+</html>
