@@ -192,6 +192,22 @@ export async function initAuthGate(options = {}) {
     } = options;
     
     console.log('🔒 Initializing auth gate...');
+    console.log('Current path:', window.location.pathname);
+    
+    // Проверяем флаг редиректа
+    if (sessionStorage.getItem('auth_redirecting') === 'true') {
+        console.log('⚠️ Auth redirecting in progress, waiting...');
+        sessionStorage.removeItem('auth_redirecting');
+        // Даем время Firebase синхронизироваться
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
+    // Добавляем защиту от повторных проверок
+    if (window._authGateChecking) {
+        console.log('⚠️ Auth gate already checking, skipping...');
+        return false;
+    }
+    window._authGateChecking = true;
     
     try {
         const { user, isAuthenticated, isBanned } = await checkAuth();
@@ -201,7 +217,8 @@ export async function initAuthGate(options = {}) {
             console.log('🚫 Authentication required, redirecting to login...');
             // Проверяем что мы не на странице логина чтобы избежать цикла
             if (!window.location.pathname.includes('login')) {
-                window.location.href = redirectTo;
+                // Используем replace чтобы не было цикла через историю
+                window.location.replace(redirectTo);
             }
             return false;
         }
@@ -228,11 +245,13 @@ export async function initAuthGate(options = {}) {
         }
         
         console.log('✅ Auth gate passed');
+        window._authGateChecking = false;
         return true;
     } catch (error) {
         console.error('Auth gate error:', error);
+        window._authGateChecking = false;
         if (requireAuth) {
-            window.location.href = redirectTo;
+            window.location.replace(redirectTo);
         }
         return false;
     }

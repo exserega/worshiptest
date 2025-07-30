@@ -48,12 +48,7 @@ export async function initializeApp() {
         
         if (!authPassed) {
             console.log('❌ [Initialization] Auth check failed');
-            // Добавляем задержку чтобы избежать цикла редиректов
-            setTimeout(() => {
-                if (window.location.pathname !== '/login.html') {
-                    window.location.href = '/login.html';
-                }
-            }, 100);
+            // Не делаем редирект здесь - authGate уже сделал это
             return;
         }
         

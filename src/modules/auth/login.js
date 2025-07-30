@@ -290,11 +290,26 @@ elements.verifyCodeBtn.addEventListener('click', handlePhoneVerify);
 // CHECK AUTH STATE
 // ====================================
 
+// Check if we just came from auth redirect
+if (sessionStorage.getItem('auth_redirecting') === 'true') {
+    console.log('⚠️ Clearing auth redirect flag');
+    sessionStorage.removeItem('auth_redirecting');
+}
+
 // If already logged in, redirect to main app
 let redirecting = false;
+let checkingAuth = false;
+
 auth.onAuthStateChanged(async (user) => {
-    if (user && !redirecting) {
+    // Избегаем множественных проверок
+    if (checkingAuth || redirecting) return;
+    
+    if (user) {
+        checkingAuth = true;
         console.log('🔐 User already logged in:', user.email || user.phoneNumber);
+        
+        // Добавляем небольшую задержку чтобы избежать гонки состояний
+        await new Promise(resolve => setTimeout(resolve, 500));
         
         // Проверяем есть ли профиль в Firestore
         try {
@@ -302,16 +317,23 @@ auth.onAuthStateChanged(async (user) => {
             if (userDoc.exists) {
                 console.log('✅ User profile exists, redirecting...');
                 redirecting = true;
-                window.location.href = '/';
+                // Сохраняем флаг что идет редирект
+                sessionStorage.setItem('auth_redirecting', 'true');
+                // Используем replace чтобы не было истории для возврата
+                window.location.replace('/');
             } else {
-                console.log('⚠️ User profile not found, staying on login page');
+                console.log('⚠️ User profile not found, creating...');
                 // Создаем профиль
                 await createUserProfile(user);
+                console.log('✅ Profile created, redirecting...');
                 redirecting = true;
-                window.location.href = '/';
+                // Сохраняем флаг что идет редирект
+                sessionStorage.setItem('auth_redirecting', 'true');
+                window.location.replace('/');
             }
         } catch (error) {
             console.error('Error checking user profile:', error);
+            checkingAuth = false;
         }
     }
 });
