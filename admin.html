@@ -39,15 +39,15 @@
         <nav class="admin-tabs">
             <button class="tab-button active" data-tab="users">
                 <i class="fas fa-users"></i>
-                Пользователи
+                <span>Пользователи</span>
             </button>
             <button class="tab-button" data-tab="branches">
                 <i class="fas fa-building"></i>
-                Филиалы
+                <span>Филиалы</span>
             </button>
             <button class="tab-button" data-tab="transfers">
                 <i class="fas fa-exchange-alt"></i>
-                Переводы
+                <span>Переводы</span>
             </button>
         </nav>
 
@@ -250,6 +250,31 @@
         
         async function initAdminPanel() {
             console.log('🚀 Initializing admin panel...');
+            
+            try {
+                // Импортируем основной модуль админ панели
+                const { initAdminPanel: initAdminCore } = await import('./src/modules/admin/adminCore.js');
+                
+                // Загружаем модуль уведомлений
+                await import('./src/modules/admin/notifications.js');
+                
+                // Инициализируем админ панель с модульной системой
+                await initAdminCore(currentUser, isRootAdmin);
+                
+                console.log('✅ Admin panel modules loaded successfully');
+                
+            } catch (error) {
+                console.error('❌ Error loading admin modules:', error);
+                
+                // Fallback на старую логику если модули не загрузились
+                console.log('⚠️ Falling back to inline initialization...');
+                await initAdminPanelFallback();
+            }
+        }
+        
+        // Резервная инициализация (старая логика)
+        async function initAdminPanelFallback() {
+            console.log('🚀 Initializing admin panel (fallback)...');
             
             // Загружаем начальные данные
             await Promise.all([
