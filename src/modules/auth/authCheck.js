@@ -36,25 +36,53 @@ export function checkAuth() {
         const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
             if (firebaseUser) {
                 try {
-                    // Получаем профиль пользователя из Firestore
-                    const userDoc = await db.collection('users').doc(firebaseUser.uid).get();
+                    // ВРЕМЕННОЕ РЕШЕНИЕ: Проверка главного админа
+                    const MAIN_ADMIN_ID = 'AF5iJmVy9cd6Hat9QNxygij0RFS2';
                     
-                    if (userDoc.exists) {
+                    if (firebaseUser.uid === MAIN_ADMIN_ID) {
+                        // Для главного админа всегда устанавливаем права
+                        const adminData = {
+                            email: firebaseUser.email || '19exxtazzy96@gmail.com',
+                            phone: firebaseUser.phoneNumber,
+                            name: firebaseUser.displayName || 'Главный администратор',
+                            role: 'admin',
+                            status: 'active',
+                            isFounder: true,
+                            isRootAdmin: true
+                        };
+                        
+                        // Обновляем в БД
+                        await db.collection('users').doc(firebaseUser.uid).set(adminData, { merge: true });
+                        
                         currentUser = {
-                            ...userDoc.data(),
+                            ...adminData,
                             uid: firebaseUser.uid,
                             firebaseUser
                         };
                         
-                        console.log('🔐 User authenticated:', currentUser.email || currentUser.phone);
+                        console.log('🔐 Main admin authenticated by ID');
+                        resolve({ user: currentUser, isAuthenticated: true });
+                    } else {
+                        // Обычная проверка для остальных пользователей
+                        const userDoc = await db.collection('users').doc(firebaseUser.uid).get();
                         
-                        // Проверяем статус пользователя
-                        if (currentUser.status === 'banned') {
-                            console.warn('🚫 User is banned');
-                            await auth.signOut();
-                            resolve({ user: null, isAuthenticated: false, isBanned: true });
-                        } else {
-                            resolve({ user: currentUser, isAuthenticated: true });
+                        if (userDoc.exists) {
+                            currentUser = {
+                                ...userDoc.data(),
+                                uid: firebaseUser.uid,
+                                firebaseUser
+                            };
+                            
+                            console.log('🔐 User authenticated:', currentUser.email || currentUser.phone);
+                            
+                            // Проверяем статус пользователя
+                            if (currentUser.status === 'banned') {
+                                console.warn('🚫 User is banned');
+                                await auth.signOut();
+                                resolve({ user: null, isAuthenticated: false, isBanned: true });
+                            } else {
+                                resolve({ user: currentUser, isAuthenticated: true });
+                            }
                         }
                     } else {
                         console.warn('⚠️ User profile not found in Firestore, creating...');
@@ -137,6 +165,12 @@ export function hasAccess(resource, action) {
  * @returns {boolean}
  */
 export function isAdmin() {
+    // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
+    const MAIN_ADMIN_ID = 'AF5iJmVy9cd6Hat9QNxygij0RFS2';
+    if (auth.currentUser?.uid === MAIN_ADMIN_ID) {
+        return true;
+    }
+    
     return currentUser?.role === 'admin';
 }
 

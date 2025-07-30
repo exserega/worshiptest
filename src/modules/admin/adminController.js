@@ -69,7 +69,39 @@ async function checkAdminAccess() {
         throw new Error('Требуется авторизация');
     }
     
-    // Получаем данные пользователя
+    // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
+    const MAIN_ADMIN_ID = 'AF5iJmVy9cd6Hat9QNxygij0RFS2';
+    
+    if (user.uid === MAIN_ADMIN_ID) {
+        console.log('✅ Main admin detected by ID');
+        state.currentUser = {
+            id: user.uid,
+            email: user.email,
+            role: 'admin',
+            status: 'active',
+            isFounder: true,
+            isRootAdmin: true
+        };
+        state.isRootAdmin = true;
+        
+        // Обновляем данные в БД для синхронизации
+        try {
+            await db.collection('users').doc(user.uid).set({
+                role: 'admin',
+                status: 'active',
+                isFounder: true,
+                isRootAdmin: true,
+                email: user.email,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        } catch (error) {
+            console.error('Error updating admin in DB:', error);
+        }
+        
+        return;
+    }
+    
+    // Обычная проверка для остальных пользователей
     const userDoc = await db.collection('users').doc(user.uid).get();
     if (!userDoc.exists) {
         throw new Error('Профиль пользователя не найден');
