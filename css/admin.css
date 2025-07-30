@@ -2,12 +2,15 @@
 
 /* CSS Variables from main site */
 :root {
+    /* Темная тема по умолчанию */
     --bg-color: #1a1a1a;
     --bg-secondary: #2a2a2a;
     --text-color: #ffffff;
     --text-secondary: #b0b0b0;
+    --text-tertiary: #808080;
     --accent-color: #ff6b6b;
-    --hover-color: #333333;
+    --accent-hover: #ff5252;
+    --hover-color: rgba(255, 107, 107, 0.1);
     --border-color: #444444;
     --success-color: #4caf50;
     --warning-color: #ff9800;
@@ -19,15 +22,33 @@
     --bg-secondary: #f5f5f5;
     --text-color: #333333;
     --text-secondary: #666666;
+    --text-tertiary: #999999;
     --accent-color: #ff6b6b;
-    --hover-color: #eeeeee;
+    --accent-hover: #ff5252;
+    --hover-color: rgba(255, 107, 107, 0.1);
     --border-color: #dddddd;
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
 }
 
 .admin-container {
     min-height: 100vh;
     background: var(--bg-color);
     color: var(--text-color);
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+* {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease;
 }
 
 /* Header */
@@ -85,7 +106,8 @@
 }
 
 .nav-tab:hover {
-    background: var(--hover-color);
+    background: var(--bg-color);
+    opacity: 0.8;
 }
 
 .nav-tab i {
@@ -176,7 +198,7 @@
 }
 
 .btn-secondary:hover {
-    background: var(--hover-color);
+    background: var(--bg-color);
 }
 
 /* User Grid */
@@ -330,7 +352,8 @@
 
 .branch-tag {
     padding: 0.3rem 0.8rem;
-    background: var(--hover-color);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 0.9rem;
 }

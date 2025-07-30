@@ -2,39 +2,37 @@
    ⚙️ SETTINGS PAGE STYLES
    ==================================== */
 
-/* CSS Variables - копируем из основного сайта */
+/* CSS Variables - из основного сайта */
 :root {
-    /* Основные цвета */
-    --bg-color: #fff;
-    --bg-secondary: #f8f9fa;
-    --text-color: #1a1a1a;
-    --text-secondary: #666;
-    --text-tertiary: #999;
-    --border-color: #e0e0e0;
-    --accent-color: #007aff;
-    --accent-hover: #0056b3;
-    --accent-danger: #dc3545;
-    --accent-warning: #ffc107;
-    --hover-color: rgba(0, 122, 255, 0.1);
-    
-    /* Для совместимости со страницей логина */
-    --bg-primary: var(--bg-color);
-    --text-primary: var(--text-color);
+    /* Темная тема по умолчанию */
+    --bg-color: #1a1a1a;
+    --bg-secondary: #2a2a2a;
+    --text-color: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-tertiary: #808080;
+    --border-color: #444444;
+    --accent-color: #ff6b6b;
+    --accent-hover: #ff5252;
+    --accent-danger: #f44336;
+    --accent-warning: #ff9800;
+    --hover-color: rgba(255, 107, 107, 0.1);
+    --success-color: #4caf50;
 }
 
-/* Темная тема */
-body[data-theme="dark"] {
-    --bg-color: #111827;
-    --bg-secondary: #1f2937;
-    --text-color: #e5e7eb;
-    --text-secondary: #9ca3af;
-    --text-tertiary: #6b7280;
-    --border-color: #374151;
-    --accent-color: #3b82f6;
-    --accent-hover: #2563eb;
-    --accent-danger: #ef4444;
-    --accent-warning: #f59e0b;
-    --hover-color: rgba(59, 130, 246, 0.1);
+/* Светлая тема */
+[data-theme="light"] {
+    --bg-color: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --text-color: #333333;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --border-color: #dddddd;
+    --accent-color: #ff6b6b;
+    --accent-hover: #ff5252;
+    --accent-danger: #f44336;
+    --accent-warning: #ff9800;
+    --hover-color: rgba(255, 107, 107, 0.1);
+    --success-color: #4caf50;
 }
 
 body {
@@ -43,6 +41,12 @@ body {
     background: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease;
 }
 
 .settings-container {
@@ -69,7 +73,7 @@ body {
     background: none;
     border: none;
     font-size: 20px;
-    color: var(--text-primary);
+    color: var(--text-color);
     cursor: pointer;
     padding: 8px;
     border-radius: 8px;
@@ -105,7 +109,7 @@ body {
     margin: 0 0 5px;
     font-size: 24px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text-color);
 }
 
 .user-contact {
@@ -125,8 +129,9 @@ body {
     border-radius: 12px;
     font-size: 12px;
     font-weight: 500;
-    background: var(--hover-color);
+    background: var(--bg-secondary);
     color: var(--text-secondary);
+    border: 1px solid var(--border-color);
 }
 
 .badge.admin {
@@ -155,7 +160,7 @@ body {
     margin: 0 0 15px;
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text-color);
 }
 
 .settings-list {
@@ -189,7 +194,7 @@ body {
 
 .setting-value {
     font-size: 16px;
-    color: var(--text-primary);
+    color: var(--text-color);
     font-weight: 500;
 }
 
@@ -214,7 +219,8 @@ body {
     align-items: center;
     gap: 10px;
     padding: 12px;
-    background: var(--hover-color);
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-warning);
     border-radius: 8px;
     color: var(--accent-warning);
     font-size: 14px;
@@ -250,7 +256,7 @@ body {
     align-items: center;
     gap: 12px;
     padding: 15px 0;
-    color: var(--text-primary);
+    color: var(--text-color);
     text-decoration: none;
     border-bottom: 1px solid var(--border-color);
 }
