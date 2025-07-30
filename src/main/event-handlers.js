@@ -1073,10 +1073,17 @@ function setupSongEventHandlers() {
     // Редактор песен
     if (ui.editSongButton) {
         ui.editSongButton.addEventListener('click', () => {
+            console.log('📝 [EventHandlers] Edit song button clicked');
             if (ui.songEditorOverlay) {
+                console.log('📝 [EventHandlers] Opening song editor overlay');
                 ui.songEditorOverlay.classList.add('show');
+            } else {
+                console.error('❌ [EventHandlers] Song editor overlay not found!');
             }
         });
+        console.log('📝 [EventHandlers] Edit song button handler attached');
+    } else {
+        console.warn('⚠️ [EventHandlers] Edit song button not found');
     }
     
     if (ui.saveEditButton) {

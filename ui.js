@@ -319,6 +319,9 @@ export function displaySongDetails(songData, keyToSelect) {
         }
     if (editBtn) {
         editBtn.style.display = 'block';
+        console.log('📝 [UI] Edit button shown for song:', cleanTitle);
+    } else {
+        console.warn('⚠️ [UI] Edit button not found in song content');
     }
     
     // Обновляем статус редактирования
