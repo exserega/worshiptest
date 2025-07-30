@@ -212,10 +212,10 @@
                     document.getElementById('admin-container').style.display = 'block';
                     
                     // Обновляем UI с информацией о пользователе
-                    updateAdminInfo();
+                    updateAdminInfo(user, isRootAdmin);
                     
                     // Инициализируем админ панель
-                    initAdminPanel();
+                    initAdminPanel(user, isRootAdmin);
                     
                 } catch (error) {
                     console.error('❌ Error loading admin panel:', error);
@@ -234,8 +234,8 @@
             document.getElementById('error-text').textContent = message;
         }
         
-        function updateAdminInfo() {
-            document.getElementById('admin-name').textContent = currentUser.name || currentUser.email;
+        function updateAdminInfo(user, isRootAdmin) {
+            document.getElementById('admin-name').textContent = user.displayName || user.email;
             const roleEl = document.getElementById('admin-role');
             roleEl.textContent = isRootAdmin ? 'Основатель' : 'Администратор';
             roleEl.className = 'badge ' + (isRootAdmin ? 'badge-danger' : 'badge-warning');
@@ -245,7 +245,7 @@
         // ADMIN PANEL INITIALIZATION
         // ====================================
         
-        async function initAdminPanel() {
+        async function initAdminPanel(user, isRootAdmin) {
             console.log('🚀 Initializing admin panel...');
             
             try {
@@ -256,7 +256,7 @@
                 await import('./src/modules/admin/notifications.js');
                 
                 // Инициализируем админ панель с модульной системой
-                await initAdminCore(currentUser, isRootAdmin);
+                await initAdminCore(user, isRootAdmin);
                 
                 console.log('✅ Admin panel modules loaded successfully');
                 
@@ -265,12 +265,12 @@
                 
                 // Fallback на старую логику если модули не загрузились
                 console.log('⚠️ Falling back to inline initialization...');
-                await initAdminPanelFallback();
+                await                     initAdminPanelFallback(user, isRootAdmin);
             }
         }
         
         // Резервная инициализация (старая логика)
-        async function initAdminPanelFallback() {
+        async function initAdminPanelFallback(user, isRootAdmin) {
             console.log('🚀 Initializing admin panel (fallback)...');
             
             // Загружаем начальные данные
