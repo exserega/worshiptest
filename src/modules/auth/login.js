@@ -37,6 +37,19 @@ const elements = {
 
 let phoneConfirmationResult = null;
 let recaptchaVerifier = null;
+let inviteId = null;
+
+// Check for invite in URL
+const urlParams = new URLSearchParams(window.location.search);
+inviteId = urlParams.get('invite');
+
+if (inviteId) {
+    console.log('Invite ID found:', inviteId);
+    // Show invite message
+    setTimeout(() => {
+        showMessage('You have been invited! Please sign up to accept the invitation.', 'info');
+    }, 500);
+}
 
 // ====================================
 // UTILITY FUNCTIONS
@@ -68,15 +81,48 @@ function switchForm(formName) {
 async function createUserProfile(user, additionalData = {}) {
     const userRef = db.collection('users').doc(user.uid);
     
+    // Check if there's an invite
+    if (inviteId) {
+        try {
+            const inviteDoc = await db.collection('invites').doc(inviteId).get();
+            
+            if (inviteDoc.exists) {
+                const invite = inviteDoc.data();
+                
+                // Validate invite
+                if (invite.status === 'pending' && 
+                    invite.email === user.email && 
+                    new Date(invite.expiresAt.toDate()) > new Date()) {
+                    
+                    // Apply invite role
+                    additionalData.role = invite.role;
+                    additionalData.status = 'active';
+                    additionalData.invitedBy = invite.invitedBy;
+                    
+                    // Mark invite as accepted
+                    await db.collection('invites').doc(inviteId).update({
+                        status: 'accepted',
+                        acceptedBy: user.uid,
+                        acceptedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    console.log('Invite accepted successfully');
+                }
+            }
+        } catch (error) {
+            console.error('Error processing invite:', error);
+        }
+    }
+    
     const userData = {
         id: user.uid,
         name: user.displayName || additionalData.name || 'Новый пользователь',
         email: user.email,
         phone: user.phoneNumber,
         photoURL: user.photoURL,
-        role: 'user',
+        role: additionalData.role || 'user',
         branchId: null,
-        status: 'pending',
+        status: additionalData.status || 'pending',
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         ...additionalData
