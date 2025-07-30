@@ -26,7 +26,7 @@
 ├── constants.js       📋 ГЛОБАЛЬНЫЕ КОНСТАНТЫ
 ├── core.js           🔗 LEGACY CORE (переходный)
 ├── firebase-config.js 🔗 LEGACY FIREBASE (переходный)
-├── metronome.js      🎵 МЕТРОНОМ (отдельный модуль)
+├── metronome.js      🎵 МЕТРОНОМ UI (визуальная часть)
 ├── index.html        🌐 HTML СТРУКТУРА
 └── styles.css        🎨 СТИЛИ
 ```
@@ -49,6 +49,7 @@ src/
 │   ├── song-display.js   📺 ОТОБРАЖЕНИЕ ПЕСЕН
 │   ├── overlay-manager.js 🎭 УПРАВЛЕНИЕ OVERLAY
 │   ├── setlist-manager.js 🎵 УПРАВЛЕНИЕ СЕТЛИСТАМИ
+│   ├── setlist-selector.js 📋 ДОБАВЛЕНИЕ В СЕТЛИСТ (NEW)
 │   ├── modal-manager.js   🎭 МОДАЛЬНЫЕ ОКНА
 │   └── utils.js          🛠️ UI УТИЛИТЫ
 ├── api/               🔌 API СЛОЙ
@@ -56,7 +57,9 @@ src/
 ├── js/                📦 ДОПОЛНИТЕЛЬНЫЕ МОДУЛИ
 │   ├── state/         🗃️ МОДУЛЬНОЕ СОСТОЯНИЕ
 │   ├── workers/       👷 WEB WORKERS
-│   └── utils/         🛠️ УТИЛИТЫ
+│   ├── utils/         🛠️ УТИЛИТЫ
+│   └── core/          🏛️ CORE МОДУЛИ
+│       └── metronome.js 🎵 МЕТРОНОМ CORE (Web Audio API)
 └── config/            ⚙️ КОНФИГУРАЦИЯ
     └── firebase.js    🔥 FIREBASE CONFIG
 ```
@@ -144,6 +147,45 @@ setupEventListeners() {
 - key-selection-modal       → Выбор тональности
 - mobile-song-preview-overlay → Мобильный просмотр
 - create-setlist-modal      → Создание сетлиста
+- setlist-select-overlay    → Выбор сетлиста для добавления (NEW)
+```
+
+---
+
+## 🎵 **СИСТЕМА МЕТРОНОМА**
+
+### **📍 АРХИТЕКТУРА МЕТРОНОМА**
+```javascript
+// ДВУХУРОВНЕВАЯ СИСТЕМА:
+1. metronome.js (корень)       → UI и управление
+2. src/js/core/metronome.js    → Core логика (Web Audio API)
+
+// ОСОБЕННОСТИ:
+- Web Audio API для точного тайминга
+- Визуальная синхронизация (beat indicators)
+- Сохранение настроек в localStorage
+- Поддержка различных размеров (2/4, 3/4, 4/4, 6/8)
+- Переключение акцента сильной доли
+```
+
+### **🔊 WEB AUDIO API КОНФИГУРАЦИЯ**
+```javascript
+// ЗВУКОВЫЕ ПАРАМЕТРЫ:
+const SOUND_CONFIG = {
+    frequencies: {
+        high: 880,  // Акцентированная нота
+        low: 440    // Обычная нота
+    },
+    volume: {
+        accent: 0.3,  // Громкость акцента
+        normal: 0.15  // Обычная громкость
+    }
+};
+
+// ВИЗУАЛЬНАЯ СИНХРОНИЗАЦИЯ:
+- scheduleNote() → планирует звук и событие
+- 'metronome-beat' event → обновляет UI
+- Компенсация задержки через lookahead
 ```
 
 ---
@@ -273,6 +315,8 @@ window.handleSetlistSelect()        → Выбор сетлиста
 window.handleFavoriteOrRepertoireSelect() → Выбор из панели
 window.handleVocalistChange()       → Смена вокалиста
 window.handleRepertoireUpdate()     → Обновление репертуара
+window.handleAddSongToSetlist()     → Открытие overlay добавления (NEW)
+window.openSetlistSelector()        → Прямое открытие селектора (NEW)
 ```
 
 **ЭТИ ФУНКЦИИ НЕЛЬЗЯ УДАЛЯТЬ - ОНИ ИСПОЛЬЗУЮТСЯ В event-handlers.js!**
@@ -304,6 +348,17 @@ ui.toggleRepertoireButton.classList.remove('loading'); // ОБЯЗАТЕЛЬНО
 - **ВСЕ** обработчики в `src/main/event-handlers.js`
 - **НЕ ДУБЛИРУЙ** обработчики в разных местах
 - **ПРОВЕРЯЙ** на существование элементов: `if (element) { ... }`
+
+### **🚨 6. ДИНАМИЧЕСКОЕ ОБНОВЛЕНИЕ СЕТЛИСТОВ**
+```javascript
+// ПОСЛЕ ДОБАВЛЕНИЯ ПЕСНИ:
+1. Вызывается handleSetlistSelect() для обновления UI
+2. Отправляется событие 'setlist-updated'
+3. Обновление происходит НЕЗАВИСИМО от открытой панели
+
+// ВАЖНО: Обработчик события обновляет список ВСЕГДА,
+// если сет-лист выбран (не только при открытой панели)
+```
 
 ---
 
@@ -337,13 +392,32 @@ button.classList.remove('loading');   // Убрать загрузку
 ### **🔧 РАБОТА С OVERLAY**
 ```javascript
 // ПОКАЗ OVERLAY:
-overlay.classList.add('show');
+overlay.classList.add('show');     // Для старых overlay
+overlay.classList.add('visible');  // Для новых (setlist-select-overlay)
 
 // СКРЫТИЕ OVERLAY:
 overlay.classList.remove('show');
+overlay.classList.remove('visible');
 
 // ОБРАБОТЧИКИ КНОПОК:
 // Всегда добавляй в setupModalEventHandlers()
+
+// ВАЖНО: setlist-select-overlay использует класс 'visible'!
+```
+
+### **🔧 РАБОТА С SETLIST SELECTOR**
+```javascript
+// ОТКРЫТИЕ СЕЛЕКТОРА:
+window.openSetlistSelector(song, selectedKey);
+
+// МОДУЛЬ: src/ui/setlist-selector.js
+// ОСОБЕННОСТИ:
+- Автоматическая загрузка сет-листов
+- Отображение выбранной тональности
+- Создание нового сет-листа inline
+- Динамическое обновление после добавления
+
+// ВАЖНО: Использует modal-overlay с классом 'visible'
 ```
 
 ---
