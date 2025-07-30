@@ -129,15 +129,22 @@
     <!-- Firebase Config -->
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyBJJmE1-B3BoLOPWNX5n1HKhMzF7p2NBUI",
+            apiKey: "AIzaSyBzDxg3S9cfseoozmZSksUh1aLbkVBG--Q",
             authDomain: "song-archive-389a6.firebaseapp.com",
             projectId: "song-archive-389a6",
             storageBucket: "song-archive-389a6.appspot.com",
-            messagingSenderId: "495844037944",
-            appId: "1:495844037944:web:0f063bc69f6ce76a5b0fb4",
-            measurementId: "G-PZ72PXDT85"
+            messagingSenderId: "660585697058",
+            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40"
         };
         firebase.initializeApp(firebaseConfig);
+        
+        // Проверка состояния аутентификации для отладки
+        firebase.auth().onAuthStateChanged((user) => {
+            console.log('🔐 [admin.html] Auth state changed:', user ? user.uid : 'No user');
+            if (user) {
+                console.log('📧 User email:', user.email);
+            }
+        });
     </script>
 
     <!-- Scripts -->
