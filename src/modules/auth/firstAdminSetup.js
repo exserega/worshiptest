@@ -11,6 +11,7 @@ export async function hasAdmins() {
     try {
         const adminsSnapshot = await db.collection('users')
             .where('role', '==', 'admin')
+            .where('status', '==', 'active')  // Проверяем только активных админов
             .limit(1)
             .get();
             
