@@ -524,11 +524,15 @@ body[data-theme="light"] #copy-text-button.copied {
 .song-details .song-key {
     font-size: 0.85rem;
     color: var(--text-color);
-    opacity: 0.8;
+    opacity: 0.7;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    text-transform: none !important;
 }
 
 .song-details .song-key #adding-song-key {
-    color: var(--text-color);
+    color: var(--accent-color);
     font-weight: 600;
     font-size: 0.95rem;
     margin-left: 0.35rem;
