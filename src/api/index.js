@@ -36,21 +36,6 @@ const vocalistsCollection = collection(db, "vocalists");
 export async function loadAllSongsFromFirestore() {
     try {
         console.log("Загрузка всех песен из Firestore...");
-        
-        // Получаем текущего пользователя для проверки филиала
-        const currentUser = auth.currentUser;
-        let userBranchId = null;
-        let isAdmin = false;
-        
-        if (currentUser) {
-            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                userBranchId = userData.branchId;
-                isAdmin = userData.role === 'admin' && (userData.isFounder || userData.isRootAdmin);
-            }
-        }
-        
         const querySnapshot = await getDocs(songsCollection);
         let newAllSongs = [];
         let newSongsBySheet = {};
@@ -59,24 +44,16 @@ export async function loadAllSongsFromFirestore() {
             const songData = doc.data();
             const songId = doc.id;
             const song = { id: songId, name: songId, ...songData };
-            
-            // Фильтруем песни по филиалу
-            // Показываем песню если:
-            // 1. У песни нет филиала (доступна всем)
-            // 2. Пользователь - главный админ (видит все)
-            // 3. Филиал песни совпадает с филиалом пользователя
-            if (!song.branchId || isAdmin || song.branchId === userBranchId) {
-                newAllSongs.push(song);
+            newAllSongs.push(song);
 
-                const sheetName = song.sheet;
-                if (sheetName) {
-                    if (!newSongsBySheet[sheetName]) {
-                        newSongsBySheet[sheetName] = [];
-                    }
-                    newSongsBySheet[sheetName].push(song);
-                } else {
-                    console.warn(`Песня "${song.name}" (${songId}) не имеет поля 'sheet' (категории).`);
+            const sheetName = song.sheet;
+            if (sheetName) {
+                if (!newSongsBySheet[sheetName]) {
+                    newSongsBySheet[sheetName] = [];
                 }
+                newSongsBySheet[sheetName].push(song);
+            } else {
+                console.warn(`Песня "${song.name}" (${songId}) не имеет поля 'sheet' (категории).`);
             }
         });
 
@@ -87,7 +64,7 @@ export async function loadAllSongsFromFirestore() {
         
         state.setAllSongs(newAllSongs);
         state.setSongsBySheet(newSongsBySheet);
-        console.log(`Загружено ${state.allSongs.length} песен${userBranchId ? ' для филиала' : ''}`);
+        console.log(`Загружено ${state.allSongs.length} песен.`);
         
         // Обновляем базу данных в Web Worker
         if (typeof window !== 'undefined' && window.searchWorkerManager) {
@@ -196,7 +173,42 @@ export async function getSongEditStatus(songId) {
  */
 export async function loadSetlists() {
     try {
-        const querySnapshot = await getDocs(query(setlistsCollection, orderBy("createdAt", "desc")));
+        // Получаем данные текущего пользователя
+        const currentUser = auth.currentUser;
+        let userBranchId = null;
+        let isRootAdmin = false;
+        
+        if (currentUser) {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                userBranchId = userData.branchId || null;
+                isRootAdmin = userData.isFounder || userData.isRootAdmin || false;
+            }
+        }
+        
+        let queryRef;
+        
+        // Если главный админ - показываем все сетлисты
+        if (isRootAdmin) {
+            queryRef = query(setlistsCollection, orderBy("createdAt", "desc"));
+        } else if (userBranchId) {
+            // Если есть филиал - показываем только сетлисты этого филиала
+            queryRef = query(
+                setlistsCollection, 
+                where("branchId", "==", userBranchId),
+                orderBy("createdAt", "desc")
+            );
+        } else {
+            // Если нет филиала - показываем только общие сетлисты (без филиала)
+            queryRef = query(
+                setlistsCollection,
+                where("branchId", "==", null),
+                orderBy("createdAt", "desc")
+            );
+        }
+        
+        const querySnapshot = await getDocs(queryRef);
         const setlists = [];
         
         querySnapshot.forEach((doc) => {
@@ -206,7 +218,7 @@ export async function loadSetlists() {
             });
         });
         
-        console.log(`✅ Загружено ${setlists.length} сетлистов`);
+        console.log(`✅ Загружено ${setlists.length} сетлистов${userBranchId && !isRootAdmin ? ' для филиала' : ''}`);
         return setlists;
     } catch (error) {
         console.error('❌ Ошибка загрузки сетлистов:', error);
@@ -225,13 +237,25 @@ export async function createSetlist(name) {
     }
     
     try {
+        // Получаем branchId текущего пользователя
+        let branchId = null;
+        const currentUser = auth.currentUser;
+        
+        if (currentUser) {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            if (userDoc.exists()) {
+                branchId = userDoc.data().branchId || null;
+            }
+        }
+        
         const docRef = await addDoc(setlistsCollection, {
             name: name.trim(),
             songs: [],
+            branchId: branchId, // Привязываем к филиалу пользователя
             createdAt: serverTimestamp()
         });
         
-        console.log(`✅ Сетлист "${name}" создан с ID: ${docRef.id}`);
+        console.log(`✅ Сетлист "${name}" создан с ID: ${docRef.id} для филиала: ${branchId || 'общий'}`);
         return docRef.id;
     } catch (error) {
         console.error(`❌ Ошибка создания сетлиста "${name}":`, error);
