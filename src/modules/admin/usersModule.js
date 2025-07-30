@@ -287,10 +287,19 @@ export async function saveUserChanges(userId) {
         // Обновляем в Firestore
         const db = firebase.firestore();
         const updateData = {
-            status,
-            branchId: branchId || null,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
+        
+        // Для основателя другие админы не могут менять статус и филиал
+        if (user && user.isFounder && currentUser.id === user.id) {
+            // Только сам основатель может менять свой статус и филиал
+            updateData.status = status;
+            updateData.branchId = branchId || null;
+        } else if (!user || !user.isFounder) {
+            // Для обычных пользователей можно менять все
+            updateData.status = status;
+            updateData.branchId = branchId || null;
+        }
         
         // Обновляем роль только если пользователь не основатель
         if (!user || !user.isFounder) {

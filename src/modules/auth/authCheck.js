@@ -49,9 +49,13 @@ export function checkAuth() {
                             console.log('🔐 User authenticated:', currentUser.email || currentUser.phone);
                             
                             // Проверяем статус пользователя
-                            if (currentUser.status === 'banned') {
-                                console.warn('🚫 User is banned');
+                            if (currentUser.status === 'banned' || currentUser.status === 'blocked') {
+                                console.warn('🚫 User is blocked');
                                 await auth.signOut();
+                                // Показываем уведомление
+                                if (typeof window !== 'undefined') {
+                                    alert('Ваш аккаунт заблокирован. Обратитесь к администратору.');
+                                }
                                 resolve({ user: null, isAuthenticated: false, isBanned: true });
                             } else {
                                 resolve({ user: currentUser, isAuthenticated: true });

@@ -368,6 +368,17 @@ auth.onAuthStateChanged(async (user) => {
         try {
             const userDoc = await db.collection('users').doc(user.uid).get();
             if (userDoc.exists) {
+                const userData = userDoc.data();
+                
+                // Проверяем статус пользователя
+                if (userData.status === 'banned' || userData.status === 'blocked') {
+                    console.warn('🚫 User is blocked');
+                    await auth.signOut();
+                    alert('Ваш аккаунт заблокирован. Обратитесь к администратору.');
+                    checkingAuth = false;
+                    return;
+                }
+                
                 console.log('✅ User profile exists, redirecting...');
                 redirecting = true;
                 // Сохраняем флаг что идет редирект
