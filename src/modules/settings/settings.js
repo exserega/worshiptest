@@ -19,6 +19,10 @@ let currentUser = null;
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('⚙️ Settings page loading...');
     
+    // Применяем сохраненную тему
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', savedTheme);
+    
     // Проверка авторизации
     auth.onAuthStateChanged(async (user) => {
         if (!user) {
