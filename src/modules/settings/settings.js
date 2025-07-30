@@ -168,8 +168,28 @@ async function updateUserProfile(updates) {
 // ====================================
 
 window.requestTransfer = async function() {
-    alert('Функция переводов будет доступна позже');
-    // TODO: Implement transfer request
+    // Проверяем, есть ли у пользователя филиал
+    if (!currentUser.branchId) {
+        alert('У вас не назначен филиал. Сначала необходимо вступить в филиал.');
+        return;
+    }
+    
+    try {
+        // Загружаем список филиалов
+        const branchesSnapshot = await db.collection('branches').get();
+        const branches = [];
+        branchesSnapshot.forEach(doc => {
+            branches.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Импортируем и вызываем модальное окно
+        const { showTransferRequestModal } = await import('../requests/transferRequestModal.js');
+        await showTransferRequestModal(currentUser, branches);
+        
+    } catch (error) {
+        console.error('Error opening transfer request:', error);
+        alert('Ошибка при загрузке формы перевода');
+    }
 };
 
 // ====================================
