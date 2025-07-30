@@ -215,6 +215,18 @@ async function handleGoogleLogin() {
         // Create/update user profile
         await createUserProfile(result.user);
         
+        // Проверяем, нужен ли выбор филиала
+        const userDoc = await db.collection('users').doc(result.user.uid).get();
+        const userData = userDoc.data();
+        
+        if (!userData.branchId && userData.role !== 'admin') {
+            console.log('🏢 New user needs to select branch');
+            const { showNewUserBranchSelection } = await import('./branchSelectionModal.js');
+            await showNewUserBranchSelection(result.user.uid, userData);
+            showLoading(false);
+            return;
+        }
+        
         console.log('🔐 Google login successful:', result.user.email);
         window.location.href = '/';
     } catch (error) {
@@ -230,7 +242,7 @@ async function handleGuestLogin() {
     
     try {
         // Импортируем модуль гостевой авторизации
-        const { createGuestSession, showBranchSelectionModal } = await import('./guestAuth.js');
+        const { createGuestSession, showBranchSelectionModal } = await import('/src/modules/auth/guestAuth.js');
         
         // Создаем гостевую сессию
         const result = await createGuestSession();
@@ -415,6 +427,16 @@ auth.onAuthStateChanged(async (user) => {
                     console.warn('🚫 User is blocked');
                     await auth.signOut();
                     alert('Ваш аккаунт заблокирован. Обратитесь к администратору.');
+                    checkingAuth = false;
+                    return;
+                }
+                
+                // Проверяем, есть ли у пользователя филиал
+                if (!userData.branchId && userData.role !== 'admin') {
+                    console.log('🏢 User needs to select branch');
+                    // Импортируем и показываем выбор филиала
+                    const { showNewUserBranchSelection } = await import('./branchSelectionModal.js');
+                    await showNewUserBranchSelection(user.uid, userData);
                     checkingAuth = false;
                     return;
                 }
