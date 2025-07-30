@@ -1074,11 +1074,20 @@ function setupSongEventHandlers() {
     if (ui.editSongButton) {
         ui.editSongButton.addEventListener('click', () => {
             console.log('📝 [EventHandlers] Edit song button clicked');
-            if (ui.songEditorOverlay) {
-                console.log('📝 [EventHandlers] Opening song editor overlay');
-                ui.songEditorOverlay.classList.add('visible'); // Исправлено: visible вместо show
+            
+            // Получаем текущую песню
+            const currentSong = window.state?.currentSong;
+            if (!currentSong) {
+                console.error('❌ [EventHandlers] No song selected for editing');
+                return;
+            }
+            
+            // Вызываем функцию открытия редактора с данными песни
+            if (typeof ui.openSongEditor === 'function') {
+                console.log('📝 [EventHandlers] Opening editor with song:', currentSong.name);
+                ui.openSongEditor(currentSong);
             } else {
-                console.error('❌ [EventHandlers] Song editor overlay not found!');
+                console.error('❌ [EventHandlers] openSongEditor function not found!');
             }
         });
         console.log('📝 [EventHandlers] Edit song button handler attached');

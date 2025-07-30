@@ -226,6 +226,12 @@ export function applyTheme(themeName) {
 /** Отображает детали выбранной песни */
 export function displaySongDetails(songData, keyToSelect) {
     const keyDisplay = document.getElementById('youtube-video-key-display');
+    
+    // Устанавливаем текущую песню в state
+    if (window.state) {
+        window.state.currentSong = songData;
+        console.log('📝 [UI] Set currentSong:', songData?.name);
+    }
 
     if (!songData) {
         // Обновляем legend и pre, сохраняя fieldset структуру
@@ -1346,7 +1352,20 @@ export function updateEditStatus(songData) {
 
 /** Открывает редактор песни */
 export function openSongEditor(songData) {
-    if (!songData || !songEditorOverlay || !songEditTextarea) return;
+    console.log('📝 [UI] openSongEditor called with:', songData?.name);
+    
+    if (!songData) {
+        console.error('❌ [UI] No songData provided to openSongEditor');
+        return;
+    }
+    if (!songEditorOverlay) {
+        console.error('❌ [UI] songEditorOverlay element not found');
+        return;
+    }
+    if (!songEditTextarea) {
+        console.error('❌ [UI] songEditTextarea element not found');
+        return;
+    }
     
     // Устанавливаем заголовок
     const editorTitle = document.getElementById('song-editor-title');
@@ -1361,6 +1380,10 @@ export function openSongEditor(songData) {
     const originalLyrics = songData.hasWebEdits 
         ? (songData['Текст и аккорды (edited)'] || '') 
         : (songData['Текст и аккорды'] || '');
+    
+    console.log('📝 [UI] Loading lyrics, hasWebEdits:', songData.hasWebEdits);
+    console.log('📝 [UI] Original lyrics length:', originalLyrics.length);
+    
     songEditTextarea.value = originalLyrics;
     
     // Обновляем статус
