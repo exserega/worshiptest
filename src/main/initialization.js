@@ -20,7 +20,7 @@ import * as metronomeUI from '../../metronome.js';
 import searchWorkerManager from '../../src/js/workers/workerManager.js';
 import * as constants from '../../constants.js';
 import { initAuthGate, getCurrentUser } from '../modules/auth/authCheck.js';
-import { updateUserUI, initUserDropdown } from '../modules/auth/userUI.js';
+import { initUserNavigation } from '../modules/auth/userNavigation.js';
 
 // Импортируем модуль setlist-selector для его инициализации
 import '../ui/setlist-selector.js';
@@ -65,9 +65,8 @@ export async function initializeApp() {
             window.stateManager.setCurrentUser(currentUser);
         }
         
-        // Обновляем UI пользователя
-        updateUserUI(currentUser);
-        initUserDropdown();
+        // Инициализируем навигацию пользователя
+        initUserNavigation();
         
         // ====================================
         // THEME SETUP

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agape Worship - Настройки</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/settings.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="settings-container">
+        <!-- Header -->
+        <header class="settings-header">
+            <button class="back-button" onclick="window.location.href='/'">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>Настройки</h1>
+        </header>
+
+        <!-- User Info Section -->
+        <section class="user-info-section">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="user-details">
+                <h2 id="user-name">Загрузка...</h2>
+                <p id="user-email" class="user-contact"></p>
+                <div class="user-badges">
+                    <span id="user-role" class="badge"></span>
+                    <span id="user-status" class="badge"></span>
+                    <span id="user-branch" class="badge"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Sections -->
+        <div class="settings-sections">
+            <!-- Profile Settings -->
+            <section class="settings-section">
+                <h3>Профиль</h3>
+                <div class="settings-list">
+                    <div class="settings-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Имя</span>
+                            <span id="display-name" class="setting-value">-</span>
+                        </div>
+                        <button class="edit-button" onclick="editName()">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Branch Info -->
+            <section class="settings-section" id="branch-section">
+                <h3>Филиал</h3>
+                <div class="settings-list">
+                    <div class="settings-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Текущий филиал</span>
+                            <span id="current-branch" class="setting-value">Не назначен</span>
+                        </div>
+                    </div>
+                    <div id="transfer-status" class="transfer-status" style="display: none;">
+                        <i class="fas fa-clock"></i>
+                        <span>Заявка на перевод в обработке</span>
+                    </div>
+                    <button id="transfer-button" class="action-button" onclick="requestTransfer()">
+                        <i class="fas fa-exchange-alt"></i>
+                        Запросить перевод
+                    </button>
+                </div>
+            </section>
+
+            <!-- Admin Section (скрыто по умолчанию) -->
+            <section class="settings-section admin-only" id="admin-section" style="display: none;">
+                <h3>Администрирование</h3>
+                <div class="settings-list">
+                    <a href="/admin.html" class="settings-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Панель администратора</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Actions -->
+            <section class="settings-section">
+                <button class="logout-button" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти из аккаунта
+                </button>
+            </section>
+        </div>
+    </div>
+
+    <!-- Firebase Config -->
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlkjVQFtFpMRFexAi6nBqEkIfjFlU5cDo",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "619735277668",
+            appId: "1:619735277668:web:51d2684bd8d4444eaf3f71",
+            measurementId: "G-Z6QYH5YD2E"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    
+    <!-- Settings Module -->
+    <script src="src/modules/settings/settings.js"></script>
+</body>
+</html>
