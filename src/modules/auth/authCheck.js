@@ -83,9 +83,8 @@ export function checkAuth() {
                             } else {
                                 resolve({ user: currentUser, isAuthenticated: true });
                             }
-                        }
-                    } else {
-                        console.warn('⚠️ User profile not found in Firestore, creating...');
+                        } else {
+                            console.warn('⚠️ User profile not found in Firestore, creating...');
                         
                         // Создаем профиль пользователя если его нет
                         try {
@@ -116,6 +115,7 @@ export function checkAuth() {
                             console.error('❌ Failed to create user profile:', createError);
                             resolve({ user: null, isAuthenticated: false });
                         }
+                    }
                     }
                 } catch (error) {
                     console.error('Error fetching user profile:', error);
