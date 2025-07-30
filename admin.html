@@ -143,10 +143,14 @@
         window.auth = firebase.auth();
         window.db = firebase.firestore();
         
-        // Делаем Firebase доступным глобально для отладки
-        window.firebase = firebase;
-        window.auth = firebase.auth();
-        window.db = firebase.firestore();
+        // Устанавливаем persistence для сохранения сессии между страницами
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log('✅ Firebase persistence set to LOCAL');
+            })
+            .catch((error) => {
+                console.error('Error setting persistence:', error);
+            });
         
         // Простая инициализация как в settings.html
         console.log('🔥 Firebase initialized in admin.html');

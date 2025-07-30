@@ -123,6 +123,15 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         
+        // Устанавливаем persistence для сохранения сессии между страницами
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log('✅ Firebase persistence set to LOCAL');
+            })
+            .catch((error) => {
+                console.error('Error setting persistence:', error);
+            });
+        
         // Включаем отладку Firestore
         firebase.firestore().settings({
             experimentalForceLongPolling: true, // Для обхода проблем с сетью
