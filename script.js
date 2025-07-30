@@ -618,6 +618,145 @@ window.handleVocalistChange = function(vocalistId) {
 };
 
 // ====================================
+// 🎵 SONG EDITOR HANDLERS
+// ====================================
+
+/**
+ * Обработчик сохранения отредактированной песни
+ */
+window.handleSaveEdit = async function() {
+    console.log('💾 [Legacy] handleSaveEdit called');
+    
+    try {
+        // Получаем элементы редактора
+        const editorTextarea = document.getElementById('song-edit-textarea');
+        const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
+        
+        if (!editorTextarea || !currentSong) {
+            console.error('❌ [Legacy] Editor elements or current song not found');
+            return;
+        }
+        
+        const songId = currentSong.id;
+        const editedContent = editorTextarea.value;
+        
+        if (!songId) {
+            console.error('❌ [Legacy] No song ID found');
+            return;
+        }
+        
+        console.log('💾 [Legacy] Saving song:', songId);
+        
+        // Сохраняем изменения через API
+        if (typeof api.saveSongEdit === 'function') {
+            await api.saveSongEdit(songId, editedContent);
+            
+            // Обновляем отображение песни если она сейчас выбрана
+            const currentSelect = ui.songSelect?.value;
+            if (currentSelect === songId) {
+                // Обновляем песню в state
+                const updatedSong = window.state.allSongs.find(s => s.id === songId);
+                if (updatedSong) {
+                    updatedSong.content = editedContent;
+                    updatedSong.hasWebEdits = true;
+                    
+                    // Перезагружаем отображение
+                    const event = new Event('change');
+                    ui.songSelect.dispatchEvent(event);
+                }
+            }
+            
+            // Закрываем редактор
+            if (ui.songEditorOverlay) {
+                ui.songEditorOverlay.classList.remove('visible');
+            }
+            
+            // Показываем уведомление
+            if (typeof ui.showModal === 'function') {
+                ui.showModal('Изменения сохранены!', 'success');
+            }
+            
+            console.log('✅ [Legacy] Song saved successfully');
+        } else {
+            console.error('❌ [Legacy] api.saveSongEdit not found');
+        }
+    } catch (error) {
+        console.error('❌ [Legacy] Error saving song:', error);
+        if (typeof ui.showModal === 'function') {
+            ui.showModal('Ошибка при сохранении: ' + error.message, 'error');
+        }
+    }
+};
+
+/**
+ * Обработчик отката к оригинальной версии песни
+ */
+window.handleRevertToOriginal = async function() {
+    console.log('🔄 [Legacy] handleRevertToOriginal called');
+    
+    try {
+        const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
+        if (!currentSong) {
+            console.error('❌ [Legacy] No current song found');
+            return;
+        }
+        
+        const songId = currentSong.id;
+        if (!songId) {
+            console.error('❌ [Legacy] No song ID found');
+            return;
+        }
+        
+        // Подтверждение действия
+        const confirmRevert = confirm('Вы уверены, что хотите откатить все изменения к оригинальной версии из Google Таблицы?');
+        if (!confirmRevert) {
+            return;
+        }
+        
+        console.log('🔄 [Legacy] Reverting song:', songId);
+        
+        // Откатываем через API
+        if (typeof api.revertToOriginal === 'function') {
+            await api.revertToOriginal(songId);
+            
+            // Обновляем песню в state
+            const song = window.state.allSongs.find(s => s.id === songId);
+            if (song && song.originalContent) {
+                song.content = song.originalContent;
+                song.hasWebEdits = false;
+                
+                // Обновляем текстовое поле редактора
+                const editorTextarea = document.getElementById('song-edit-textarea');
+                if (editorTextarea) {
+                    editorTextarea.value = song.originalContent;
+                }
+                
+                // Если песня сейчас выбрана, обновляем отображение
+                const currentSelect = ui.songSelect?.value;
+                if (currentSelect === songId) {
+                    const event = new Event('change');
+                    ui.songSelect.dispatchEvent(event);
+                }
+            }
+            
+            // Показываем уведомление
+            if (typeof ui.showModal === 'function') {
+                ui.showModal('Песня откачена к оригинальной версии!', 'success');
+            }
+            
+            console.log('✅ [Legacy] Song reverted successfully');
+        } else {
+            console.error('❌ [Legacy] api.revertToOriginal not found');
+        }
+    } catch (error) {
+        console.error('❌ [Legacy] Error reverting song:', error);
+        if (typeof ui.showModal === 'function') {
+            ui.showModal('Ошибка при откате: ' + error.message, 'error');
+        }
+    }
+};
+
+// ====================================
 // 🚀 APPLICATION STARTUP
 // ====================================
 // Единственная задача этого файла - запустить приложение!
