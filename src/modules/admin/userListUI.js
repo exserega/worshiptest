@@ -76,8 +76,7 @@ function createUIStructure() {
                 <select id="filter-status" class="filter-select">
                     <option value="">Все статусы</option>
                     <option value="active">Активные</option>
-                    <option value="pending">Ожидают</option>
-                    <option value="banned">Заблокированы</option>
+                    <option value="blocked">Заблокированы</option>
                 </select>
             </div>
             

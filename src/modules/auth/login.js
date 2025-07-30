@@ -129,7 +129,7 @@ async function createUserProfile(user, additionalData = {}) {
         photoURL: user.photoURL,
         role: additionalData.role || 'user',
         branchId: null,
-        status: additionalData.status || 'pending',
+        status: additionalData.status || 'active', // Новые пользователи сразу активны
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         ...additionalData

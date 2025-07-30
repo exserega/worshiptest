@@ -115,7 +115,7 @@ function createUserCard(user, branches, currentUser, isRootAdmin) {
             </div>
             
             <div class="user-actions">
-                ${!isCurrentUser ? `
+                ${!isCurrentUser && !user.isFounder ? `
                     <button class="button small" 
                             onclick="window.adminModules.users.showEditUserModal('${user.id}')"
                             title="Редактировать">
@@ -145,6 +145,12 @@ function createUserCard(user, branches, currentUser, isRootAdmin) {
 export function showEditUserModal(userId) {
     const user = window.adminState.users.find(u => u.id === userId);
     if (!user) return;
+    
+    // Защита от редактирования основателя
+    if (user.isFounder) {
+        showNotification('Невозможно редактировать основателя системы', 'error');
+        return;
+    }
     
     const modalHtml = `
         <div class="modal" id="edit-user-modal">
@@ -186,13 +192,10 @@ export function showEditUserModal(userId) {
                         <div class="form-group">
                             <label>Статус</label>
                             <select id="user-status">
-                                <option value="pending" ${user.status === 'pending' ? 'selected' : ''}>
-                                    Ожидает активации
-                                </option>
                                 <option value="active" ${user.status === 'active' ? 'selected' : ''}>
                                     Активен
                                 </option>
-                                <option value="banned" ${user.status === 'banned' ? 'selected' : ''}>
+                                <option value="blocked" ${user.status === 'blocked' || user.status === 'banned' ? 'selected' : ''}>
                                     Заблокирован
                                 </option>
                             </select>
@@ -403,8 +406,9 @@ function getRoleText(role) {
 function getStatusBadgeClass(status) {
     const classes = {
         active: 'success',
-        pending: 'warning',
-        banned: 'danger'
+        blocked: 'danger',
+        banned: 'danger', // для обратной совместимости
+        pending: 'success' // временная совместимость - pending считаем активным
     };
     return classes[status] || 'secondary';
 }
@@ -412,8 +416,9 @@ function getStatusBadgeClass(status) {
 function getStatusText(status) {
     const texts = {
         active: 'Активен',
-        pending: 'Ожидает',
-        banned: 'Заблокирован'
+        blocked: 'Заблокирован',
+        banned: 'Заблокирован', // для обратной совместимости
+        pending: 'Активен' // временная совместимость
     };
     return texts[status] || status;
 }
