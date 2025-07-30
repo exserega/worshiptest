@@ -115,7 +115,7 @@ function createUserCard(user, branches, currentUser, isRootAdmin) {
             </div>
             
             <div class="user-actions">
-                ${!isCurrentUser && !user.isFounder ? `
+                ${!isCurrentUser ? `
                     <button class="button small" 
                             onclick="window.adminModules.users.showEditUserModal('${user.id}')"
                             title="Редактировать">
@@ -145,12 +145,6 @@ function createUserCard(user, branches, currentUser, isRootAdmin) {
 export function showEditUserModal(userId) {
     const user = window.adminState.users.find(u => u.id === userId);
     if (!user) return;
-    
-    // Защита от редактирования основателя
-    if (user.isFounder) {
-        showNotification('Невозможно редактировать основателя системы', 'error');
-        return;
-    }
     
     const modalHtml = `
         <div class="modal" id="edit-user-modal">
@@ -187,6 +181,7 @@ export function showEditUserModal(userId) {
                                     Администратор
                                 </option>
                             </select>
+                            ${user.isFounder ? '<small class="text-muted">Роль основателя нельзя изменить</small>' : ''}
                         </div>
                         
                         <div class="form-group">

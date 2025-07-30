@@ -192,10 +192,7 @@ export async function loadSetlists() {
         
         let queryRef;
         
-        // Если главный админ - показываем все сетлисты
-        if (isRootAdmin) {
-            queryRef = query(setlistsCollection);
-        } else if (userBranchId) {
+        if (userBranchId) {
             // Если есть филиал - показываем только сетлисты этого филиала
             queryRef = query(
                 setlistsCollection, 
@@ -225,7 +222,7 @@ export async function loadSetlists() {
         // Сортируем в JavaScript вместо Firestore
         setlists.sort((a, b) => b.createdAt - a.createdAt);
         
-        console.log(`✅ Загружено ${setlists.length} сетлистов${userBranchId && !isRootAdmin ? ' для филиала' : ''}`);
+        console.log(`✅ Загружено ${setlists.length} сетлистов${userBranchId ? ' для филиала' : ' (общие)'}`);
         return setlists;
     } catch (error) {
         console.error('❌ Ошибка загрузки сетлистов:', error);
