@@ -522,23 +522,24 @@ body[data-theme="light"] #copy-text-button.copied {
 }
 
 .song-details .song-key {
-    font-size: 0.8rem;
-    color: var(--label-color);
+    font-size: 0.85rem;
+    color: var(--text-color);
+    opacity: 0.8;
 }
 
 .song-details .song-key #adding-song-key {
     color: var(--text-color);
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-left: 0.5rem;
-    padding: 0.25rem 0.75rem;
-    background: var(--input-bg-color);
-    border: 2px solid var(--accent-color);
-    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-left: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--hover-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
     display: inline-block;
     text-transform: none !important;
     letter-spacing: normal;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 1;
 }
 
 /* Секция существующих сет-листов */
@@ -848,7 +849,6 @@ body[data-theme="light"] #copy-text-button.copied {
 /* === Light Theme Overrides for Setlist Selector === */
 body[data-theme="light"] .song-details .song-key #adding-song-key {
     color: var(--text-color);
-    background: #f9fafb;
-    border-color: var(--primary-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background: var(--hover-color);
+    border-color: var(--border-color);
 }
