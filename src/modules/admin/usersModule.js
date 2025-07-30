@@ -261,21 +261,39 @@ export async function saveUserChanges(userId) {
         const status = document.getElementById('user-status').value;
         const branchId = document.getElementById('user-branch').value;
         
+        // Получаем текущие данные пользователя для проверки
+        const user = window.adminState.users.find(u => u.id === userId);
+        
+        // ЗАЩИТА: Не позволяем изменить роль основателя
+        if (user && user.isFounder && role !== 'admin') {
+            showNotification('Нельзя изменить роль основателя системы', 'error');
+            return;
+        }
+        
         // Обновляем в Firestore
         const db = firebase.firestore();
-        await db.collection('users').doc(userId).update({
-            role,
+        const updateData = {
             status,
             branchId: branchId || null,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        };
+        
+        // Обновляем роль только если пользователь не основатель
+        if (!user || !user.isFounder) {
+            updateData.role = role;
+        }
+        
+        await db.collection('users').doc(userId).update(updateData);
         
         // Обновляем локальное состояние
-        const user = window.adminState.users.find(u => u.id === userId);
-        if (user) {
-            user.role = role;
-            user.status = status;
-            user.branchId = branchId || null;
+        const userToUpdate = window.adminState.users.find(u => u.id === userId);
+        if (userToUpdate) {
+            // Обновляем роль только если не основатель
+            if (!userToUpdate.isFounder) {
+                userToUpdate.role = role;
+            }
+            userToUpdate.status = status;
+            userToUpdate.branchId = branchId || null;
         }
         
         // Закрываем модальное окно

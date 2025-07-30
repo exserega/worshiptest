@@ -81,6 +81,13 @@ function switchForm(formName) {
 async function createUserProfile(user, additionalData = {}) {
     const userRef = db.collection('users').doc(user.uid);
     
+    // ВАЖНО: Проверяем, не существует ли уже профиль
+    const existingDoc = await userRef.get();
+    if (existingDoc.exists) {
+        console.warn('⚠️ Profile already exists, skipping creation');
+        return existingDoc.data();
+    }
+    
     // Check if there's an invite
     if (inviteId) {
         try {
@@ -367,32 +374,34 @@ auth.onAuthStateChanged(async (user) => {
                 sessionStorage.setItem('auth_redirecting', 'true');
                 // Используем replace чтобы не было истории для возврата
                 window.location.replace('/');
+                    } else {
+            console.log('⚠️ User profile not found, creating...');
+            
+            // ВАЖНО: Проверяем количество ВСЕХ пользователей, а не только админов
+            // чтобы избежать race conditions
+            const allUsersQuery = await db.collection('users')
+                .limit(1)
+                .get();
+                
+            const isFirstUserEver = allUsersQuery.empty;
+            
+            // Создаем профиль
+            await createUserProfile(user);
+            
+            // Делаем админом ТОЛЬКО если это самый первый пользователь в системе
+            if (isFirstUserEver) {
+                console.log('🌟 Very first user in system - setting up as founder');
+                await db.collection('users').doc(user.uid).update({
+                    role: 'admin',
+                    status: 'active',
+                    isFounder: true,
+                    permissions: ['*']
+                });
             } else {
-                console.log('⚠️ User profile not found, creating...');
-                
-                // Проверяем, является ли это первым пользователем в системе
-                const adminsQuery = await db.collection('users')
-                    .where('role', '==', 'admin')
-                    .limit(1)
-                    .get();
-                    
-                const isFirstUser = adminsQuery.empty;
-                
-                // Создаем профиль
-                await createUserProfile(user);
-                
-                // Если это первый пользователь - делаем его админом
-                if (isFirstUser) {
-                    console.log('🌟 First user detected - setting up as admin');
-                    await db.collection('users').doc(user.uid).update({
-                        role: 'admin',
-                        status: 'active',
-                        isFounder: true,
-                        permissions: ['*']
-                    });
-                }
-                
-                console.log('✅ Profile created, redirecting...');
+                console.log('📝 Regular user profile created');
+            }
+            
+            console.log('✅ Profile created, redirecting...');
                 redirecting = true;
                 // Сохраняем флаг что идет редирект
                 sessionStorage.setItem('auth_redirecting', 'true');
