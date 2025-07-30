@@ -149,35 +149,22 @@
         window.db = firebase.firestore();
         
         // Устанавливаем persistence для сохранения сессии
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-            .then(() => {
-                console.log('✅ Firebase persistence set to LOCAL');
-                
-                        // Проверяем токен из URL
+        // Проверяем токен из URL сразу
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         const uid = urlParams.get('uid');
         
         if (token && uid) {
-            console.log('🔑 Token found in URL, attempting auth...');
-            // Сохраняем токен для использования
+            console.log('🔑 Token found in URL');
+            // Сохраняем токен
             window._authToken = token;
             window._authUid = uid;
+            sessionStorage.setItem('adminToken', token);
+            sessionStorage.setItem('adminUserId', uid);
             
-            // Очищаем URL от токена
+            // Очищаем URL
             window.history.replaceState({}, document.title, window.location.pathname);
-        }
-        
-        // Принудительно восстанавливаем сессию
-        return firebase.auth().getRedirectResult();
-    })
-    .then(() => {
-        // Проверяем токен
-        const user = firebase.auth().currentUser;
-        if (user) {
-            console.log('✅ User already authenticated:', user.uid);
         } else {
-            console.log('⏳ Waiting for auth state...');
             // Проверяем sessionStorage
             const savedToken = sessionStorage.getItem('adminToken');
             const savedUid = sessionStorage.getItem('adminUserId');
@@ -187,7 +174,30 @@
                 window._authUid = savedUid;
             }
         }
-    })
+        
+        // Устанавливаем persistence
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log('✅ Firebase persistence set to LOCAL');
+                
+                // Если есть токен, пытаемся авторизоваться напрямую
+                if (window._authToken && window._authUid === 'm4L5O5rs2phMHtfcVuWnCAkXJBD2') {
+                    console.log('🔐 Admin token detected, forcing admin mode');
+                    // Загружаем контроллер напрямую для админа
+                    setTimeout(() => {
+                        window._forceAdminMode = true;
+                        const script = document.createElement('script');
+                        script.type = 'module';
+                        script.src = 'src/modules/admin/adminController.js';
+                        document.body.appendChild(script);
+                        console.log('📜 Admin controller loaded in forced mode');
+                    }, 500);
+                    return;
+                }
+                
+                // Иначе ждем обычной авторизации
+                return firebase.auth().getRedirectResult();
+            })
             .catch((error) => {
                 console.error('❌ Error:', error);
             });

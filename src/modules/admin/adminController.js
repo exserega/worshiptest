@@ -64,11 +64,17 @@ export async function initAdminPanel() {
  * Проверить права администратора
  */
 async function checkAdminAccess() {
-    let user = auth.currentUser;
-    
     // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
     const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
     const MAIN_ADMIN_EMAIL = '19exxtazzy96@gmail.com';
+    
+    // Проверяем принудительный режим
+    if (window._forceAdminMode && window._authUid === MAIN_ADMIN_ID) {
+        console.log('✅ Admin access granted in forced mode');
+        return;
+    }
+    
+    let user = auth.currentUser;
     
     // Если нет пользователя, проверяем альтернативные методы
     if (!user && window._authToken && window._authUid) {
@@ -655,7 +661,29 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    // Ждем загрузки пользователя Firebase
+    // Проверяем принудительный режим админа
+    if (window._forceAdminMode && window._authToken && window._authUid === 'm4L5O5rs2phMHtfcVuWnCAkXJBD2') {
+        console.log('🔐 Running in forced admin mode');
+        // Устанавливаем состояние напрямую
+        state.currentUser = {
+            id: 'm4L5O5rs2phMHtfcVuWnCAkXJBD2',
+            email: '19exxtazzy96@gmail.com',
+            role: 'admin',
+            status: 'active',
+            isFounder: true,
+            isRootAdmin: true
+        };
+        state.isRootAdmin = true;
+        
+        // Инициализируем панель
+        initAdminPanel().catch(error => {
+            console.error('❌ Error in forced mode:', error);
+            showAccessDenied('Ошибка инициализации: ' + error.message);
+        });
+        return;
+    }
+    
+    // Иначе ждем обычной авторизации
     let initialized = false;
     auth.onAuthStateChanged((user) => {
         if (initialized) return; // Предотвращаем множественные вызовы

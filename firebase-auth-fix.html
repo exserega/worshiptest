@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Auth Fix</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        pre {
+            background: #111;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .fix-button { background: #4caf50; }
+        .info-button { background: #2196f3; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Firebase Auth Diagnostics & Fix</h1>
+    
+    <div class="section">
+        <h2>1. Domain Check</h2>
+        <p><strong>Current Domain:</strong> <span id="current-domain"></span></p>
+        <p><strong>Auth Domain:</strong> <span id="auth-domain"></span></p>
+        <p><strong>Match:</strong> <span id="domain-match"></span></p>
+    </div>
+    
+    <div class="section">
+        <h2>2. Firebase Auth Settings</h2>
+        <pre id="auth-settings"></pre>
+    </div>
+    
+    <div class="section">
+        <h2>3. Storage Analysis</h2>
+        <div id="storage-analysis"></div>
+    </div>
+    
+    <div class="section">
+        <h2>4. Manual Fix Options</h2>
+        <button class="fix-button" onclick="tryManualLogin()">🔐 Manual Login</button>
+        <button class="fix-button" onclick="saveAuthManually()">💾 Force Save Auth</button>
+        <button class="fix-button" onclick="testPersistence()">🧪 Test Persistence</button>
+        <button class="info-button" onclick="showFirebaseInfo()">ℹ️ Show Firebase Info</button>
+    </div>
+    
+    <div class="section">
+        <h2>5. Results</h2>
+        <pre id="results"></pre>
+    </div>
+
+    <script>
+        const log = (msg, type = 'info') => {
+            const results = document.getElementById('results');
+            const time = new Date().toISOString().split('T')[1];
+            const color = type === 'error' ? '#f44336' : type === 'success' ? '#4caf50' : '#2196f3';
+            results.innerHTML += `<span style="color: ${color}">[${time}] ${msg}</span>\n`;
+            console.log(msg);
+        };
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzDxg3S9cfseoozmZSksUh1aLbkVBG--Q",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "660585697058",
+            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Check domains
+        const currentDomain = window.location.hostname;
+        const authDomain = firebaseConfig.authDomain.split('.')[0];
+        document.getElementById('current-domain').textContent = currentDomain;
+        document.getElementById('auth-domain').textContent = firebaseConfig.authDomain;
+        
+        if (currentDomain === 'agapeworship.asia' && firebaseConfig.authDomain.includes('firebaseapp.com')) {
+            document.getElementById('domain-match').innerHTML = '<span class="warning">⚠️ Domains don\'t match - this might cause issues</span>';
+            log('⚠️ Domain mismatch detected', 'warning');
+        } else {
+            document.getElementById('domain-match').innerHTML = '<span class="success">✅ OK</span>';
+        }
+
+        // Show auth settings
+        auth.onAuthStateChanged((user) => {
+            const settings = {
+                currentUser: user ? user.uid : null,
+                persistence: auth.currentUser ? 'Some persistence active' : 'No persistence',
+                authDomain: firebaseConfig.authDomain,
+                apiKey: firebaseConfig.apiKey.substring(0, 10) + '...'
+            };
+            document.getElementById('auth-settings').textContent = JSON.stringify(settings, null, 2);
+            
+            if (user) {
+                log(`✅ User detected: ${user.uid}`, 'success');
+            } else {
+                log('❌ No user authenticated', 'error');
+            }
+        });
+
+        // Storage analysis
+        function analyzeStorage() {
+            const analysis = document.getElementById('storage-analysis');
+            let html = '<h3>LocalStorage Firebase Keys:</h3><ul>';
+            
+            let firebaseKeyCount = 0;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('firebase')) {
+                    firebaseKeyCount++;
+                    html += `<li>${key}</li>`;
+                }
+            }
+            
+            if (firebaseKeyCount === 0) {
+                html += '<li class="error">❌ No Firebase keys found in localStorage</li>';
+            }
+            
+            html += '</ul><h3>Possible Issues:</h3><ul>';
+            
+            if (firebaseKeyCount === 0) {
+                html += '<li>Firebase Auth is not persisting to localStorage</li>';
+                html += '<li>Possible domain mismatch preventing storage</li>';
+                html += '<li>Browser blocking third-party storage</li>';
+            }
+            
+            html += '</ul>';
+            analysis.innerHTML = html;
+        }
+
+        // Manual login
+        async function tryManualLogin() {
+            const email = prompt('Email:');
+            if (!email) return;
+            
+            const password = prompt('Password:');
+            if (!password) return;
+            
+            try {
+                log('🔄 Attempting manual login...', 'info');
+                
+                // Clear any existing session
+                await auth.signOut();
+                
+                // Set persistence first
+                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                log('✅ Persistence set to LOCAL', 'success');
+                
+                // Sign in
+                const result = await auth.signInWithEmailAndPassword(email, password);
+                log(`✅ Signed in: ${result.user.uid}`, 'success');
+                
+                // Force token refresh
+                const token = await result.user.getIdToken(true);
+                log('✅ Token obtained', 'success');
+                
+                // Manually save to localStorage
+                const authData = {
+                    uid: result.user.uid,
+                    email: result.user.email,
+                    token: token.substring(0, 50) + '...',
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem('manual_auth_backup', JSON.stringify(authData));
+                log('✅ Manual backup saved to localStorage', 'success');
+                
+                // Check if Firebase saved anything
+                setTimeout(() => {
+                    analyzeStorage();
+                }, 1000);
+                
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Force save auth
+        function saveAuthManually() {
+            const user = auth.currentUser;
+            if (!user) {
+                log('❌ No user to save', 'error');
+                return;
+            }
+            
+            user.getIdToken().then(token => {
+                const authData = {
+                    uid: user.uid,
+                    email: user.email,
+                    token: token,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Save in multiple places
+                localStorage.setItem('forced_auth_token', token);
+                localStorage.setItem('forced_auth_uid', user.uid);
+                localStorage.setItem('forced_auth_data', JSON.stringify(authData));
+                sessionStorage.setItem('forced_auth_token', token);
+                
+                log('✅ Auth data forcefully saved to storage', 'success');
+                log('Use this on admin.html: window._authToken = localStorage.getItem("forced_auth_token")', 'info');
+            }).catch(error => {
+                log(`❌ Error getting token: ${error.message}`, 'error');
+            });
+        }
+
+        // Test persistence
+        async function testPersistence() {
+            try {
+                log('🧪 Testing different persistence modes...', 'info');
+                
+                // Test LOCAL
+                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                log('✅ LOCAL persistence set', 'success');
+                
+                // Test SESSION
+                await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+                log('✅ SESSION persistence set', 'success');
+                
+                // Test NONE
+                await auth.setPersistence(firebase.auth.Auth.Persistence.NONE);
+                log('✅ NONE persistence set', 'success');
+                
+                // Set back to LOCAL
+                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                log('✅ Reverted to LOCAL persistence', 'success');
+                
+            } catch (error) {
+                log(`❌ Persistence test failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Show Firebase info
+        function showFirebaseInfo() {
+            const info = {
+                SDK_Version: firebase.SDK_VERSION,
+                Auth_Settings: auth.settings || 'Not available',
+                App_Name: firebase.app().name,
+                Current_User: auth.currentUser ? {
+                    uid: auth.currentUser.uid,
+                    email: auth.currentUser.email,
+                    emailVerified: auth.currentUser.emailVerified,
+                    provider: auth.currentUser.providerData[0]?.providerId
+                } : null
+            };
+            
+            log('Firebase Info:\n' + JSON.stringify(info, null, 2), 'info');
+        }
+
+        // Auto-run analysis
+        window.onload = () => {
+            setTimeout(() => {
+                analyzeStorage();
+                log('🔍 Initial analysis complete', 'info');
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
