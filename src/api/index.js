@@ -87,7 +87,7 @@ export async function loadAllSongsFromFirestore() {
  * @returns {Promise<void>}
  */
 export async function saveSongEdit(songId, editedContent) {
-    if (!songId || !editedContent) {
+    if (!songId || editedContent === null || editedContent === undefined) {
         throw new Error('songId и editedContent обязательны');
     }
     

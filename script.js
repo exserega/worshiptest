@@ -657,7 +657,13 @@ window.handleSaveEdit = async function() {
                 // Обновляем песню в state
                 const updatedSong = window.state.allSongs.find(s => s.id === songId);
                 if (updatedSong) {
-                    updatedSong.content = editedContent;
+                    // Сохраняем оригинал если его еще нет
+                    if (!updatedSong.originalContent) {
+                        updatedSong.originalContent = updatedSong['Текст и аккорды'] || '';
+                    }
+                    
+                    // Обновляем отредактированное содержимое
+                    updatedSong['Текст и аккорды (edited)'] = editedContent;
                     updatedSong.hasWebEdits = true;
                     
                     // Перезагружаем отображение
@@ -721,14 +727,16 @@ window.handleRevertToOriginal = async function() {
             
             // Обновляем песню в state
             const song = window.state.allSongs.find(s => s.id === songId);
-            if (song && song.originalContent) {
-                song.content = song.originalContent;
+            if (song) {
+                // Восстанавливаем оригинальный текст
+                const originalText = song.originalContent || song['Текст и аккорды'] || '';
+                song['Текст и аккорды (edited)'] = '';
                 song.hasWebEdits = false;
                 
                 // Обновляем текстовое поле редактора
                 const editorTextarea = document.getElementById('song-edit-textarea');
                 if (editorTextarea) {
-                    editorTextarea.value = song.originalContent;
+                    editorTextarea.value = originalText;
                 }
                 
                 // Если песня сейчас выбрана, обновляем отображение
