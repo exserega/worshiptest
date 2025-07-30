@@ -1014,14 +1014,14 @@ function setupSongEventHandlers() {
     window.addEventListener('setlist-updated', async (event) => {
         console.log('📋 [EventHandlers] Setlist updated event:', event.detail);
         
-        // Если панель сет-листов открыта, обновляем её
-        if (ui.setlistsPanel?.classList.contains('open')) {
-            try {
-                const setlists = await api.loadSetlists();
-                if (window.state && typeof window.state.setSetlists === 'function') {
-                    window.state.setSetlists(setlists);
-                }
-                
+        try {
+            const setlists = await api.loadSetlists();
+            if (window.state && typeof window.state.setSetlists === 'function') {
+                window.state.setSetlists(setlists);
+            }
+            
+            // Если панель сет-листов открыта, обновляем её
+            if (ui.setlistsPanel?.classList.contains('open')) {
                 // Обновляем отображение
                 if (typeof ui.renderSetlists === 'function') {
                     ui.renderSetlists(setlists, 
@@ -1029,21 +1029,24 @@ function setupSongEventHandlers() {
                         window.handleSetlistDelete
                     );
                 }
-                
-                // Если есть выбранный сет-лист, обновляем его
-                const currentSetlistId = window.state?.currentSetlistId;
-                if (currentSetlistId === event.detail?.setlistId) {
-                    const currentSetlist = setlists.find(s => s.id === currentSetlistId);
-                    if (currentSetlist && typeof ui.displaySelectedSetlist === 'function') {
-                        ui.displaySelectedSetlist(currentSetlist, 
-                            window.handleFavoriteOrRepertoireSelect,
-                            window.handleRemoveSongFromSetlist
-                        );
-                    }
-                }
-            } catch (error) {
-                console.error('Error updating setlist panel:', error);
             }
+            
+            // ВАЖНО: Обновляем список песен ВСЕГДА, если сет-лист выбран
+            // независимо от того, открыта ли панель
+            const currentSetlistId = window.state?.currentSetlistId;
+            if (currentSetlistId === event.detail?.setlistId) {
+                console.log('📋 [EventHandlers] Updating songs for current setlist:', currentSetlistId);
+                const currentSetlist = setlists.find(s => s.id === currentSetlistId);
+                if (currentSetlist && typeof ui.displaySelectedSetlist === 'function') {
+                    console.log('📋 [EventHandlers] Found setlist, songs count:', currentSetlist.songs?.length);
+                    ui.displaySelectedSetlist(currentSetlist, 
+                        window.handleFavoriteOrRepertoireSelect,
+                        window.handleRemoveSongFromSetlist
+                    );
+                }
+            }
+        } catch (error) {
+            console.error('Error updating setlist panel:', error);
         }
     });
     

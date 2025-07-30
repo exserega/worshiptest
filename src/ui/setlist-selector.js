@@ -221,40 +221,37 @@ class SetlistSelector {
             // Показываем уведомление
             this.showNotification('✅ Песня успешно добавлена в сет-лист!', 'success');
             
-            // Обновляем UI если панель сет-листов открыта
-            const setlistsPanel = document.getElementById('setlists-panel');
-            if (setlistsPanel?.classList.contains('open')) {
-                console.log('📋 [SetlistSelector] Setlist panel is open, triggering update');
+            // Если текущий сет-лист совпадает с тем, куда добавляем - обновляем сразу
+            if (window.state?.currentSetlistId === setlistId) {
+                console.log('📋 [SetlistSelector] Current setlist was updated, refreshing display');
+                console.log('📋 [SetlistSelector] currentSetlistId:', window.state?.currentSetlistId);
+                console.log('📋 [SetlistSelector] setlistId:', setlistId);
                 
-                // Если текущий сет-лист совпадает с тем, куда добавляем - обновляем сразу
-                if (window.state?.currentSetlistId === setlistId) {
-                    console.log('📋 [SetlistSelector] Updating current setlist display');
-                    
-                    // Делаем небольшую задержку чтобы данные успели сохраниться
-                    setTimeout(async () => {
-                        try {
-                            // Загружаем обновленные данные
-                            const setlists = await loadSetlists();
-                            const updatedSetlist = setlists.find(s => s.id === setlistId);
-                            
-                            if (updatedSetlist && window.handleSetlistSelect) {
-                                console.log('📋 [SetlistSelector] Calling handleSetlistSelect with updated data');
-                                // Вызываем handleSetlistSelect для полного обновления UI
-                                window.handleSetlistSelect(updatedSetlist);
-                            }
-                        } catch (error) {
-                            console.error('Error updating setlist display:', error);
+                // Делаем небольшую задержку чтобы данные успели сохраниться
+                setTimeout(async () => {
+                    try {
+                        // Загружаем обновленные данные
+                        const setlists = await loadSetlists();
+                        const updatedSetlist = setlists.find(s => s.id === setlistId);
+                        
+                        if (updatedSetlist && window.handleSetlistSelect) {
+                            console.log('📋 [SetlistSelector] Calling handleSetlistSelect with updated data');
+                            console.log('📋 [SetlistSelector] Updated setlist songs count:', updatedSetlist.songs?.length);
+                            // Вызываем handleSetlistSelect для полного обновления UI
+                            window.handleSetlistSelect(updatedSetlist);
                         }
-                    }, 100);
-                }
-                
-                // Также отправляем событие для других компонентов
-                setTimeout(() => {
-                    window.dispatchEvent(new CustomEvent('setlist-updated', { 
-                        detail: { setlistId } 
-                    }));
-                }, 500);
+                    } catch (error) {
+                        console.error('Error updating setlist display:', error);
+                    }
+                }, 300); // Увеличиваем задержку для надежности
             }
+            
+            // Отправляем событие для обновления счетчиков и других компонентов
+            setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('setlist-updated', { 
+                    detail: { setlistId } 
+                }));
+            }, 500);
             
             // Закрываем overlay
             this.close();
