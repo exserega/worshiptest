@@ -401,3 +401,15 @@ body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button.active span {
     transition: border-color 0.3s ease;
 }
 
+/* ======================================== */
+/* Fix для корректного отображения тональностей */
+/* ======================================== */
+
+/* Отменяем uppercase для тональностей во всех панелях 
+   Важно для корректного отображения Gb, Eb, Ab и т.д. */
+#setlists-panel .song-key,
+#my-list-panel .song-key,
+#repertoire-panel .song-key {
+    text-transform: none !important;
+}
+
