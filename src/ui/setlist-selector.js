@@ -227,33 +227,29 @@ class SetlistSelector {
                 console.log('📋 [SetlistSelector] Setlist panel is open, triggering update');
                 
                 // Если текущий сет-лист совпадает с тем, куда добавляем - обновляем сразу
-                if (window.state?.currentSetlistId === setlistId && window.handleSetlistSelect) {
-                    // Добавляем песню в локальное состояние для мгновенного отображения
-                    const currentSetlist = window.state?.currentSetlist;
-                    if (currentSetlist) {
-                        const songToAdd = {
-                            id: this.currentSong.id,
-                            name: this.currentSong.name,
-                            key: this.currentSong.selectedKey,
-                            category: this.currentSong.category
-                        };
-                        
-                        // Добавляем в локальное состояние
-                        if (!currentSetlist.songs) currentSetlist.songs = [];
-                        currentSetlist.songs.push(songToAdd);
-                        
-                        // Обновляем отображение сразу
-                        if (typeof window.ui?.displaySelectedSetlist === 'function') {
-                            window.ui.displaySelectedSetlist(currentSetlist, 
-                                window.handleFavoriteOrRepertoireSelect,
-                                window.handleRemoveSongFromSetlist
-                            );
+                if (window.state?.currentSetlistId === setlistId) {
+                    console.log('📋 [SetlistSelector] Updating current setlist display');
+                    
+                    // Делаем небольшую задержку чтобы данные успели сохраниться
+                    setTimeout(async () => {
+                        try {
+                            // Загружаем обновленные данные
+                            const setlists = await loadSetlists();
+                            const updatedSetlist = setlists.find(s => s.id === setlistId);
+                            
+                            if (updatedSetlist && window.handleSetlistSelect) {
+                                console.log('📋 [SetlistSelector] Calling handleSetlistSelect with updated data');
+                                // Вызываем handleSetlistSelect для полного обновления UI
+                                window.handleSetlistSelect(updatedSetlist);
+                            }
+                        } catch (error) {
+                            console.error('Error updating setlist display:', error);
                         }
-                    }
+                    }, 100);
                 }
                 
-                // Все равно отправляем событие и делаем полное обновление через время
-                setTimeout(async () => {
+                // Также отправляем событие для других компонентов
+                setTimeout(() => {
                     window.dispatchEvent(new CustomEvent('setlist-updated', { 
                         detail: { setlistId } 
                     }));
