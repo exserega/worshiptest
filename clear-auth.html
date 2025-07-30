@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Очистка авторизации</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #1a1a1a;
+            color: #fff;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: #2a2a2a;
+            border-radius: 10px;
+            max-width: 500px;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .success {
+            color: #28a745;
+            margin: 10px 0;
+        }
+        .error {
+            color: #dc3545;
+            margin: 10px 0;
+        }
+        .info {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            text-align: left;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Очистка авторизации</h1>
+        <p>Эта страница поможет полностью очистить старые данные авторизации</p>
+        
+        <div id="status"></div>
+        <div id="localStorage-info" class="info"></div>
+        
+        <button class="button" onclick="showCurrentState()">📊 Показать текущее состояние</button>
+        <button class="button" onclick="clearAllAuth()">🗑️ Очистить всё</button>
+        <button class="button" onclick="window.location.href='/login.html'">🔐 Перейти к входу</button>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBhB3cfd-ugqwJh8fQYZAJvC7pj2Yj0Bu4",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "12711132605",
+            appId: "1:12711132605:web:f0b2cc66c92c38c59a7e7d"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.innerHTML = `<div class="${isError ? 'error' : 'success'}">${message}</div>`;
+        }
+        
+        function showCurrentState() {
+            const info = document.getElementById('localStorage-info');
+            let output = '=== ТЕКУЩЕЕ СОСТОЯНИЕ ===\n\n';
+            
+            // Firebase Auth
+            const user = auth.currentUser;
+            output += `Firebase Auth User: ${user ? user.email + ' (' + user.uid + ')' : 'Нет'}\n\n`;
+            
+            // localStorage
+            output += '=== localStorage ===\n';
+            let firebaseKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('firebase') || key.includes('auth')) {
+                    firebaseKeys.push(key);
+                    const value = localStorage.getItem(key);
+                    // Обрезаем длинные значения
+                    const displayValue = value.length > 100 ? value.substring(0, 100) + '...' : value;
+                    output += `${key}: ${displayValue}\n`;
+                }
+            }
+            
+            if (firebaseKeys.length === 0) {
+                output += 'Нет Firebase ключей в localStorage\n';
+            }
+            
+            // sessionStorage
+            output += '\n=== sessionStorage ===\n';
+            let sessionKeys = [];
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key.includes('firebase') || key.includes('auth') || key.includes('admin')) {
+                    sessionKeys.push(key);
+                    const value = sessionStorage.getItem(key);
+                    const displayValue = value.length > 100 ? value.substring(0, 100) + '...' : value;
+                    output += `${key}: ${displayValue}\n`;
+                }
+            }
+            
+            if (sessionKeys.length === 0) {
+                output += 'Нет Firebase ключей в sessionStorage\n';
+            }
+            
+            // IndexedDB
+            output += '\n=== IndexedDB ===\n';
+            if ('indexedDB' in window) {
+                indexedDB.databases().then(databases => {
+                    const firebaseDbs = databases.filter(db => db.name.includes('firebase'));
+                    if (firebaseDbs.length > 0) {
+                        output += 'Firebase базы данных:\n';
+                        firebaseDbs.forEach(db => {
+                            output += `- ${db.name} (v${db.version})\n`;
+                        });
+                    } else {
+                        output += 'Нет Firebase баз данных\n';
+                    }
+                    info.textContent = output;
+                });
+            } else {
+                output += 'IndexedDB не поддерживается\n';
+                info.textContent = output;
+            }
+        }
+        
+        async function clearAllAuth() {
+            try {
+                showStatus('🔄 Начинаю очистку...');
+                
+                // 1. Выход из Firebase
+                if (auth.currentUser) {
+                    await auth.signOut();
+                    console.log('✅ Вышли из Firebase Auth');
+                }
+                
+                // 2. Очистка localStorage - только Firebase ключи
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.includes('firebase') || key.includes('auth'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => {
+                    localStorage.removeItem(key);
+                    console.log(`✅ Удален ключ из localStorage: ${key}`);
+                });
+                
+                // 3. Очистка sessionStorage
+                const sessionKeysToRemove = [];
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key && (key.includes('firebase') || key.includes('auth') || key.includes('admin'))) {
+                        sessionKeysToRemove.push(key);
+                    }
+                }
+                sessionKeysToRemove.forEach(key => {
+                    sessionStorage.removeItem(key);
+                    console.log(`✅ Удален ключ из sessionStorage: ${key}`);
+                });
+                
+                // 4. Очистка IndexedDB
+                if ('indexedDB' in window) {
+                    const databases = await indexedDB.databases();
+                    for (const db of databases) {
+                        if (db.name.includes('firebase')) {
+                            await new Promise((resolve, reject) => {
+                                const deleteReq = indexedDB.deleteDatabase(db.name);
+                                deleteReq.onsuccess = () => {
+                                    console.log(`✅ Удалена база данных: ${db.name}`);
+                                    resolve();
+                                };
+                                deleteReq.onerror = reject;
+                            });
+                        }
+                    }
+                }
+                
+                showStatus('✅ Очистка завершена! Теперь можете войти заново.');
+                
+                // Обновляем отображение состояния
+                setTimeout(() => showCurrentState(), 500);
+                
+            } catch (error) {
+                console.error('Ошибка при очистке:', error);
+                showStatus(`❌ Ошибка: ${error.message}`, true);
+            }
+        }
+        
+        // Показываем состояние при загрузке
+        window.onload = () => {
+            showCurrentState();
+        };
+    </script>
+</body>
+</html>
