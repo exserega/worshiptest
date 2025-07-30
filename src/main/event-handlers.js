@@ -387,8 +387,8 @@ function setupKeyboardEventHandlers() {
             }
             
             // Закрываем редактор песен
-            if (ui.songEditorOverlay && ui.songEditorOverlay.classList.contains('show')) {
-                ui.songEditorOverlay.classList.remove('show');
+            if (ui.songEditorOverlay && ui.songEditorOverlay.classList.contains('visible')) {
+                ui.songEditorOverlay.classList.remove('visible');
             }
         }
     });
@@ -1076,7 +1076,7 @@ function setupSongEventHandlers() {
             console.log('📝 [EventHandlers] Edit song button clicked');
             if (ui.songEditorOverlay) {
                 console.log('📝 [EventHandlers] Opening song editor overlay');
-                ui.songEditorOverlay.classList.add('show');
+                ui.songEditorOverlay.classList.add('visible'); // Исправлено: visible вместо show
             } else {
                 console.error('❌ [EventHandlers] Song editor overlay not found!');
             }
@@ -1097,7 +1097,7 @@ function setupSongEventHandlers() {
     if (ui.cancelEditButton) {
         ui.cancelEditButton.addEventListener('click', () => {
             if (ui.songEditorOverlay) {
-                ui.songEditorOverlay.classList.remove('show');
+                ui.songEditorOverlay.classList.remove('visible'); // Исправлено: visible вместо show
             }
         });
     }
@@ -1105,7 +1105,7 @@ function setupSongEventHandlers() {
     if (ui.closeEditorButton) {
         ui.closeEditorButton.addEventListener('click', () => {
             if (ui.songEditorOverlay) {
-                ui.songEditorOverlay.classList.remove('show');
+                ui.songEditorOverlay.classList.remove('visible'); // Исправлено: visible вместо show
             }
         });
     }
