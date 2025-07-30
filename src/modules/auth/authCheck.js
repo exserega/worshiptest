@@ -57,8 +57,37 @@ export function checkAuth() {
                             resolve({ user: currentUser, isAuthenticated: true });
                         }
                     } else {
-                        console.warn('⚠️ User profile not found in Firestore');
-                        resolve({ user: null, isAuthenticated: false });
+                        console.warn('⚠️ User profile not found in Firestore, creating...');
+                        
+                        // Создаем профиль пользователя если его нет
+                        try {
+                            const newUserData = {
+                                id: firebaseUser.uid,
+                                name: firebaseUser.displayName || 'Новый пользователь',
+                                email: firebaseUser.email,
+                                phone: firebaseUser.phoneNumber,
+                                photoURL: firebaseUser.photoURL,
+                                role: 'user',
+                                branchId: null,
+                                status: 'pending',
+                                createdAt: new Date(),
+                                updatedAt: new Date()
+                            };
+                            
+                            await db.collection('users').doc(firebaseUser.uid).set(newUserData);
+                            console.log('✅ User profile created');
+                            
+                            currentUser = {
+                                ...newUserData,
+                                uid: firebaseUser.uid,
+                                firebaseUser
+                            };
+                            
+                            resolve({ user: currentUser, isAuthenticated: true });
+                        } catch (createError) {
+                            console.error('❌ Failed to create user profile:', createError);
+                            resolve({ user: null, isAuthenticated: false });
+                        }
                     }
                 } catch (error) {
                     console.error('Error fetching user profile:', error);
@@ -170,7 +199,10 @@ export async function initAuthGate(options = {}) {
         // Проверка авторизации
         if (requireAuth && !isAuthenticated) {
             console.log('🚫 Authentication required, redirecting to login...');
-            window.location.href = redirectTo;
+            // Проверяем что мы не на странице логина чтобы избежать цикла
+            if (!window.location.pathname.includes('login')) {
+                window.location.href = redirectTo;
+            }
             return false;
         }
         

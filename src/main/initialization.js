@@ -48,6 +48,12 @@ export async function initializeApp() {
         
         if (!authPassed) {
             console.log('❌ [Initialization] Auth check failed');
+            // Добавляем задержку чтобы избежать цикла редиректов
+            setTimeout(() => {
+                if (window.location.pathname !== '/login.html') {
+                    window.location.href = '/login.html';
+                }
+            }, 100);
             return;
         }
         

@@ -291,10 +291,28 @@ elements.verifyCodeBtn.addEventListener('click', handlePhoneVerify);
 // ====================================
 
 // If already logged in, redirect to main app
-auth.onAuthStateChanged((user) => {
-    if (user) {
+let redirecting = false;
+auth.onAuthStateChanged(async (user) => {
+    if (user && !redirecting) {
         console.log('🔐 User already logged in:', user.email || user.phoneNumber);
-        window.location.href = '/';
+        
+        // Проверяем есть ли профиль в Firestore
+        try {
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+                console.log('✅ User profile exists, redirecting...');
+                redirecting = true;
+                window.location.href = '/';
+            } else {
+                console.log('⚠️ User profile not found, staying on login page');
+                // Создаем профиль
+                await createUserProfile(user);
+                redirecting = true;
+                window.location.href = '/';
+            }
+        } catch (error) {
+            console.error('Error checking user profile:', error);
+        }
     }
 });
 
