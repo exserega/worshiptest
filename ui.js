@@ -227,10 +227,14 @@ export function applyTheme(themeName) {
 export function displaySongDetails(songData, keyToSelect) {
     const keyDisplay = document.getElementById('youtube-video-key-display');
     
-    // Устанавливаем текущую песню в state
-    if (window.state) {
-        window.state.currentSong = songData;
-        console.log('📝 [UI] Set currentSong:', songData?.name);
+    // Устанавливаем текущую песню через stateManager
+    if (window.stateManager && typeof window.stateManager.setCurrentSong === 'function') {
+        window.stateManager.setCurrentSong(songData);
+        console.log('📝 [UI] Set currentSong via stateManager:', songData?.name);
+    } else {
+        // Fallback: сохраняем в window напрямую
+        window.currentSong = songData;
+        console.log('📝 [UI] Set currentSong on window:', songData?.name);
     }
 
     if (!songData) {

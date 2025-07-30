@@ -1076,9 +1076,10 @@ function setupSongEventHandlers() {
             console.log('📝 [EventHandlers] Edit song button clicked');
             
             // Получаем текущую песню
-            const currentSong = window.state?.currentSong;
+            const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
             if (!currentSong) {
                 console.error('❌ [EventHandlers] No song selected for editing');
+                console.log('Checked: stateManager.getCurrentSong, window.currentSong');
                 return;
             }
             
