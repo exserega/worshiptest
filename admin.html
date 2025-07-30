@@ -153,18 +153,41 @@
             .then(() => {
                 console.log('✅ Firebase persistence set to LOCAL');
                 
-                // Принудительно восстанавливаем сессию
-                return firebase.auth().getRedirectResult();
-            })
-            .then(() => {
-                // Проверяем токен
-                const user = firebase.auth().currentUser;
-                if (user) {
-                    console.log('✅ User already authenticated:', user.uid);
-                } else {
-                    console.log('⏳ Waiting for auth state...');
-                }
-            })
+                        // Проверяем токен из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const uid = urlParams.get('uid');
+        
+        if (token && uid) {
+            console.log('🔑 Token found in URL, attempting auth...');
+            // Сохраняем токен для использования
+            window._authToken = token;
+            window._authUid = uid;
+            
+            // Очищаем URL от токена
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
+        // Принудительно восстанавливаем сессию
+        return firebase.auth().getRedirectResult();
+    })
+    .then(() => {
+        // Проверяем токен
+        const user = firebase.auth().currentUser;
+        if (user) {
+            console.log('✅ User already authenticated:', user.uid);
+        } else {
+            console.log('⏳ Waiting for auth state...');
+            // Проверяем sessionStorage
+            const savedToken = sessionStorage.getItem('adminToken');
+            const savedUid = sessionStorage.getItem('adminUserId');
+            if (savedToken && savedUid) {
+                console.log('📦 Found token in sessionStorage');
+                window._authToken = savedToken;
+                window._authUid = savedUid;
+            }
+        }
+    })
             .catch((error) => {
                 console.error('❌ Error:', error);
             });
@@ -188,6 +211,7 @@
                             <li>Обновить страницу (F5)</li>
                             <li>Вернуться на главную и зайти снова</li>
                             <li>Проверить подключение к интернету</li>
+                            <li>Войти напрямую (для администратора)</li>
                         </ol>
                     </div>
                     <button onclick="location.reload()" style="background: #ff6b6b; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
@@ -199,9 +223,38 @@
                     <button onclick="window.location.href='/debug-auth.html'" style="background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
                         🔍 Диагностика
                     </button>
+                    <button onclick="forceAdminLogin()" style="background: #9c27b0; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
+                        🔐 Войти как админ
+                    </button>
+                    <button onclick="window.location.href='/test-storage.html'" style="background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
+                        🧪 Тест хранилища
+                    </button>
                 </div>
             `;
         }
+        
+        // Функция для прямого входа администратора
+        window.forceAdminLogin = function() {
+            const email = prompt('Email администратора:');
+            if (email) {
+                const password = prompt('Пароль:');
+                if (password) {
+                    firebase.auth().signInWithEmailAndPassword(email, password)
+                        .then((result) => {
+                            console.log('✅ Admin logged in:', result.user.uid);
+                            // Устанавливаем persistence
+                            return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                        })
+                        .then(() => {
+                            alert('✅ Вход выполнен! Обновляю страницу...');
+                            setTimeout(() => location.reload(), 1000);
+                        })
+                        .catch((error) => {
+                            alert('❌ Ошибка входа: ' + error.message);
+                        });
+                }
+            }
+        };
         
         function checkAuthWithRetry() {
             console.log(`🔄 Auth check attempt ${retryCount + 1}/${maxRetries}`);

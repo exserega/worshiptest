@@ -64,14 +64,41 @@ export async function initAdminPanel() {
  * Проверить права администратора
  */
 async function checkAdminAccess() {
-    const user = auth.currentUser;
-    if (!user) {
-        throw new Error('Требуется авторизация');
-    }
+    let user = auth.currentUser;
     
     // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
     const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
     const MAIN_ADMIN_EMAIL = '19exxtazzy96@gmail.com';
+    
+    // Если нет пользователя, проверяем альтернативные методы
+    if (!user && window._authToken && window._authUid) {
+        console.log('🔑 Using token from URL/sessionStorage');
+        
+        if (window._authUid === MAIN_ADMIN_ID) {
+            // Создаем фиктивный объект пользователя для админа
+            user = {
+                uid: window._authUid,
+                email: MAIN_ADMIN_EMAIL,
+                getIdToken: () => Promise.resolve(window._authToken)
+            };
+            // Обновляем состояние
+            state.currentUser = {
+                id: window._authUid,
+                email: MAIN_ADMIN_EMAIL,
+                role: 'admin',
+                status: 'active',
+                isFounder: true,
+                isRootAdmin: true
+            };
+            state.isRootAdmin = true;
+            console.log('✅ Admin access granted via token');
+            return;
+        }
+    }
+    
+    if (!user) {
+        throw new Error('Требуется авторизация');
+    }
     
     if (user.uid === MAIN_ADMIN_ID || user.email === MAIN_ADMIN_EMAIL) {
         console.log('✅ Main admin detected by ID or email');

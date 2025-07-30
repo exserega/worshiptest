@@ -89,6 +89,31 @@ function updateUI() {
         roleEl.className = 'badge admin';
         // Показываем админ секцию
         document.getElementById('admin-section').style.display = 'block';
+        
+        // Добавляем обработчик для админ ссылки
+        const adminLink = document.querySelector('a[href="/admin.html"]');
+        if (adminLink) {
+            adminLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    // Получаем токен для передачи
+                    const user = auth.currentUser;
+                    if (user) {
+                        const token = await user.getIdToken();
+                        // Сохраняем в sessionStorage как запасной вариант
+                        sessionStorage.setItem('adminToken', token);
+                        sessionStorage.setItem('adminUserId', user.uid);
+                        // Передаем токен через URL
+                        window.location.href = `/admin.html?token=${encodeURIComponent(token)}&uid=${user.uid}`;
+                    } else {
+                        window.location.href = '/admin.html';
+                    }
+                } catch (error) {
+                    console.error('Error getting token:', error);
+                    window.location.href = '/admin.html';
+                }
+            });
+        }
     } else {
         roleEl.textContent = 'Пользователь';
         roleEl.className = 'badge';
