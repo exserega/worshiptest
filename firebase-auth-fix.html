@@ -73,6 +73,7 @@
         <button class="fix-button" onclick="saveAuthManually()">💾 Force Save Auth</button>
         <button class="fix-button" onclick="testPersistence()">🧪 Test Persistence</button>
         <button class="info-button" onclick="showFirebaseInfo()">ℹ️ Show Firebase Info</button>
+        <button class="fix-button" onclick="goToAdminWithToken()">🚀 Go to Admin (Force)</button>
     </div>
     
     <div class="section">
@@ -166,47 +167,95 @@
 
         // Manual login
         async function tryManualLogin() {
-            const email = prompt('Email:');
-            if (!email) return;
+            const method = confirm('Войти через Google? (OK = Google, Cancel = Email/Password)');
             
-            const password = prompt('Password:');
-            if (!password) return;
-            
-            try {
-                log('🔄 Attempting manual login...', 'info');
+            if (method) {
+                // Google login
+                try {
+                    log('🔄 Attempting Google login...', 'info');
+                    
+                    // Set persistence first
+                    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                    log('✅ Persistence set to LOCAL', 'success');
+                    
+                    // Sign in with Google
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    const result = await auth.signInWithPopup(provider);
+                    log(`✅ Signed in with Google: ${result.user.uid}`, 'success');
+                    
+                    // Force token refresh
+                    const token = await result.user.getIdToken(true);
+                    log('✅ Token obtained', 'success');
+                    
+                    // Manually save to localStorage
+                    const authData = {
+                        uid: result.user.uid,
+                        email: result.user.email,
+                        token: token.substring(0, 50) + '...',
+                        timestamp: new Date().toISOString()
+                    };
+                    localStorage.setItem('manual_auth_backup', JSON.stringify(authData));
+                    log('✅ Manual backup saved to localStorage', 'success');
+                    
+                    // Force save for admin
+                    if (result.user.uid === 'm4L5O5rs2phMHtfcVuWnCAkXJBD2') {
+                        localStorage.setItem('forced_auth_token', token);
+                        localStorage.setItem('forced_auth_uid', result.user.uid);
+                        log('✅ Admin credentials saved!', 'success');
+                    }
+                    
+                    // Check if Firebase saved anything
+                    setTimeout(() => {
+                        analyzeStorage();
+                    }, 1000);
+                    
+                } catch (error) {
+                    log(`❌ Error: ${error.message}`, 'error');
+                }
+            } else {
+                // Email/Password login
+                const email = prompt('Email:');
+                if (!email) return;
                 
-                // Clear any existing session
-                await auth.signOut();
+                const password = prompt('Password:');
+                if (!password) return;
                 
-                // Set persistence first
-                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-                log('✅ Persistence set to LOCAL', 'success');
-                
-                // Sign in
-                const result = await auth.signInWithEmailAndPassword(email, password);
-                log(`✅ Signed in: ${result.user.uid}`, 'success');
-                
-                // Force token refresh
-                const token = await result.user.getIdToken(true);
-                log('✅ Token obtained', 'success');
-                
-                // Manually save to localStorage
-                const authData = {
-                    uid: result.user.uid,
-                    email: result.user.email,
-                    token: token.substring(0, 50) + '...',
-                    timestamp: new Date().toISOString()
-                };
-                localStorage.setItem('manual_auth_backup', JSON.stringify(authData));
-                log('✅ Manual backup saved to localStorage', 'success');
-                
-                // Check if Firebase saved anything
-                setTimeout(() => {
-                    analyzeStorage();
-                }, 1000);
-                
-            } catch (error) {
-                log(`❌ Error: ${error.message}`, 'error');
+                try {
+                    log('🔄 Attempting email/password login...', 'info');
+                    
+                    // Clear any existing session
+                    await auth.signOut();
+                    
+                    // Set persistence first
+                    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                    log('✅ Persistence set to LOCAL', 'success');
+                    
+                    // Sign in
+                    const result = await auth.signInWithEmailAndPassword(email, password);
+                    log(`✅ Signed in: ${result.user.uid}`, 'success');
+                    
+                    // Force token refresh
+                    const token = await result.user.getIdToken(true);
+                    log('✅ Token obtained', 'success');
+                    
+                    // Manually save to localStorage
+                    const authData = {
+                        uid: result.user.uid,
+                        email: result.user.email,
+                        token: token.substring(0, 50) + '...',
+                        timestamp: new Date().toISOString()
+                    };
+                    localStorage.setItem('manual_auth_backup', JSON.stringify(authData));
+                    log('✅ Manual backup saved to localStorage', 'success');
+                    
+                    // Check if Firebase saved anything
+                    setTimeout(() => {
+                        analyzeStorage();
+                    }, 1000);
+                    
+                } catch (error) {
+                    log(`❌ Error: ${error.message}`, 'error');
+                }
             }
         }
 
@@ -280,6 +329,40 @@
             };
             
             log('Firebase Info:\n' + JSON.stringify(info, null, 2), 'info');
+        }
+        
+        // Go to admin with forced token
+        async function goToAdminWithToken() {
+            const user = auth.currentUser;
+            
+            if (!user) {
+                log('❌ No user authenticated. Please login first!', 'error');
+                return;
+            }
+            
+            try {
+                log('🚀 Preparing to go to admin panel...', 'info');
+                
+                // Get fresh token
+                const token = await user.getIdToken(true);
+                
+                // Save to storage
+                localStorage.setItem('forced_auth_token', token);
+                localStorage.setItem('forced_auth_uid', user.uid);
+                sessionStorage.setItem('adminToken', token);
+                sessionStorage.setItem('adminUserId', user.uid);
+                
+                log('✅ Token saved to storage', 'success');
+                
+                // Go to admin with token in URL
+                const adminUrl = `/admin.html?token=${encodeURIComponent(token)}&uid=${user.uid}`;
+                log('🔗 Redirecting to: ' + adminUrl.substring(0, 50) + '...', 'info');
+                
+                window.location.href = adminUrl;
+                
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
         }
 
         // Auto-run analysis
