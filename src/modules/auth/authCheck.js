@@ -37,7 +37,7 @@ export function checkAuth() {
             if (firebaseUser) {
                 try {
                     // ВРЕМЕННОЕ РЕШЕНИЕ: Проверка главного админа
-                    const MAIN_ADMIN_ID = 'AF5iJmVy9cd6Hat9QNxygij0RFS2';
+                    const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
                     
                     if (firebaseUser.uid === MAIN_ADMIN_ID) {
                         // Для главного админа всегда устанавливаем права
@@ -166,7 +166,7 @@ export function hasAccess(resource, action) {
  */
 export function isAdmin() {
     // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
-    const MAIN_ADMIN_ID = 'AF5iJmVy9cd6Hat9QNxygij0RFS2';
+    const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
     if (auth.currentUser?.uid === MAIN_ADMIN_ID) {
         return true;
     }

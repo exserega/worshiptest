@@ -70,7 +70,7 @@ async function checkAdminAccess() {
     }
     
     // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
-    const MAIN_ADMIN_ID = 'AF5iJmVy9cd6Hat9QNxygij0RFS2';
+    const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
     
     if (user.uid === MAIN_ADMIN_ID) {
         console.log('✅ Main admin detected by ID');

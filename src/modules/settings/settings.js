@@ -81,7 +81,7 @@ function updateUI() {
     
     // Role badge
     // ВРЕМЕННОЕ РЕШЕНИЕ: Проверка главного админа
-    const MAIN_ADMIN_ID = 'AF5iJmVy9cd6Hat9QNxygij0RFS2';
+    const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
     const isAdmin = currentUser.role === 'admin' || currentUser.id === MAIN_ADMIN_ID;
     
     if (isAdmin) {

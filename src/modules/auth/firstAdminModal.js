@@ -274,7 +274,8 @@ function showFirstAdminModal(userEmail) {
 export async function checkAndShowFirstAdminModal() {
     // Проверяем, не отказался ли пользователь ранее
     if (localStorage.getItem('first_admin_declined') === 'true') {
-        return;
+        // Очищаем флаг для нового пользователя
+        localStorage.removeItem('first_admin_declined');
     }
     
     try {
