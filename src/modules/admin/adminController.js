@@ -71,12 +71,13 @@ async function checkAdminAccess() {
     
     // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
     const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
+    const MAIN_ADMIN_EMAIL = '19exxtazzy96@gmail.com';
     
-    if (user.uid === MAIN_ADMIN_ID) {
-        console.log('✅ Main admin detected by ID');
+    if (user.uid === MAIN_ADMIN_ID || user.email === MAIN_ADMIN_EMAIL) {
+        console.log('✅ Main admin detected by ID or email');
         state.currentUser = {
             id: user.uid,
-            email: user.email,
+            email: user.email || MAIN_ADMIN_EMAIL,
             role: 'admin',
             status: 'active',
             isFounder: true,
@@ -616,5 +617,21 @@ window.adminController = {
 
 // Запускаем при загрузке
 document.addEventListener('DOMContentLoaded', () => {
-    initAdminPanel();
+    // Ждем загрузки пользователя Firebase
+    let initialized = false;
+    auth.onAuthStateChanged((user) => {
+        if (initialized) return; // Предотвращаем множественные вызовы
+        
+        if (user) {
+            initialized = true;
+            console.log('🔐 User detected:', user.uid);
+            // Небольшая задержка для синхронизации данных
+            setTimeout(() => {
+                initAdminPanel();
+            }, 500);
+        } else {
+            console.log('❌ No user authenticated');
+            showAccessDenied('Требуется авторизация');
+        }
+    });
 });
