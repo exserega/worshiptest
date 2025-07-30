@@ -191,20 +191,18 @@ export async function loadSetlists() {
         
         // Если главный админ - показываем все сетлисты
         if (isRootAdmin) {
-            queryRef = query(setlistsCollection, orderBy("createdAt", "desc"));
+            queryRef = query(setlistsCollection);
         } else if (userBranchId) {
             // Если есть филиал - показываем только сетлисты этого филиала
             queryRef = query(
                 setlistsCollection, 
-                where("branchId", "==", userBranchId),
-                orderBy("createdAt", "desc")
+                where("branchId", "==", userBranchId)
             );
         } else {
             // Если нет филиала - показываем только общие сетлисты (без филиала)
             queryRef = query(
                 setlistsCollection,
-                where("branchId", "==", null),
-                orderBy("createdAt", "desc")
+                where("branchId", "==", null)
             );
         }
         
@@ -212,11 +210,17 @@ export async function loadSetlists() {
         const setlists = [];
         
         querySnapshot.forEach((doc) => {
+            const data = doc.data();
             setlists.push({
                 id: doc.id,
-                ...doc.data()
+                ...data,
+                // Преобразуем Timestamp в Date для сортировки
+                createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date()
             });
         });
+        
+        // Сортируем в JavaScript вместо Firestore
+        setlists.sort((a, b) => b.createdAt - a.createdAt);
         
         console.log(`✅ Загружено ${setlists.length} сетлистов${userBranchId && !isRootAdmin ? ' для филиала' : ''}`);
         return setlists;
