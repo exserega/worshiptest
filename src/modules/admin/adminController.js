@@ -66,78 +66,37 @@ export async function initAdminPanel() {
  * Проверить права администратора
  */
 async function checkAdminAccess() {
-    // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
-    const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
-    const MAIN_ADMIN_EMAIL = '19exxtazzy96@gmail.com';
-    
-    // Проверяем принудительный режим
-    if (window._forceAdminMode && window._authUid === MAIN_ADMIN_ID) {
-        console.log('✅ Admin access granted in forced mode');
-        return;
-    }
-    
-    let user = auth.currentUser;
-    
-    // Если нет пользователя, проверяем альтернативные методы
-    if (!user && window._authToken && window._authUid) {
-        console.log('🔑 Using token from URL/sessionStorage');
-        
-        if (window._authUid === MAIN_ADMIN_ID) {
-            // Создаем фиктивный объект пользователя для админа
-            user = {
-                uid: window._authUid,
-                email: MAIN_ADMIN_EMAIL,
-                getIdToken: () => Promise.resolve(window._authToken)
-            };
-            // Обновляем состояние
-            state.currentUser = {
-                id: window._authUid,
-                email: MAIN_ADMIN_EMAIL,
-                role: 'admin',
-                status: 'active',
-                isFounder: true,
-                isRootAdmin: true
-            };
-            state.isRootAdmin = true;
-            console.log('✅ Admin access granted via token');
-            return;
-        }
-    }
+    const user = auth.currentUser;
     
     if (!user) {
         throw new Error('Требуется авторизация');
     }
     
-    if (user.uid === MAIN_ADMIN_ID || user.email === MAIN_ADMIN_EMAIL) {
-        console.log('✅ Main admin detected by ID or email');
-        state.currentUser = {
-            id: user.uid,
-            email: user.email || MAIN_ADMIN_EMAIL,
-            role: 'admin',
-            status: 'active',
-            isFounder: true,
-            isRootAdmin: true
-        };
-        state.isRootAdmin = true;
+    // Получаем токен с custom claims
+    try {
+        const idTokenResult = await user.getIdTokenResult();
         
-        // Обновляем данные в БД для синхронизации
-        try {
-            await db.collection('users').doc(user.uid).set({
-                role: 'admin',
-                status: 'active',
-                isFounder: true,
-                isRootAdmin: true,
-                email: user.email,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
-        } catch (error) {
-            console.error('Error updating admin in DB:', error);
+        // Проверяем роль в custom claims
+        if (idTokenResult.claims.role === 'admin') {
+            console.log('✅ Admin access granted via custom claims');
+            
+            // Загружаем данные пользователя из Firestore для полной информации
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+                state.currentUser = {
+                    id: user.uid,
+                    ...userDoc.data()
+                };
+                state.isRootAdmin = userDoc.data().isFounder || userDoc.data().isRootAdmin || false;
+            }
+            
+            return;
         }
-        
-        return;
+    } catch (error) {
+        console.error('Error checking custom claims:', error);
     }
     
-    // Обычная проверка для остальных пользователей
+    // Fallback: проверка в Firestore
     const userDoc = await db.collection('users').doc(user.uid).get();
     if (!userDoc.exists) {
         throw new Error('Профиль пользователя не найден');

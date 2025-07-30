@@ -80,9 +80,7 @@ function updateUI() {
     const branchEl = document.getElementById('user-branch');
     
     // Role badge
-    // ВРЕМЕННОЕ РЕШЕНИЕ: Проверка главного админа
-    const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
-    const isAdmin = currentUser.role === 'admin' || currentUser.id === MAIN_ADMIN_ID;
+    const isAdmin = currentUser.role === 'admin';
     
     if (isAdmin) {
         roleEl.textContent = 'Администратор';

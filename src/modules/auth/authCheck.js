@@ -36,35 +36,8 @@ export function checkAuth() {
         const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
             if (firebaseUser) {
                 try {
-                    // ВРЕМЕННОЕ РЕШЕНИЕ: Проверка главного админа
-                    const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
-                    
-                    if (firebaseUser.uid === MAIN_ADMIN_ID) {
-                        // Для главного админа всегда устанавливаем права
-                        const adminData = {
-                            email: firebaseUser.email || '19exxtazzy96@gmail.com',
-                            phone: firebaseUser.phoneNumber,
-                            name: firebaseUser.displayName || 'Главный администратор',
-                            role: 'admin',
-                            status: 'active',
-                            isFounder: true,
-                            isRootAdmin: true
-                        };
-                        
-                        // Обновляем в БД
-                        await db.collection('users').doc(firebaseUser.uid).set(adminData, { merge: true });
-                        
-                        currentUser = {
-                            ...adminData,
-                            uid: firebaseUser.uid,
-                            firebaseUser
-                        };
-                        
-                        console.log('🔐 Main admin authenticated by ID');
-                        resolve({ user: currentUser, isAuthenticated: true });
-                    } else {
-                        // Обычная проверка для остальных пользователей
-                        const userDoc = await db.collection('users').doc(firebaseUser.uid).get();
+                    // Проверка пользователя в Firestore
+                    const userDoc = await db.collection('users').doc(firebaseUser.uid).get();
                         
                         if (userDoc.exists) {
                             currentUser = {
@@ -116,7 +89,6 @@ export function checkAuth() {
                             resolve({ user: null, isAuthenticated: false });
                         }
                     }
-                    }
                 } catch (error) {
                     console.error('Error fetching user profile:', error);
                     resolve({ user: null, isAuthenticated: false });
@@ -164,14 +136,25 @@ export function hasAccess(resource, action) {
  * Проверяет является ли пользователь админом
  * @returns {boolean}
  */
-export function isAdmin() {
-    // ВРЕМЕННОЕ РЕШЕНИЕ: Прямая проверка ID главного администратора
-    const MAIN_ADMIN_ID = 'm4L5O5rs2phMHtfcVuWnCAkXJBD2';
-    if (auth.currentUser?.uid === MAIN_ADMIN_ID) {
-        return true;
-    }
+export async function isAdmin() {
+    const user = auth.currentUser;
+    if (!user) return false;
     
-    return currentUser?.role === 'admin';
+    try {
+        // Получаем токен с custom claims
+        const idTokenResult = await user.getIdTokenResult();
+        
+        // Проверяем custom claims (приоритет)
+        if (idTokenResult.claims.role === 'admin') {
+            return true;
+        }
+        
+        // Fallback на Firestore (если claims еще не синхронизированы)
+        return currentUser?.role === 'admin';
+    } catch (error) {
+        console.error('Error checking admin status:', error);
+        return currentUser?.role === 'admin';
+    }
 }
 
 /**
@@ -179,9 +162,9 @@ export function isAdmin() {
  * @param {string} branchId - ID филиала
  * @returns {boolean}
  */
-export function belongsToBranch(branchId) {
+export async function belongsToBranch(branchId) {
     if (!currentUser) return false;
-    if (isAdmin()) return true; // Админы видят все филиалы
+    if (await isAdmin()) return true; // Админы видят все филиалы
     return currentUser.branchId === branchId;
 }
 

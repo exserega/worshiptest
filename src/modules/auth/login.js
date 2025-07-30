@@ -369,8 +369,29 @@ auth.onAuthStateChanged(async (user) => {
                 window.location.replace('/');
             } else {
                 console.log('⚠️ User profile not found, creating...');
+                
+                // Проверяем, является ли это первым пользователем в системе
+                const adminsQuery = await db.collection('users')
+                    .where('role', '==', 'admin')
+                    .limit(1)
+                    .get();
+                    
+                const isFirstUser = adminsQuery.empty;
+                
                 // Создаем профиль
                 await createUserProfile(user);
+                
+                // Если это первый пользователь - делаем его админом
+                if (isFirstUser) {
+                    console.log('🌟 First user detected - setting up as admin');
+                    await db.collection('users').doc(user.uid).update({
+                        role: 'admin',
+                        status: 'active',
+                        isFounder: true,
+                        permissions: ['*']
+                    });
+                }
+                
                 console.log('✅ Profile created, redirecting...');
                 redirecting = true;
                 // Сохраняем флаг что идет редирект
