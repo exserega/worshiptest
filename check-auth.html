@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проверка авторизации</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        .status {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #333;
+        }
+        .success { background: #4caf50; }
+        .error { background: #f44336; }
+        .info { background: #2196f3; }
+        pre {
+            background: #111;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #ff5252; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Проверка авторизации Firebase</h1>
+        
+        <div id="auth-status" class="status">
+            Проверка...
+        </div>
+        
+        <div id="user-info"></div>
+        
+        <div id="storage-info" class="status info" style="margin-top: 20px;">
+            <h3>📦 Данные в хранилище:</h3>
+            <pre id="storage-data"></pre>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="checkAuth()">🔄 Обновить</button>
+            <button onclick="forceSignIn()">🔑 Принудительный вход</button>
+            <button onclick="signOut()">🚪 Выйти</button>
+            <button onclick="window.location.href='/'">🏠 На главную</button>
+        </div>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzDxg3S9cfseoozmZSksUh1aLbkVBG--Q",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "660585697058",
+            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Проверка авторизации
+        function checkAuth() {
+            const statusDiv = document.getElementById('auth-status');
+            const userInfoDiv = document.getElementById('user-info');
+            
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '✅ Пользователь авторизован';
+                    
+                    userInfoDiv.innerHTML = `
+                        <div class="status">
+                            <h3>👤 Информация о пользователе:</h3>
+                            <p><strong>UID:</strong> ${user.uid}</p>
+                            <p><strong>Email:</strong> ${user.email || 'Не указан'}</p>
+                            <p><strong>Phone:</strong> ${user.phoneNumber || 'Не указан'}</p>
+                            <p><strong>Display Name:</strong> ${user.displayName || 'Не указан'}</p>
+                            <p><strong>Provider:</strong> ${user.providerData[0]?.providerId || 'Unknown'}</p>
+                        </div>
+                    `;
+                    
+                    // Проверяем данные в Firestore
+                    checkFirestoreUser(user.uid);
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = '❌ Пользователь не авторизован';
+                    userInfoDiv.innerHTML = '';
+                }
+                
+                checkStorage();
+            });
+        }
+        
+        // Проверка пользователя в Firestore
+        async function checkFirestoreUser(uid) {
+            try {
+                const userDoc = await db.collection('users').doc(uid).get();
+                const userInfoDiv = document.getElementById('user-info');
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    userInfoDiv.innerHTML += `
+                        <div class="status info">
+                            <h3>📄 Данные из Firestore:</h3>
+                            <pre>${JSON.stringify(userData, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    userInfoDiv.innerHTML += `
+                        <div class="status error">
+                            <p>❌ Профиль не найден в Firestore</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Firestore error:', error);
+            }
+        }
+        
+        // Проверка данных в хранилище
+        function checkStorage() {
+            const storageData = {
+                localStorage: {},
+                sessionStorage: {}
+            };
+            
+            // Проверяем localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('firebase') || key.includes('auth')) {
+                    storageData.localStorage[key] = localStorage.getItem(key).substring(0, 50) + '...';
+                }
+            }
+            
+            // Проверяем sessionStorage
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key.includes('firebase') || key.includes('auth')) {
+                    storageData.sessionStorage[key] = sessionStorage.getItem(key).substring(0, 50) + '...';
+                }
+            }
+            
+            document.getElementById('storage-data').textContent = JSON.stringify(storageData, null, 2);
+        }
+        
+        // Принудительный вход для админа
+        async function forceSignIn() {
+            const email = '19exxtazzy96@gmail.com';
+            const password = prompt('Введите пароль для ' + email);
+            
+            if (password) {
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    alert('✅ Вход выполнен');
+                    checkAuth();
+                } catch (error) {
+                    alert('❌ Ошибка: ' + error.message);
+                }
+            }
+        }
+        
+        // Выход
+        async function signOut() {
+            try {
+                await auth.signOut();
+                alert('✅ Выход выполнен');
+                checkAuth();
+            } catch (error) {
+                alert('❌ Ошибка: ' + error.message);
+            }
+        }
+        
+        // Проверяем при загрузке
+        window.onload = () => {
+            checkAuth();
+        };
+    </script>
+</body>
+</html>

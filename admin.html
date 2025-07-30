@@ -138,16 +138,41 @@
         };
         firebase.initializeApp(firebaseConfig);
         
-        // Проверка состояния аутентификации для отладки
-        firebase.auth().onAuthStateChanged((user) => {
-            console.log('🔐 [admin.html] Auth state changed:', user ? user.uid : 'No user');
-            if (user) {
-                console.log('📧 User email:', user.email);
-            }
-        });
+        // Устанавливаем persistence для сохранения сессии
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log('✅ Firebase persistence set to LOCAL');
+                
+                // Проверка состояния аутентификации для отладки
+                firebase.auth().onAuthStateChanged((user) => {
+                    console.log('🔐 [admin.html] Auth state changed:', user ? user.uid : 'No user');
+                    if (user) {
+                        console.log('📧 User email:', user.email);
+                        console.log('🆔 User ID:', user.uid);
+                    }
+                });
+                
+                // Проверяем текущего пользователя
+                const currentUser = firebase.auth().currentUser;
+                console.log('👤 Current user immediately:', currentUser ? currentUser.uid : 'None');
+            })
+            .catch((error) => {
+                console.error('❌ Error setting persistence:', error);
+            });
     </script>
 
     <!-- Scripts -->
-    <script type="module" src="src/modules/admin/adminController.js"></script>
+    <script>
+        // Задержка загрузки модулей до полной инициализации Firebase
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const script = document.createElement('script');
+                script.type = 'module';
+                script.src = 'src/modules/admin/adminController.js';
+                document.body.appendChild(script);
+                console.log('📜 Admin controller loaded');
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
