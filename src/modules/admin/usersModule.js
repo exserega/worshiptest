@@ -115,7 +115,7 @@ function createUserCard(user, branches, currentUser, isRootAdmin) {
             </div>
             
             <div class="user-actions">
-                ${!isCurrentUser ? `
+                ${(!isCurrentUser && !user.isFounder) || (isCurrentUser && user.isFounder) ? `
                     <button class="button small" 
                             onclick="window.adminModules.users.showEditUserModal('${user.id}')"
                             title="Редактировать">
@@ -145,6 +145,13 @@ function createUserCard(user, branches, currentUser, isRootAdmin) {
 export function showEditUserModal(userId) {
     const user = window.adminState.users.find(u => u.id === userId);
     if (!user) return;
+    
+    // Защита от редактирования основателя другими админами
+    const currentUser = window.adminState.currentUser;
+    if (user.isFounder && currentUser.id !== user.id) {
+        showNotification('Только основатель может редактировать свой профиль', 'error');
+        return;
+    }
     
     const modalHtml = `
         <div class="modal" id="edit-user-modal">
@@ -186,7 +193,7 @@ export function showEditUserModal(userId) {
                         
                         <div class="form-group">
                             <label>Статус</label>
-                            <select id="user-status">
+                            <select id="user-status" ${user.isFounder && currentUser.id !== user.id ? 'disabled' : ''}>
                                 <option value="active" ${user.status === 'active' ? 'selected' : ''}>
                                     Активен
                                 </option>
@@ -194,11 +201,12 @@ export function showEditUserModal(userId) {
                                     Заблокирован
                                 </option>
                             </select>
+                            ${user.isFounder && currentUser.id !== user.id ? '<small class="text-muted">Только основатель может изменить свой статус</small>' : ''}
                         </div>
                         
                         <div class="form-group">
                             <label>Филиал</label>
-                            <select id="user-branch">
+                            <select id="user-branch" ${user.isFounder && currentUser.id !== user.id ? 'disabled' : ''}>
                                 <option value="">Не назначен</option>
                                 ${window.adminState.branches.map(b => `
                                     <option value="${b.id}" 
@@ -207,6 +215,7 @@ export function showEditUserModal(userId) {
                                     </option>
                                 `).join('')}
                             </select>
+                            ${user.isFounder && currentUser.id !== user.id ? '<small class="text-muted">Только основатель может изменить свой филиал</small>' : ''}
                         </div>
                     </div>
                 </div>
@@ -261,6 +270,13 @@ export async function saveUserChanges(userId) {
         
         // Получаем текущие данные пользователя для проверки
         const user = window.adminState.users.find(u => u.id === userId);
+        const currentUser = window.adminState.currentUser;
+        
+        // ЗАЩИТА: Только основатель может редактировать свой профиль
+        if (user && user.isFounder && currentUser.id !== user.id) {
+            showNotification('Только основатель может редактировать свой профиль', 'error');
+            return;
+        }
         
         // ЗАЩИТА: Не позволяем изменить роль основателя
         if (user && user.isFounder && role !== 'admin') {
