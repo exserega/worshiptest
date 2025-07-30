@@ -73,6 +73,9 @@ export class StateManager {
    */
   _initializeState() {
     const initialState = {
+      // Пользователь
+      currentUser: null,
+      
       // Песни
       allSongs: [],
       currentSong: null,
@@ -244,6 +247,37 @@ export class StateManager {
     }
     
     return true;
+  }
+  
+  /**
+   * Set current user
+   * @param {Object|null} user - User object or null
+   * @returns {boolean} Success status
+   */
+  setCurrentUser(user) {
+    if (user && typeof user !== 'object') {
+      console.error('StateManager.setCurrentUser: user must be object or null');
+      return false;
+    }
+    
+    this.setState('currentUser', user);
+    
+    if (this.debug) {
+      console.log(`🗃️ StateManager: Set current user: ${user?.email || user?.phone || 'null'}`);
+    }
+    
+    // Emit user change event
+    this.eventBus.emit('userChanged', user);
+    
+    return true;
+  }
+  
+  /**
+   * Get current user
+   * @returns {Object|null} Current user
+   */
+  getCurrentUser() {
+    return this.getState('currentUser', null);
   }
 
   /**

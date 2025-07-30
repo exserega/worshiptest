@@ -3,9 +3,9 @@
 // ====================================
 // Проверка авторизации и управление доступом
 
-import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../../js/firebase/config.js';
+// Firebase instances from global scope
+const auth = window.firebase?.auth();
+const db = window.firebase?.firestore();
 
 // ====================================
 // STATE
@@ -23,17 +23,23 @@ let authCheckPromise = null;
  * @returns {Promise<{user: Object|null, isAuthenticated: boolean}>}
  */
 export function checkAuth() {
+    // Проверяем что Firebase инициализирован
+    if (!auth || !db) {
+        console.error('Firebase not initialized');
+        return Promise.resolve({ user: null, isAuthenticated: false });
+    }
+    
     // Возвращаем существующий промис если проверка уже идет
     if (authCheckPromise) return authCheckPromise;
     
     authCheckPromise = new Promise((resolve) => {
-        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
             if (firebaseUser) {
                 try {
                     // Получаем профиль пользователя из Firestore
-                    const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+                    const userDoc = await db.collection('users').doc(firebaseUser.uid).get();
                     
-                    if (userDoc.exists()) {
+                    if (userDoc.exists) {
                         currentUser = {
                             ...userDoc.data(),
                             uid: firebaseUser.uid,

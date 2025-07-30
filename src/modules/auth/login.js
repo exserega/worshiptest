@@ -3,20 +3,11 @@
 // ====================================
 // Обработка входа, регистрации и авторизации
 
-import { initializeApp } from '../../js/firebase/config.js';
-import { 
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    signInWithPhoneNumber,
-    GoogleAuthProvider,
-    RecaptchaVerifier,
-    createUserWithEmailAndPassword,
-    updateProfile
-} from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-
-// Firebase инициализация
-const { auth, db } = initializeApp();
+// Firebase imports
+const auth = firebase.auth();
+const db = firebase.firestore();
+const GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
+const RecaptchaVerifier = firebase.auth.RecaptchaVerifier;
 
 // ====================================
 // DOM ELEMENTS
@@ -75,7 +66,7 @@ function switchForm(formName) {
 // ====================================
 
 async function createUserProfile(user, additionalData = {}) {
-    const userRef = doc(db, 'users', user.uid);
+    const userRef = db.collection('users').doc(user.uid);
     
     const userData = {
         id: user.uid,
@@ -86,12 +77,12 @@ async function createUserProfile(user, additionalData = {}) {
         role: 'user',
         branchId: null,
         status: 'pending',
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         ...additionalData
     };
     
-    await setDoc(userRef, userData, { merge: true });
+    await userRef.set(userData, { merge: true });
 }
 
 // ====================================
@@ -107,7 +98,7 @@ async function handleEmailLogin(e) {
     const password = e.target.password.value;
     
     try {
-        const result = await signInWithEmailAndPassword(auth, email, password);
+        const result = await auth.signInWithEmailAndPassword(email, password);
         console.log('🔐 Login successful:', result.user.email);
         
         // Redirect to main app
@@ -137,10 +128,10 @@ async function handleRegister(e) {
     }
     
     try {
-        const result = await createUserWithEmailAndPassword(auth, email, password);
+        const result = await auth.createUserWithEmailAndPassword(email, password);
         
         // Update display name
-        await updateProfile(result.user, { displayName: name });
+        await result.user.updateProfile({ displayName: name });
         
         // Create user profile
         await createUserProfile(result.user, { name });
@@ -164,8 +155,8 @@ async function handleGoogleLogin() {
     showLoading();
     
     try {
-        const provider = new GoogleAuthProvider();
-        const result = await signInWithPopup(auth, provider);
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const result = await auth.signInWithPopup(provider);
         
         // Create/update user profile
         await createUserProfile(result.user);
@@ -189,15 +180,15 @@ async function handlePhoneSend(e) {
     try {
         // Initialize reCAPTCHA
         if (!recaptchaVerifier) {
-            recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
                 size: 'normal',
                 callback: () => {
                     console.log('reCAPTCHA solved');
                 }
-            }, auth);
+            });
         }
         
-        phoneConfirmationResult = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
+        phoneConfirmationResult = await auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
         
         console.log('📱 SMS sent to:', phoneNumber);
         showMessage('Код отправлен на ваш телефон', 'success');

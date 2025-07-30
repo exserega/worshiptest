@@ -1,0 +1,121 @@
+/* ====================================
+   USER INFO & DROPDOWN
+   ==================================== */
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-name {
+    font-size: 14px;
+    color: var(--text-secondary);
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#user-menu-button {
+    font-size: 24px;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 250px;
+    display: none;
+    z-index: 1000;
+}
+
+.user-dropdown.show {
+    display: block;
+}
+
+.user-dropdown-header {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-dropdown-header i {
+    font-size: 32px;
+    color: var(--text-tertiary);
+}
+
+.dropdown-user-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.dropdown-user-email {
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background-color 0.2s;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background: var(--bg-primary);
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+    color: var(--text-tertiary);
+}
+
+.dropdown-item.logout {
+    color: var(--accent-danger);
+}
+
+.dropdown-item.logout i {
+    color: var(--accent-danger);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .user-name {
+        display: none;
+    }
+    
+    .header-controls {
+        gap: 10px;
+    }
+}

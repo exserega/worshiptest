@@ -19,6 +19,8 @@ import * as ui from '../../ui.js';
 import * as metronomeUI from '../../metronome.js';
 import searchWorkerManager from '../../src/js/workers/workerManager.js';
 import * as constants from '../../constants.js';
+import { initAuthGate, getCurrentUser } from '../modules/auth/authCheck.js';
+import { updateUserUI, initUserDropdown } from '../modules/auth/userUI.js';
 
 // Импортируем модуль setlist-selector для его инициализации
 import '../ui/setlist-selector.js';
@@ -34,6 +36,37 @@ export async function initializeApp() {
     console.log('🚀 [Initialization] initializeApp START');
     
     try {
+        // ====================================
+        // 🔐 AUTH CHECK - ПЕРВЫМ ДЕЛОМ!
+        // ====================================
+        console.log('🔐 [Initialization] Checking authentication...');
+        const authPassed = await initAuthGate({
+            requireAuth: true,
+            requireBranch: false, // Пока не требуем филиал
+            requireAdmin: false
+        });
+        
+        if (!authPassed) {
+            console.log('❌ [Initialization] Auth check failed');
+            return;
+        }
+        
+        const currentUser = getCurrentUser();
+        console.log('✅ [Initialization] Auth check passed, user:', currentUser?.email || currentUser?.phone);
+        
+        // Сохраняем пользователя в глобальный state
+        if (window.stateManager) {
+            window.stateManager.setCurrentUser(currentUser);
+        }
+        
+        // Обновляем UI пользователя
+        updateUserUI(currentUser);
+        initUserDropdown();
+        
+        // ====================================
+        // THEME SETUP
+        // ====================================
+        
         // Показываем индикатор загрузки
         showLoadingIndicator();
         

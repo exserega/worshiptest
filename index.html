@@ -47,15 +47,52 @@
 
 <header>
     <h1>Agape Worship</h1>
-    <button id="theme-toggle-button" class="theme-toggle" title="Переключить тему">
-      <span class="theme-toggle-bg">
-        <i class="fas fa-moon theme-icon moon"></i>
-        <i class="fas fa-sun theme-icon sun"></i>
-      </span>
-      <span class="theme-toggle-slider">
-        <i class="fas fa-moon"></i>
-      </span>
-    </button>
+    
+    <div class="header-controls">
+        <!-- User Info -->
+        <div id="user-info" class="user-info">
+            <span id="user-name" class="user-name"></span>
+            <button id="user-menu-button" class="icon-button simple" title="Меню пользователя">
+                <i class="fas fa-user-circle"></i>
+            </button>
+            
+            <!-- User Dropdown Menu -->
+            <div id="user-dropdown" class="user-dropdown">
+                <div class="user-dropdown-header">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <div id="dropdown-user-name" class="dropdown-user-name"></div>
+                        <div id="dropdown-user-email" class="dropdown-user-email"></div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="/settings.html" class="dropdown-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Настройки</span>
+                </a>
+                <a href="/admin.html" id="admin-link" class="dropdown-item" style="display: none;">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Админ-панель</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <button id="logout-button" class="dropdown-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Выйти</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle-button" class="theme-toggle" title="Переключить тему">
+          <span class="theme-toggle-bg">
+            <i class="fas fa-moon theme-icon moon"></i>
+            <i class="fas fa-sun theme-icon sun"></i>
+          </span>
+          <span class="theme-toggle-slider">
+            <i class="fas fa-moon"></i>
+          </span>
+        </button>
+    </div>
 </header>
 
 <main class="container">

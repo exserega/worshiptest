@@ -191,7 +191,24 @@
         </div>
     </div>
 
+    <!-- Firebase Config -->
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfcjeRUJrEKJQdKZPY-gNmzzJiG82d_1o",
+            authDomain: "agapeworkship.firebaseapp.com",
+            projectId: "agapeworkship",
+            storageBucket: "agapeworkship.appspot.com",
+            messagingSenderId: "901435687689",
+            appId: "1:901435687689:web:f5f977e14c3b74a6c7ab84",
+            measurementId: "G-STV9BS6SYE"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    
     <!-- Auth Module -->
-    <script type="module" src="src/modules/auth/login.js"></script>
+    <script src="src/modules/auth/login.js"></script>
 </body>
 </html>
