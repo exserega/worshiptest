@@ -22,15 +22,32 @@ export function displayBranches() {
     
     const { branches, users, isRootAdmin } = window.adminState;
     
+    // Добавляем кнопку создания филиала только для главного админа
+    const controlsBar = document.getElementById('branches-controls');
+    if (controlsBar) {
+        if (isRootAdmin) {
+            controlsBar.innerHTML = `
+                <button class="button primary" onclick="window.adminModules.branches.showCreateBranchModal()">
+                    <i class="fas fa-plus"></i>
+                    Создать филиал
+                </button>
+            `;
+        } else {
+            controlsBar.innerHTML = '';
+        }
+    }
+    
     if (branches.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-building" style="font-size: 48px; margin-bottom: 16px;"></i>
                 <p>Филиалов пока нет</p>
-                <button class="button primary" onclick="window.adminModules.branches.showCreateBranchModal()">
-                    <i class="fas fa-plus"></i>
-                    Создать первый филиал
-                </button>
+                ${isRootAdmin ? `
+                    <button class="button primary" onclick="window.adminModules.branches.showCreateBranchModal()">
+                        <i class="fas fa-plus"></i>
+                        Создать первый филиал
+                    </button>
+                ` : ''}
             </div>
         `;
         return;
@@ -72,21 +89,23 @@ function createBranchCard(branch, users, isRootAdmin) {
                 </div>
             </div>
             
-            <div class="branch-actions">
-                <button class="button small" 
-                        onclick="window.adminModules.branches.showEditBranchModal('${branch.id}')"
-                        title="Редактировать">
-                    <i class="fas fa-edit"></i>
-                </button>
-                
-                ${isRootAdmin && !branch.isMain ? `
-                    <button class="button small danger" 
-                            onclick="window.adminModules.branches.deleteBranch('${branch.id}')"
-                            title="Удалить">
-                        <i class="fas fa-trash"></i>
+            ${isRootAdmin ? `
+                <div class="branch-actions">
+                    <button class="button small" 
+                            onclick="window.adminModules.branches.showEditBranchModal('${branch.id}')"
+                            title="Редактировать">
+                        <i class="fas fa-edit"></i>
                     </button>
-                ` : ''}
-            </div>
+                    
+                    ${!branch.isMain ? `
+                        <button class="button small danger" 
+                                onclick="window.adminModules.branches.deleteBranch('${branch.id}')"
+                                title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    ` : ''}
+                </div>
+            ` : ''}
         </div>
     `;
 }

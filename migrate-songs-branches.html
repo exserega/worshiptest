@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Миграция песен - добавление филиалов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #1a1a1a;
+            color: #fff;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: #2a2a2a;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .button.danger {
+            background: #f44336;
+        }
+        .button.danger:hover {
+            background: #da190b;
+        }
+        .stats {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .progress {
+            background: #333;
+            height: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background: #4CAF50;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .log {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .branch-select {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .info-box {
+            background: #444;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+    </style>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Миграция песен - добавление филиалов</h1>
+        
+        <div class="info-box">
+            <p><strong>Внимание!</strong> Эта утилита добавит поддержку филиалов к песням.</p>
+            <p>После миграции:</p>
+            <ul style="text-align: left;">
+                <li>Песни без филиала будут видны всем</li>
+                <li>Песни с филиалом будут видны только пользователям этого филиала</li>
+                <li>Главный админ видит все песни</li>
+            </ul>
+        </div>
+        
+        <div>
+            <label for="branch-select">Выберите филиал по умолчанию (опционально):</label><br>
+            <select id="branch-select" class="branch-select">
+                <option value="">-- Не назначать филиал (песни будут доступны всем) --</option>
+            </select>
+        </div>
+        
+        <div id="stats" class="stats" style="display: none;">
+            <h3>Статистика:</h3>
+            <div id="stats-content"></div>
+        </div>
+        
+        <div class="progress" id="progress" style="display: none;">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div id="log" class="log" style="display: none;"></div>
+        
+        <button class="button" id="check-btn" onclick="checkSongs()">
+            📊 Проверить песни
+        </button>
+        
+        <button class="button" id="migrate-btn" onclick="migrateSongs()" disabled>
+            🚀 Начать миграцию
+        </button>
+        
+        <button class="button danger" id="remove-btn" onclick="removeBranchIds()" style="display: none;">
+            🗑️ Удалить привязку к филиалам
+        </button>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlkjVQFtFpMRFexAi6nBqEkIfjFlU5cDo",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "660585697058",
+            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40",
+            measurementId: "G-Z6QYH5YD2E"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        let allSongs = [];
+        let branches = [];
+        
+        function log(message, isError = false) {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString('ru-RU');
+            logEl.innerHTML += `<div style="color: ${isError ? '#f44336' : '#4CAF50'}">[${time}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        async function loadBranches() {
+            try {
+                const snapshot = await db.collection('branches').get();
+                branches = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                
+                const select = document.getElementById('branch-select');
+                branches.forEach(branch => {
+                    const option = document.createElement('option');
+                    option.value = branch.id;
+                    option.textContent = branch.name;
+                    if (branch.isMain) {
+                        option.textContent += ' (Главный)';
+                    }
+                    select.appendChild(option);
+                });
+                
+                log(`Загружено ${branches.length} филиалов`);
+            } catch (error) {
+                log(`Ошибка загрузки филиалов: ${error.message}`, true);
+            }
+        }
+        
+        async function checkSongs() {
+            try {
+                document.getElementById('check-btn').disabled = true;
+                document.getElementById('stats').style.display = 'block';
+                document.getElementById('log').style.display = 'block';
+                
+                log('Загрузка песен...');
+                
+                const snapshot = await db.collection('songs').get();
+                allSongs = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                
+                const stats = {
+                    total: allSongs.length,
+                    withBranch: 0,
+                    withoutBranch: 0,
+                    byBranch: {}
+                };
+                
+                allSongs.forEach(song => {
+                    if (song.branchId) {
+                        stats.withBranch++;
+                        const branchName = branches.find(b => b.id === song.branchId)?.name || 'Неизвестный филиал';
+                        stats.byBranch[branchName] = (stats.byBranch[branchName] || 0) + 1;
+                    } else {
+                        stats.withoutBranch++;
+                    }
+                });
+                
+                let statsHtml = `
+                    <p>Всего песен: <strong>${stats.total}</strong></p>
+                    <p style="color: #ff9800;">Без филиала: <strong>${stats.withoutBranch}</strong></p>
+                    <p style="color: #4CAF50;">С филиалом: <strong>${stats.withBranch}</strong></p>
+                `;
+                
+                if (Object.keys(stats.byBranch).length > 0) {
+                    statsHtml += '<hr><h4>По филиалам:</h4>';
+                    for (const [branch, count] of Object.entries(stats.byBranch)) {
+                        statsHtml += `<p>${branch}: <strong>${count}</strong></p>`;
+                    }
+                }
+                
+                document.getElementById('stats-content').innerHTML = statsHtml;
+                
+                if (stats.withoutBranch > 0) {
+                    document.getElementById('migrate-btn').disabled = false;
+                    log(`Найдено ${stats.withoutBranch} песен без филиала`);
+                } else {
+                    log('Все песни уже имеют филиалы');
+                }
+                
+                if (stats.withBranch > 0) {
+                    document.getElementById('remove-btn').style.display = 'inline-block';
+                }
+                
+            } catch (error) {
+                log(`Ошибка: ${error.message}`, true);
+            } finally {
+                document.getElementById('check-btn').disabled = false;
+            }
+        }
+        
+        async function migrateSongs() {
+            const selectedBranchId = document.getElementById('branch-select').value;
+            const songsToMigrate = allSongs.filter(song => !song.branchId);
+            
+            if (songsToMigrate.length === 0) {
+                log('Нет песен для миграции', true);
+                return;
+            }
+            
+            let confirmMsg = `Будет обработано ${songsToMigrate.length} песен.\n\n`;
+            if (selectedBranchId) {
+                const branchName = branches.find(b => b.id === selectedBranchId)?.name;
+                confirmMsg += `Они будут привязаны к филиалу: ${branchName}`;
+            } else {
+                confirmMsg += 'Поле branchId будет добавлено как null (песни доступны всем)';
+            }
+            
+            if (!confirm(confirmMsg)) return;
+            
+            document.getElementById('migrate-btn').disabled = true;
+            document.getElementById('check-btn').disabled = true;
+            document.getElementById('progress').style.display = 'block';
+            
+            log(`Начало миграции ${songsToMigrate.length} песен...`);
+            
+            let completed = 0;
+            let errors = 0;
+            
+            // Обрабатываем батчами по 500
+            const batchSize = 500;
+            for (let i = 0; i < songsToMigrate.length; i += batchSize) {
+                const batch = db.batch();
+                const currentBatch = songsToMigrate.slice(i, Math.min(i + batchSize, songsToMigrate.length));
+                
+                currentBatch.forEach(song => {
+                    const songRef = db.collection('songs').doc(song.id);
+                    batch.update(songRef, {
+                        branchId: selectedBranchId || null,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                });
+                
+                try {
+                    await batch.commit();
+                    completed += currentBatch.length;
+                    log(`✅ Обработано ${completed} из ${songsToMigrate.length}`);
+                } catch (error) {
+                    errors += currentBatch.length;
+                    log(`❌ Ошибка батча: ${error.message}`, true);
+                }
+                
+                // Обновляем прогресс
+                const progress = ((completed + errors) / songsToMigrate.length) * 100;
+                document.getElementById('progress-bar').style.width = `${progress}%`;
+            }
+            
+            log(`\nМиграция завершена!`);
+            log(`Успешно: ${completed}, Ошибок: ${errors}`);
+            
+            // Обновляем статистику
+            setTimeout(() => checkSongs(), 1000);
+        }
+        
+        async function removeBranchIds() {
+            const songsWithBranch = allSongs.filter(song => song.branchId);
+            
+            if (songsWithBranch.length === 0) {
+                log('Нет песен с филиалами', true);
+                return;
+            }
+            
+            if (!confirm(`Вы уверены, что хотите удалить привязку к филиалам у ${songsWithBranch.length} песен?\n\nЭто сделает все песни доступными для всех пользователей.`)) {
+                return;
+            }
+            
+            document.getElementById('remove-btn').disabled = true;
+            document.getElementById('progress').style.display = 'block';
+            
+            log(`Удаление привязки у ${songsWithBranch.length} песен...`);
+            
+            let completed = 0;
+            let errors = 0;
+            
+            // Обрабатываем батчами
+            const batchSize = 500;
+            for (let i = 0; i < songsWithBranch.length; i += batchSize) {
+                const batch = db.batch();
+                const currentBatch = songsWithBranch.slice(i, Math.min(i + batchSize, songsWithBranch.length));
+                
+                currentBatch.forEach(song => {
+                    const songRef = db.collection('songs').doc(song.id);
+                    batch.update(songRef, {
+                        branchId: firebase.firestore.FieldValue.delete(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                });
+                
+                try {
+                    await batch.commit();
+                    completed += currentBatch.length;
+                    log(`✅ Обработано ${completed} из ${songsWithBranch.length}`);
+                } catch (error) {
+                    errors += currentBatch.length;
+                    log(`❌ Ошибка батча: ${error.message}`, true);
+                }
+                
+                // Обновляем прогресс
+                const progress = ((completed + errors) / songsWithBranch.length) * 100;
+                document.getElementById('progress-bar').style.width = `${progress}%`;
+            }
+            
+            log(`\nУдаление завершено!`);
+            log(`Успешно: ${completed}, Ошибок: ${errors}`);
+            
+            // Обновляем статистику
+            setTimeout(() => checkSongs(), 1000);
+        }
+        
+        // Проверяем авторизацию
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                alert('Необходимо войти в систему как администратор');
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Проверяем роль
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            if (!userDoc.exists || userDoc.data().role !== 'admin') {
+                alert('Доступ разрешен только администраторам');
+                window.location.href = '/';
+                return;
+            }
+            
+            log('Авторизация успешна. Загрузка филиалов...');
+            await loadBranches();
+            log('Нажмите "Проверить" для начала.');
+        });
+    </script>
+</body>
+</html>

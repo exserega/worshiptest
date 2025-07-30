@@ -127,7 +127,16 @@ async function loadInitialData() {
  */
 async function loadUsers() {
     const db = firebase.firestore();
-    const snapshot = await db.collection('users').get();
+    const { currentUser, isRootAdmin } = window.adminState;
+    
+    let query = db.collection('users');
+    
+    // Если это администратор филиала (не главный админ), показываем только пользователей его филиала
+    if (!isRootAdmin && currentUser.branchId) {
+        query = query.where('branchId', '==', currentUser.branchId);
+    }
+    
+    const snapshot = await query.get();
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
@@ -136,7 +145,21 @@ async function loadUsers() {
  */
 async function loadBranches() {
     const db = firebase.firestore();
-    const snapshot = await db.collection('branches').get();
+    const { currentUser, isRootAdmin } = window.adminState;
+    
+    let query = db.collection('branches');
+    
+    // Если это администратор филиала, показываем только его филиал
+    if (!isRootAdmin && currentUser.branchId) {
+        const snapshot = await query.doc(currentUser.branchId).get();
+        if (snapshot.exists) {
+            return [{ id: snapshot.id, ...snapshot.data() }];
+        }
+        return [];
+    }
+    
+    // Главный админ видит все филиалы
+    const snapshot = await query.get();
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 

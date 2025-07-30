@@ -10,7 +10,7 @@
 // FIREBASE IMPORTS
 // ====================================
 
-import { db } from '../../firebase-config.js';
+import { db, auth } from '../../firebase-config.js';
 import {
     collection, addDoc, query, onSnapshot, updateDoc, deleteDoc, setDoc, doc,
     orderBy, getDocs, where, getDoc, runTransaction, serverTimestamp, deleteField
@@ -36,6 +36,21 @@ const vocalistsCollection = collection(db, "vocalists");
 export async function loadAllSongsFromFirestore() {
     try {
         console.log("Загрузка всех песен из Firestore...");
+        
+        // Получаем текущего пользователя для проверки филиала
+        const currentUser = auth.currentUser;
+        let userBranchId = null;
+        let isAdmin = false;
+        
+        if (currentUser) {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                userBranchId = userData.branchId;
+                isAdmin = userData.role === 'admin' && (userData.isFounder || userData.isRootAdmin);
+            }
+        }
+        
         const querySnapshot = await getDocs(songsCollection);
         let newAllSongs = [];
         let newSongsBySheet = {};
@@ -44,16 +59,24 @@ export async function loadAllSongsFromFirestore() {
             const songData = doc.data();
             const songId = doc.id;
             const song = { id: songId, name: songId, ...songData };
-            newAllSongs.push(song);
+            
+            // Фильтруем песни по филиалу
+            // Показываем песню если:
+            // 1. У песни нет филиала (доступна всем)
+            // 2. Пользователь - главный админ (видит все)
+            // 3. Филиал песни совпадает с филиалом пользователя
+            if (!song.branchId || isAdmin || song.branchId === userBranchId) {
+                newAllSongs.push(song);
 
-            const sheetName = song.sheet;
-            if (sheetName) {
-                if (!newSongsBySheet[sheetName]) {
-                    newSongsBySheet[sheetName] = [];
+                const sheetName = song.sheet;
+                if (sheetName) {
+                    if (!newSongsBySheet[sheetName]) {
+                        newSongsBySheet[sheetName] = [];
+                    }
+                    newSongsBySheet[sheetName].push(song);
+                } else {
+                    console.warn(`Песня "${song.name}" (${songId}) не имеет поля 'sheet' (категории).`);
                 }
-                newSongsBySheet[sheetName].push(song);
-            } else {
-                console.warn(`Песня "${song.name}" (${songId}) не имеет поля 'sheet' (категории).`);
             }
         });
 
@@ -64,7 +87,7 @@ export async function loadAllSongsFromFirestore() {
         
         state.setAllSongs(newAllSongs);
         state.setSongsBySheet(newSongsBySheet);
-        console.log(`Загружено ${state.allSongs.length} песен.`);
+        console.log(`Загружено ${state.allSongs.length} песен${userBranchId ? ' для филиала' : ''}`);
         
         // Обновляем базу данных в Web Worker
         if (typeof window !== 'undefined' && window.searchWorkerManager) {
