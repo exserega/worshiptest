@@ -10,12 +10,15 @@
 // FIREBASE IMPORTS
 // ====================================
 
-import { db, auth } from '../../firebase-config.js';
+import { db } from '../../firebase-config.js';
 import {
     collection, addDoc, query, onSnapshot, updateDoc, deleteDoc, setDoc, doc,
     orderBy, getDocs, where, getDoc, runTransaction, serverTimestamp, deleteField
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import * as state from '../../state.js';
+
+// Получаем auth из глобального firebase (версия 8)
+const auth = window.firebase?.auth?.() || null;
 
 // ====================================
 // COLLECTIONS
@@ -174,7 +177,7 @@ export async function getSongEditStatus(songId) {
 export async function loadSetlists() {
     try {
         // Получаем данные текущего пользователя
-        const currentUser = auth.currentUser;
+        const currentUser = auth?.currentUser || null;
         let userBranchId = null;
         let isRootAdmin = false;
         
@@ -243,7 +246,7 @@ export async function createSetlist(name) {
     try {
         // Получаем branchId текущего пользователя
         let branchId = null;
-        const currentUser = auth.currentUser;
+        const currentUser = auth?.currentUser || null;
         
         if (currentUser) {
             const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
