@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Admin Role</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .admin-button { background: #9c27b0; }
+        pre {
+            background: #111;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Setup Admin Role</h1>
+    
+    <div class="section">
+        <h2>1. Current User</h2>
+        <div id="current-user">Checking...</div>
+    </div>
+    
+    <div class="section">
+        <h2>2. Firestore User Document</h2>
+        <pre id="user-doc">Loading...</pre>
+    </div>
+    
+    <div class="section">
+        <h2>3. Actions</h2>
+        <button onclick="checkUser()">🔍 Check User Data</button>
+        <button class="admin-button" onclick="makeAdmin()">👑 Make Me Admin</button>
+        <button onclick="removeAdmin()">🚫 Remove Admin Role</button>
+        <button onclick="window.location.href='/admin.html'">🚀 Go to Admin Panel</button>
+    </div>
+    
+    <div class="section">
+        <h2>4. Log</h2>
+        <pre id="log"></pre>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzDxg3S9cfseoozmZSksUh1aLbkVBG--Q",
+            authDomain: "song-archive-389a6.firebaseapp.com",
+            projectId: "song-archive-389a6",
+            storageBucket: "song-archive-389a6.appspot.com",
+            messagingSenderId: "660585697058",
+            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        let currentUserId = null;
+        
+        function log(msg, type = 'info') {
+            const logEl = document.getElementById('log');
+            const time = new Date().toISOString().split('T')[1];
+            const color = type === 'error' ? '#f44336' : type === 'success' ? '#4caf50' : '#2196f3';
+            logEl.innerHTML += `<span style="color: ${color}">[${time}] ${msg}</span>\n`;
+            console.log(msg);
+        }
+        
+        // Check auth state
+        auth.onAuthStateChanged((user) => {
+            const userDiv = document.getElementById('current-user');
+            
+            if (user) {
+                currentUserId = user.uid;
+                userDiv.innerHTML = `
+                    <p class="success">✅ Logged in</p>
+                    <p><strong>UID:</strong> ${user.uid}</p>
+                    <p><strong>Email:</strong> ${user.email || 'N/A'}</p>
+                    <p><strong>Provider:</strong> ${user.providerData[0]?.providerId || 'N/A'}</p>
+                `;
+                log(`User authenticated: ${user.uid}`, 'success');
+                checkUser();
+            } else {
+                userDiv.innerHTML = '<p class="error">❌ Not logged in</p>';
+                log('No user authenticated', 'error');
+            }
+        });
+        
+        // Check user document
+        async function checkUser() {
+            if (!currentUserId) {
+                log('No user to check', 'error');
+                return;
+            }
+            
+            try {
+                log('Checking user document...');
+                const userDoc = await db.collection('users').doc(currentUserId).get();
+                
+                const docDiv = document.getElementById('user-doc');
+                
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    docDiv.textContent = JSON.stringify(data, null, 2);
+                    
+                    if (data.role === 'admin') {
+                        log('✅ User has admin role!', 'success');
+                    } else {
+                        log('⚠️ User does not have admin role', 'warning');
+                    }
+                } else {
+                    docDiv.textContent = 'No document found';
+                    log('❌ No user document in Firestore', 'error');
+                }
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Make user admin
+        async function makeAdmin() {
+            if (!currentUserId) {
+                log('No user logged in', 'error');
+                return;
+            }
+            
+            if (!confirm('Make yourself an admin?')) {
+                return;
+            }
+            
+            try {
+                log('Setting admin role...');
+                
+                const adminData = {
+                    role: 'admin',
+                    isRootAdmin: true,
+                    isFounder: true,
+                    status: 'active',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Check if document exists
+                const userDoc = await db.collection('users').doc(currentUserId).get();
+                
+                if (userDoc.exists) {
+                    // Update existing document
+                    await db.collection('users').doc(currentUserId).update(adminData);
+                    log('✅ Updated existing user document with admin role', 'success');
+                } else {
+                    // Create new document
+                    const user = auth.currentUser;
+                    await db.collection('users').doc(currentUserId).set({
+                        ...adminData,
+                        id: currentUserId,
+                        email: user.email,
+                        name: user.displayName || 'Admin',
+                        photoURL: user.photoURL || '',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    log('✅ Created new user document with admin role', 'success');
+                }
+                
+                // Reload data
+                checkUser();
+                
+            } catch (error) {
+                log(`Error setting admin: ${error.message}`, 'error');
+            }
+        }
+        
+        // Remove admin role
+        async function removeAdmin() {
+            if (!currentUserId) {
+                log('No user logged in', 'error');
+                return;
+            }
+            
+            if (!confirm('Remove admin role?')) {
+                return;
+            }
+            
+            try {
+                log('Removing admin role...');
+                
+                await db.collection('users').doc(currentUserId).update({
+                    role: 'user',
+                    isRootAdmin: false,
+                    isFounder: false,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                log('✅ Admin role removed', 'success');
+                checkUser();
+                
+            } catch (error) {
+                log(`Error removing admin: ${error.message}`, 'error');
+            }
+        }
+        
+        // Auto-check on load
+        window.onload = () => {
+            log('Page loaded, waiting for auth...');
+        };
+    </script>
+</body>
+</html>
