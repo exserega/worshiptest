@@ -187,7 +187,7 @@
 }
 
 .users-table tbody tr.current-user {
-    background: rgba(var(--accent-color-rgb), 0.1);
+    background: var(--hover-color);
 }
 
 .users-table td {

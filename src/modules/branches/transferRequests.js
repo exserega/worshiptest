@@ -1,7 +1,9 @@
 // Transfer Requests Module
 // Управление заявками на перевод между филиалами
 
-import { db } from '../../config.js';
+// Firebase уже инициализирован глобально в HTML
+const db = firebase.firestore();
+
 import { getCurrentUser } from '../auth/authCheck.js';
 
 /**

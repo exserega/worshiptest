@@ -17,6 +17,7 @@ import { initUserManagement, updateFilter, changeUserRole, changeUserStatus, ass
 import userListUI from './userListUI.js';
 import { getAllBranches, createBranch } from '../branches/branchManager.js';
 import { getPendingTransferRequests, processTransferRequest } from '../branches/transferRequests.js';
+import { checkAndCreateInitialBranch, assignUsersToDefaultBranch } from '../branches/initialBranchSetup.js';
 
 // Состояние
 const state = {
@@ -122,9 +123,20 @@ function initDOMElements() {
  */
 async function loadInitialData() {
     try {
+        // Проверяем и создаем начальный филиал, если нужно
+        const initialBranch = await checkAndCreateInitialBranch();
+        if (initialBranch) {
+            console.log('🏢 Created initial branch');
+        }
+        
         // Загружаем филиалы
         state.branches = await getAllBranches();
         console.log(`📍 Loaded ${state.branches.length} branches`);
+        
+        // Если есть филиалы, назначаем пользователей без филиала
+        if (state.branches.length > 0) {
+            await assignUsersToDefaultBranch();
+        }
         
         // Инициализируем модуль управления пользователями
         await initUserManagement();

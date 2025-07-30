@@ -1,7 +1,9 @@
 // Branch Manager Module
 // Управление филиалами церкви
 
-import { db } from '../../config.js';
+// Firebase уже инициализирован глобально в HTML
+const db = firebase.firestore();
+
 import { getCurrentUser } from '../auth/authCheck.js';
 
 // Кэш филиалов

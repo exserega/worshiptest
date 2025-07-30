@@ -309,17 +309,25 @@ export async function assignUserToBranch(userId, branchId) {
             updatedBy: auth.currentUser.uid
         });
         
-        // Обновляем счетчики филиалов
+        // Обновляем счетчики филиалов (проверяем существование)
         if (oldBranchId) {
-            batch.update(db.collection('branches').doc(oldBranchId), {
-                memberCount: firebase.firestore.FieldValue.increment(-1)
-            });
+            const oldBranchRef = db.collection('branches').doc(oldBranchId);
+            const oldBranchDoc = await oldBranchRef.get();
+            if (oldBranchDoc.exists) {
+                batch.update(oldBranchRef, {
+                    memberCount: firebase.firestore.FieldValue.increment(-1)
+                });
+            }
         }
         
         if (branchId) {
-            batch.update(db.collection('branches').doc(branchId), {
-                memberCount: firebase.firestore.FieldValue.increment(1)
-            });
+            const newBranchRef = db.collection('branches').doc(branchId);
+            const newBranchDoc = await newBranchRef.get();
+            if (newBranchDoc.exists) {
+                batch.update(newBranchRef, {
+                    memberCount: firebase.firestore.FieldValue.increment(1)
+                });
+            }
         }
         
         await batch.commit();
