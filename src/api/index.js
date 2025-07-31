@@ -165,7 +165,7 @@ export async function getSongEditStatus(songId) {
     
     try {
         const docSnap = await getDoc(songRef);
-        if (docSnap.exists()) {
+        if (docSnap.exists) {
             const data = docSnap.data();
             return {
                 hasWebEdits: data.hasWebEdits || false,
@@ -198,7 +198,7 @@ export async function loadSetlists() {
         
         if (currentUser) {
             const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-            if (userDoc.exists()) {
+            if (userDoc.exists) {
                 const userData = userDoc.data();
                 userBranchId = userData.branchId || null;
                 isRootAdmin = userData.isFounder || userData.isRootAdmin || false;
@@ -262,7 +262,7 @@ export async function createSetlist(name) {
         
         if (currentUser) {
             const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-            if (userDoc.exists()) {
+            if (userDoc.exists) {
                 branchId = userDoc.data().branchId || null;
             }
         }
@@ -347,7 +347,7 @@ export async function addSongToSetlist(setlistId, songId, preferredKey) {
         console.log('Getting setlist document...');
         const setlistDoc = await getDoc(setlistRef);
         
-        if (!setlistDoc.exists()) {
+        if (!setlistDoc.exists) {
             throw new Error('Сетлист не найден');
         }
         
@@ -416,7 +416,7 @@ export async function removeSongFromSetlist(setlistId, songId) {
     
     try {
         const setlistDoc = await getDoc(setlistRef);
-        if (!setlistDoc.exists()) {
+        if (!setlistDoc.exists) {
             throw new Error('Сетлист не найден');
         }
         

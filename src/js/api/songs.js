@@ -116,7 +116,7 @@ export async function getSongEditStatus(songId) {
     
     try {
         const songDoc = await getDoc(songRef);
-        if (songDoc.exists()) {
+        if (songDoc.exists) {
             const songData = songDoc.data();
             return {
                 hasWebEdits: songData.hasWebEdits || false,

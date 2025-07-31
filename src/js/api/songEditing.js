@@ -79,7 +79,7 @@ async function getSongEditStatus(songId) {
     
     try {
         const docSnap = await getDoc(songRef);
-        if (!docSnap.exists()) {
+        if (!docSnap.exists) {
             throw new Error(`Песня "${songId}" не найдена`);
         }
         
