@@ -18,7 +18,7 @@ import * as api from '../api/index.js';
 import * as ui from '../../ui.js';
 import * as metronomeUI from '../../metronome.js';
 import searchWorkerManager from '../../src/js/workers/workerManager.js';
-import * as constants from '../../constants.js';
+import * as constants from '../../js/constants.js';
 import { initAuthGate, getCurrentUser } from '../modules/auth/authCheck.js';
 import { initUserNavigation } from '../modules/auth/userNavigation.js';
 

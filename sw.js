@@ -12,7 +12,7 @@ const URLS_TO_CACHE = [
   './ui.js',
   './core.js',
   './state.js',
-  './constants.js',
+  './js/constants.js',
   './firebase-config.js',
   './firebase-init.js',
   './assets/images/Icon-192.png', // Добавим иконки для PWA

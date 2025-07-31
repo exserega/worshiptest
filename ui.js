@@ -1,6 +1,6 @@
 // Agape Worship App - ui.js
 
-import { SONG_CATEGORIES_ORDER, MIN_FONT_SIZE, chords } from './constants.js';
+import { SONG_CATEGORIES_ORDER, MIN_FONT_SIZE, chords } from './js/constants.js';
 
 // --- UTILITY FUNCTIONS ---
 
