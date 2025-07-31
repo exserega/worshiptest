@@ -17,18 +17,19 @@ const firebaseConfig = {
 // Проверяем, не инициализирован ли уже Firebase
 if (!window.firebase) {
     console.error('Firebase SDK не загружен! Убедитесь, что скрипты Firebase подключены в HTML.');
-} else if (!firebase.apps.length) {
+} else if (!window.firebase.apps.length) {
     // Инициализируем Firebase только если еще не инициализирован
-    firebase.initializeApp(firebaseConfig);
+    window.firebase.initializeApp(firebaseConfig);
     console.log('✅ Firebase инициализирован');
 } else {
     console.log('✅ Firebase уже был инициализирован');
 }
 
-// Экспортируем сервисы для удобства
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+// Создаем локальные переменные из глобального объекта
+const firebase = window.firebase;
+const auth = firebase?.auth?.();
+const db = firebase?.firestore?.();
+const storage = firebase?.storage?.();
 
 // Делаем доступными глобально для обратной совместимости
 window.firebaseAuth = auth;

@@ -127,28 +127,28 @@ export async function runTransaction(db, updateFunction) {
  * Эмуляция serverTimestamp() из v9
  */
 export function serverTimestamp() {
-    return firebase.firestore.FieldValue.serverTimestamp();
+    return window.firebase.firestore.FieldValue.serverTimestamp();
 }
 
 /**
  * Эмуляция deleteField() из v9
  */
 export function deleteField() {
-    return firebase.firestore.FieldValue.delete();
+    return window.firebase.firestore.FieldValue.delete();
 }
 
 /**
  * Эмуляция arrayUnion() из v9
  */
 export function arrayUnion(...elements) {
-    return firebase.firestore.FieldValue.arrayUnion(...elements);
+    return window.firebase.firestore.FieldValue.arrayUnion(...elements);
 }
 
 /**
  * Эмуляция arrayRemove() из v9
  */
 export function arrayRemove(...elements) {
-    return firebase.firestore.FieldValue.arrayRemove(...elements);
+    return window.firebase.firestore.FieldValue.arrayRemove(...elements);
 }
 
 // Экспорт базы данных
