@@ -30,7 +30,7 @@ import {
     isMobileView,
     distributeSongBlocksToColumns
 } from './js/core.js';
-import * as api from './api.js';
+import * as api from './js/api.js';
 
 
 // --- DOM ELEMENT REFERENCES ---
