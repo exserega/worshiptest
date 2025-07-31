@@ -21,7 +21,7 @@ import {
     correctBlockType as correctBlockTypeNew,
     demonstrateParser as demonstrateParserNew,
     resetParserLearning as resetParserLearningNew
-} from './src/js/core/index.js';
+} from '../src/js/core/index.js';
 
 // --- REGEX & DERIVED CONSTANTS ---
 const chordRegex = /([A-H][#b]?(?:maj7|maj9|m7|m9|m11|7sus4|sus4|sus2|add9|dim7|dim|aug7|aug|7|m|6|9|11|13|sus)?(?:\s*\/\s*[A-H][#b]?)?)/g;
