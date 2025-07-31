@@ -902,3 +902,81 @@ input[type="checkbox"] {
         opacity: 1;
     }
 }
+
+/* ====================================
+   REQUESTS CARDS
+   ==================================== */
+
+.requests-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.request-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: box-shadow 0.2s;
+}
+
+.request-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.request-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.request-info {
+    margin-bottom: 1rem;
+}
+
+.request-info p {
+    margin: 0.5rem 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.request-info p strong {
+    color: var(--text-color);
+}
+
+.request-info i {
+    width: 20px;
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+}
+
+.request-info small {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.request-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Badge styles for request types */
+.badge.info {
+    background-color: #3498db;
+    color: white;
+}
+
+.badge.warning {
+    background-color: #f39c12;
+    color: white;
+}

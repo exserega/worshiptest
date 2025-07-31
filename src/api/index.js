@@ -241,15 +241,25 @@ export async function createSetlist(name) {
     }
     
     try {
-        // Получаем branchId текущего пользователя
-        let branchId = null;
+        // Получаем данные текущего пользователя
         const currentUser = auth?.currentUser || null;
+        let branchId = null;
+        let userStatus = null;
+        let userRole = null;
         
         if (currentUser) {
             const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
             if (userDoc.exists()) {
-                branchId = userDoc.data().branchId || null;
+                const userData = userDoc.data();
+                branchId = userData.branchId || null;
+                userStatus = userData.status || null;
+                userRole = userData.role || 'user';
             }
+        }
+        
+        // Проверка прав доступа
+        if (userRole === 'guest' || userStatus === 'pending') {
+            throw new Error('У вас нет прав для создания сет-листов. Дождитесь подтверждения вашей заявки администратором.');
         }
         
         const docRef = await addDoc(setlistsCollection, {
@@ -278,6 +288,25 @@ export async function deleteSetlist(setlistId) {
     }
     
     try {
+        // Проверяем права текущего пользователя
+        const currentUser = auth?.currentUser || null;
+        let userStatus = null;
+        let userRole = null;
+        
+        if (currentUser) {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                userStatus = userData.status || null;
+                userRole = userData.role || 'user';
+            }
+        }
+        
+        // Проверка прав доступа
+        if (userRole === 'guest' || userStatus === 'pending') {
+            throw new Error('У вас нет прав для удаления сет-листов. Дождитесь подтверждения вашей заявки администратором.');
+        }
+        
         await deleteDoc(doc(setlistsCollection, setlistId));
         console.log(`✅ Сетлист ${setlistId} удален`);
     } catch (error) {

@@ -49,6 +49,10 @@
                 <i class="fas fa-exchange-alt"></i>
                 <span>Переводы</span>
             </button>
+            <button class="tab-button" data-tab="requests">
+                <i class="fas fa-user-plus"></i>
+                <span>Заявки</span>
+            </button>
         </nav>
 
         <!-- Содержимое табов -->
@@ -109,6 +113,26 @@
                     <div class="loading">Загрузка заявок...</div>
                 </div>
             </section>
+            
+            <!-- Таб заявок на вступление -->
+            <section id="requests-tab" class="tab-content">
+                <div class="controls-bar">
+                    <div class="info-text">
+                        <i class="fas fa-info-circle"></i>
+                        Заявки на вступление в филиалы
+                    </div>
+                    <div class="filters">
+                        <select id="request-type-filter">
+                            <option value="">Все типы заявок</option>
+                            <option value="branch_join">Вступление в филиал</option>
+                            <option value="branch_create">Создание филиала</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="requests-list" class="requests-list">
+                    <div class="loading">Загрузка заявок...</div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -157,6 +181,7 @@
         let branches = [];
         let users = [];
         let transfers = [];
+        let requests = []; // Добавляем массив для заявок
         let isRootAdmin = false;
 
         // ====================================
@@ -277,7 +302,8 @@
             await Promise.all([
                 loadBranches(),
                 loadUsers(),
-                loadTransfers()
+                loadTransfers(),
+                loadRequests() // Добавляем загрузку заявок
             ]);
             
             // Настраиваем обработчики событий
@@ -332,6 +358,22 @@
                 displayTransfers();
             } catch (error) {
                 console.error('Error loading transfers:', error);
+            }
+        }
+        
+        // Новая функция для загрузки заявок на вступление
+        async function loadRequests() {
+            try {
+                const snapshot = await db.collection('requests')
+                    .where('status', '==', 'pending')
+                    .get();
+                requests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log('✅ Loaded requests:', requests.length);
+                
+                // Отображаем заявки
+                displayRequests();
+            } catch (error) {
+                console.error('Error loading requests:', error);
             }
         }
         
@@ -464,6 +506,85 @@
             `).join('');
         }
         
+        // Новая функция для отображения заявок на вступление
+        function displayRequests() {
+            const container = document.getElementById('requests-list');
+            
+            if (requests.length === 0) {
+                container.innerHTML = '<div class="empty-state">Нет активных заявок</div>';
+                return;
+            }
+
+            // Применяем фильтры
+            let filteredRequests = [...requests];
+            const requestTypeFilter = document.getElementById('request-type-filter').value;
+            if (requestTypeFilter) {
+                filteredRequests = filteredRequests.filter(r => r.type === requestTypeFilter);
+            }
+
+            container.innerHTML = filteredRequests.map(request => {
+                // Получаем информацию о пользователе
+                const user = users.find(u => u.id === request.userId);
+                const userName = user ? user.name || user.email : 'Неизвестный пользователь';
+                
+                if (request.type === 'branch_join') {
+                    const branch = branches.find(b => b.id === request.branchId);
+                    const branchName = branch ? branch.name : 'Неизвестный филиал';
+                    
+                    return `
+                        <div class="request-card">
+                            <div class="request-header">
+                                <h4>${userName}</h4>
+                                <span class="badge info">Вступление в филиал</span>
+                            </div>
+                            <div class="request-info">
+                                <p><i class="fas fa-building"></i> Филиал: <strong>${branchName}</strong></p>
+                                ${request.userData ? `
+                                    <p><i class="fas fa-envelope"></i> Email: ${request.userData.email || 'Не указан'}</p>
+                                    <p><i class="fas fa-phone"></i> Телефон: ${request.userData.phone || 'Не указан'}</p>
+                                ` : ''}
+                                <small><i class="fas fa-clock"></i> Подана: ${formatDate(request.createdAt)}</small>
+                            </div>
+                            <div class="request-actions">
+                                <button class="button small success" onclick="approveJoinRequest('${request.id}', '${request.userId}', '${request.branchId}')">
+                                    <i class="fas fa-check"></i> Одобрить
+                                </button>
+                                <button class="button small danger" onclick="rejectRequest('${request.id}')">
+                                    <i class="fas fa-times"></i> Отклонить
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else if (request.type === 'branch_create') {
+                    return `
+                        <div class="request-card">
+                            <div class="request-header">
+                                <h4>${userName}</h4>
+                                <span class="badge warning">Создание филиала</span>
+                            </div>
+                            <div class="request-info">
+                                <p><i class="fas fa-building"></i> Название: <strong>${request.branchData.name}</strong></p>
+                                <p><i class="fas fa-map-marker-alt"></i> Город: ${request.branchData.city}</p>
+                                ${request.branchData.address ? `<p><i class="fas fa-location-arrow"></i> Адрес: ${request.branchData.address}</p>` : ''}
+                                ${request.branchData.contactPhone ? `<p><i class="fas fa-phone"></i> Телефон: ${request.branchData.contactPhone}</p>` : ''}
+                                ${request.branchData.contactSocial ? `<p><i class="fas fa-comment"></i> Соцсеть: ${request.branchData.contactSocial}</p>` : ''}
+                                <small><i class="fas fa-clock"></i> Подана: ${formatDate(request.createdAt)}</small>
+                            </div>
+                            <div class="request-actions">
+                                <button class="button small success" onclick="approveBranchCreation('${request.id}', '${request.userId}')">
+                                    <i class="fas fa-check"></i> Создать филиал
+                                </button>
+                                <button class="button small danger" onclick="rejectRequest('${request.id}')">
+                                    <i class="fas fa-times"></i> Отклонить
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                return '';
+            }).join('');
+        }
+        
         // ====================================
         // EVENT HANDLERS
         // ====================================
@@ -482,6 +603,12 @@
             document.getElementById('status-filter').addEventListener('change', displayUsers);
             document.getElementById('branch-filter').addEventListener('change', displayUsers);
             document.getElementById('user-search').addEventListener('input', displayUsers);
+            
+            // Фильтр для заявок
+            const requestTypeFilter = document.getElementById('request-type-filter');
+            if (requestTypeFilter) {
+                requestTypeFilter.addEventListener('change', displayRequests);
+            }
         }
         
         function showTab(tabName) {
@@ -609,6 +736,126 @@
         function exportUsers() {
             alert('Функция экспорта пользователей в разработке');
         }
+
+        // ====================================
+        // REQUEST HANDLERS
+        // ====================================
+        
+        // Функция для одобрения заявки на вступление
+        async function approveJoinRequest(requestId, userId, branchId) {
+            if (confirm('Вы уверены, что хотите одобрить эту заявку на вступление?')) {
+                try {
+                    // Обновляем заявку
+                    await db.collection('requests').doc(requestId).update({
+                        status: 'approved',
+                        approvedBy: currentUser.id,
+                        approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Обновляем статус пользователя
+                    await db.collection('users').doc(userId).update({
+                        status: 'active',
+                        branchId: branchId,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    console.log('Join request approved:', requestId);
+                    await loadRequests(); // Обновляем список заявок
+                    await loadUsers(); // Обновляем список пользователей
+                    showSuccess('Заявка одобрена! Пользователь активирован.');
+                } catch (error) {
+                    console.error('Error approving join request:', error);
+                    showError('Ошибка одобрения заявки: ' + error.message);
+                }
+            }
+        }
+        
+        // Функция для создания филиала и одобрения заявки
+        async function approveBranchCreation(requestId, userId) {
+            if (confirm('Вы уверены, что хотите создать этот филиал?')) {
+                try {
+                    // Получаем данные заявки
+                    const requestDoc = await db.collection('requests').doc(requestId).get();
+                    const requestData = requestDoc.data();
+                    const branchData = requestData.branchData;
+                    
+                    // Создаем новый филиал
+                    const branchRef = await db.collection('branches').add({
+                        name: branchData.name,
+                        city: branchData.city,
+                        address: branchData.address || '',
+                        contactPhone: branchData.contactPhone || '',
+                        contactSocial: branchData.contactSocial || '',
+                        createdBy: userId,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Обновляем заявку
+                    await db.collection('requests').doc(requestId).update({
+                        status: 'approved',
+                        approvedBy: currentUser.id,
+                        approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        createdBranchId: branchRef.id
+                    });
+                    
+                    // Обновляем пользователя - делаем его админом нового филиала
+                    await db.collection('users').doc(userId).update({
+                        status: 'active',
+                        role: 'admin',
+                        branchId: branchRef.id,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    console.log('Branch created:', branchRef.id);
+                    await Promise.all([
+                        loadRequests(),
+                        loadBranches(),
+                        loadUsers()
+                    ]);
+                    showSuccess('Филиал создан! Пользователь назначен администратором филиала.');
+                } catch (error) {
+                    console.error('Error creating branch:', error);
+                    showError('Ошибка создания филиала: ' + error.message);
+                }
+            }
+        }
+
+        // Функция для отклонения заявки
+        async function rejectRequest(requestId) {
+            if (confirm('Вы уверены, что хотите отклонить эту заявку?')) {
+                try {
+                    await db.collection('requests').doc(requestId).update({
+                        status: 'rejected',
+                        rejectedBy: currentUser.id,
+                        rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    console.log('Request rejected:', requestId);
+                    loadRequests(); // Обновляем список заявок
+                    showSuccess('Заявка отклонена!');
+                } catch (error) {
+                    console.error('Error rejecting request:', error);
+                    showError('Ошибка отклонения заявки: ' + error.message);
+                }
+            }
+        }
+
+        // ====================================
+        // UTILITIES
+        // ====================================
+        
+        function showSuccess(message) {
+            alert(message); // TODO: Заменить на красивое уведомление
+        }
+        
+        function showError(message) {
+            alert('Ошибка: ' + message); // TODO: Заменить на красивое уведомление
+        }
+        
+        // ====================================
+        // INITIALIZE
+        // ====================================
+        
+        initAdminPanel();
     </script>
 </body>
 </html>

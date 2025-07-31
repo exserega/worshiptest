@@ -124,18 +124,37 @@ async function handleBranchSelection(userId, userData, branchId) {
                     <h3>Заявка отправлена!</h3>
                     <p>Ваша заявка на вступление в филиал отправлена администратору.</p>
                     <p class="info-text">Вы можете пользоваться системой в ограниченном режиме до подтверждения заявки.</p>
-                    <button class="btn-primary" onclick="window.location.reload()">
+                    <button class="btn-primary" onclick="window.location.href = '/';">
                         Начать работу
                     </button>
                 </div>
             `;
+            
+            // Автоматически закрываем модальное окно и переходим на главную через 3 секунды
+            setTimeout(() => {
+                modal.remove();
+                window.location.href = '/';
+            }, 3000);
         } else {
             throw new Error(result.error);
         }
         
     } catch (error) {
         console.error('Error handling branch selection:', error);
-        alert('Ошибка при создании заявки: ' + error.message);
+        
+        // Показываем ошибку в модальном окне
+        const modal = document.getElementById('new-user-branch-modal');
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.innerHTML = `
+            <div class="error-state">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3>Произошла ошибка</h3>
+                <p>${error.message}</p>
+                <button class="btn-primary" onclick="window.location.reload()">
+                    Попробовать снова
+                </button>
+            </div>
+        `;
     }
 }
 
