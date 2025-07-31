@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v20'; // v20, исправлен импорт в api.js
+const CACHE_NAME = 'agape-worship-cache-v21'; // v21, metronome.js перемещен в /js/
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
