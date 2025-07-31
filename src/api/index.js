@@ -30,7 +30,7 @@ import {
     deleteField
 } from '../utils/firebase-v8-adapter.js';
 
-import * as state from '../../state.js';
+import * as state from '../../js/state.js';
 
 // Получаем auth из глобального firebase (версия 8)
 const auth = window.firebase?.auth?.() || null;

@@ -11,7 +11,7 @@ const URLS_TO_CACHE = [
   './api.js',
   './ui.js',
   './core.js',
-  './state.js',
+  './js/state.js',
   './js/constants.js',
   './firebase-config.js',
   './firebase-init.js',

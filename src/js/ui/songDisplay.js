@@ -14,7 +14,7 @@ import {
     chordsOnlyButton,
     searchResults
 } from './domReferences.js';
-import * as state from '../../state.js';
+import * as state from '../../js/state.js';
 import { 
     getRenderedSongText, 
     extractYouTubeVideoId, 

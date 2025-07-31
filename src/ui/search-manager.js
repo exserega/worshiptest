@@ -9,7 +9,7 @@ import {
     getNormalizedTitle,
     getNormalizedLyrics
 } from '../core/index.js';
-import * as state from '../../state.js';
+import * as state from '../../js/state.js';
 
 /**
  * Поиск в выпадающем списке overlay

@@ -15,7 +15,7 @@
 import { eventBus, stateManager } from '../core/index.js';
 import { showNotification, showConfirmDialog } from '../core/index.js';
 import * as api from '../api/index.js';
-import * as state from '../../state.js';
+import * as state from '../../js/state.js';
 import * as ui from '../../ui.js';
 
 // ====================================

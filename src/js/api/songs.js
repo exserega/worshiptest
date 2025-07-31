@@ -11,7 +11,7 @@ import {
     getDoc
 } from '../../utils/firebase-v8-adapter.js';
 
-import * as state from '../../../state.js';
+import * as state from '../../../js/state.js';
 
 // ====================================
 // SONGS COLLECTION

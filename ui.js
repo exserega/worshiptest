@@ -16,7 +16,7 @@ function getSongKey(song) {
            song.key || 
            'C'; // Fallback по умолчанию
 }
-import * as state from './state.js';
+import * as state from './js/state.js';
 import { 
     getTransposition, 
     transposeLyrics, 

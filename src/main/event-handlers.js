@@ -21,7 +21,7 @@ import {
 } from '../core/index.js';
 import { showMobileSongPreview } from '../core/index.js';
 import * as ui from '../../ui.js';
-import * as state from '../../state.js';
+import * as state from '../../js/state.js';
 
 // ====================================
 // MAIN SETUP FUNCTION

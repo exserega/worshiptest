@@ -17,7 +17,7 @@
 import { eventBus, stateManager } from '../core/index.js';
 
 // Импорты состояния и API
-import * as state from '../../state.js';
+import * as state from '../../js/state.js';
 import * as songsApi from '../js/api/songs.js';
 import * as ui from '../../ui.js';
 

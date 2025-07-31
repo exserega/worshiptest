@@ -16,7 +16,7 @@ import {
     bpmDisplay,
     songSelect
 } from './domReferences.js';
-import * as state from '../../state.js';
+import * as state from '../../js/state.js';
 import { isMobileView } from '../../core.js';
 
 // --- UI GENERAL ---
