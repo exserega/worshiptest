@@ -1,9 +1,16 @@
-// Agape Worship App - API: Song Editing Module
+// Agape Worship App - API: Song Editing
 
-import { db } from '../../../firebase-config.js';
 import {
-    updateDoc, doc, deleteField, getDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    db,
+    doc,
+    updateDoc,
+    deleteField,
+    getDoc,
+    serverTimestamp
+} from '../../utils/firebase-v8-adapter.js';
+
+// Auth из глобального firebase v8
+const auth = window.firebase?.auth?.() || null;
 
 /**
  * Сохраняет отредактированный контент песни в Firebase

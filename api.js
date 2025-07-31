@@ -1,150 +1,27 @@
-// Agape Worship App - api.js
+// ====================================
+// API.JS - Legacy compatibility layer
+// Реэкспорт всех API функций для обратной совместимости
+// ====================================
 
 // Import from new centralized API structure
 import * as api from './src/api/index.js';
 
-// Legacy imports for backward compatibility
-import { db } from './firebase-config.js';
-import {
-    collection, addDoc, query, onSnapshot, updateDoc, deleteDoc, setDoc, doc,
-    orderBy, getDocs, where, getDoc, runTransaction, serverTimestamp, deleteField
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import * as state from './state.js';
+// Re-export all functions for backward compatibility
+export const loadAllSongsFromFirestore = api.loadAllSongsFromFirestore;
+export const loadVocalists = api.loadVocalists;
+export const loadRepertoire = api.loadRepertoire;
+export const toggleFavorite = api.toggleFavorite;
+export const updateFavoritesCounter = api.updateFavoritesCounter;
+export const loadSetlists = api.loadSetlists;
+export const createSetlist = api.createSetlist;
+export const deleteSetlist = api.deleteSetlist;
+export const renameSetlist = api.renameSetlist;
+export const updateSongInRepertoire = api.updateSongInRepertoire;
+export const updateNotesForSong = api.updateNotesForSong;
+export const saveSongEdit = api.saveSongEdit;
+export const addSongToSetlist = api.addSongToSetlist;
+export const removeSongFromSetlist = api.removeSongFromSetlist;
+export const toggleRepertoireEntry = api.toggleRepertoireEntry;
 
-const songsCollection = collection(db, "songs");
-const setlistsCollection = collection(db, "worship_setlists");
-const vocalistsCollection = collection(db, "vocalists");
-
-// --- SONGS ---
-
-/** Загрузка данных со ВСЕХ песен из Firestore */
-const loadAllSongsFromFirestore = api.loadAllSongsFromFirestore;
-
-
-// --- VOCALISTS & REPERTOIRE ---
-
-/** Загрузка списка вокалистов */
-const loadVocalists = api.loadVocalists;
-
-/** Загрузка репертуара вокалиста с использованием callback для обновления UI */
-const loadRepertoire = api.loadRepertoire;
-
-/**
- * Добавляет или обновляет песню в репертуаре вокалиста.
- * Проверяет наличие по имени песни, чтобы избежать дубликатов.
- * @param {string} vocalistId
- * @param {object} song - Объект песни.
- * @param {string} preferredKey - Выбранная тональность.
- * @returns {Promise<{status: string, key: string}>}
- */
-const addToRepertoire = api.addToRepertoire;
-
-/** Удаление песни из репертуара вокалиста */
-const removeFromRepertoire = api.removeFromRepertoire;
-
-// --- SETLISTS ---
-
-/**
- * Загружает все сетлисты из Firestore.
- * @returns {Promise<Array>} Массив объектов сетлистов.
- */
-const loadSetlists = api.loadSetlists;
-
-/**
- * Создает новый сетлист в Firestore.
- * @param {string} name - Название нового сетлиста.
- * @returns {Promise<DocumentReference>} Ссылка на созданный документ.
- */
-const createSetlist = api.createSetlist;
-
-/**
- * Удаляет сетлист из Firestore.
- * @param {string} setlistId - ID удаляемого сетлиста.
- */
-const deleteSetlist = api.deleteSetlist;
-
-/**
- * Обновляет название сетлиста.
- * @param {string} setlistId - ID сетлиста.
- * @param {string} newName - Новое название.
- */
-const updateSetlistName = api.updateSetlistName;
-
-/**
- * Добавляет песню в массив `songs` документа сетлиста или предлагает обновить ключ.
- * @param {string} setlistId
- * @param {string} songId
- * @param {string} preferredKey
- * @returns {Promise<{status: string, existingKey?: string, message?: string}>}
- */
-const addSongToSetlist = api.addSongToSetlist;
-
-/**
- * Обновляет тональность существующей песни в сетлисте.
- * @param {string} setlistId
- * @param {string} songId
- * @param {string} newKey
- */
-const updateSongKeyInSetlist = api.updateSongKeyInSetlist;
-
-/**
- * Удаляет песню из массива `songs` в документе сетлиста.
- * @param {string} setlistId
- * @param {string} songIdToRemove
- */
-const removeSongFromSetlist = api.removeSongFromSetlist;
-
-
-// --- FAVORITES (MY LIST) ---
-
-/** Добавляет или обновляет песню в "Моем списке" */
-const addToFavorites = api.addToFavorites;
-
-/** Удаление песни из избранного */
-const removeFromFavorites = api.removeFromFavorites;
-
-
-// --- SONG EDITING ---
-
-/**
- * Сохраняет отредактированный контент песни в Firebase
- * @param {string} songId - ID песни
- * @param {string} editedContent - Отредактированный текст с аккордами
- * @returns {Promise<void>}
- */
-const saveSongEdit = api.saveSongEdit;
-
-/**
- * Откатывает песню к оригинальному тексту из Google Таблицы
- * @param {string} songId - ID песни
- * @returns {Promise<void>}
- */
-const revertToOriginal = api.revertToOriginal;
-
-/**
- * Получает статус редактирования песни
- * @param {string} songId - ID песни
- * @returns {Promise<{hasWebEdits: boolean, lastEditedInApp: any, editedBy: string}>}
- */
-const getSongEditStatus = api.getSongEditStatus;
-
-
-export {
-    loadAllSongsFromFirestore,
-    loadVocalists,
-    loadRepertoire,
-    addToRepertoire,
-    removeFromRepertoire,
-    loadSetlists,
-    createSetlist,
-    deleteSetlist,
-    updateSetlistName,
-    addSongToSetlist,
-    updateSongKeyInSetlist,
-    removeSongFromSetlist,
-    addToFavorites,
-    removeFromFavorites,
-    saveSongEdit,
-    revertToOriginal,
-    getSongEditStatus
-}; 
+// Export the entire api object for those who import it as a namespace
+export default api; 

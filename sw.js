@@ -14,13 +14,15 @@ const URLS_TO_CACHE = [
   './state.js',
   './constants.js',
   './firebase-config.js',
+  './firebase-init.js',
   './images/Icon-192.png', // Добавим иконки для PWA
   './images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js'
+  'https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js',
+  'https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js',
+  'https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js',
+  'https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js'
   // Аудио файл метронома убран из кэша - токен может быть недействительным
 ];
 

@@ -1,9 +1,23 @@
-// Agape Worship App - API: Setlists Module
+// Agape Worship App - API: Setlists
 
-import { db } from '../../../firebase-config.js';
 import {
-    collection, addDoc, query, orderBy, getDocs, deleteDoc, doc, runTransaction, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    db,
+    collection,
+    query,
+    where,
+    orderBy,
+    getDocs,
+    addDoc,
+    deleteDoc,
+    doc,
+    updateDoc,
+    runTransaction,
+    serverTimestamp,
+    onSnapshot
+} from '../../utils/firebase-v8-adapter.js';
+
+// Auth из глобального firebase v8
+const auth = window.firebase?.auth?.() || null;
 
 /**
  * Загружает все сетлисты из Firestore.
@@ -57,13 +71,7 @@ async function updateSetlistName(setlistId, newName) {
         throw new Error("Setlist ID and name cannot be empty.");
     }
     const setlistRef = doc(db, 'worship_setlists', setlistId);
-    return await runTransaction(db, async (transaction) => {
-        const setlistDoc = await transaction.get(setlistRef);
-        if (!setlistDoc.exists()) {
-            throw new Error("Setlist does not exist!");
-        }
-        transaction.update(setlistRef, { name: newName.trim() });
-    });
+    return await updateDoc(setlistRef, { name: newName.trim() });
 }
 
 /**
@@ -86,7 +94,7 @@ async function addSongToSetlist(setlistId, songId, preferredKey) {
         await runTransaction(db, async (transaction) => {
             console.log('Getting setlist document...');
             const setlistDoc = await transaction.get(setlistRef);
-            if (!setlistDoc.exists()) {
+            if (!setlistDoc.exists) {
                 console.error('Setlist does not exist!');
                 throw new Error("Setlist does not exist!");
             }
@@ -134,15 +142,8 @@ async function addSongToSetlist(setlistId, songId, preferredKey) {
  */
 async function updateSongKeyInSetlist(setlistId, songId, newKey) {
     const setlistRef = doc(db, "worship_setlists", setlistId);
-     return await runTransaction(db, async (transaction) => {
-        const setlistDoc = await transaction.get(setlistRef);
-        if (!setlistDoc.exists()) throw new Error("Setlist does not exist!");
-        const songs = setlistDoc.data().songs || [];
-        const songIndex = songs.findIndex(s => s.songId === songId);
-        if (songIndex > -1) {
-            songs[songIndex].preferredKey = newKey;
-            transaction.update(setlistRef, { songs });
-        }
+     return await updateDoc(setlistRef, {
+        songs: (await getDocs(query(collection(db, "worship_setlists"), where("id", "==", setlistId)))).docs[0].data().songs.map(s => s.songId === songId ? { ...s, preferredKey: newKey } : s)
     });
 }
 
@@ -153,17 +154,8 @@ async function updateSongKeyInSetlist(setlistId, songId, newKey) {
  */
 async function removeSongFromSetlist(setlistId, songIdToRemove) {
     const setlistRef = doc(db, "worship_setlists", setlistId);
-    return await runTransaction(db, async (transaction) => {
-        const setlistDoc = await transaction.get(setlistRef);
-        if (!setlistDoc.exists()) throw new Error("Setlist does not exist!");
-
-        const songs = setlistDoc.data().songs || [];
-        const updatedSongs = songs.filter(song => song.songId !== songIdToRemove);
-
-        // Пересчитываем `order` для оставшихся песен
-        const reorderedSongs = updatedSongs.map((song, index) => ({ ...song, order: index }));
-
-        transaction.update(setlistRef, { songs: reorderedSongs });
+    return await updateDoc(setlistRef, {
+        songs: (await getDocs(query(collection(db, "worship_setlists"), where("id", "==", setlistId)))).docs[0].data().songs.filter(song => song.songId !== songIdToRemove)
     });
 }
 

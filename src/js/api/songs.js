@@ -1,10 +1,21 @@
-// Agape Worship App - API: Songs Module
+// Agape Worship App - API: Songs
 
-import { db } from '../../../firebase-config.js';
-import {
-    collection, getDocs, updateDoc, doc, setDoc, deleteField, getDoc
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { 
+    db,
+    collection,
+    getDocs,
+    updateDoc,
+    doc,
+    setDoc,
+    deleteField,
+    getDoc
+} from '../../utils/firebase-v8-adapter.js';
+
 import * as state from '../../../state.js';
+
+// ====================================
+// SONGS COLLECTION
+// ====================================
 
 const songsCollection = collection(db, "songs");
 

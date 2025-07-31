@@ -1,5 +1,8 @@
 // Modern admin setup using Firebase Custom Claims
-import { auth, db } from '../../config/firebase-client.js';
+
+// Firebase из глобального объекта (v8)
+const auth = window.firebase?.auth?.() || null;
+const db = window.firebase?.firestore?.() || null;
 
 /**
  * Modern Admin Setup Flow

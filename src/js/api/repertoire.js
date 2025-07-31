@@ -1,9 +1,14 @@
-// Agape Worship App - API: Repertoire Module
+// Agape Worship App - API: Repertoire
 
-import { db } from '../../../firebase-config.js';
 import {
-    collection, getDocs, onSnapshot, query, updateDoc, deleteDoc, setDoc, doc, serverTimestamp, where
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    db,
+    collection,
+    getDocs,
+    doc,
+    runTransaction,
+    serverTimestamp
+} from '../../utils/firebase-v8-adapter.js';
+
 import * as state from '../../../state.js';
 
 const vocalistsCollection = collection(db, "vocalists");

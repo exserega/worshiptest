@@ -10,11 +10,26 @@
 // FIREBASE IMPORTS
 // ====================================
 
-import { db } from '../../firebase-config.js';
-import {
-    collection, addDoc, query, onSnapshot, updateDoc, deleteDoc, setDoc, doc,
-    orderBy, getDocs, where, getDoc, runTransaction, serverTimestamp, deleteField
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+// Используем адаптер для совместимости v8/v9
+import { 
+    db,
+    collection, 
+    addDoc, 
+    query, 
+    onSnapshot, 
+    updateDoc, 
+    deleteDoc, 
+    setDoc, 
+    doc,
+    orderBy, 
+    getDocs, 
+    where, 
+    getDoc, 
+    runTransaction, 
+    serverTimestamp, 
+    deleteField
+} from '../utils/firebase-v8-adapter.js';
+
 import * as state from '../../state.js';
 
 // Получаем auth из глобального firebase (версия 8)
