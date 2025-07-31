@@ -15,8 +15,8 @@ const URLS_TO_CACHE = [
   './constants.js',
   './firebase-config.js',
   './firebase-init.js',
-  './images/Icon-192.png', // Добавим иконки для PWA
-  './images/Icon-512.png',
+  './assets/images/Icon-192.png', // Добавим иконки для PWA
+  './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
   'https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js',
