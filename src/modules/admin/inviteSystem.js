@@ -47,7 +47,7 @@ export async function createAdminInvite(options = {}) {
     
     return {
         code: inviteCode,
-        link: `${window.location.origin}/public/public/login.html?invite=${inviteCode}`,
+        link: `${window.location.origin}/public/login.html?invite=${inviteCode}`,
         expiresAt: inviteData.expiresAt
     };
 }

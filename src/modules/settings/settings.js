@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     auth.onAuthStateChanged(async (user) => {
         if (!user) {
             console.log('❌ Not authenticated, redirecting...');
-            window.location.href = '/public/public/public/login.html';
+            window.location.href = '/public/login.html';
             return;
         }
         
@@ -180,7 +180,7 @@ window.handleLogout = async function() {
     if (confirm('Вы уверены, что хотите выйти?')) {
         try {
             await auth.signOut();
-            window.location.href = '/public/public/public/login.html';
+            window.location.href = '/public/login.html';
         } catch (error) {
             console.error('Logout error:', error);
         }

@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v11'; // v11, исправление импорта в core.js
+const CACHE_NAME = 'agape-worship-cache-v12'; // v12, исправление дублирования путей
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
