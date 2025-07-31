@@ -1,6 +1,6 @@
 // Agape Worship App - core.js
 
-import { chords, structureMarkers } from './js/constants.js';
+import { chords, structureMarkers } from './constants.js';
 
 // Импорт функций из новых модулей
 import { 

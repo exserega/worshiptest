@@ -29,7 +29,7 @@ import {
     extractYouTubeVideoId, 
     isMobileView,
     distributeSongBlocksToColumns
-} from './core.js';
+} from './js/core.js';
 import * as api from './api.js';
 
 

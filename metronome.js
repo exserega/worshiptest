@@ -2,7 +2,7 @@
 // New Metronome Module - v4.0 - Correct Implementation
 // =====================================================================
 
-import * as core from './core.js';
+import * as core from './js/core.js';
 
 class MetronomeController {
     constructor() {

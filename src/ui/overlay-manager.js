@@ -11,7 +11,7 @@ import {
     highlightChords 
 } from '../core/index.js';
 import * as ui from '../../ui.js';
-import * as core from '../../core.js';
+import * as core from '../../js/core.js';
 
 // Глобальные переменные для состояния оверлеев
 let currentMobileSong = null;

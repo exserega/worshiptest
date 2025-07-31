@@ -17,7 +17,7 @@ import {
     songSelect
 } from './domReferences.js';
 import * as state from '../../js/state.js';
-import { isMobileView } from '../../core.js';
+import { isMobileView } from '../../js/core.js';
 
 // --- UI GENERAL ---
 

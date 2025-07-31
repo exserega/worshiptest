@@ -20,7 +20,7 @@ import {
     extractYouTubeVideoId, 
     distributeSongBlocksToColumns,
     isMobileView 
-} from '../../core.js';
+} from '../../js/core.js';
 import { 
     updateBPM, 
     updateToggleChordsButton, 
