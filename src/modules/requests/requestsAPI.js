@@ -4,8 +4,20 @@
 // ====================================
 
 // Firebase из глобального объекта (v8)
-const db = window.firebase?.firestore?.() || null;
-const serverTimestamp = () => window.firebase?.firestore?.FieldValue?.serverTimestamp?.() || new Date();
+const getDb = () => {
+    if (window.firebase && window.firebase.firestore) {
+        return window.firebase.firestore();
+    }
+    console.error('Firebase не инициализирован!');
+    return null;
+};
+
+const getServerTimestamp = () => {
+    if (window.firebase && window.firebase.firestore) {
+        return window.firebase.firestore.FieldValue.serverTimestamp();
+    }
+    return new Date();
+};
 
 // Типы заявок
 export const REQUEST_TYPES = {
@@ -37,11 +49,11 @@ export async function createTransferRequest(userId, fromBranchId, toBranchId, re
             toBranchId,
             reason,
             status: REQUEST_STATUS.PENDING,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
+            createdAt: getServerTimestamp(),
+            updatedAt: getServerTimestamp()
         };
 
-        const docRef = await db.collection('requests').add(requestData);
+        const docRef = await getDb().collection('requests').add(requestData);
         console.log('✅ Transfer request created:', docRef.id);
         return { success: true, requestId: docRef.id };
     } catch (error) {
@@ -55,6 +67,13 @@ export async function createTransferRequest(userId, fromBranchId, toBranchId, re
  */
 export async function createJoinRequest(userId, branchId, userData = {}) {
     try {
+        console.log('📝 [createJoinRequest] Starting...', { userId, branchId, userData });
+        
+        const db = getDb();
+        if (!db) {
+            throw new Error('Firebase Firestore не инициализирован');
+        }
+        
         const requestData = {
             type: REQUEST_TYPES.BRANCH_JOIN,
             userId,
@@ -65,15 +84,31 @@ export async function createJoinRequest(userId, branchId, userData = {}) {
                 phone: userData.phone || ''
             },
             status: REQUEST_STATUS.PENDING,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
+            createdAt: getServerTimestamp(),
+            updatedAt: getServerTimestamp()
         };
+        
+        console.log('📝 [createJoinRequest] Request data:', requestData);
 
-        const docRef = await db.collection('requests').add(requestData);
+        const docRef = await getDb().collection('requests').add(requestData);
         console.log('✅ Join request created:', docRef.id);
+        
+        // Проверяем, что заявка действительно создана
+        const createdDoc = await docRef.get();
+        if (!createdDoc.exists) {
+            throw new Error('Заявка не была создана в базе данных');
+        }
+        
+        console.log('✅ Join request verified:', createdDoc.data());
+        
         return { success: true, requestId: docRef.id };
     } catch (error) {
-        console.error('Error creating join request:', error);
+        console.error('❌ Error creating join request:', error);
+        console.error('❌ Error details:', {
+            message: error.message,
+            code: error.code,
+            stack: error.stack
+        });
         return { success: false, error: error.message };
     }
 }
@@ -94,11 +129,11 @@ export async function createBranchRequest(userId, branchData) {
                 contactSocial: branchData.contactSocial || ''
             },
             status: REQUEST_STATUS.PENDING,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
+            createdAt: getServerTimestamp(),
+            updatedAt: getServerTimestamp()
         };
 
-        const docRef = await db.collection('requests').add(requestData);
+        const docRef = await getDb().collection('requests').add(requestData);
         console.log('✅ Branch creation request created:', docRef.id);
         return { success: true, requestId: docRef.id };
     } catch (error) {
@@ -116,7 +151,7 @@ export async function createBranchRequest(userId, branchData) {
  */
 export async function getUserRequests(userId) {
     try {
-        const querySnapshot = await db.collection('requests')
+        const querySnapshot = await getDb().collection('requests')
             .where('userId', '==', userId)
             .orderBy('createdAt', 'desc')
             .get();
@@ -141,7 +176,7 @@ export async function getUserRequests(userId) {
  */
 export async function getRequestsByType(type, status = null) {
     try {
-        let query = db.collection('requests')
+        let query = getDb().collection('requests')
             .where('type', '==', type);
         
         if (status) {
@@ -172,7 +207,7 @@ export async function getRequestsByType(type, status = null) {
  */
 export async function getActiveUserRequest(userId, type) {
     try {
-        const querySnapshot = await db.collection('requests')
+        const querySnapshot = await getDb().collection('requests')
             .where('userId', '==', userId)
             .where('type', '==', type)
             .where('status', '==', REQUEST_STATUS.PENDING)
@@ -210,12 +245,12 @@ export async function approveRequest(requestId, adminId, additionalData = {}) {
         const updateData = {
             status: REQUEST_STATUS.APPROVED,
             approvedBy: adminId,
-            approvedAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
+            approvedAt: getServerTimestamp(),
+            updatedAt: getServerTimestamp(),
             ...additionalData
         };
 
-        await db.collection('requests').doc(requestId).update(updateData);
+        await getDb().collection('requests').doc(requestId).update(updateData);
         console.log('✅ Request approved:', requestId);
         return { success: true };
     } catch (error) {
@@ -232,12 +267,12 @@ export async function rejectRequest(requestId, adminId, reason = '') {
         const updateData = {
             status: REQUEST_STATUS.REJECTED,
             rejectedBy: adminId,
-            rejectedAt: serverTimestamp(),
+            rejectedAt: getServerTimestamp(),
             rejectionReason: reason,
-            updatedAt: serverTimestamp()
+            updatedAt: getServerTimestamp()
         };
 
-        await db.collection('requests').doc(requestId).update(updateData);
+        await getDb().collection('requests').doc(requestId).update(updateData);
         console.log('✅ Request rejected:', requestId);
         return { success: true };
     } catch (error) {
@@ -251,7 +286,7 @@ export async function rejectRequest(requestId, adminId, reason = '') {
  */
 export async function deleteRequest(requestId) {
     try {
-        await db.collection('requests').doc(requestId).delete();
+        await getDb().collection('requests').doc(requestId).delete();
         console.log('✅ Request deleted:', requestId);
         return { success: true };
     } catch (error) {
@@ -271,7 +306,7 @@ export async function deleteRequest(requestId) {
 export async function approveJoinRequest(requestId) {
     try {
         // Получаем данные заявки
-        const requestDoc = await db.collection('requests').doc(requestId).get();
+        const requestDoc = await getDb().collection('requests').doc(requestId).get();
         if (!requestDoc.exists) {
             throw new Error('Заявка не найдена');
         }
@@ -279,16 +314,16 @@ export async function approveJoinRequest(requestId) {
         const requestData = requestDoc.data();
         
         // Обновляем статус пользователя
-        await db.collection('users').doc(requestData.userId).update({
+        await getDb().collection('users').doc(requestData.userId).update({
             status: 'active',
-            updatedAt: serverTimestamp()
+            updatedAt: getServerTimestamp()
         });
         
         // Обновляем статус заявки
-        await db.collection('requests').doc(requestId).update({
+        await getDb().collection('requests').doc(requestId).update({
             status: REQUEST_STATUS.APPROVED,
-            approvedAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
+            approvedAt: getServerTimestamp(),
+            updatedAt: getServerTimestamp()
         });
         
         console.log('✅ Join request approved:', requestId);
@@ -306,7 +341,7 @@ export async function approveJoinRequest(requestId) {
 export async function approveBranchRequest(requestId) {
     try {
         // Получаем данные заявки
-        const requestDoc = await db.collection('requests').doc(requestId).get();
+        const requestDoc = await getDb().collection('requests').doc(requestId).get();
         if (!requestDoc.exists) {
             throw new Error('Заявка не найдена');
         }
@@ -322,25 +357,25 @@ export async function approveBranchRequest(requestId) {
             contactPhone: branchData.contactPhone || '',
             contactSocial: branchData.contactSocial || '',
             createdBy: requestData.userId,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
+            createdAt: getServerTimestamp(),
+            updatedAt: getServerTimestamp()
         };
         
-        const branchRef = await db.collection('branches').add(newBranch);
+        const branchRef = await getDb().collection('branches').add(newBranch);
         
         // Обновляем пользователя - назначаем его в созданный филиал
-        await db.collection('users').doc(requestData.userId).update({
+        await getDb().collection('users').doc(requestData.userId).update({
             branchId: branchRef.id,
             status: 'active',
-            updatedAt: serverTimestamp()
+            updatedAt: getServerTimestamp()
         });
         
         // Обновляем статус заявки
-        await db.collection('requests').doc(requestId).update({
+        await getDb().collection('requests').doc(requestId).update({
             status: REQUEST_STATUS.APPROVED,
-            approvedAt: serverTimestamp(),
+            approvedAt: getServerTimestamp(),
             createdBranchId: branchRef.id,
-            updatedAt: serverTimestamp()
+            updatedAt: getServerTimestamp()
         });
         
         console.log('✅ Branch request approved, new branch created:', branchRef.id);

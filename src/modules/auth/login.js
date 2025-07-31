@@ -85,9 +85,18 @@ async function createUserProfile(user, additionalData = {}) {
     // ВАЖНО: Проверяем, не существует ли уже профиль
     const existingDoc = await userRef.get();
     if (existingDoc.exists) {
-        console.warn('⚠️ Profile already exists, skipping creation');
-        return existingDoc.data();
+        const existingData = existingDoc.data();
+        console.warn('⚠️ Profile already exists:', {
+            uid: user.uid,
+            email: existingData.email,
+            status: existingData.status,
+            role: existingData.role,
+            branchId: existingData.branchId
+        });
+        return existingData;
     }
+    
+    console.log('📝 Creating new user profile for:', user.email || user.uid);
     
     // Check if there's an invite
     if (inviteId) {
@@ -130,13 +139,21 @@ async function createUserProfile(user, additionalData = {}) {
         photoURL: user.photoURL,
         role: additionalData.role || 'user',
         branchId: null,
-        status: additionalData.status || 'active', // Новые пользователи сразу активны
+        status: additionalData.status || 'pending', // Новые пользователи требуют подтверждения
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         ...additionalData
     };
     
+    console.log('📝 Creating user with data:', {
+        email: userData.email,
+        status: userData.status,
+        role: userData.role,
+        branchId: userData.branchId
+    });
+    
     await userRef.set(userData, { merge: true });
+    console.log('✅ User profile created successfully');
 }
 
 // ====================================

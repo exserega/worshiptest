@@ -22,6 +22,7 @@ const db = window.firebase?.firestore?.() || null;
 let joinRequests = [];
 let branchRequests = [];
 let currentUser = null;
+let branchesCache = {}; // Кэш филиалов для быстрого доступа
 
 // ====================================
 // INITIALIZATION
@@ -34,6 +35,9 @@ export async function initRequestsModule(user) {
     console.log('🚀 Initializing requests module...');
     currentUser = user;
     
+    // Загружаем филиалы для кэша
+    await loadBranchesCache();
+    
     // Загружаем заявки
     await loadJoinRequests();
     await loadBranchRequests();
@@ -42,6 +46,22 @@ export async function initRequestsModule(user) {
     setupEventHandlers();
     
     console.log('✅ Requests module initialized');
+}
+
+/**
+ * Загружает филиалы в кэш
+ */
+async function loadBranchesCache() {
+    try {
+        const snapshot = await db.collection('branches').get();
+        branchesCache = {};
+        snapshot.forEach(doc => {
+            branchesCache[doc.id] = doc.data();
+        });
+        console.log('✅ Branches loaded to cache:', Object.keys(branchesCache).length);
+    } catch (error) {
+        console.error('Error loading branches cache:', error);
+    }
 }
 
 // ====================================
@@ -290,8 +310,16 @@ window.rejectBranchRequest = async function(requestId) {
  * Получает название филиала по ID
  */
 function getBranchName(branchId) {
-    // TODO: Загрузить из кэша филиалов
-    return branchId || 'Неизвестный филиал';
+    if (!branchId) return 'Не указан';
+    
+    // Ищем в кэше
+    const branch = branchesCache[branchId];
+    if (branch) {
+        return branch.name || 'Неизвестный филиал';
+    }
+    
+    // Если не нашли в кэше, возвращаем ID
+    return `Филиал ${branchId}`;
 }
 
 /**

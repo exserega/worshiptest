@@ -5,14 +5,26 @@
 
 import { createJoinRequest } from '/src/modules/requests/requestsAPI.js';
 
-// Firebase из глобального объекта (v8)
-const db = window.firebase?.firestore?.() || null;
+// Firebase из глобального объекта (v8) - получаем динамически
+const getDb = () => {
+    if (window.firebase && window.firebase.firestore) {
+        return window.firebase.firestore();
+    }
+    console.error('Firebase не инициализирован!');
+    return null;
+};
 
 /**
  * Показывает модальное окно выбора филиала для нового пользователя
  */
 export async function showNewUserBranchSelection(userId, userData) {
     try {
+        const db = getDb();
+        if (!db) {
+            console.error('❌ Firebase не инициализирован');
+            return;
+        }
+        
         // Загружаем список филиалов
         const branchesSnapshot = await db.collection('branches').get();
         const branches = [];
@@ -114,14 +126,28 @@ async function handleBranchSelection(userId, userData, branchId) {
         console.log('📝 Join request result:', result);
         
         if (result.success) {
+            // Сначала проверяем текущий статус пользователя
+            console.log('📝 Checking current user status before update...');
+            const db = getDb();
+            const userDoc = await db.collection('users').doc(userId).get();
+            const currentUserData = userDoc.data();
+            console.log('📝 Current user data:', currentUserData);
+            
             // Обновляем профиль пользователя
             console.log('📝 Updating user profile...');
-            await db.collection('users').doc(userId).update({
+            const updateData = {
                 branchId: branchId,
-                status: 'pending',
                 updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
-            });
-            console.log('✅ User profile updated');
+            };
+            
+            // Обновляем статус только если он еще не 'pending' или 'active'
+            if (!currentUserData.status || currentUserData.status === 'active') {
+                updateData.status = 'pending';
+                console.log('📝 Setting status to pending');
+            }
+            
+            await db.collection('users').doc(userId).update(updateData);
+            console.log('✅ User profile updated with data:', updateData);
             
             // Показываем успешное сообщение и автоматически перезагружаем через 2 секунды
             modalContent.innerHTML = `
