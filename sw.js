@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v17'; // v17, исправление путей в admin.html
+const CACHE_NAME = 'agape-worship-cache-v18'; // v18, добавлены файлы-редиректы
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
