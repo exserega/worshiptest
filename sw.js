@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v19'; // v19, api.js перемещен в /js/
+const CACHE_NAME = 'agape-worship-cache-v20'; // v20, исправлен импорт в api.js
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

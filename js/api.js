@@ -4,7 +4,7 @@
 // ====================================
 
 // Import from new centralized API structure
-import * as api from './src/api/index.js';
+import * as api from '../src/api/index.js';
 
 // Re-export all functions for backward compatibility
 export const loadAllSongsFromFirestore = api.loadAllSongsFromFirestore;
