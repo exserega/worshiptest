@@ -16,7 +16,7 @@ export function initUserNavigation() {
     
     userButton.addEventListener('click', () => {
         // Переход на страницу настроек
-        window.location.href = '/settings.html';
+        window.location.href = '/public/public/settings.html';
     });
     
     console.log('👤 User navigation initialized');

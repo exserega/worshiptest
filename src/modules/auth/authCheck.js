@@ -209,7 +209,7 @@ export async function initAuthGate(options = {}) {
         requireAuth = true,
         requireBranch = false,
         requireAdmin = false,
-        redirectTo = '/login.html'
+        redirectTo = '/public/public/public/login.html'
     } = options;
     
     console.log('🔒 Initializing auth gate...');
@@ -294,7 +294,7 @@ function showAuthMessage(message) {
         <div class="auth-message-card">
             <i class="fas fa-exclamation-circle"></i>
             <p>${message}</p>
-            <button onclick="window.location.href='/login.html'">Войти заново</button>
+            <button onclick="window.location.href='/public/public/public/login.html'">Войти заново</button>
         </div>
     `;
     
@@ -359,7 +359,7 @@ export async function logout() {
     try {
         await auth.signOut();
         currentUser = null;
-        window.location.href = '/login.html';
+        window.location.href = '/public/public/public/login.html';
     } catch (error) {
         console.error('Logout error:', error);
     }

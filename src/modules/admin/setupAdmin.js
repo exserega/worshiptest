@@ -144,7 +144,7 @@ window.adminSetup = {
         console.log('✅ Admin setup completed successfully!');
         console.log('📍 Branch ID:', branchId);
         console.log('🔐 Admin email:', userEmail);
-        console.log('👉 Now you can access /admin.html');
+        console.log('👉 Now you can access /public/admin.html');
     }
 };
 
