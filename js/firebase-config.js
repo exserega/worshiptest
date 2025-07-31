@@ -4,7 +4,7 @@
 // ====================================
 
 // Импортируем из единого файла инициализации
-import { db, storage, auth, firebase } from './firebase-init.js';
+import { db, storage, auth, firebase } from '../firebase-init.js';
 
 // Экспортируем для модулей, которые используют этот файл
 export { db, storage, auth, firebase };

@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v21'; // v21, metronome.js перемещен в /js/
+const CACHE_NAME = 'agape-worship-cache-v22'; // v22, firebase-config.js перемещен в /js/
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
@@ -13,7 +13,7 @@ const URLS_TO_CACHE = [
   './js/core.js',
   './js/state.js',
   './js/constants.js',
-  './firebase-config.js',
+  './js/firebase-config.js',
   './firebase-init.js',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',

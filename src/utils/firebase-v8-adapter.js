@@ -3,7 +3,7 @@
 // Адаптер для использования v8 API с v9-подобным синтаксисом
 // ====================================
 
-import { db as firebaseDb } from '../../firebase-config.js';
+import { db as firebaseDb } from '../../js/firebase-config.js';
 
 // ====================================
 // FIRESTORE ADAPTERS
