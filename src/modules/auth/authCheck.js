@@ -132,18 +132,49 @@ export function checkAuth() {
 export function hasAccess(resource, action) {
     if (!currentUser) return false;
     
+    // Гости имеют очень ограниченный доступ
+    if (currentUser.role === 'guest' || currentUser.isGuest) {
+        const guestPermissions = {
+            songs: ['read'],        // Только просмотр песен
+            setlists: ['read'],     // Только просмотр сет-листов
+            users: [],              // Нет доступа к пользователям
+            branches: []            // Нет доступа к филиалам
+        };
+        return guestPermissions[resource]?.includes(action) || false;
+    }
+    
+    // Пользователи со статусом pending имеют ограниченный доступ
+    if (currentUser.status === 'pending') {
+        const pendingPermissions = {
+            songs: ['read'],        // Только просмотр песен
+            setlists: ['read'],     // Только просмотр сет-листов
+            users: [],              // Нет доступа к пользователям
+            branches: []            // Нет доступа к филиалам
+        };
+        return pendingPermissions[resource]?.includes(action) || false;
+    }
+    
+    // Заблокированные пользователи не имеют доступа
+    if (currentUser.status === 'banned' || currentUser.status === 'blocked') {
+        return false;
+    }
+    
     // Админы имеют полный доступ
     if (currentUser.role === 'admin') return true;
     
-    // Проверка прав для обычных пользователей
-    const userPermissions = {
-        setlists: ['read'],
-        songs: ['read'],
-        users: [],
-        branches: []
-    };
+    // Активные обычные пользователи
+    if (currentUser.status === 'active') {
+        const userPermissions = {
+            setlists: ['read', 'create', 'update', 'delete'],  // Полный доступ к сет-листам
+            songs: ['read'],                                     // Только чтение песен
+            users: [],                                           // Нет доступа к пользователям
+            branches: ['read']                                   // Только чтение филиалов
+        };
+        return userPermissions[resource]?.includes(action) || false;
+    }
     
-    return userPermissions[resource]?.includes(action) || false;
+    // По умолчанию - нет доступа
+    return false;
 }
 
 /**
@@ -356,6 +387,62 @@ function showAuthMessage(message) {
     }
     
     document.body.appendChild(overlay);
+}
+
+/**
+ * Показывает уведомление об ограниченном доступе
+ * @param {string} action - Действие которое пытался выполнить пользователь
+ */
+export function showAccessDeniedMessage(action = '') {
+    if (!currentUser) {
+        alert('Пожалуйста, войдите в систему');
+        window.location.href = '/login.html';
+        return;
+    }
+    
+    // Сообщения для разных статусов
+    if (currentUser.role === 'guest' || currentUser.isGuest) {
+        alert(`Доступ запрещен: ваш статус "Гость". ${action ? `Действие "${action}" недоступно для гостей.` : ''}\n\nДля получения полного доступа необходимо зарегистрироваться.`);
+    } else if (currentUser.status === 'pending') {
+        alert(`Доступ запрещен: ваша заявка ожидает подтверждения администратора.\n\nПожалуйста, дождитесь одобрения заявки или свяжитесь с администратором напрямую в Telegram: @Sha1oom`);
+    } else if (currentUser.status === 'banned' || currentUser.status === 'blocked') {
+        alert('Ваш аккаунт заблокирован. Обратитесь к администратору.');
+    } else {
+        alert(`У вас недостаточно прав для выполнения этого действия. ${action ? `Действие: ${action}` : ''}`);
+    }
+}
+
+/**
+ * Проверяет доступ и показывает сообщение если доступ запрещен
+ * @param {string} resource - Ресурс
+ * @param {string} action - Действие
+ * @returns {boolean}
+ */
+export function checkAccessWithNotification(resource, action) {
+    const hasPermission = hasAccess(resource, action);
+    
+    if (!hasPermission) {
+        const actionTexts = {
+            create: 'создание',
+            update: 'редактирование',
+            delete: 'удаление',
+            read: 'просмотр'
+        };
+        
+        const resourceTexts = {
+            setlists: 'сет-листов',
+            songs: 'песен',
+            users: 'пользователей',
+            branches: 'филиалов'
+        };
+        
+        const actionText = actionTexts[action] || action;
+        const resourceText = resourceTexts[resource] || resource;
+        
+        showAccessDeniedMessage(`${actionText} ${resourceText}`);
+    }
+    
+    return hasPermission;
 }
 
 // ====================================

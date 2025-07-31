@@ -45,6 +45,14 @@
                 <i class="fas fa-building"></i>
                 <span>Филиалы</span>
             </button>
+            <button class="tab-button" data-tab="requests">
+                <i class="fas fa-user-plus"></i>
+                <span>Заявки на вступление</span>
+            </button>
+            <button class="tab-button" data-tab="branch-requests">
+                <i class="fas fa-plus-square"></i>
+                <span>Заявки на филиалы</span>
+            </button>
             <button class="tab-button" data-tab="transfers">
                 <i class="fas fa-exchange-alt"></i>
                 <span>Переводы</span>
@@ -106,6 +114,48 @@
                     </div>
                 </div>
                 <div id="transfers-list" class="transfers-list">
+                    <div class="loading">Загрузка заявок...</div>
+                </div>
+            </section>
+            
+            <!-- Таб заявок на вступление -->
+            <section id="requests-tab" class="tab-content">
+                <div class="controls-bar">
+                    <div class="info-text">
+                        <i class="fas fa-info-circle"></i>
+                        Заявки пользователей на вступление в филиалы
+                    </div>
+                    <div class="filters">
+                        <select id="request-status-filter">
+                            <option value="pending">Ожидающие</option>
+                            <option value="">Все заявки</option>
+                            <option value="approved">Одобренные</option>
+                            <option value="rejected">Отклоненные</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="join-requests-list" class="requests-list">
+                    <div class="loading">Загрузка заявок...</div>
+                </div>
+            </section>
+            
+            <!-- Таб заявок на создание филиалов -->
+            <section id="branch-requests-tab" class="tab-content">
+                <div class="controls-bar">
+                    <div class="info-text">
+                        <i class="fas fa-info-circle"></i>
+                        Заявки на создание новых филиалов
+                    </div>
+                    <div class="filters">
+                        <select id="branch-request-status-filter">
+                            <option value="pending">Ожидающие</option>
+                            <option value="">Все заявки</option>
+                            <option value="approved">Одобренные</option>
+                            <option value="rejected">Отклоненные</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="branch-requests-list" class="requests-list">
                     <div class="loading">Загрузка заявок...</div>
                 </div>
             </section>

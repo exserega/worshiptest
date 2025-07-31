@@ -902,3 +902,116 @@ input[type="checkbox"] {
         opacity: 1;
     }
 }
+
+/* ====================================
+   REQUEST CARDS STYLES
+==================================== */
+
+.requests-list {
+    display: grid;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+}
+
+.request-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: var(--spacing-md);
+    transition: all 0.2s;
+}
+
+.request-card:hover {
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow);
+}
+
+.request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--spacing-md);
+}
+
+.request-info h4 {
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--text-color);
+    font-size: var(--font-md);
+}
+
+.request-contact {
+    color: var(--text-color);
+    opacity: 0.7;
+    font-size: var(--font-sm);
+    margin: 0;
+}
+
+.request-location {
+    color: var(--accent-color);
+    font-size: var(--font-sm);
+    margin: 0;
+}
+
+.request-date {
+    color: var(--text-color);
+    opacity: 0.5;
+    font-size: var(--font-xs);
+}
+
+.request-details {
+    margin-bottom: var(--spacing-md);
+}
+
+.detail-item {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-sm);
+}
+
+.detail-label {
+    color: var(--text-color);
+    opacity: 0.7;
+    min-width: 100px;
+}
+
+.detail-value {
+    color: var(--text-color);
+}
+
+.request-from {
+    margin-bottom: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+    font-size: var(--font-sm);
+}
+
+.request-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.request-actions .button {
+    flex: 1;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .request-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .request-actions {
+        flex-direction: column;
+    }
+    
+    .detail-item {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .detail-label {
+        min-width: auto;
+    }
+}

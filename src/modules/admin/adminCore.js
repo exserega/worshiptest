@@ -8,6 +8,9 @@
  * - Базовой инициализацией
  */
 
+// Импортируем модуль заявок
+import { initRequestsModule } from './requestsModule.js';
+
 // ====================================
 // ГЛОБАЛЬНОЕ СОСТОЯНИЕ
 // ====================================
@@ -51,6 +54,14 @@ export async function initAdminPanel(user, isRootAdmin) {
     
     // Загружаем начальные данные
     await loadInitialData();
+    
+    // Инициализируем модуль заявок
+    try {
+        await initRequestsModule(user);
+        console.log('✅ Requests module initialized');
+    } catch (error) {
+        console.error('❌ Failed to initialize requests module:', error);
+    }
     
     // Показываем первый таб
     showTab('users');

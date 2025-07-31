@@ -259,3 +259,94 @@ export async function deleteRequest(requestId) {
         return { success: false, error: error.message };
     }
 }
+
+// ====================================
+// СПЕЦИФИЧНЫЕ МЕТОДЫ ОБРАБОТКИ
+// ====================================
+
+/**
+ * Одобряет заявку на вступление в филиал
+ * Обновляет статус пользователя на active
+ */
+export async function approveJoinRequest(requestId) {
+    try {
+        // Получаем данные заявки
+        const requestDoc = await db.collection('requests').doc(requestId).get();
+        if (!requestDoc.exists) {
+            throw new Error('Заявка не найдена');
+        }
+        
+        const requestData = requestDoc.data();
+        
+        // Обновляем статус пользователя
+        await db.collection('users').doc(requestData.userId).update({
+            status: 'active',
+            updatedAt: serverTimestamp()
+        });
+        
+        // Обновляем статус заявки
+        await db.collection('requests').doc(requestId).update({
+            status: REQUEST_STATUS.APPROVED,
+            approvedAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+        
+        console.log('✅ Join request approved:', requestId);
+        return { success: true };
+    } catch (error) {
+        console.error('Error approving join request:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Одобряет заявку на создание филиала
+ * Создает новый филиал и делает заявителя его админом
+ */
+export async function approveBranchRequest(requestId) {
+    try {
+        // Получаем данные заявки
+        const requestDoc = await db.collection('requests').doc(requestId).get();
+        if (!requestDoc.exists) {
+            throw new Error('Заявка не найдена');
+        }
+        
+        const requestData = requestDoc.data();
+        const branchData = requestData.branchData;
+        
+        // Создаем новый филиал
+        const newBranch = {
+            name: branchData.name,
+            city: branchData.city,
+            address: branchData.address || '',
+            contactPhone: branchData.contactPhone || '',
+            contactSocial: branchData.contactSocial || '',
+            createdBy: requestData.userId,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        };
+        
+        const branchRef = await db.collection('branches').add(newBranch);
+        
+        // Обновляем пользователя - назначаем его в созданный филиал
+        await db.collection('users').doc(requestData.userId).update({
+            branchId: branchRef.id,
+            status: 'active',
+            updatedAt: serverTimestamp()
+        });
+        
+        // Обновляем статус заявки
+        await db.collection('requests').doc(requestId).update({
+            status: REQUEST_STATUS.APPROVED,
+            approvedAt: serverTimestamp(),
+            createdBranchId: branchRef.id,
+            updatedAt: serverTimestamp()
+        });
+        
+        console.log('✅ Branch request approved, new branch created:', branchRef.id);
+        return { success: true, branchId: branchRef.id };
+    } catch (error) {
+        console.error('Error approving branch request:', error);
+        return { success: false, error: error.message };
+    }
+}

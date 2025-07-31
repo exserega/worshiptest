@@ -96,6 +96,8 @@ export async function showNewUserBranchSelection(userId, userData) {
  */
 async function handleBranchSelection(userId, userData, branchId) {
     try {
+        console.log('🏢 Handling branch selection:', { userId, branchId, userData });
+        
         // Показываем индикатор загрузки
         const modal = document.getElementById('new-user-branch-modal');
         const modalContent = modal.querySelector('.modal-content');
@@ -107,35 +109,71 @@ async function handleBranchSelection(userId, userData, branchId) {
         `;
         
         // Создаем заявку на вступление
+        console.log('📝 Creating join request...');
         const result = await createJoinRequest(userId, branchId, userData);
+        console.log('📝 Join request result:', result);
         
         if (result.success) {
             // Обновляем профиль пользователя
+            console.log('📝 Updating user profile...');
             await db.collection('users').doc(userId).update({
                 branchId: branchId,
                 status: 'pending',
                 updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
             });
+            console.log('✅ User profile updated');
             
-            // Показываем успешное сообщение
+            // Показываем успешное сообщение и автоматически перезагружаем через 2 секунды
             modalContent.innerHTML = `
                 <div class="success-state">
                     <i class="fas fa-check-circle"></i>
                     <h3>Заявка отправлена!</h3>
                     <p>Ваша заявка на вступление в филиал отправлена администратору.</p>
                     <p class="info-text">Вы можете пользоваться системой в ограниченном режиме до подтверждения заявки.</p>
+                    <p class="info-text" style="color: #999; margin-top: 10px;">Перенаправление через <span id="countdown">3</span> секунды...</p>
+                </div>
+            `;
+            
+            // Обратный отсчет и автоматическая перезагрузка
+            let countdown = 3;
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                const countdownEl = document.getElementById('countdown');
+                if (countdownEl) {
+                    countdownEl.textContent = countdown;
+                }
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = '/'; // Перенаправляем на главную страницу
+                }
+            }, 1000);
+            
+        } else {
+            console.error('❌ Failed to create join request:', result.error);
+            throw new Error(result.error || 'Не удалось создать заявку');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error handling branch selection:', error);
+        
+        // Показываем ошибку в модальном окне
+        const modal = document.getElementById('new-user-branch-modal');
+        const modalContent = modal?.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.innerHTML = `
+                <div class="error-state">
+                    <i class="fas fa-exclamation-circle" style="color: #ff4444; font-size: 48px;"></i>
+                    <h3>Ошибка!</h3>
+                    <p>Произошла ошибка при создании заявки:</p>
+                    <p style="color: #ff4444;">${error.message}</p>
                     <button class="btn-primary" onclick="window.location.reload()">
-                        Начать работу
+                        Попробовать снова
                     </button>
                 </div>
             `;
         } else {
-            throw new Error(result.error);
+            alert('Ошибка при создании заявки: ' + error.message);
         }
-        
-    } catch (error) {
-        console.error('Error handling branch selection:', error);
-        alert('Ошибка при создании заявки: ' + error.message);
     }
 }
 

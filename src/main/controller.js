@@ -29,6 +29,13 @@ import * as ui from '../../ui.js';
 export async function handleCreateSetlist(name) {
     console.log('🎵 [Controller] handleCreateSetlist:', name);
     
+    // Проверяем права доступа
+    const { checkAccessWithNotification } = await import('../modules/auth/authCheck.js');
+    if (!checkAccessWithNotification('setlists', 'create')) {
+        console.log('❌ [Controller] Access denied for creating setlist');
+        return;
+    }
+    
     if (!name || !name.trim()) {
         showNotification('❌ Название сет-листа не может быть пустым', 'error');
         return;
@@ -140,6 +147,13 @@ export function handleSetlistSelect(setlist) {
 export async function handleSetlistDelete(setlistId, setlistName) {
     console.log('🗑️ [Controller] handleSetlistDelete:', setlistName);
     
+    // Проверяем права доступа
+    const { checkAccessWithNotification } = await import('../modules/auth/authCheck.js');
+    if (!checkAccessWithNotification('setlists', 'delete')) {
+        console.log('❌ [Controller] Access denied for deleting setlist');
+        return false;
+    }
+    
     const confirmed = await showConfirmDialog(
         `Вы уверены, что хотите удалить сет-лист "${setlistName}"?`,
         {
@@ -192,6 +206,13 @@ export async function handleSetlistDelete(setlistId, setlistName) {
  */
 export async function handleRemoveSongFromSetlist(songId, songName) {
     console.log('➖ [Controller] handleRemoveSongFromSetlist:', songName);
+    
+    // Проверяем права доступа
+    const { checkAccessWithNotification } = await import('../modules/auth/authCheck.js');
+    if (!checkAccessWithNotification('setlists', 'update')) {
+        console.log('❌ [Controller] Access denied for updating setlist');
+        return false;
+    }
     
     if (!state.currentSetlistId) {
         showNotification('❌ Сетлист не выбран', 'error');
