@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v4'; // v4, исправлены ошибки fetch
+const CACHE_NAME = 'agape-worship-cache-v7'; // v7, полный откат к начальной версии
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
