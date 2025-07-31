@@ -250,10 +250,10 @@
             
             try {
                 // Импортируем основной модуль админ панели
-                const { initAdminPanel: initAdminCore } = await import('./src/modules/admin/adminCore.js');
+                const { initAdminPanel: initAdminCore } = await import('../src/modules/admin/adminCore.js');
                 
                 // Загружаем модуль уведомлений
-                await import('./src/modules/admin/notifications.js');
+                await import('../src/modules/admin/notifications.js');
                 
                 // Инициализируем админ панель с модульной системой
                 await initAdminCore(user, isRootAdmin);
