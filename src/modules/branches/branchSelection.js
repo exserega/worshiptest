@@ -19,19 +19,26 @@ export function initBranchSelection() {
     branchesList = document.getElementById('branches-list');
     
     if (!branchSelectionModal || !branchesList) {
-        console.error('Branch selection elements not found');
+        console.error('Branch selection elements not found', {
+            modal: branchSelectionModal,
+            list: branchesList
+        });
         return;
     }
+    console.log('✅ Branch selection initialized');
 }
 
 /**
  * Показать модальное окно выбора филиала
  */
 export async function showBranchSelection() {
-    if (!branchSelectionModal) return;
+    if (!branchSelectionModal) {
+        console.error('❌ Branch selection modal not initialized');
+        return;
+    }
     
     console.log('🏢 Showing branch selection modal');
-    branchSelectionModal.style.display = 'flex';
+    branchSelectionModal.classList.add('visible');
     
     // Загружаем список филиалов
     await loadBranches();
@@ -43,7 +50,7 @@ export async function showBranchSelection() {
 export function hideBranchSelection() {
     if (!branchSelectionModal) return;
     
-    branchSelectionModal.style.display = 'none';
+    branchSelectionModal.classList.remove('visible');
 }
 
 /**
@@ -214,9 +221,15 @@ export async function checkAndShowBranchSelection() {
         
         if (userDoc.exists) {
             const userData = userDoc.data();
+            console.log('🔍 Checking user branch:', {
+                userId: user.uid,
+                branchId: userData.branchId,
+                status: userData.status
+            });
             
             // Если у пользователя нет филиала, показываем выбор
             if (!userData.branchId) {
+                console.log('📋 User has no branch, showing selection');
                 await showBranchSelection();
                 return true;
             }

@@ -67,10 +67,12 @@ export async function initializeApp() {
         const { checkAndShowFirstAdminModal } = await import('../modules/auth/firstAdminModal.js');
         checkAndShowFirstAdminModal();
         
-        // Проверяем, нужно ли выбрать филиал
-        const { initBranchSelection, checkAndShowBranchSelection } = await import('../modules/branches/branchSelection.js');
-        initBranchSelection();
-        await checkAndShowBranchSelection();
+        // Проверяем, нужно ли выбрать филиал (после полной загрузки DOM)
+        setTimeout(async () => {
+            const { initBranchSelection, checkAndShowBranchSelection } = await import('../modules/branches/branchSelection.js');
+            initBranchSelection();
+            await checkAndShowBranchSelection();
+        }, 100);
         
         // ====================================
         // THEME SETUP
