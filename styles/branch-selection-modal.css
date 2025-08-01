@@ -151,7 +151,12 @@
 /* Основная кнопка подтверждения */
 .branch-selection-actions .confirm-button {
     background: var(--accent-primary); /* Акцентный фон */
-    color: white;                      /* Белый текст */
+    color: #ffffff;                    /* Всегда белый текст на акцентной кнопке */
+}
+
+/* Иконки внутри кнопки подтверждения */
+.branch-selection-actions .confirm-button i {
+    color: #ffffff;                    /* Белые иконки */
 }
 
 /* Отключенное состояние кнопки */
