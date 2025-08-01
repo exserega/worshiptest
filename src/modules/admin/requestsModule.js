@@ -140,10 +140,14 @@ export async function approveRequest(userId) {
         // Удаляем пользователя из списка заявок
         window.adminState.requests = window.adminState.requests.filter(u => u.id !== userId);
         
-        // Обновляем пользователя в общем списке
-        const userIndex = window.adminState.users.findIndex(u => u.id === userId);
-        if (userIndex !== -1) {
-            window.adminState.users[userIndex].status = 'active';
+        // Обновляем пользователя в общем списке - загружаем свежие данные
+        const userDoc = await db.collection('users').doc(userId).get();
+        if (userDoc.exists) {
+            const updatedUser = { id: userDoc.id, ...userDoc.data() };
+            const userIndex = window.adminState.users.findIndex(u => u.id === userId);
+            if (userIndex !== -1) {
+                window.adminState.users[userIndex] = updatedUser;
+            }
         }
         
         // Обновляем отображение
@@ -193,6 +197,22 @@ export async function rejectRequest(userId) {
         });
         
         // НЕ удаляем пользователя из списка заявок - он остается в pending
+        
+        // Обновляем данные пользователя в общем списке
+        const userDoc = await db.collection('users').doc(userId).get();
+        if (userDoc.exists) {
+            const updatedUser = { id: userDoc.id, ...userDoc.data() };
+            const userIndex = window.adminState.users.findIndex(u => u.id === userId);
+            if (userIndex !== -1) {
+                window.adminState.users[userIndex] = updatedUser;
+            }
+            
+            // Обновляем также в списке заявок
+            const requestIndex = window.adminState.requests.findIndex(u => u.id === userId);
+            if (requestIndex !== -1) {
+                window.adminState.requests[requestIndex] = updatedUser;
+            }
+        }
         
         // Обновляем отображение
         displayRequests();
