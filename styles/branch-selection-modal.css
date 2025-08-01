@@ -139,35 +139,58 @@
 }
 
 .branch-selection-actions button {
-    padding: 12px 30px;              /* Отступы */
-    border-radius: 8px;              /* Скругление */
-    font-size: 1rem;                 /* Размер шрифта */
+    padding: 14px 32px;              /* Увеличенные отступы */
+    border-radius: 10px;             /* Более современное скругление */
+    font-size: 1.05rem;              /* Чуть больше размер шрифта */
     font-weight: 600;                /* Жирность */
     cursor: pointer;                 /* Курсор */
     transition: all 0.3s ease;       /* Плавные переходы */
-    border: none;                    /* Без границы */
+    border: 2px solid transparent;   /* Прозрачная граница по умолчанию */
+    display: flex;                   /* Flex для выравнивания иконки и текста */
+    align-items: center;             /* Центрирование по вертикали */
+    gap: 10px;                       /* Отступ между иконкой и текстом */
 }
 
-/* Основная кнопка подтверждения */
-.branch-selection-actions .confirm-button {
+/* Основная кнопка подтверждения - ТЕМНАЯ ТЕМА */
+:root .branch-selection-actions .confirm-button,
+[data-theme="dark"] .branch-selection-actions .confirm-button {
+    background: var(--accent-primary); /* Яркий акцентный фон */
+    color: #111827;                    /* Темный текст для контраста */
+    border-color: var(--accent-primary);
+}
+
+/* Основная кнопка подтверждения - СВЕТЛАЯ ТЕМА */
+[data-theme="light"] .branch-selection-actions .confirm-button {
     background: var(--accent-primary); /* Акцентный фон */
-    color: #ffffff;                    /* Всегда белый текст на акцентной кнопке */
+    color: #ffffff;                    /* Белый текст для светлой темы */
+    border-color: var(--accent-primary);
 }
 
-/* Иконки внутри кнопки подтверждения */
+/* Иконки внутри кнопки - обе темы */
 .branch-selection-actions .confirm-button i {
-    color: #ffffff;                    /* Белые иконки */
+    font-size: 0.95rem;              /* Размер иконки */
+    flex-shrink: 0;                  /* Предотвращаем сжатие иконки */
 }
 
 /* Отключенное состояние кнопки */
 .branch-selection-actions .confirm-button:disabled {
-    opacity: 0.5;                    /* Полупрозрачность */
+    background: var(--bg-tertiary);  /* Серый фон */
+    color: var(--text-secondary);    /* Серый текст */
+    border-color: var(--border-color); /* Серая граница */
     cursor: not-allowed;             /* Запрещающий курсор */
+    opacity: 0.7;                    /* Небольшая прозрачность */
 }
 
 /* Активное состояние при наведении */
 .branch-selection-actions .confirm-button:not(:disabled):hover {
-    background: var(--accent-primary-hover); /* Темнее при наведении */
+    transform: translateY(-2px);     /* Легкий подъем */
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3); /* Тень с акцентным цветом */
+}
+
+/* Нажатое состояние */
+.branch-selection-actions .confirm-button:not(:disabled):active {
+    transform: translateY(0);        /* Возврат на место */
+    box-shadow: 0 2px 4px rgba(34, 211, 238, 0.2); /* Меньшая тень */
 }
 
 /* === СОСТОЯНИЯ ОШИБОК И ПУСТЫЕ СОСТОЯНИЯ === */

@@ -155,7 +155,7 @@ function addConfirmButton() {
     actionsDiv.innerHTML = `
         <button class="confirm-button" disabled>
             <i class="fas fa-check"></i>
-            Выбрать филиал
+            <span>Выбрать филиал</span>
         </button>
     `;
     
@@ -175,7 +175,7 @@ async function confirmBranchSelection() {
     
     const confirmButton = document.querySelector('.confirm-button');
     confirmButton.disabled = true;
-    confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Сохранение...';
+    confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Сохранение...</span>';
     
     try {
         // Обновляем профиль пользователя
@@ -200,11 +200,11 @@ async function confirmBranchSelection() {
         
     } catch (error) {
         console.error('Error selecting branch:', error);
-        confirmButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ошибка';
+        confirmButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Ошибка</span>';
         
         setTimeout(() => {
             confirmButton.disabled = false;
-            confirmButton.innerHTML = '<i class="fas fa-check"></i> Выбрать филиал';
+            confirmButton.innerHTML = '<i class="fas fa-check"></i><span>Выбрать филиал</span>';
         }, 2000);
     }
 }
