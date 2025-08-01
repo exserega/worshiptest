@@ -124,7 +124,7 @@ function renderBranchCard(branch) {
     card.innerHTML = `
         <h3>${branch.name || 'Без названия'}</h3>
         <p><i class="fas fa-map-marker-alt"></i> ${branch.address || 'Адрес не указан'}</p>
-                        <p class="member-count"><i class="fas fa-users"></i> ${branch.actualMemberCount ?? branch.memberCount || 0} участников</p>
+        <p class="member-count"><i class="fas fa-users"></i> ${branch.actualMemberCount ?? branch.memberCount || 0} участников</p>
     `;
     
     // Обработчик клика
