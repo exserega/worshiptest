@@ -622,6 +622,7 @@ body {
     
     /* Request Card - Modern Design */
     .request-card {
+        display: block;
         background: #ffffff !important;
         border-radius: 12px;
         padding: 24px;
@@ -631,6 +632,7 @@ body {
         position: relative;
         overflow: hidden;
         color: #333 !important;
+        margin-bottom: 16px;
     }
     
     .request-card::before {
@@ -729,19 +731,20 @@ body {
         align-items: center;
         gap: 12px;
         margin-bottom: 12px;
-        color: #555;
+        color: #555 !important;
         font-size: 14px;
         line-height: 1.5;
     }
     
     [data-theme="dark"] .request-info .info-row {
-        color: #ccc;
+        color: #ccc !important;
     }
     
     .request-info .info-row i {
+        display: inline-block;
         width: 20px;
         text-align: center;
-        color: #ff9800;
+        color: #ff9800 !important;
         font-size: 16px;
     }
     
@@ -762,14 +765,24 @@ body {
         border-top-color: #3a3a3a;
     }
     
-    .request-actions .btn-action {
-        flex: 1;
+    /* Base button styles for btn-action */
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 10px 20px;
+        border: none;
         border-radius: 8px;
         font-weight: 500;
         font-size: 14px;
+        cursor: pointer;
         transition: all 0.2s ease;
-        justify-content: center;
+        text-decoration: none;
+        outline: none;
+    }
+    
+    .request-actions .btn-action {
+        flex: 1;
         gap: 8px;
     }
     

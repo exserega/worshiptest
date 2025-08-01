@@ -32,6 +32,15 @@ export function displayRequests() {
     // Создаем карточки заявок
     const html = requests.map(user => createRequestCard(user, branches)).join('');
     container.innerHTML = html;
+    
+    // Отладка: проверяем применились ли стили
+    console.log('📋 Requests rendered:', requests.length);
+    const firstCard = container.querySelector('.request-card');
+    if (firstCard) {
+        const computedStyle = window.getComputedStyle(firstCard);
+        console.log('Card background:', computedStyle.backgroundColor);
+        console.log('Card padding:', computedStyle.padding);
+    }
 }
 
 /**
@@ -42,37 +51,39 @@ function createRequestCard(user, branches) {
     const branchName = branch ? branch.name : 'Филиал не указан';
     
     return `
-        <div class="request-card" data-user-id="${user.id}">
-            <div class="request-header">
-                <h3>${user.name || 'Без имени'}</h3>
-                <span class="request-date">${formatDate(user.createdAt)}</span>
+        <div class="request-card" data-user-id="${user.id}" style="background: white; border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <div class="request-header" style="display: flex; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0;">
+                <h3 style="margin: 0; color: #2c3e50; font-size: 20px;">${user.name || 'Без имени'}</h3>
+                <span class="request-date" style="font-size: 13px; color: #999; background: #f5f5f5; padding: 4px 12px; border-radius: 20px;">${formatDate(user.createdAt)}</span>
             </div>
             
-            <div class="request-info">
-                <div class="info-row">
-                    <i class="fas fa-envelope"></i>
+            <div class="request-info" style="margin-bottom: 24px;">
+                <div class="info-row" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: #555;">
+                    <i class="fas fa-envelope" style="width: 20px; text-align: center; color: #ff9800;"></i>
                     <span>${user.email}</span>
                 </div>
-                <div class="info-row">
-                    <i class="fas fa-phone"></i>
+                <div class="info-row" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: #555;">
+                    <i class="fas fa-phone" style="width: 20px; text-align: center; color: #ff9800;"></i>
                     <span>${user.phone || 'Не указан'}</span>
                 </div>
-                <div class="info-row">
-                    <i class="fas fa-building"></i>
+                <div class="info-row" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: #555;">
+                    <i class="fas fa-building" style="width: 20px; text-align: center; color: #ff9800;"></i>
                     <span>${branchName}</span>
                 </div>
             </div>
             
-            <div class="request-actions">
+            <div class="request-actions" style="display: flex; gap: 12px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;">
                 <button class="btn-action success" 
                         onclick="window.adminRequests.approveRequest('${user.id}')"
-                        title="Одобрить заявку">
+                        title="Одобрить заявку"
+                        style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 8px; font-weight: 500; font-size: 14px; cursor: pointer;">
                     <i class="fas fa-check"></i>
                     Одобрить
                 </button>
                 <button class="btn-action danger" 
                         onclick="window.adminRequests.rejectRequest('${user.id}')"
-                        title="Отклонить заявку">
+                        title="Отклонить заявку"
+                        style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; background: white; color: #f44336; border: 1px solid #f44336; border-radius: 8px; font-weight: 500; font-size: 14px; cursor: pointer;">
                     <i class="fas fa-times"></i>
                     Отклонить
                 </button>
