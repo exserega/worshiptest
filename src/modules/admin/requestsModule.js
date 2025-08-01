@@ -156,7 +156,9 @@ export async function approveRequest(userId) {
         // Если открыт таб пользователей, обновляем его тоже
         if (window.adminState.currentTab === 'users') {
             const { displayUsers } = await import('./usersModule.js');
-            displayUsers();
+            await displayUsers();
+            // Принудительное обновление обработчиков событий
+            window.dispatchEvent(new Event('admin-data-updated'));
         }
         
         showSuccess('Заявка одобрена');
@@ -216,6 +218,14 @@ export async function rejectRequest(userId) {
         
         // Обновляем отображение
         displayRequests();
+        
+        // Если открыт таб пользователей, обновляем его тоже
+        if (window.adminState.currentTab === 'users') {
+            const { displayUsers } = await import('./usersModule.js');
+            await displayUsers();
+            // Принудительное обновление обработчиков событий
+            window.dispatchEvent(new Event('admin-data-updated'));
+        }
         
         // Показываем уведомление пользователю при следующем входе
         showSuccess('Заявка отклонена. Пользователь получит уведомление при входе.');

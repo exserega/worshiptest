@@ -82,11 +82,22 @@ async function loadBranches() {
         // Очищаем загрузку
         branchesList.innerHTML = '';
         
-        // Рендерим карточки филиалов
+        // Рендерим карточки филиалов с актуальным количеством участников
+        const branches = [];
         snapshot.forEach(doc => {
-            const branch = { id: doc.id, ...doc.data() };
-            renderBranchCard(branch);
+            branches.push({ id: doc.id, ...doc.data() });
         });
+        
+        // Подсчитываем актуальное количество участников для каждого филиала
+        for (const branch of branches) {
+            const usersSnapshot = await db.collection('users')
+                .where('branchId', '==', branch.id)
+                .where('status', 'in', ['active', 'pending'])  // Считаем только активных и ожидающих
+                .get();
+            
+            branch.actualMemberCount = usersSnapshot.size;
+            renderBranchCard(branch);
+        }
         
         // Добавляем кнопку подтверждения
         addConfirmButton();
@@ -113,7 +124,7 @@ function renderBranchCard(branch) {
     card.innerHTML = `
         <h3>${branch.name || 'Без названия'}</h3>
         <p><i class="fas fa-map-marker-alt"></i> ${branch.address || 'Адрес не указан'}</p>
-        <p class="member-count"><i class="fas fa-users"></i> ${branch.memberCount || 0} участников</p>
+                        <p class="member-count"><i class="fas fa-users"></i> ${branch.actualMemberCount ?? branch.memberCount || 0} участников</p>
     `;
     
     // Обработчик клика

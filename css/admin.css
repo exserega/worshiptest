@@ -622,7 +622,7 @@ body {
     
     /* Request Card - Modern Design */
     .request-card {
-        background: #ffffff;
+        background: #ffffff !important;
         border-radius: 12px;
         padding: 24px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -630,6 +630,7 @@ body {
         border: 1px solid #e5e5e5;
         position: relative;
         overflow: hidden;
+        color: #333 !important;
     }
     
     .request-card::before {
@@ -643,9 +644,10 @@ body {
     }
     
     [data-theme="dark"] .request-card {
-        background: #2a2a2a;
+        background: #2a2a2a !important;
         border-color: #3a3a3a;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        color: #f0f0f0 !important;
     }
     
     .request-card:hover {
