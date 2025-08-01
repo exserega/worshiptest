@@ -250,14 +250,7 @@ function setupSearchEventHandlers() {
 function setupModalEventHandlers() {
     console.log('🎭 [EventHandlers] setupModalEventHandlers');
     
-    // Модальное окно создания сетлиста
-    if (ui.createNewSetlistHeaderBtn) {
-        ui.createNewSetlistHeaderBtn.addEventListener('click', () => {
-            if (ui.createSetlistModal) {
-                ui.createSetlistModal.classList.add('show');
-            }
-        });
-    }
+    // Обработчик создания сетлиста перенесен ниже с проверками прав
     
     if (ui.closeCreateModal) {
         ui.closeCreateModal.addEventListener('click', () => {
