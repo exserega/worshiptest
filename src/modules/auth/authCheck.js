@@ -213,9 +213,9 @@ export function getUserStatus() {
  * @param {string} action - Название действия (например, "Создание сет-листов")
  */
 export function showPendingUserMessage(action) {
-    const message = `${action} недоступно.\n\nВаша заявка находится на рассмотрении администратора.\n\nОбратитесь к администратору в Telegram: @Sha1oom`;
+    const message = `${action} временно недоступно.\n\nВаша заявка находится на рассмотрении администратора.\nПожалуйста, дождитесь подтверждения.\n\nЕсли у вас есть вопросы, обратитесь к администратору:\nTelegram: @Sha1oom`;
     
-    if (confirm(message + '\n\nНажмите OK, чтобы открыть Telegram')) {
+    if (confirm(message + '\n\nНажмите OK, чтобы связаться с администратором в Telegram')) {
         window.open('https://t.me/Sha1oom', '_blank');
     }
 }

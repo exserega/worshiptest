@@ -442,16 +442,18 @@ function setupSetlistEventHandlers() {
                     
                     if (isUserPending()) {
                         if (createBtn) {
-                            createBtn.disabled = true;
+                            // Не используем disabled, чтобы обработчик клика работал
                             createBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
                             createBtn.style.opacity = '0.5';
                             createBtn.style.cursor = 'not-allowed';
+                            createBtn.classList.add('pending-disabled');
                         }
                         if (addSongBtn) {
-                            addSongBtn.disabled = true;
+                            // Не используем disabled, чтобы обработчик клика работал
                             addSongBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
                             addSongBtn.style.opacity = '0.5';
                             addSongBtn.style.cursor = 'not-allowed';
+                            addSongBtn.classList.add('pending-disabled');
                         }
                     }
                     // Прямой вызов API и UI функций

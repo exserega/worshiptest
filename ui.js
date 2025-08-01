@@ -368,13 +368,17 @@ export function displaySongDetails(songData, keyToSelect) {
     
     // Проверяем статус пользователя для кнопки добавления в сет-лист
     if (isUserPending()) {
-        addToSetlistButton.disabled = true;
+        // Не используем disabled, чтобы обработчик клика работал
         addToSetlistButton.title = 'Недоступно. Ваша заявка на рассмотрении';
         addToSetlistButton.style.opacity = '0.5';
+        addToSetlistButton.style.cursor = 'not-allowed';
+        addToSetlistButton.classList.add('pending-disabled');
     } else {
         addToSetlistButton.disabled = false;
         addToSetlistButton.title = 'Добавить в сет-лист';
         addToSetlistButton.style.opacity = '1';
+        addToSetlistButton.style.cursor = 'pointer';
+        addToSetlistButton.classList.remove('pending-disabled');
     }
     
     repertoireButton.disabled = false;
@@ -1022,9 +1026,11 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         
         // Проверяем статус пользователя
         if (isUserPending()) {
-            removeBtn.disabled = true;
+            // Не используем disabled, чтобы обработчик клика работал
             removeBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
             removeBtn.style.opacity = '0.5';
+            removeBtn.style.cursor = 'not-allowed';
+            removeBtn.classList.add('pending-disabled');
         } else {
             removeBtn.title = 'Удалить из сет-листа';
         }
@@ -1180,9 +1186,11 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         
         // Проверяем статус пользователя
         if (isUserPending()) {
-            editBtn.disabled = true;
+            // Не используем disabled, чтобы обработчик клика работал
             editBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
             editBtn.style.opacity = '0.5';
+            editBtn.style.cursor = 'not-allowed';
+            editBtn.classList.add('pending-disabled');
         } else {
             editBtn.title = 'Редактировать название';
         }
@@ -1218,9 +1226,11 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         
         // Проверяем статус пользователя
         if (isUserPending()) {
-            deleteBtn.disabled = true;
+            // Не используем disabled, чтобы обработчик клика работал
             deleteBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
             deleteBtn.style.opacity = '0.5';
+            deleteBtn.style.cursor = 'not-allowed';
+            deleteBtn.classList.add('pending-disabled');
         } else {
             deleteBtn.title = 'Удалить сет-лист';
         }

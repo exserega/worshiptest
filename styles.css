@@ -4847,6 +4847,19 @@ body:not([data-theme="light"]) mark.search-highlight {
     opacity: 0.8;
 }
 
+/* Стили для кнопок с ограниченным доступом для pending пользователей */
+.pending-disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+/* Убираем hover эффекты для pending-disabled кнопок */
+.pending-disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    background-color: inherit !important;
+}
+
 /* Мобильная адаптация - новая структура */
 @media (max-width: 768px) {
     .header-top {
