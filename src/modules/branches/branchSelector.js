@@ -3,7 +3,7 @@
 // ====================================
 
 import { db } from '../../../js/firebase-config.js';
-import { appState } from '../../../src/js/state/appState.js';
+import { getUserBranchId, getUserStatus } from '../auth/authCheck.js';
 
 // Состояние выбранного филиала
 let selectedBranchId = null;
@@ -23,9 +23,9 @@ export function initBranchSelector() {
     }
     
     // Загружаем основной филиал пользователя
-    const currentUser = appState.currentUser;
-    if (currentUser && currentUser.branchId) {
-        userMainBranchId = currentUser.branchId;
+    const branchId = getUserBranchId();
+    if (branchId) {
+        userMainBranchId = branchId;
         selectedBranchId = userMainBranchId; // По умолчанию выбран основной филиал
     }
     
@@ -135,14 +135,8 @@ export function canEditInCurrentBranch() {
     }
     
     // Если свой филиал - проверяем статус пользователя
-    try {
-        const currentUser = appState.currentUser;
-        return currentUser && currentUser.status === 'active';
-    } catch (e) {
-        console.warn('AppState not loaded, checking basic auth');
-        // Если appState не загружен, проверяем базовую авторизацию
-        return false;
-    }
+    const status = getUserStatus();
+    return status === 'active';
 }
 
 /**
