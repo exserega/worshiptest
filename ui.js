@@ -1038,10 +1038,11 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         removeBtn.innerHTML = '<i class="fas fa-times"></i>';
         removeBtn.className = 'song-action-btn';
         
-        // Проверяем статус пользователя
-        if (isUserPending()) {
+        // Проверяем права для текущего филиала
+        const canEdit = canEditInCurrentBranch();
+        if (!canEdit) {
             // Не используем disabled, чтобы обработчик клика работал
-            removeBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+            removeBtn.title = isUserMainBranch() ? 'Недоступно. Ваша заявка на рассмотрении' : 'Недоступно в чужом филиале';
             removeBtn.style.opacity = '0.5';
             removeBtn.style.cursor = 'not-allowed';
             removeBtn.classList.add('pending-disabled');
@@ -1053,8 +1054,12 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
             e.stopPropagation();
             
             // Дополнительная проверка при клике
-            if (isUserPending()) {
-                showPendingUserMessage('Удаление песен из сет-листов');
+            if (!canEditInCurrentBranch()) {
+                if (isUserMainBranch()) {
+                    showPendingUserMessage('Удаление песен из сет-листов');
+                } else {
+                    showOtherBranchMessage('Удаление песен из сет-листов');
+                }
                 return;
             }
             

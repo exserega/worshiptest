@@ -440,9 +440,21 @@ export async function addSongToSetlist(setlistId, songId, preferredKey) {
  * @returns {Promise<void>}
  */
 export async function removeSongFromSetlist(setlistId, songId) {
-    // Проверяем статус пользователя
-    if (isUserPending()) {
-        throw new Error('Удаление песен из сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+    // Проверяем права пользователя
+    try {
+        const { canEditInCurrentBranch, isUserMainBranch } = await import('../modules/branches/branchSelector.js');
+        if (!canEditInCurrentBranch()) {
+            if (!isUserMainBranch()) {
+                throw new Error('Удаление песен из сет-листов доступно только в вашем филиале.');
+            } else {
+                throw new Error('Удаление песен из сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+            }
+        }
+    } catch (e) {
+        // Если модуль не загружен, проверяем только статус
+        if (isUserPending()) {
+            throw new Error('Удаление песен из сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+        }
     }
     
     if (!setlistId || !songId) {
