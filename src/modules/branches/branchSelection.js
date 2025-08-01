@@ -186,9 +186,16 @@ function addConfirmButton() {
 async function confirmBranchSelection() {
     if (!selectedBranchId || !auth.currentUser) return;
     
-    const confirmButton = document.querySelector('.confirm-button');
-    confirmButton.disabled = true;
-    confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Сохранение...</span>';
+    // Показываем индикатор загрузки на выбранной карточке
+    const selectedCard = document.querySelector('.branch-card.selected');
+    if (selectedCard) {
+        selectedCard.style.opacity = '0.6';
+        selectedCard.style.pointerEvents = 'none';
+        const title = selectedCard.querySelector('h3');
+        if (title) {
+            title.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + title.textContent;
+        }
+    }
     
     try {
         // Обновляем профиль пользователя
@@ -213,12 +220,18 @@ async function confirmBranchSelection() {
         
     } catch (error) {
         console.error('Error selecting branch:', error);
-        confirmButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Ошибка</span>';
         
-        setTimeout(() => {
-            confirmButton.disabled = false;
-            confirmButton.innerHTML = '<i class="fas fa-check"></i><span>Выбрать филиал</span>';
-        }, 2000);
+        // Восстанавливаем выбранную карточку
+        if (selectedCard) {
+            selectedCard.style.opacity = '1';
+            selectedCard.style.pointerEvents = 'auto';
+            const title = selectedCard.querySelector('h3');
+            if (title) {
+                title.innerHTML = title.textContent.replace(/^.*? /, ''); // Убираем иконку загрузки
+            }
+        }
+        
+        alert('Ошибка при выборе филиала. Попробуйте еще раз.');
     }
 }
 
