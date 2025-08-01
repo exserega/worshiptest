@@ -128,12 +128,13 @@ export async function approveRequest(userId) {
         showRequestLoading(userId);
         
         const db = firebase.firestore();
+        console.log('Current user:', window.adminState.currentUser);
         
         // Обновляем статус пользователя на active
         await db.collection('users').doc(userId).update({
             status: 'active',
             approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            approvedBy: window.adminState.currentUser.id
+            approvedBy: window.adminState.currentUser?.id || window.adminState.currentUser?.uid
         });
         
         // Удаляем пользователя из списка заявок
@@ -175,6 +176,7 @@ export async function rejectRequest(userId) {
         showRequestLoading(userId);
         
         const db = firebase.firestore();
+        console.log('Current user:', window.adminState.currentUser);
         
         // Получаем информацию о филиале пользователя
         const user = window.adminState.requests.find(u => u.id === userId);
@@ -184,7 +186,7 @@ export async function rejectRequest(userId) {
         await db.collection('users').doc(userId).update({
             status: 'rejected',
             rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            rejectedBy: window.adminState.currentUser.id,
+            rejectedBy: window.adminState.currentUser?.id || window.adminState.currentUser?.uid,
             rejectionReason: reason || 'Без указания причины',
             branchName: branch?.name || 'Филиал не указан'
         });

@@ -700,6 +700,25 @@ body {
     .user-info p {
         font-size: var(--font-sm);
     }
+    
+    /* Requests Grid Mobile */
+    .requests-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        padding: var(--spacing-sm);
+    }
+    
+    .request-card {
+        padding: var(--spacing-md);
+    }
+    
+    .request-actions {
+        flex-direction: column;
+    }
+    
+    .request-actions .btn-action {
+        width: 100%;
+    }
 }
 
 /* ====================================
