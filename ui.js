@@ -1180,7 +1180,16 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         item.dataset.setlistId = setlist.id;
         item.addEventListener('click', () => {
             console.log('📋 [UI] Setlist item clicked:', setlist.name);
-            onSelect(setlist);
+            if (onSelect && typeof onSelect === 'function') {
+                onSelect(setlist);
+            } else {
+                // Если onSelect не передан, используем глобальный обработчик
+                if (window.handleSetlistSelect && typeof window.handleSetlistSelect === 'function') {
+                    window.handleSetlistSelect(setlist);
+                } else {
+                    console.error('📋 [UI] No setlist select handler available');
+                }
+            }
             // Закрываем dropdown после выбора
             const dropdown = document.getElementById('setlist-dropdown-menu');
             const dropdownBtn = document.getElementById('setlist-dropdown-btn');
@@ -1267,7 +1276,16 @@ export function renderSetlists(setlists, onSelect, onDelete) {
                 return;
             }
             
-            onDelete(setlist.id, setlist.name);
+            if (onDelete && typeof onDelete === 'function') {
+                onDelete(setlist.id, setlist.name);
+            } else {
+                // Если onDelete не передан, используем глобальный обработчик
+                if (window.handleSetlistDelete && typeof window.handleSetlistDelete === 'function') {
+                    window.handleSetlistDelete(setlist.id, setlist.name);
+                } else {
+                    console.error('📋 [UI] No setlist delete handler available');
+                }
+            }
         });
         item.appendChild(deleteBtn);
 
