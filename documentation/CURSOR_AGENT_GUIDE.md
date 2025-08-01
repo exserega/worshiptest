@@ -19,16 +19,14 @@
 ### **📁 КОРНЕВЫЕ ФАЙЛЫ (LEGACY + ENTRY POINTS)**
 ```
 /
-├── script.js           ⭐ ГЛАВНАЯ ТОЧКА ВХОДА (640 строк, было 2017)
-├── ui.js              ⭐ LEGACY UI ФУНКЦИИ (1367 строк)
-├── state.js           🔗 РЕЭКСПОРТ МОДУЛЬНОГО STATE
-├── api.js             🔗 LEGACY API (переходный)
-├── constants.js       📋 ГЛОБАЛЬНЫЕ КОНСТАНТЫ
-├── core.js           🔗 LEGACY CORE (переходный)
-├── firebase-config.js 🔗 LEGACY FIREBASE (переходный)
-├── metronome.js      🎵 МЕТРОНОМ UI (визуальная часть)
+├── script.js           ⭐ ГЛАВНАЯ ТОЧКА ВХОДА (934 строки)
+├── ui.js              ⭐ LEGACY UI ФУНКЦИИ (1431 строк)
+├── firebase-init.js   🔥 ИНИЦИАЛИЗАЦИЯ FIREBASE v8
 ├── index.html        🌐 HTML СТРУКТУРА
-└── styles.css        🎨 СТИЛИ
+├── styles.css        🎨 СТИЛИ (4963 строки)
+├── sw.js             📦 SERVICE WORKER
+├── manifest.json     📱 PWA МАНИФЕСТ
+└── [HTML редиректы: admin.html, login.html, settings.html]
 ```
 
 ### **📁 МОДУЛЬНАЯ СТРУКТУРА src/**
