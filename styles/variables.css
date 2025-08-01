@@ -22,6 +22,13 @@
     --label-color: #9ca3af;
     --glow-color: rgba(34, 211, 238, 0.4);
     
+    /* Additional colors for modals and UI */
+    --bg-tertiary: #1a1f2e;
+    --bg-info: rgba(34, 211, 238, 0.1);
+    --accent-info: #22d3ee;
+    --accent-primary-transparent: rgba(34, 211, 238, 0.1);
+    --accent-primary-hover: #06b6d4;
+    
     /* Typography System - Professional Scale */
     --font-xs: 0.75rem;    /* 12px - вспомогательный текст */
     --font-sm: 0.875rem;   /* 14px - основной текст кнопок */
@@ -48,6 +55,13 @@ body[data-theme="light"] {
     --input-bg-color: #ffffff;
     --label-color: #475569;
     --glow-color: rgba(28, 126, 214, 0.3);
+    
+    /* Additional colors for modals and UI */
+    --bg-tertiary: #f8fafc;
+    --bg-info: rgba(51, 154, 240, 0.1);
+    --accent-info: #339af0;
+    --accent-primary-transparent: rgba(51, 154, 240, 0.1);
+    --accent-primary-hover: #1c7ed6;
 }
 
 /* Принудительно убираем фоновые артефакты в светлой теме */

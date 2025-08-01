@@ -67,6 +67,11 @@ export async function initializeApp() {
         const { checkAndShowFirstAdminModal } = await import('../modules/auth/firstAdminModal.js');
         checkAndShowFirstAdminModal();
         
+        // Проверяем, нужно ли выбрать филиал
+        const { initBranchSelection, checkAndShowBranchSelection } = await import('../modules/branches/branchSelection.js');
+        initBranchSelection();
+        await checkAndShowBranchSelection();
+        
         // ====================================
         // THEME SETUP
         // ====================================
