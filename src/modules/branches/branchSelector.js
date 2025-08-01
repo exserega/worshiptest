@@ -3,7 +3,7 @@
 // ====================================
 
 import { db } from '../../../js/firebase-config.js';
-import { getUserBranchId, getUserStatus } from '../auth/authCheck.js';
+import { getCurrentBranchId, getUserStatus } from '../auth/authCheck.js';
 
 // Состояние выбранного филиала
 let selectedBranchId = null;
@@ -23,7 +23,7 @@ export function initBranchSelector() {
     }
     
     // Загружаем основной филиал пользователя
-    const branchId = getUserBranchId();
+    const branchId = getCurrentBranchId();
     if (branchId) {
         userMainBranchId = branchId;
         selectedBranchId = userMainBranchId; // По умолчанию выбран основной филиал
