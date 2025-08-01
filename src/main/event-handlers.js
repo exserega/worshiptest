@@ -429,6 +429,23 @@ function setupSetlistEventHandlers() {
     window.addEventListener('branchChanged', async (event) => {
         console.log('🏢 [EventHandlers] Branch changed:', event.detail);
         
+        // Сбрасываем текущий выбранный сет-лист
+        if (window.state && typeof window.state.setCurrentSetlistId === 'function') {
+            window.state.setCurrentSetlistId(null);
+        }
+        
+        // Очищаем отображение выбранного сет-листа
+        const selectedSetlistContainer = document.getElementById('selected-setlist-container');
+        if (selectedSetlistContainer) {
+            selectedSetlistContainer.innerHTML = '';
+        }
+        
+        // Скрываем dropdown если он открыт
+        const dropdown = document.getElementById('setlist-dropdown-menu');
+        if (dropdown) {
+            dropdown.classList.remove('show');
+        }
+        
         // Проверяем, открыта ли панель сет-листов
         const setlistsPanel = document.getElementById('setlists-panel');
         if (setlistsPanel && setlistsPanel.classList.contains('open')) {
@@ -475,13 +492,50 @@ function setupSetlistEventHandlers() {
                 const { canEditInCurrentBranch } = await import('../modules/branches/branchSelector.js');
                 const canEdit = canEditInCurrentBranch();
                 
-                // Обновляем состояние кнопки создания сет-листа
+                // Обновляем состояние всех кнопок редактирования
                 const createBtn = document.getElementById('create-new-setlist-header-btn');
+                const addSongBtn = document.getElementById('add-song-btn');
+                const addToSetlistBtn = document.getElementById('add-to-setlist-button');
+                
                 if (createBtn) {
                     if (!canEdit) {
                         createBtn.classList.add('pending-disabled');
+                        createBtn.title = 'Недоступно для редактирования';
+                        createBtn.style.opacity = '0.5';
+                        createBtn.style.cursor = 'not-allowed';
                     } else {
                         createBtn.classList.remove('pending-disabled');
+                        createBtn.title = '';
+                        createBtn.style.opacity = '';
+                        createBtn.style.cursor = '';
+                    }
+                }
+                
+                if (addSongBtn) {
+                    if (!canEdit) {
+                        addSongBtn.classList.add('pending-disabled');
+                        addSongBtn.title = 'Недоступно для редактирования';
+                        addSongBtn.style.opacity = '0.5';
+                        addSongBtn.style.cursor = 'not-allowed';
+                    } else {
+                        addSongBtn.classList.remove('pending-disabled');
+                        addSongBtn.title = '';
+                        addSongBtn.style.opacity = '';
+                        addSongBtn.style.cursor = '';
+                    }
+                }
+                
+                if (addToSetlistBtn) {
+                    if (!canEdit) {
+                        addToSetlistBtn.classList.add('pending-disabled');
+                        addToSetlistBtn.title = 'Недоступно для редактирования';
+                        addToSetlistBtn.style.opacity = '0.5';
+                        addToSetlistBtn.style.cursor = 'not-allowed';
+                    } else {
+                        addToSetlistBtn.classList.remove('pending-disabled');
+                        addToSetlistBtn.title = '';
+                        addToSetlistBtn.style.opacity = '';
+                        addToSetlistBtn.style.cursor = '';
                     }
                 }
                 
