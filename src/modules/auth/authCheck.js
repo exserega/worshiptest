@@ -65,11 +65,30 @@ export function checkAuth() {
                                 
                                 if (typeof window !== 'undefined') {
                                     if (confirm(message + '\n\nНажмите OK, чтобы связаться с администратором в Telegram')) {
-                                        window.open('https://t.me/Sha1oom', '_blank');
+                                        // Используем tg:// для мобильных устройств
+                                        window.location.href = 'tg://resolve?domain=Sha1oom';
+                                        // Запасной вариант через setTimeout
+                                        setTimeout(() => {
+                                            window.open('https://t.me/Sha1oom', '_blank');
+                                        }, 500);
                                     }
                                 }
                                 // Пользователь с rejected статусом может пользоваться сайтом, но с ограничениями
                                 resolve({ user: currentUser, isAuthenticated: true, isRejected: true });
+                            } else if (currentUser.status === 'active' && currentUser.approvedAt && !currentUser.approvalShown) {
+                                console.log('✅ User was recently approved');
+                                // Показываем уведомление об одобрении один раз
+                                if (typeof window !== 'undefined') {
+                                    const message = `Поздравляем! Ваша заявка одобрена.\n\nТеперь вы можете:\n• Создавать сет-листы\n• Редактировать сет-листы\n• Добавлять песни в сет-листы\n\nДобро пожаловать в команду!`;
+                                    alert(message);
+                                    
+                                    // Отмечаем что уведомление показано
+                                    const db = firebase.firestore();
+                                    db.collection('users').doc(firebaseUser.uid).update({
+                                        approvalShown: true
+                                    }).catch(err => console.error('Error updating approvalShown:', err));
+                                }
+                                resolve({ user: currentUser, isAuthenticated: true });
                             } else {
                                 resolve({ user: currentUser, isAuthenticated: true });
                             }
@@ -254,7 +273,12 @@ export function showRestrictedUserMessage(action) {
     }
     
     if (confirm(message + '\n\nНажмите OK, чтобы связаться с администратором в Telegram')) {
-        window.open('https://t.me/Sha1oom', '_blank');
+        // Используем tg:// для мобильных устройств
+        window.location.href = 'tg://resolve?domain=Sha1oom';
+        // Запасной вариант через setTimeout
+        setTimeout(() => {
+            window.open('https://t.me/Sha1oom', '_blank');
+        }, 500);
     }
 }
 

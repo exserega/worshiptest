@@ -540,6 +540,13 @@ body {
     font-size: var(--font-md);
 }
 
+.empty-state i {
+    font-size: 48px;
+    margin-bottom: var(--spacing-md);
+    display: block;
+    opacity: 0.5;
+}
+
 .info-text {
     display: flex;
     align-items: center;
