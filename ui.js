@@ -33,6 +33,20 @@ import {
 import * as api from './js/api.js';
 import { isUserPending, showPendingUserMessage } from './src/modules/auth/authCheck.js';
 
+// Функции для проверки прав в филиалах (загружаются динамически)
+let canEditInCurrentBranch = () => !isUserPending(); // По умолчанию проверяем только pending
+let isUserMainBranch = () => true; // По умолчанию считаем что это основной филиал
+let showOtherBranchMessage = () => {}; // Пустая функция по умолчанию
+
+// Пытаемся загрузить функции из branchSelector
+import('./src/modules/branches/branchSelector.js').then(module => {
+    canEditInCurrentBranch = module.canEditInCurrentBranch;
+    isUserMainBranch = module.isUserMainBranch;
+    showOtherBranchMessage = module.showOtherBranchMessage;
+}).catch(e => {
+    console.log('Branch selector module not loaded yet');
+});
+
 
 // --- DOM ELEMENT REFERENCES ---
 export const sheetSelect = document.getElementById('sheet-select');
@@ -1184,10 +1198,11 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         editBtn.innerHTML = '<i class="fas fa-edit"></i>';
         editBtn.className = 'edit-button';
         
-        // Проверяем статус пользователя
-        if (isUserPending()) {
+        // Проверяем права для текущего филиала
+        const canEdit = canEditInCurrentBranch();
+        if (!canEdit) {
             // Не используем disabled, чтобы обработчик клика работал
-            editBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+            editBtn.title = isUserMainBranch() ? 'Недоступно. Ваша заявка на рассмотрении' : 'Недоступно в чужом филиале';
             editBtn.style.opacity = '0.5';
             editBtn.style.cursor = 'not-allowed';
             editBtn.classList.add('pending-disabled');
@@ -1199,8 +1214,12 @@ export function renderSetlists(setlists, onSelect, onDelete) {
             e.stopPropagation();
             
             // Дополнительная проверка при клике
-            if (isUserPending()) {
-                showPendingUserMessage('Редактирование сет-листов');
+            if (!canEditInCurrentBranch()) {
+                if (isUserMainBranch()) {
+                    showPendingUserMessage('Редактирование сет-листов');
+                } else {
+                    showOtherBranchMessage('Редактирование сет-листов');
+                }
                 return;
             }
             
@@ -1224,10 +1243,10 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
         deleteBtn.className = 'remove-button';
         
-        // Проверяем статус пользователя
-        if (isUserPending()) {
+        // Проверяем права для текущего филиала
+        if (!canEdit) {
             // Не используем disabled, чтобы обработчик клика работал
-            deleteBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+            deleteBtn.title = isUserMainBranch() ? 'Недоступно. Ваша заявка на рассмотрении' : 'Недоступно в чужом филиале';
             deleteBtn.style.opacity = '0.5';
             deleteBtn.style.cursor = 'not-allowed';
             deleteBtn.classList.add('pending-disabled');
@@ -1239,8 +1258,12 @@ export function renderSetlists(setlists, onSelect, onDelete) {
             e.stopPropagation();
             
             // Дополнительная проверка при клике
-            if (isUserPending()) {
-                showPendingUserMessage('Удаление сет-листов');
+            if (!canEditInCurrentBranch()) {
+                if (isUserMainBranch()) {
+                    showPendingUserMessage('Удаление сет-листов');
+                } else {
+                    showOtherBranchMessage('Удаление сет-листов');
+                }
                 return;
             }
             

@@ -206,10 +206,26 @@ export async function loadSetlists() {
             }
         }
         
+        // Проверяем выбранный филиал в селекторе
+        let selectedBranchId = userBranchId; // По умолчанию - филиал пользователя
+        try {
+            const { getSelectedBranchId } = await import('../modules/branches/branchSelector.js');
+            selectedBranchId = getSelectedBranchId() || userBranchId;
+        } catch (e) {
+            // Если модуль еще не загружен, используем филиал пользователя
+            console.log('Branch selector not initialized yet');
+        }
+        
         let queryRef;
         
-        if (userBranchId) {
-            // Если есть филиал - показываем только сетлисты этого филиала
+        if (selectedBranchId) {
+            // Показываем сетлисты выбранного филиала
+            queryRef = query(
+                setlistsCollection, 
+                where("branchId", "==", selectedBranchId)
+            );
+        } else if (userBranchId) {
+            // Если нет выбранного - показываем сетлисты филиала пользователя
             queryRef = query(
                 setlistsCollection, 
                 where("branchId", "==", userBranchId)

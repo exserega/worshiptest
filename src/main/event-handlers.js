@@ -425,6 +425,49 @@ function setupSetlistEventHandlers() {
         }
     });
     
+    // Обработчик изменения филиала в селекторе
+    window.addEventListener('branchChanged', async (event) => {
+        console.log('🏢 [EventHandlers] Branch changed:', event.detail);
+        
+        // Проверяем, открыта ли панель сет-листов
+        const setlistsPanel = document.getElementById('setlists-panel');
+        if (setlistsPanel && setlistsPanel.classList.contains('open')) {
+            // Перезагружаем сет-листы для нового филиала
+            try {
+                // Показываем индикатор загрузки
+                const setlistsContainer = document.getElementById('setlists-container');
+                if (setlistsContainer) {
+                    setlistsContainer.innerHTML = '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Загрузка сет-листов...</div>';
+                }
+                
+                // Загружаем сет-листы нового филиала
+                const setlists = await api.loadSetlists();
+                
+                // Обновляем отображение
+                if (typeof ui.renderSetlists === 'function') {
+                    ui.renderSetlists(setlists);
+                }
+                
+                // Обновляем состояние кнопок в зависимости от прав
+                const { canEditInCurrentBranch } = await import('../modules/branches/branchSelector.js');
+                const canEdit = canEditInCurrentBranch();
+                
+                // Обновляем состояние кнопки создания сет-листа
+                const createBtn = document.getElementById('create-new-setlist-header-btn');
+                if (createBtn) {
+                    if (!canEdit) {
+                        createBtn.classList.add('pending-disabled');
+                    } else {
+                        createBtn.classList.remove('pending-disabled');
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error reloading setlists:', error);
+            }
+        }
+    });
+    
     // Переключение панелей - ПРЯМАЯ ЛОГИКА БЕЗ WINDOW ФУНКЦИЙ
     if (ui.toggleSetlistsButton) {
         ui.toggleSetlistsButton.addEventListener('click', async () => {
@@ -436,14 +479,24 @@ function setupSetlistEventHandlers() {
                 try {
                     ui.setlistsPanel.classList.add('open');
                     
-                    // Проверяем статус пользователя и отключаем кнопки для pending
+                    // Проверяем права пользователя для текущего филиала
                     const createBtn = document.getElementById('create-new-setlist-header-btn');
                     const addSongBtn = document.getElementById('add-song-btn');
                     
-                    if (isUserPending()) {
+                    // Проверяем можно ли редактировать в текущем филиале
+                    let canEdit = true;
+                    try {
+                        const { canEditInCurrentBranch } = await import('../modules/branches/branchSelector.js');
+                        canEdit = canEditInCurrentBranch();
+                    } catch (e) {
+                        // Если модуль не загружен, проверяем только статус пользователя
+                        canEdit = !isUserPending();
+                    }
+                    
+                    if (!canEdit) {
                         if (createBtn) {
                             // Не используем disabled, чтобы обработчик клика работал
-                            createBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+                            createBtn.title = 'Недоступно для редактирования';
                             createBtn.style.opacity = '0.5';
                             createBtn.style.cursor = 'not-allowed';
                             createBtn.classList.add('pending-disabled');
@@ -627,12 +680,29 @@ function setupSetlistEventHandlers() {
     // ОБРАБОТЧИК КНОПКИ СОЗДАНИЯ СЕТЛИСТА - КРИТИЧЕСКИ ВАЖНО!
     const createSetlistBtn = document.getElementById('create-new-setlist-header-btn');
     if (createSetlistBtn) {
-        createSetlistBtn.addEventListener('click', () => {
+        createSetlistBtn.addEventListener('click', async () => {
             console.log('🎵 [EventHandlers] Create setlist button clicked');
             
+            // Проверяем права для текущего филиала
+            let canEdit = true;
+            try {
+                const { canEditInCurrentBranch, isUserMainBranch, showOtherBranchMessage } = await import('../modules/branches/branchSelector.js');
+                canEdit = canEditInCurrentBranch();
+                
+                if (!canEdit && !isUserMainBranch()) {
+                    // Если это чужой филиал
+                    console.log('⚠️ [EventHandlers] Cannot create in other branch');
+                    showOtherBranchMessage('Создание сет-листов');
+                    return;
+                }
+            } catch (e) {
+                // Если модуль не загружен, проверяем только статус
+                canEdit = !isUserPending();
+            }
+            
             // Проверяем статус пользователя
-            if (isUserPending()) {
-                console.log('⚠️ [EventHandlers] User is pending, creation blocked');
+            if (!canEdit) {
+                console.log('⚠️ [EventHandlers] User cannot edit, creation blocked');
                 showPendingUserMessage('Создание сет-листов');
                 return;
             }

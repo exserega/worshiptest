@@ -383,6 +383,10 @@ async function loadInitialData() {
             window.searchWorkerManager = searchWorkerManager;
         }
         
+        // Инициализируем селектор филиалов для сет-листов
+        const { initBranchSelector } = await import('../modules/branches/branchSelector.js');
+        initBranchSelector();
+        
     } catch (error) {
         console.error('❌ [Initialization] Ошибка загрузки данных:', error);
         throw error;

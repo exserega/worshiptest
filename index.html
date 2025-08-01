@@ -300,6 +300,23 @@
         <h3 class="panel-title">Сет-листы</h3>
     </div>
     
+    <!-- Селектор филиала -->
+    <div class="branch-selector-section ui-section">
+        <div class="branch-selector-wrapper">
+            <label for="setlist-branch-selector" class="branch-selector-label">
+                <i class="fas fa-building"></i>
+                <span>Филиал:</span>
+            </label>
+            <select id="setlist-branch-selector" class="branch-selector">
+                <option value="">Загрузка...</option>
+            </select>
+        </div>
+        <div class="branch-selector-info" style="display: none;">
+            <i class="fas fa-info-circle"></i>
+            <span class="info-text">Просмотр другого филиала</span>
+        </div>
+    </div>
+    
     <!-- БЛОК 1: Создание нового списка (премиум дизайн) -->
     <div class="ui-section create-section">
         <button id="create-new-setlist-header-btn" class="create-btn-modern">
