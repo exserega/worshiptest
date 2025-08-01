@@ -22,7 +22,7 @@ import {
 import { showMobileSongPreview } from '../core/index.js';
 import * as ui from '../../ui.js';
 import * as state from '../../js/state.js';
-import { isUserPending, getUserStatus } from '../modules/auth/authCheck.js';
+import { isUserPending, getUserStatus, showPendingUserMessage } from '../modules/auth/authCheck.js';
 
 // ====================================
 // MAIN SETUP FUNCTION
@@ -436,13 +436,23 @@ function setupSetlistEventHandlers() {
                 try {
                     ui.setlistsPanel.classList.add('open');
                     
-                    // Проверяем статус пользователя и отключаем кнопку создания для pending
+                    // Проверяем статус пользователя и отключаем кнопки для pending
                     const createBtn = document.getElementById('create-new-setlist-header-btn');
-                    if (createBtn && isUserPending()) {
-                        createBtn.disabled = true;
-                        createBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
-                        createBtn.style.opacity = '0.5';
-                        createBtn.style.cursor = 'not-allowed';
+                    const addSongBtn = document.getElementById('add-song-btn');
+                    
+                    if (isUserPending()) {
+                        if (createBtn) {
+                            createBtn.disabled = true;
+                            createBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+                            createBtn.style.opacity = '0.5';
+                            createBtn.style.cursor = 'not-allowed';
+                        }
+                        if (addSongBtn) {
+                            addSongBtn.disabled = true;
+                            addSongBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+                            addSongBtn.style.opacity = '0.5';
+                            addSongBtn.style.cursor = 'not-allowed';
+                        }
                     }
                     // Прямой вызов API и UI функций
                     const setlists = await api.loadSetlists();
@@ -621,7 +631,7 @@ function setupSetlistEventHandlers() {
             // Проверяем статус пользователя
             if (isUserPending()) {
                 console.log('⚠️ [EventHandlers] User is pending, creation blocked');
-                alert('Создание сет-листов недоступно. Ваша заявка находится на рассмотрении администратора.');
+                showPendingUserMessage('Создание сет-листов');
                 return;
             }
             
@@ -779,6 +789,14 @@ function setupSetlistEventHandlers() {
     if (addSongBtn) {
         addSongBtn.addEventListener('click', () => {
             console.log('🎵 [EventHandlers] Add song button clicked');
+            
+            // Проверяем статус пользователя
+            if (isUserPending()) {
+                console.log('⚠️ [EventHandlers] User is pending, add songs blocked');
+                showPendingUserMessage('Добавление песен в сет-листы');
+                return;
+            }
+            
             // Проверяем есть ли выбранный сетлист
             const currentSetlistId = window.state?.currentSetlistId;
             if (currentSetlistId) {
@@ -1022,7 +1040,7 @@ function setupSongEventHandlers() {
             // Проверяем статус пользователя
             if (isUserPending()) {
                 console.log('⚠️ [EventHandlers] User is pending, add to setlist blocked');
-                alert('Добавление песен в сет-листы недоступно. Ваша заявка находится на рассмотрении.');
+                showPendingUserMessage('Добавление песен в сет-листы');
                 return;
             }
             

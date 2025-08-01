@@ -424,6 +424,11 @@ export async function addSongToSetlist(setlistId, songId, preferredKey) {
  * @returns {Promise<void>}
  */
 export async function removeSongFromSetlist(setlistId, songId) {
+    // Проверяем статус пользователя
+    if (isUserPending()) {
+        throw new Error('Удаление песен из сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+    }
+    
     if (!setlistId || !songId) {
         throw new Error('setlistId и songId обязательны');
     }

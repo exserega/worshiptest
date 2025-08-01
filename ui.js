@@ -31,7 +31,7 @@ import {
     distributeSongBlocksToColumns
 } from './js/core.js';
 import * as api from './js/api.js';
-import { isUserPending } from './src/modules/auth/authCheck.js';
+import { isUserPending, showPendingUserMessage } from './src/modules/auth/authCheck.js';
 
 
 // --- DOM ELEMENT REFERENCES ---
@@ -1019,9 +1019,25 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         const removeBtn = document.createElement('button');
         removeBtn.innerHTML = '<i class="fas fa-times"></i>';
         removeBtn.className = 'song-action-btn';
-        removeBtn.title = 'Удалить из сет-листа';
+        
+        // Проверяем статус пользователя
+        if (isUserPending()) {
+            removeBtn.disabled = true;
+            removeBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+            removeBtn.style.opacity = '0.5';
+        } else {
+            removeBtn.title = 'Удалить из сет-листа';
+        }
+        
         removeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            
+            // Дополнительная проверка при клике
+            if (isUserPending()) {
+                showPendingUserMessage('Удаление песен из сет-листов');
+                return;
+            }
+            
             onSongRemove(song.id, song.name);
         });
         
@@ -1176,7 +1192,7 @@ export function renderSetlists(setlists, onSelect, onDelete) {
             
             // Дополнительная проверка при клике
             if (isUserPending()) {
-                alert('Редактирование сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+                showPendingUserMessage('Редактирование сет-листов');
                 return;
             }
             
@@ -1214,7 +1230,7 @@ export function renderSetlists(setlists, onSelect, onDelete) {
             
             // Дополнительная проверка при клике
             if (isUserPending()) {
-                alert('Удаление сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+                showPendingUserMessage('Удаление сет-листов');
                 return;
             }
             

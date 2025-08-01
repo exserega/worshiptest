@@ -208,6 +208,18 @@ export function getUserStatus() {
     return currentUser?.status || null;
 }
 
+/**
+ * Показать сообщение о том, что функция недоступна для pending пользователей
+ * @param {string} action - Название действия (например, "Создание сет-листов")
+ */
+export function showPendingUserMessage(action) {
+    const message = `${action} недоступно.\n\nВаша заявка находится на рассмотрении администратора.\n\nОбратитесь к администратору в Telegram: @Sha1oom`;
+    
+    if (confirm(message + '\n\nНажмите OK, чтобы открыть Telegram')) {
+        window.open('https://t.me/Sha1oom', '_blank');
+    }
+}
+
 // ====================================
 // AUTH GATE
 // ====================================
