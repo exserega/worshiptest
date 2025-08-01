@@ -192,6 +192,22 @@ export function getCurrentBranchId() {
     return currentUser?.branchId || null;
 }
 
+/**
+ * Проверить является ли пользователь в статусе pending
+ * @returns {boolean}
+ */
+export function isUserPending() {
+    return currentUser?.status === 'pending';
+}
+
+/**
+ * Получить статус текущего пользователя
+ * @returns {string|null}
+ */
+export function getUserStatus() {
+    return currentUser?.status || null;
+}
+
 // ====================================
 // AUTH GATE
 // ====================================

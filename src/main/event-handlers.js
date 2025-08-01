@@ -22,6 +22,7 @@ import {
 import { showMobileSongPreview } from '../core/index.js';
 import * as ui from '../../ui.js';
 import * as state from '../../js/state.js';
+import { isUserPending, getUserStatus } from '../modules/auth/authCheck.js';
 
 // ====================================
 // MAIN SETUP FUNCTION
@@ -434,6 +435,15 @@ function setupSetlistEventHandlers() {
                 ui.toggleSetlistsButton.classList.add('loading');
                 try {
                     ui.setlistsPanel.classList.add('open');
+                    
+                    // Проверяем статус пользователя и отключаем кнопку создания для pending
+                    const createBtn = document.getElementById('create-new-setlist-header-btn');
+                    if (createBtn && isUserPending()) {
+                        createBtn.disabled = true;
+                        createBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+                        createBtn.style.opacity = '0.5';
+                        createBtn.style.cursor = 'not-allowed';
+                    }
                     // Прямой вызов API и UI функций
                     const setlists = await api.loadSetlists();
                     console.log('📋 [EventHandlers] Loaded setlists:', setlists.length);
@@ -607,6 +617,14 @@ function setupSetlistEventHandlers() {
     if (createSetlistBtn) {
         createSetlistBtn.addEventListener('click', () => {
             console.log('🎵 [EventHandlers] Create setlist button clicked');
+            
+            // Проверяем статус пользователя
+            if (isUserPending()) {
+                console.log('⚠️ [EventHandlers] User is pending, creation blocked');
+                alert('Создание сет-листов недоступно. Ваша заявка находится на рассмотрении администратора.');
+                return;
+            }
+            
             // Открываем модал создания сетлиста
             if (ui.createSetlistModal) {
                 ui.createSetlistModal.classList.add('show');
@@ -1000,6 +1018,14 @@ function setupSongEventHandlers() {
         ui.addToSetlistButton.addEventListener('click', async (e) => {
             e.preventDefault();
             console.log('📋 [EventHandlers] Add to setlist button clicked');
+            
+            // Проверяем статус пользователя
+            if (isUserPending()) {
+                console.log('⚠️ [EventHandlers] User is pending, add to setlist blocked');
+                alert('Добавление песен в сет-листы недоступно. Ваша заявка находится на рассмотрении.');
+                return;
+            }
+            
             if (typeof window.handleAddSongToSetlist === 'function') {
                 await window.handleAddSongToSetlist();
             } else {

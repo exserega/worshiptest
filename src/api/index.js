@@ -31,6 +31,7 @@ import {
 } from '../utils/firebase-v8-adapter.js';
 
 import * as state from '../../js/state.js';
+import { isUserPending } from '../modules/auth/authCheck.js';
 
 // Получаем auth из глобального firebase (версия 8)
 const auth = window.firebase?.auth?.() || null;
@@ -251,6 +252,11 @@ export async function loadSetlists() {
  * @returns {Promise<string>} ID созданного сетлиста
  */
 export async function createSetlist(name) {
+    // Проверяем статус пользователя
+    if (isUserPending()) {
+        throw new Error('Создание сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+    }
+    
     if (!name || !name.trim()) {
         throw new Error('Название сетлиста обязательно');
     }
@@ -288,6 +294,11 @@ export async function createSetlist(name) {
  * @returns {Promise<void>}
  */
 export async function deleteSetlist(setlistId) {
+    // Проверяем статус пользователя
+    if (isUserPending()) {
+        throw new Error('Удаление сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+    }
+    
     if (!setlistId) {
         throw new Error('setlistId обязателен');
     }
@@ -332,6 +343,11 @@ export async function updateSetlistName(setlistId, newName) {
  * @returns {Promise<Object>} Результат операции
  */
 export async function addSongToSetlist(setlistId, songId, preferredKey) {
+    // Проверяем статус пользователя
+    if (isUserPending()) {
+        throw new Error('Добавление песен в сет-листы недоступно. Ваша заявка находится на рассмотрении.');
+    }
+    
     if (!setlistId || !songId) {
         throw new Error('setlistId и songId обязательны');
     }

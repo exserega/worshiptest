@@ -31,6 +31,7 @@ import {
     distributeSongBlocksToColumns
 } from './js/core.js';
 import * as api from './js/api.js';
+import { isUserPending } from './src/modules/auth/authCheck.js';
 
 
 // --- DOM ELEMENT REFERENCES ---
@@ -364,7 +365,18 @@ export function displaySongDetails(songData, keyToSelect) {
     }
 
     favoriteButton.disabled = false;
-    addToSetlistButton.disabled = false;
+    
+    // Проверяем статус пользователя для кнопки добавления в сет-лист
+    if (isUserPending()) {
+        addToSetlistButton.disabled = true;
+        addToSetlistButton.title = 'Недоступно. Ваша заявка на рассмотрении';
+        addToSetlistButton.style.opacity = '0.5';
+    } else {
+        addToSetlistButton.disabled = false;
+        addToSetlistButton.title = 'Добавить в сет-лист';
+        addToSetlistButton.style.opacity = '1';
+    }
+    
     repertoireButton.disabled = false;
     toggleChordsButton.disabled = false;
     chordsOnlyButton.disabled = false;
@@ -1149,9 +1161,25 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         const editBtn = document.createElement('button');
         editBtn.innerHTML = '<i class="fas fa-edit"></i>';
         editBtn.className = 'edit-button';
-        editBtn.title = 'Редактировать название';
+        
+        // Проверяем статус пользователя
+        if (isUserPending()) {
+            editBtn.disabled = true;
+            editBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+            editBtn.style.opacity = '0.5';
+        } else {
+            editBtn.title = 'Редактировать название';
+        }
+        
         editBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
+            
+            // Дополнительная проверка при клике
+            if (isUserPending()) {
+                alert('Редактирование сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+                return;
+            }
+            
             const newName = prompt('Введите новое название сет-листа:', setlist.name);
             if (newName && newName.trim() && newName !== setlist.name) {
                 try {
@@ -1171,9 +1199,25 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         const deleteBtn = document.createElement('button');
         deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
         deleteBtn.className = 'remove-button';
-        deleteBtn.title = 'Удалить сет-лист';
+        
+        // Проверяем статус пользователя
+        if (isUserPending()) {
+            deleteBtn.disabled = true;
+            deleteBtn.title = 'Недоступно. Ваша заявка на рассмотрении';
+            deleteBtn.style.opacity = '0.5';
+        } else {
+            deleteBtn.title = 'Удалить сет-лист';
+        }
+        
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            
+            // Дополнительная проверка при клике
+            if (isUserPending()) {
+                alert('Удаление сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+                return;
+            }
+            
             onDelete(setlist.id, setlist.name);
         });
         item.appendChild(deleteBtn);
