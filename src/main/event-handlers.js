@@ -434,10 +434,26 @@ function setupSetlistEventHandlers() {
             window.state.setCurrentSetlistId(null);
         }
         
-        // Очищаем отображение выбранного сет-листа
-        const selectedSetlistContainer = document.getElementById('selected-setlist-container');
-        if (selectedSetlistContainer) {
-            selectedSetlistContainer.innerHTML = '';
+        // Очищаем все отображения выбранного сет-листа
+        const currentSetlistName = document.getElementById('current-setlist-name');
+        if (currentSetlistName) {
+            currentSetlistName.textContent = 'Выберите список';
+        }
+        
+        const selectedSetlistControl = document.getElementById('selected-setlist-control');
+        if (selectedSetlistControl) {
+            selectedSetlistControl.style.display = 'none';
+        }
+        
+        const currentSetlistSongsContainer = document.getElementById('current-setlist-songs-container');
+        if (currentSetlistSongsContainer) {
+            currentSetlistSongsContainer.innerHTML = '';
+        }
+        
+        // Сбрасываем текст в dropdown кнопке
+        const dropdownBtnText = document.querySelector('#setlist-dropdown-btn .selector-text');
+        if (dropdownBtnText) {
+            dropdownBtnText.textContent = 'Выберите список';
         }
         
         // Скрываем dropdown если он открыт
