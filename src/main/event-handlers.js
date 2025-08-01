@@ -602,7 +602,7 @@ function setupSetlistEventHandlers() {
                         window.state.setSetlists(setlists);
                     }
                     if (typeof ui.renderSetlists === 'function') {
-                        ui.renderSetlists(setlists, 
+                        await ui.renderSetlists(setlists, 
                             window.handleSetlistSelect || function(setlist) {
                                 console.log('📋 Setlist selected:', setlist.name);
                                 if (window.state) window.state.setCurrentSetlistId(setlist.id);
@@ -1226,7 +1226,7 @@ function setupSongEventHandlers() {
             if (ui.setlistsPanel?.classList.contains('open')) {
                 // Обновляем отображение
                 if (typeof ui.renderSetlists === 'function') {
-                    ui.renderSetlists(setlists, 
+                                        await ui.renderSetlists(setlists,
                         window.handleSetlistSelect,
                         window.handleSetlistDelete
                     );

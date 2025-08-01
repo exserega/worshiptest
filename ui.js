@@ -34,7 +34,7 @@ import * as api from './js/api.js';
 import { isUserPending, showPendingUserMessage } from './src/modules/auth/authCheck.js';
 
 // Функции для проверки прав в филиалах (загружаются динамически)
-let canEditInCurrentBranch = () => !isUserPending(); // По умолчанию проверяем только pending
+let canEditInCurrentBranch = async () => !isUserPending(); // По умолчанию проверяем только pending
 let isUserMainBranch = () => true; // По умолчанию считаем что это основной филиал
 let showOtherBranchMessage = () => {}; // Пустая функция по умолчанию
 
@@ -963,7 +963,7 @@ export function renderFavorites(favoriteSongs, onSelect, onRemove) {
 
 // --- SETLIST PANEL ---
 
-function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
+async function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
     if (!currentSetlistSongsContainer) return;
     currentSetlistSongsContainer.innerHTML = '';
 
@@ -1039,7 +1039,7 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         removeBtn.className = 'song-action-btn';
         
         // Проверяем права для текущего филиала
-        const canEdit = canEditInCurrentBranch();
+        const canEdit = await canEditInCurrentBranch();
         if (!canEdit) {
             // Не используем disabled, чтобы обработчик клика работал
             removeBtn.title = isUserMainBranch() ? 'Недоступно. Ваша заявка на рассмотрении' : 'Недоступно в чужом филиале';
@@ -1050,11 +1050,11 @@ function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
             removeBtn.title = 'Удалить из сет-листа';
         }
         
-        removeBtn.addEventListener('click', (e) => {
+        removeBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
             
             // Дополнительная проверка при клике
-            if (!canEditInCurrentBranch()) {
+            if (!(await canEditInCurrentBranch())) {
                 if (isUserMainBranch()) {
                     showPendingUserMessage('Удаление песен из сет-листов');
                 } else {
@@ -1161,7 +1161,7 @@ function getSongCountText(count) {
  * @param {function} onSelect - Функция обратного вызова при выборе сетлиста.
  * @param {function} onDelete - Функция обратного вызова при удалении сетлиста.
  */
-export function renderSetlists(setlists, onSelect, onDelete) {
+export async function renderSetlists(setlists, onSelect, onDelete) {
     console.log('📋 [UI] renderSetlists called with:', setlists?.length, 'setlists');
     console.log('📋 [UI] setlistsListContainer:', setlistsListContainer);
     if (!setlistsListContainer) {
@@ -1213,7 +1213,7 @@ export function renderSetlists(setlists, onSelect, onDelete) {
         editBtn.className = 'edit-button';
         
         // Проверяем права для текущего филиала
-        const canEdit = canEditInCurrentBranch();
+        const canEdit = await canEditInCurrentBranch();
         if (!canEdit) {
             // Не используем disabled, чтобы обработчик клика работал
             editBtn.title = isUserMainBranch() ? 'Недоступно. Ваша заявка на рассмотрении' : 'Недоступно в чужом филиале';
@@ -1228,7 +1228,7 @@ export function renderSetlists(setlists, onSelect, onDelete) {
             e.stopPropagation();
             
             // Дополнительная проверка при клике
-            if (!canEditInCurrentBranch()) {
+            if (!(await canEditInCurrentBranch())) {
                 if (isUserMainBranch()) {
                     showPendingUserMessage('Редактирование сет-листов');
                 } else {
@@ -1268,11 +1268,11 @@ export function renderSetlists(setlists, onSelect, onDelete) {
             deleteBtn.title = 'Удалить сет-лист';
         }
         
-        deleteBtn.addEventListener('click', (e) => {
+        deleteBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
             
             // Дополнительная проверка при клике
-            if (!canEditInCurrentBranch()) {
+            if (!(await canEditInCurrentBranch())) {
                 if (isUserMainBranch()) {
                     showPendingUserMessage('Удаление сет-листов');
                 } else {

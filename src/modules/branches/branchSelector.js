@@ -126,27 +126,53 @@ export function isUserMainBranch() {
 }
 
 /**
+ * Проверить, принадлежит ли пользователь к выбранному филиалу
+ */
+export async function isUserInSelectedBranch() {
+    if (!selectedBranchId) return true; // Если филиал не выбран, считаем что это основной
+    
+    try {
+        const { isUserInBranch } = await import('./userBranches.js');
+        return await isUserInBranch(selectedBranchId);
+    } catch (e) {
+        // Если модуль не загружен, проверяем только основной филиал
+        return selectedBranchId === userMainBranchId;
+    }
+}
+
+/**
  * Проверить, может ли пользователь редактировать в текущем филиале
  */
-export function canEditInCurrentBranch() {
-    // Если не свой филиал - нельзя редактировать
-    if (!isUserMainBranch()) {
+export async function canEditInCurrentBranch() {
+    // Проверяем статус пользователя
+    const status = getUserStatus();
+    if (status !== 'active') {
         return false;
     }
     
-    // Если свой филиал - проверяем статус пользователя
-    const status = getUserStatus();
-    return status === 'active';
+    // Проверяем, принадлежит ли пользователь к выбранному филиалу
+    return await isUserInSelectedBranch();
 }
 
 /**
  * Показать сообщение о просмотре чужого филиала
  */
-export function showOtherBranchMessage(action) {
+export async function showOtherBranchMessage(action) {
     const selectedBranch = branches.find(b => b.id === selectedBranchId);
     const branchName = selectedBranch ? selectedBranch.name : 'другого филиала';
     
-    const message = `Вы просматриваете сет-листы филиала "${branchName}". ${action} доступно только в вашем филиале.`;
+    const message = `Вы просматриваете сет-листы филиала "${branchName}". ${action} доступно только в ваших филиалах.`;
     
-    alert(message);
+    // Показываем диалог с опциями
+    const result = confirm(message + '\n\nХотите отправить запрос на присоединение к этому филиалу?');
+    
+    if (result) {
+        try {
+            const { requestAdditionalBranch } = await import('./userBranches.js');
+            await requestAdditionalBranch(selectedBranchId, `Запрос через попытку ${action.toLowerCase()}`);
+            alert('Запрос на присоединение к филиалу отправлен администратору.');
+        } catch (error) {
+            alert('Ошибка при отправке запроса: ' + error.message);
+        }
+    }
 }
