@@ -146,11 +146,8 @@ function selectBranch(branchId, cardElement) {
     cardElement.classList.add('selected');
     selectedBranchId = branchId;
     
-    // Активируем кнопку подтверждения
-    const confirmButton = document.querySelector('.confirm-button');
-    if (confirmButton) {
-        confirmButton.disabled = false;
-    }
+    // Сразу подтверждаем выбор при клике
+    confirmBranchSelection();
 }
 
 /**
@@ -164,18 +161,23 @@ function addConfirmButton() {
     actionsDiv.className = 'branch-selection-actions';
     
     actionsDiv.innerHTML = `
-        <button class="confirm-button" disabled>
-            <i class="fas fa-check"></i>
-            <span>Выбрать филиал</span>
-        </button>
+        <div class="branch-selection-help">
+            <p>Не нашли свой филиал?</p>
+            <button class="contact-admin-button">
+                <i class="fab fa-telegram"></i>
+                <span>Отправить заявку</span>
+            </button>
+        </div>
     `;
     
     const modalContent = branchSelectionModal.querySelector('.modal-content');
     modalContent.appendChild(actionsDiv);
     
-    // Обработчик кнопки подтверждения
-    const confirmButton = actionsDiv.querySelector('.confirm-button');
-    confirmButton.addEventListener('click', confirmBranchSelection);
+    // Обработчик кнопки связи с администратором
+    const contactButton = actionsDiv.querySelector('.contact-admin-button');
+    contactButton.addEventListener('click', () => {
+        window.open('https://t.me/Sha1oom', '_blank');
+    });
 }
 
 /**

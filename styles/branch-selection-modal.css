@@ -218,6 +218,73 @@
 /* === МОБИЛЬНАЯ АДАПТАЦИЯ === */
 /* Стили для маленьких экранов */
 
+/* === СТИЛИ ДЛЯ ПОМОЩИ === */
+/* Блок помощи для тех, кто не нашел свой филиал */
+
+.branch-selection-help {
+    text-align: center;
+}
+
+.branch-selection-help p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.contact-admin-button {
+    background: var(--accent-primary);
+    color: #ffffff !important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.contact-admin-button span,
+.contact-admin-button i {
+    color: #ffffff !important;
+}
+
+.contact-admin-button:hover {
+    background: var(--accent-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.contact-admin-button i {
+    font-size: 1.2rem;
+}
+
+/* === КОМПАКТНЫЕ КАРТОЧКИ === */
+/* Переопределение стилей для более компактного вида */
+
+.branch-card {
+    padding: 10px 12px !important;
+    text-align: left !important;
+}
+
+.branch-card h3 {
+    font-size: 0.95rem !important;
+    margin-bottom: 4px !important;
+}
+
+.branch-card p {
+    font-size: 0.8rem !important;
+    margin-bottom: 2px !important;
+}
+
+.branch-card p i {
+    font-size: 0.8rem;
+    width: 14px;
+}
+
+/* === МЕДИА ЗАПРОСЫ === */
 @media (max-width: 768px) {
     .branch-selection-content {
         padding: 20px;               /* Меньше отступы на мобильных */
@@ -226,11 +293,19 @@
     
     .branches-selection-grid {
         grid-template-columns: 1fr;  /* Одна колонка на мобильных */
-        gap: 15px;                   /* Меньше отступы */
+        gap: 10px;                   /* Еще меньше отступы */
     }
     
     .branch-card {
-        padding: 15px;               /* Меньше отступы */
+        padding: 8px 10px !important; /* Еще меньше отступы на мобильных */
+    }
+    
+    .branch-card h3 {
+        font-size: 0.9rem !important;
+    }
+    
+    .branch-card p {
+        font-size: 0.75rem !important;
     }
     
     .modal-footer-info {
