@@ -194,8 +194,14 @@ export function showEditUserModal(userId) {
                         <div class="form-group">
                             <label>Статус</label>
                             <select id="user-status" ${user.isFounder && currentUser.id !== user.id ? 'disabled' : ''}>
+                                <option value="pending" ${user.status === 'pending' ? 'selected' : ''}>
+                                    Ожидает подтверждения
+                                </option>
                                 <option value="active" ${user.status === 'active' ? 'selected' : ''}>
                                     Активен
+                                </option>
+                                <option value="rejected" ${user.status === 'rejected' ? 'selected' : ''}>
+                                    Отклонен
                                 </option>
                                 <option value="blocked" ${user.status === 'blocked' || user.status === 'banned' ? 'selected' : ''}>
                                     Заблокирован
@@ -428,7 +434,8 @@ function getStatusBadgeClass(status) {
         active: 'success',
         blocked: 'danger',
         banned: 'danger', // для обратной совместимости
-        pending: 'success' // временная совместимость - pending считаем активным
+        pending: 'warning', // pending - желтый цвет для ожидающих
+        rejected: 'secondary' // rejected - серый цвет для отклоненных
     };
     return classes[status] || 'secondary';
 }
@@ -438,7 +445,8 @@ function getStatusText(status) {
         active: 'Активен',
         blocked: 'Заблокирован',
         banned: 'Заблокирован', // для обратной совместимости
-        pending: 'Активен' // временная совместимость
+        pending: 'Ожидает подтверждения',
+        rejected: 'Отклонен'
     };
     return texts[status] || status;
 }

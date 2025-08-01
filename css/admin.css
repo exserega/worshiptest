@@ -203,6 +203,14 @@ body {
     background: var(--accent-color);
 }
 
+/* Badge в табе */
+.tab-button .badge {
+    margin-left: var(--spacing-xs);
+    background: var(--accent-color);
+    min-width: 20px;
+    text-align: center;
+}
+
 /* ====================================
    CONTENT
 ==================================== */
@@ -510,6 +518,10 @@ body {
     background: #2196F3;
 }
 
+.badge-secondary {
+    background: #757575;
+}
+
 /* ====================================
    STATES
 ==================================== */
@@ -591,6 +603,83 @@ body {
     .branches-grid {
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: var(--spacing-md);
+    }
+    
+    /* Requests Grid */
+    .requests-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: var(--spacing-lg);
+        padding: var(--spacing-md);
+    }
+    
+    /* Request Card */
+    .request-card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-color);
+    }
+    
+    .request-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .request-card.loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+    
+    .request-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .request-header h3 {
+        margin: 0;
+        color: var(--text-color);
+        font-size: var(--font-lg);
+    }
+    
+    .request-date {
+        font-size: var(--font-sm);
+        color: var(--text-color);
+        opacity: 0.6;
+    }
+    
+    .request-info {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .request-info .info-row {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-sm);
+        color: var(--text-color);
+        font-size: var(--font-sm);
+    }
+    
+    .request-info .info-row i {
+        width: 20px;
+        opacity: 0.6;
+    }
+    
+    .request-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+        flex-wrap: wrap;
+    }
+    
+    .request-actions .btn-action {
+        flex: 1;
+        min-width: 100px;
+        justify-content: center;
     }
     
     /* Cards */

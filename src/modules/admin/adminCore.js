@@ -91,6 +91,7 @@ async function loadInitialData() {
         showLoadingState('users');
         showLoadingState('branches');
         showLoadingState('transfers');
+        showLoadingState('requests');
         
         // Загружаем данные параллельно
         const [users, branches, transfers] = await Promise.all([
@@ -104,6 +105,9 @@ async function loadInitialData() {
         window.adminState.branches = branches;
         window.adminState.transfers = transfers;
         
+        // Фильтруем пользователей со статусом pending для заявок
+        window.adminState.requests = users.filter(user => user.status === 'pending');
+        
         // Обновляем UI
         updateBranchFilter();
         
@@ -111,10 +115,12 @@ async function loadInitialData() {
         const { displayUsers } = await import('./usersModule.js');
         const { displayBranches } = await import('./branchesModule.js');
         const { displayTransfers } = await import('./transfersModule.js');
+        const { displayRequests } = await import('./requestsModule.js');
         
         displayUsers();
         displayBranches();
         displayTransfers();
+        displayRequests();
         
     } catch (error) {
         console.error('Error loading initial data:', error);
