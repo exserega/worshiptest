@@ -443,9 +443,32 @@ function setupSetlistEventHandlers() {
                 // Загружаем сет-листы нового филиала
                 const setlists = await api.loadSetlists();
                 
-                // Обновляем отображение
+                // Обновляем отображение с правильными обработчиками
                 if (typeof ui.renderSetlists === 'function') {
-                    ui.renderSetlists(setlists);
+                    ui.renderSetlists(setlists, 
+                        window.handleSetlistSelect || function(setlist) {
+                            console.log('📋 Setlist selected:', setlist.name);
+                            if (window.state) window.state.setCurrentSetlistId(setlist.id);
+                            if (ui.displaySelectedSetlist) {
+                                ui.displaySelectedSetlist(setlist, 
+                                    window.handleFavoriteOrRepertoireSelect,
+                                    window.handleRemoveSongFromSetlist
+                                );
+                            }
+                        },
+                        window.handleSetlistDelete || async function(setlistId, setlistName) {
+                            console.log('📋 Delete setlist:', setlistName);
+                            if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
+                                try {
+                                    await api.deleteSetlist(setlistId);
+                                    ui.toggleSetlistsButton.click(); // Refresh panel
+                                } catch (error) {
+                                    console.error('Ошибка удаления:', error);
+                                    alert('Не удалось удалить сет-лист');
+                                }
+                            }
+                        }
+                    );
                 }
                 
                 // Обновляем состояние кнопок в зависимости от прав
