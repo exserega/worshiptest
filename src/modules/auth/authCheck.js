@@ -57,24 +57,24 @@ export function checkAuth() {
                                     alert('Ваш аккаунт заблокирован. Обратитесь к администратору.');
                                 }
                                 resolve({ user: null, isAuthenticated: false, isBanned: true });
-                            } else if (currentUser.status === 'rejected') {
-                                console.warn('❌ User request was rejected');
+                            } else if (currentUser.status === 'pending' && currentUser.hasRejection && !currentUser.rejectionShown) {
+                                console.warn('❌ User request was rejected but status is pending');
                                 const branchName = currentUser.branchName || 'выбранный филиал';
                                 const reason = currentUser.rejectionReason || 'Без указания причины';
                                 const message = `Администратор отклонил вашу заявку на вступление в ${branchName}.\n\nПричина: ${reason}\n\nВы можете пользоваться сайтом с ограниченным функционалом или обратиться к администратору:\nTelegram: @Sha1oom`;
                                 
                                 if (typeof window !== 'undefined') {
                                     if (confirm(message + '\n\nНажмите OK, чтобы связаться с администратором в Telegram')) {
-                                        // Используем tg:// для мобильных устройств
-                                        window.location.href = 'tg://resolve?domain=Sha1oom';
-                                        // Запасной вариант через setTimeout
-                                        setTimeout(() => {
-                                            window.open('https://t.me/Sha1oom', '_blank');
-                                        }, 500);
+                                        window.open('https://t.me/Sha1oom', '_blank');
                                     }
+                                    
+                                    // Отмечаем что уведомление показано
+                                    const db = firebase.firestore();
+                                    db.collection('users').doc(firebaseUser.uid).update({
+                                        rejectionShown: true
+                                    }).catch(err => console.error('Error updating rejectionShown:', err));
                                 }
-                                // Пользователь с rejected статусом может пользоваться сайтом, но с ограничениями
-                                resolve({ user: currentUser, isAuthenticated: true, isRejected: true });
+                                resolve({ user: currentUser, isAuthenticated: true });
                             } else if (currentUser.status === 'active' && currentUser.approvedAt && !currentUser.approvalShown) {
                                 console.log('✅ User was recently approved');
                                 // Показываем уведомление об одобрении один раз
@@ -232,21 +232,7 @@ export function isUserPending() {
     return currentUser?.status === 'pending';
 }
 
-/**
- * Проверить является ли заявка пользователя отклоненной
- * @returns {boolean}
- */
-export function isUserRejected() {
-    return currentUser?.status === 'rejected';
-}
 
-/**
- * Проверить имеет ли пользователь ограниченный доступ (pending или rejected)
- * @returns {boolean}
- */
-export function isUserRestricted() {
-    return currentUser?.status === 'pending' || currentUser?.status === 'rejected';
-}
 
 /**
  * Получить статус текущего пользователя
@@ -257,33 +243,16 @@ export function getUserStatus() {
 }
 
 /**
- * Показать сообщение о том, что функция недоступна для пользователей с ограниченным доступом
+ * Показать сообщение о том, что функция недоступна для pending пользователей
  * @param {string} action - Название действия (например, "Создание сет-листов")
  */
-export function showRestrictedUserMessage(action) {
-    let message;
-    
-    if (isUserPending()) {
-        message = `${action} временно недоступно.\n\nВаша заявка находится на рассмотрении администратора.\nПожалуйста, дождитесь подтверждения.\n\nЕсли у вас есть вопросы, обратитесь к администратору:\nTelegram: @Sha1oom`;
-    } else if (isUserRejected()) {
-        const reason = currentUser?.rejectionReason || 'Без указания причины';
-        message = `${action} недоступно.\n\nВаша заявка была отклонена.\nПричина: ${reason}\n\nВы можете обратиться к администратору:\nTelegram: @Sha1oom`;
-    } else {
-        message = `${action} недоступно.\n\nОбратитесь к администратору:\nTelegram: @Sha1oom`;
-    }
+export function showPendingUserMessage(action) {
+    const message = `${action} временно недоступно.\n\nВаша заявка находится на рассмотрении администратора.\nПожалуйста, дождитесь подтверждения.\n\nЕсли у вас есть вопросы, обратитесь к администратору:\nTelegram: @Sha1oom`;
     
     if (confirm(message + '\n\nНажмите OK, чтобы связаться с администратором в Telegram')) {
-        // Используем tg:// для мобильных устройств
-        window.location.href = 'tg://resolve?domain=Sha1oom';
-        // Запасной вариант через setTimeout
-        setTimeout(() => {
-            window.open('https://t.me/Sha1oom', '_blank');
-        }, 500);
+        window.open('https://t.me/Sha1oom', '_blank');
     }
 }
-
-// Для обратной совместимости
-export const showPendingUserMessage = showRestrictedUserMessage;
 
 // ====================================
 // AUTH GATE

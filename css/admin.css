@@ -622,12 +622,16 @@ body {
     
     /* Request Card */
     .request-card {
-        background: var(--card-bg);
+        background: #ffffff;
         border-radius: var(--radius);
         padding: var(--spacing-lg);
         box-shadow: var(--shadow);
         transition: all 0.3s ease;
         border: 1px solid var(--border-color);
+    }
+    
+    [data-theme="dark"] .request-card {
+        background: var(--card-bg);
     }
     
     .request-card:hover {
@@ -649,12 +653,21 @@ body {
     
     .request-header h3 {
         margin: 0;
-        color: var(--text-color);
+        color: #333;
         font-size: var(--font-lg);
+        font-weight: 600;
+    }
+    
+    [data-theme="dark"] .request-header h3 {
+        color: var(--text-color);
     }
     
     .request-date {
         font-size: var(--font-sm);
+        color: #999;
+    }
+    
+    [data-theme="dark"] .request-date {
         color: var(--text-color);
         opacity: 0.6;
     }
@@ -668,8 +681,12 @@ body {
         align-items: center;
         gap: var(--spacing-sm);
         margin-bottom: var(--spacing-sm);
-        color: var(--text-color);
+        color: #666;
         font-size: var(--font-sm);
+    }
+    
+    [data-theme="dark"] .request-info .info-row {
+        color: var(--text-color);
     }
     
     .request-info .info-row i {

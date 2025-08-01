@@ -200,9 +200,6 @@ export function showEditUserModal(userId) {
                                 <option value="active" ${user.status === 'active' ? 'selected' : ''}>
                                     Активен
                                 </option>
-                                <option value="rejected" ${user.status === 'rejected' ? 'selected' : ''}>
-                                    Отклонен
-                                </option>
                                 <option value="blocked" ${user.status === 'blocked' || user.status === 'banned' ? 'selected' : ''}>
                                     Заблокирован
                                 </option>
@@ -434,8 +431,7 @@ function getStatusBadgeClass(status) {
         active: 'success',
         blocked: 'danger',
         banned: 'danger', // для обратной совместимости
-        pending: 'warning', // pending - желтый цвет для ожидающих
-        rejected: 'secondary' // rejected - серый цвет для отклоненных
+        pending: 'warning' // pending - желтый цвет для ожидающих
     };
     return classes[status] || 'secondary';
 }
@@ -445,8 +441,7 @@ function getStatusText(status) {
         active: 'Активен',
         blocked: 'Заблокирован',
         banned: 'Заблокирован', // для обратной совместимости
-        pending: 'Ожидает подтверждения',
-        rejected: 'Отклонен'
+        pending: 'Ожидает подтверждения'
     };
     return texts[status] || status;
 }

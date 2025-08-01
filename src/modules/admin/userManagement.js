@@ -198,7 +198,6 @@ export function getUserStats() {
         total: state.users.length,
         active: state.users.filter(u => u.status === 'active').length,
         pending: state.users.filter(u => u.status === 'pending').length,
-        rejected: state.users.filter(u => u.status === 'rejected').length,
         banned: state.users.filter(u => u.status === 'banned' || u.status === 'blocked').length,
         admins: state.users.filter(u => u.role === 'admin').length,
         users: state.users.filter(u => u.role === 'user').length,

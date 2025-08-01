@@ -182,29 +182,23 @@ export async function rejectRequest(userId) {
         const user = window.adminState.requests.find(u => u.id === userId);
         const branch = window.adminState.branches.find(b => b.id === user?.branchId);
         
-        // Обновляем статус пользователя на rejected
+        // Сохраняем информацию об отклонении но оставляем статус pending
         await db.collection('users').doc(userId).update({
-            status: 'rejected',
+            // status остается 'pending'
             rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
             rejectedBy: window.adminState.currentUser?.id || window.adminState.currentUser?.uid,
             rejectionReason: reason || 'Без указания причины',
-            branchName: branch?.name || 'Филиал не указан'
+            branchName: branch?.name || 'Филиал не указан',
+            hasRejection: true
         });
         
-        // Удаляем пользователя из списка заявок
-        window.adminState.requests = window.adminState.requests.filter(u => u.id !== userId);
-        
-        // Обновляем пользователя в общем списке
-        const userIndex = window.adminState.users.findIndex(u => u.id === userId);
-        if (userIndex !== -1) {
-            window.adminState.users[userIndex].status = 'rejected';
-            window.adminState.users[userIndex].rejectionReason = reason || 'Без указания причины';
-        }
+        // НЕ удаляем пользователя из списка заявок - он остается в pending
         
         // Обновляем отображение
         displayRequests();
         
-        showSuccess('Заявка отклонена');
+        // Показываем уведомление пользователю при следующем входе
+        showSuccess('Заявка отклонена. Пользователь получит уведомление при входе.');
         
     } catch (error) {
         console.error('Error rejecting request:', error);
