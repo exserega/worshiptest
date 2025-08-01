@@ -319,6 +319,14 @@ export async function createBranch() {
         
         // Создаем в Firestore
         const db = firebase.firestore();
+        const currentUserId = window.adminState.currentUser?.id || window.adminState.currentUser?.uid;
+        
+        if (!currentUserId) {
+            console.error('Current user ID not found:', window.adminState.currentUser);
+            alert('Ошибка: не удалось определить текущего пользователя');
+            return;
+        }
+        
         const docRef = await db.collection('branches').add({
             name,
             address: address || null,
@@ -326,7 +334,7 @@ export async function createBranch() {
             description: description || null,
             isMain: isMain || false,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            createdBy: window.adminState.currentUser.id
+            createdBy: currentUserId
         });
         
         // Добавляем в локальное состояние
@@ -338,7 +346,7 @@ export async function createBranch() {
             description,
             isMain,
             createdAt: new Date(),
-            createdBy: window.adminState.currentUser.id
+            createdBy: currentUserId
         };
         
         window.adminState.branches.push(newBranch);
