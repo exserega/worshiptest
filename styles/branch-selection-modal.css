@@ -151,25 +151,23 @@
     gap: 10px;                       /* Отступ между иконкой и текстом */
 }
 
-/* Основная кнопка подтверждения - ТЕМНАЯ ТЕМА */
-:root .branch-selection-actions .confirm-button,
-[data-theme="dark"] .branch-selection-actions .confirm-button {
-    background: var(--accent-primary); /* Яркий акцентный фон */
-    color: #111827;                    /* Темный текст для контраста */
-    border-color: var(--accent-primary);
-}
-
-/* Основная кнопка подтверждения - СВЕТЛАЯ ТЕМА */
-[data-theme="light"] .branch-selection-actions .confirm-button {
+/* Основная кнопка подтверждения - базовые стили */
+.branch-selection-actions .confirm-button {
     background: var(--accent-primary); /* Акцентный фон */
-    color: #ffffff;                    /* Белый текст для светлой темы */
+    color: #ffffff !important;         /* ВСЕГДА белый текст */
     border-color: var(--accent-primary);
 }
 
-/* Иконки внутри кнопки - обе темы */
+/* Иконки внутри кнопки */
 .branch-selection-actions .confirm-button i {
+    color: #ffffff !important;         /* ВСЕГДА белая иконка */
     font-size: 0.95rem;              /* Размер иконки */
     flex-shrink: 0;                  /* Предотвращаем сжатие иконки */
+}
+
+/* Текст внутри кнопки */
+.branch-selection-actions .confirm-button span {
+    color: #ffffff !important;         /* ВСЕГДА белый текст */
 }
 
 /* Отключенное состояние кнопки */
