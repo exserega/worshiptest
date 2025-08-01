@@ -92,18 +92,21 @@ async function loadInitialData() {
         showLoadingState('branches');
         showLoadingState('transfers');
         showLoadingState('requests');
+        showLoadingState('branch-requests');
         
         // Загружаем данные параллельно
-        const [users, branches, transfers] = await Promise.all([
+        const [users, branches, transfers, branchRequests] = await Promise.all([
             loadUsers(),
             loadBranches(), 
-            loadTransfers()
+            loadTransfers(),
+            loadBranchRequests()
         ]);
         
         // Сохраняем в состояние
         window.adminState.users = users;
         window.adminState.branches = branches;
         window.adminState.transfers = transfers;
+        window.adminState.branchRequests = branchRequests;
         
         // Фильтруем пользователей со статусом pending для заявок
         window.adminState.requests = users.filter(user => user.status === 'pending');
@@ -116,11 +119,13 @@ async function loadInitialData() {
         const { displayBranches } = await import('./branchesModule.js');
         const { displayTransfers } = await import('./transfersModule.js');
         const { displayRequests } = await import('./requestsModule.js');
+        const { displayBranchRequests } = await import('./branchRequestsModule.js');
         
         displayUsers();
         displayBranches();
         displayTransfers();
         displayRequests();
+        displayBranchRequests();
         
     } catch (error) {
         console.error('Error loading initial data:', error);
@@ -178,6 +183,21 @@ async function loadTransfers() {
         .where('status', '==', 'pending')
         .get();
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+/**
+ * Загрузка заявок на филиалы
+ */
+async function loadBranchRequests() {
+    const db = firebase.firestore();
+    try {
+        const snapshot = await db.collection('branchRequests')
+            .get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error('Error loading branch requests:', error);
+        return [];
+    }
 }
 
 // ====================================

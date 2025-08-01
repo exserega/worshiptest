@@ -443,9 +443,9 @@ export async function removeSongFromSetlist(setlistId, songId) {
     // Проверяем права пользователя
     try {
         const { canEditInCurrentBranch, isUserMainBranch } = await import('../modules/branches/branchSelector.js');
-        if (!canEditInCurrentBranch()) {
+        if (!(await canEditInCurrentBranch())) {
             if (!isUserMainBranch()) {
-                throw new Error('Удаление песен из сет-листов доступно только в вашем филиале.');
+                throw new Error('Удаление песен из сет-листов доступно только в ваших филиалах.');
             } else {
                 throw new Error('Удаление песен из сет-листов недоступно. Ваша заявка находится на рассмотрении.');
             }

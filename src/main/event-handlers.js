@@ -499,7 +499,7 @@ function setupSetlistEventHandlers() {
                 
                 // Обновляем состояние кнопок в зависимости от прав
                 const { canEditInCurrentBranch } = await import('../modules/branches/branchSelector.js');
-                const canEdit = canEditInCurrentBranch();
+                const canEdit = await canEditInCurrentBranch();
                 
                 // Обновляем состояние всех кнопок редактирования
                 const createBtn = document.getElementById('create-new-setlist-header-btn');
@@ -773,12 +773,12 @@ function setupSetlistEventHandlers() {
             let canEdit = true;
             try {
                 const { canEditInCurrentBranch, isUserMainBranch, showOtherBranchMessage } = await import('../modules/branches/branchSelector.js');
-                canEdit = canEditInCurrentBranch();
+                canEdit = await canEditInCurrentBranch();
                 
                 if (!canEdit && !isUserMainBranch()) {
                     // Если это чужой филиал
                     console.log('⚠️ [EventHandlers] Cannot create in other branch');
-                    showOtherBranchMessage('Создание сет-листов');
+                    await showOtherBranchMessage('Создание сет-листов');
                     return;
                 }
             } catch (e) {

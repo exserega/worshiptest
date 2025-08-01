@@ -46,6 +46,11 @@
                 <span>Заявки</span>
                 <span id="requests-count" class="badge"></span>
             </button>
+            <button class="tab-button" data-tab="branch-requests">
+                <i class="fas fa-code-branch"></i>
+                <span>Заявки филиалов</span>
+                <span id="branch-requests-count" class="badge"></span>
+            </button>
             <button class="tab-button" data-tab="branches">
                 <i class="fas fa-building"></i>
                 <span>Филиалы</span>
@@ -103,6 +108,20 @@
                     </div>
                 </div>
                 <div id="requests-list" class="requests-grid">
+                    <div class="loading">Загрузка заявок...</div>
+                </div>
+            </section>
+
+            <!-- Таб заявок на филиалы -->
+            <section id="branch-requests-tab" class="tab-content">
+                <div class="controls-bar">
+                    <h2>Заявки на филиалы</h2>
+                    <div class="info-text">
+                        <i class="fas fa-info-circle"></i>
+                        Заявки на смену основного филиала и присоединение к дополнительным филиалам
+                    </div>
+                </div>
+                <div id="branch-requests-list" class="branch-requests-list">
                     <div class="loading">Загрузка заявок...</div>
                 </div>
             </section>
