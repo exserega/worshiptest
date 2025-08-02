@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v41'; // v41, fix auth page colors to match main site dark theme
+const CACHE_NAME = 'agape-worship-cache-v42'; // v42, minimalist auth page redesign
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

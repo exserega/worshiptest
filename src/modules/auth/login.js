@@ -13,18 +13,27 @@ const RecaptchaVerifier = firebase.auth.RecaptchaVerifier;
 // DOM ELEMENTS
 // ====================================
 
-const forms = {
-    login: document.getElementById('login-form'),
+const screens = {
+    main: document.getElementById('main-auth'),
+    email: document.getElementById('email-form'),
     register: document.getElementById('register-form'),
     phone: document.getElementById('phone-form')
+};
+
+const forms = {
+    login: document.getElementById('login-form'),
+    register: document.getElementById('register-form-element'),
+    phone: document.getElementById('phone-form-element')
 };
 
 const elements = {
     googleBtn: document.getElementById('google-login-btn'),
     phoneBtn: document.getElementById('phone-login-btn'),
+    emailBtn: document.getElementById('email-login-btn'),
     showRegister: document.getElementById('show-register'),
-    showLogin: document.getElementById('show-login'),
-    backToLogin: document.getElementById('back-to-login'),
+    backFromEmail: document.getElementById('back-from-email'),
+    backFromRegister: document.getElementById('back-from-register'),
+    backFromPhone: document.getElementById('back-from-phone'),
     verifyCodeBtn: document.getElementById('verify-code-btn'),
     verificationGroup: document.getElementById('verification-code-group'),
     authMessage: document.getElementById('auth-message'),
@@ -68,10 +77,23 @@ function showMessage(message, type = 'error') {
     }, 5000);
 }
 
-function switchForm(formName) {
-    Object.keys(forms).forEach(key => {
-        forms[key].style.display = key === formName ? 'block' : 'none';
+function clearMessages() {
+    elements.authMessage.classList.remove('show');
+    elements.authMessage.textContent = '';
+}
+
+function switchForm(screenName) {
+    // Hide all screens
+    Object.values(screens).forEach(screen => {
+        screen.classList.remove('active');
     });
+    
+    // Show requested screen
+    if (screens[screenName]) {
+        screens[screenName].classList.add('active');
+    }
+    
+    clearMessages();
 }
 
 // ====================================
@@ -325,18 +347,17 @@ forms.phone.addEventListener('submit', handlePhoneSend);
 // Button clicks
 elements.googleBtn.addEventListener('click', handleGoogleLogin);
 elements.phoneBtn.addEventListener('click', () => switchForm('phone'));
+elements.emailBtn.addEventListener('click', () => switchForm('email'));
 elements.showRegister.addEventListener('click', (e) => {
     e.preventDefault();
     switchForm('register');
 });
-elements.showLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    switchForm('login');
-});
-elements.backToLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    switchForm('login');
-});
+
+// Back buttons
+elements.backFromEmail.addEventListener('click', () => switchForm('main'));
+elements.backFromRegister.addEventListener('click', () => switchForm('main'));
+elements.backFromPhone.addEventListener('click', () => switchForm('main'));
+
 elements.verifyCodeBtn.addEventListener('click', handlePhoneVerify);
 
 // ====================================
