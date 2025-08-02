@@ -3,6 +3,9 @@
 // Единая точка инициализации Firebase для всего проекта
 // ====================================
 
+// Импортируем logger для условного логирования
+import logger from './src/utils/logger.js';
+
 // Конфигурация Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBlkjVQFtFpMRFexAi6nBqEkIfjFlU5cDo",
@@ -20,9 +23,9 @@ if (!window.firebase) {
 } else if (!window.firebase.apps.length) {
     // Инициализируем Firebase только если еще не инициализирован
     window.firebase.initializeApp(firebaseConfig);
-    console.log('✅ Firebase инициализирован');
+    logger.log('✅ Firebase инициализирован');
 } else {
-    console.log('✅ Firebase уже был инициализирован');
+    logger.log('✅ Firebase уже был инициализирован');
 }
 
 // Создаем локальные переменные из глобального объекта

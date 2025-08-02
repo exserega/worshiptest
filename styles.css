@@ -22,23 +22,27 @@
 /* === ИМПОРТ МОДУЛЬНЫХ СТИЛЕЙ === */
 /* @import './styles/setlist-panel.css'; */ /* Временно отключен для GitHub Pages */
 
-/* Импорт модулей CSS в правильном порядке */
+/* Импорт основных модулей CSS */
 @import url('./styles/variables.css');
-@import url('./styles/color-tokens.css'); /* Новая система цветовых токенов */
 @import url('./styles/base.css');
+@import url('./styles/buttons.css');
+@import url('./styles/song-display.css');
+@import url('./styles/panels.css');
+@import url('./styles/modals.css');
+@import url('./styles/responsive.css');
+
+/* Импорт дополнительных модулей - можно объединить позже для оптимизации */
+/* 
+@import url('./styles/color-tokens.css');
 @import url('./styles/header.css');
 @import url('./styles/headings.css');
 @import url('./styles/forms.css');
-@import url('./styles/buttons.css');
-@import url('./styles/song-display.css');
 @import url('./styles/presentation.css');
-@import url('./styles/panels.css');
-@import url('./styles/modals.css');
 @import url('./styles/components.css');
 @import url('./styles/metronome.css');
-@import url('./styles/responsive.css');
-@import url('./styles/setlist-panel-compact.css'); /* Компактные стили для мобильных */
-@import url('./styles/add-songs-overlay-compact.css'); /* Компактные стили для overlay добавления песен */
+@import url('./styles/setlist-panel-compact.css');
+@import url('./styles/add-songs-overlay-compact.css');
+*/
 
 /* ======================================== */
 /* МИНИМАЛИСТИЧНАЯ СТРУКТУРА СЕТ-ЛИСТОВ */

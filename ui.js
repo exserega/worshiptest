@@ -2,6 +2,9 @@
 
 import { SONG_CATEGORIES_ORDER, MIN_FONT_SIZE, chords } from './js/constants.js';
 
+// Импортируем logger для условного логирования
+import logger from './src/utils/logger.js';
+
 // --- UTILITY FUNCTIONS ---
 
 /** Универсальная функция для получения тональности песни из разных возможных полей */
@@ -44,7 +47,7 @@ import('./src/modules/branches/branchSelector.js').then(module => {
     isUserMainBranch = module.isUserMainBranch;
     showOtherBranchMessage = module.showOtherBranchMessage;
 }).catch(e => {
-    console.log('Branch selector module not loaded yet');
+    logger.log('Branch selector module not loaded yet');
 });
 
 
@@ -245,11 +248,11 @@ export function displaySongDetails(songData, keyToSelect) {
     // Устанавливаем текущую песню через stateManager
     if (window.stateManager && typeof window.stateManager.setCurrentSong === 'function') {
         window.stateManager.setCurrentSong(songData);
-        console.log('📝 [UI] Set currentSong via stateManager:', songData?.name);
+        logger.log('📝 [UI] Set currentSong via stateManager:', songData?.name);
     } else {
         // Fallback: сохраняем в window напрямую
         window.currentSong = songData;
-        console.log('📝 [UI] Set currentSong on window:', songData?.name);
+        logger.log('📝 [UI] Set currentSong on window:', songData?.name);
     }
 
     if (!songData) {
@@ -268,7 +271,7 @@ export function displaySongDetails(songData, keyToSelect) {
         
         // Reset metronome when no song selected
         if (window.metronomeUI && window.metronomeUI.updateBPMFromSong) {
-            console.log('Clearing metronome BPM - no song selected');
+            logger.log('Clearing metronome BPM - no song selected');
             window.metronomeUI.updateBPMFromSong(null);
         }
         keySelect.dataset.songId = '';
@@ -308,7 +311,7 @@ export function displaySongDetails(songData, keyToSelect) {
     // Update metronome with BPM from Firebase
     if (window.metronomeUI && window.metronomeUI.updateBPMFromSong) {
         const bpmValue = (bpm === 'N/A' || bpm === null || bpm === undefined) ? null : parseInt(bpm, 10);
-        console.log('Updating metronome with BPM from song:', bpmValue);
+        logger.log('Updating metronome with BPM from song:', bpmValue);
         window.metronomeUI.updateBPMFromSong(bpmValue);
     }
     if (holychordsButton) {
@@ -344,9 +347,9 @@ export function displaySongDetails(songData, keyToSelect) {
         }
     if (editBtn) {
         editBtn.style.display = 'block';
-        console.log('📝 [UI] Edit button shown for song:', cleanTitle);
+        logger.log('📝 [UI] Edit button shown for song:', cleanTitle);
     } else {
-        console.warn('⚠️ [UI] Edit button not found in song content');
+        logger.warn('⚠️ [UI] Edit button not found in song content');
     }
     
     // Обновляем статус редактирования
@@ -722,7 +725,7 @@ export function displaySearchResults(matchingSongs, onSelect, query = '') {
 export function populateVocalistSelect(vocalists) {
     vocalistSelect.innerHTML = '<option value="">-- Выберите вокалиста --</option>';
     if (vocalists.length === 0) {
-        console.warn("В коллекции 'vocalists' не найдено ни одного документа.");
+        logger.warn("В коллекции 'vocalists' не найдено ни одного документа.");
     } else {
         vocalists.forEach((vocalist) => {
             const option = document.createElement('option');
@@ -926,7 +929,7 @@ export function updatePresentationSplitButtonState() {
 
 // --- FAVORITES PANEL ---
 export function renderFavorites(favoriteSongs, onSelect, onRemove) {
-    console.log('⭐ [UI] renderFavorites called with:', favoriteSongs?.length, 'favorites');
+    logger.log('⭐ [UI] renderFavorites called with:', favoriteSongs?.length, 'favorites');
     favoritesList.innerHTML = '';
     // Используем переданные данные или данные из state
     const favorites = favoriteSongs || state.favorites;
@@ -1164,14 +1167,14 @@ function getSongCountText(count) {
  * @param {function} onDelete - Функция обратного вызова при удалении сетлиста.
  */
 export async function renderSetlists(setlists, onSelect, onDelete) {
-    console.log('📋 [UI] renderSetlists called with:', setlists?.length, 'setlists');
-    console.log('📋 [UI] setlistsListContainer:', setlistsListContainer);
+    logger.log('📋 [UI] renderSetlists called with:', setlists?.length, 'setlists');
+    logger.log('📋 [UI] setlistsListContainer:', setlistsListContainer);
     if (!setlistsListContainer) {
-        console.error('📋 [UI] setlistsListContainer not found!');
+        logger.error('📋 [UI] setlistsListContainer not found!');
         return;
     }
     setlistsListContainer.innerHTML = '';
-    console.log('📋 [UI] Rendering setlists...');
+    logger.log('📋 [UI] Rendering setlists...');
 
     if (!setlists || setlists.length === 0) {
         setlistsListContainer.innerHTML = `
@@ -1189,7 +1192,7 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
         item.className = 'setlist-item';
         item.dataset.setlistId = setlist.id;
         item.addEventListener('click', () => {
-            console.log('📋 [UI] Setlist item clicked:', setlist.name);
+            logger.log('📋 [UI] Setlist item clicked:', setlist.name);
             if (onSelect && typeof onSelect === 'function') {
                 onSelect(setlist);
             } else {
@@ -1197,7 +1200,7 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
                 if (window.handleSetlistSelect && typeof window.handleSetlistSelect === 'function') {
                     window.handleSetlistSelect(setlist);
                 } else {
-                    console.error('📋 [UI] No setlist select handler available');
+                    logger.error('📋 [UI] No setlist select handler available');
                 }
             }
             // Закрываем dropdown после выбора
@@ -1250,7 +1253,7 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
                     }
                     window.showNotification(`Сет-лист переименован в "${newName.trim()}"`, 'success');
                 } catch (error) {
-                    console.error('Ошибка переименования:', error);
+                    logger.error('Ошибка переименования:', error);
                     window.showNotification('Ошибка при переименовании сет-листа', 'error');
                 }
             }
@@ -1292,7 +1295,7 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
                 if (window.handleSetlistDelete && typeof window.handleSetlistDelete === 'function') {
                     window.handleSetlistDelete(setlist.id, setlist.name);
                 } else {
-                    console.error('📋 [UI] No setlist delete handler available');
+                    logger.error('📋 [UI] No setlist delete handler available');
                 }
             }
         });
@@ -1300,7 +1303,7 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
 
         setlistsListContainer.appendChild(item);
     });
-    console.log('📋 [UI] renderSetlists completed, rendered', setlists.length, 'setlists');
+    logger.log('📋 [UI] renderSetlists completed, rendered', setlists.length, 'setlists');
 }
 
 // Функция позиционирования кнопки копирования удалена - 
@@ -1476,18 +1479,18 @@ export function updateEditStatus(songData) {
 
 /** Открывает редактор песни */
 export function openSongEditor(songData) {
-    console.log('📝 [UI] openSongEditor called with:', songData?.name);
+    logger.log('📝 [UI] openSongEditor called with:', songData?.name);
     
     if (!songData) {
-        console.error('❌ [UI] No songData provided to openSongEditor');
+        logger.error('❌ [UI] No songData provided to openSongEditor');
         return;
     }
     if (!songEditorOverlay) {
-        console.error('❌ [UI] songEditorOverlay element not found');
+        logger.error('❌ [UI] songEditorOverlay element not found');
         return;
     }
     if (!songEditTextarea) {
-        console.error('❌ [UI] songEditTextarea element not found');
+        logger.error('❌ [UI] songEditTextarea element not found');
         return;
     }
     
@@ -1505,8 +1508,8 @@ export function openSongEditor(songData) {
         ? (songData['Текст и аккорды (edited)'] || '') 
         : (songData['Текст и аккорды'] || '');
     
-    console.log('📝 [UI] Loading lyrics, hasWebEdits:', songData.hasWebEdits);
-    console.log('📝 [UI] Original lyrics length:', originalLyrics.length);
+    logger.log('📝 [UI] Loading lyrics, hasWebEdits:', songData.hasWebEdits);
+    logger.log('📝 [UI] Original lyrics length:', originalLyrics.length);
     
     songEditTextarea.value = originalLyrics;
     
