@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v57'; // v57, Улучшена мобильная адаптация reCAPTCHA
+const CACHE_NAME = 'agape-worship-cache-v58'; // v58, Улучшена обработка ошибок SMS авторизации
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

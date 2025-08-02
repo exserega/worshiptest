@@ -397,6 +397,17 @@ async function submitPhoneForm() {
             showMessage('Проблема с проверкой безопасности. Попробуйте использовать тестовый номер: +79999999999 с кодом 123456');
         } else if (error.code === 'auth/too-many-requests') {
             showMessage('Слишком много попыток. Подождите несколько минут или используйте email');
+        } else if (error.code === 'auth/operation-not-allowed') {
+            showMessage('SMS авторизация не настроена или недоступна в вашем регионе', 'error');
+            
+            // Автоматически предлагаем email вход
+            setTimeout(() => {
+                if (confirm('Хотите войти через email?')) {
+                    // Переключаемся на email форму
+                    document.getElementById('phone-form').classList.remove('active');
+                    document.getElementById('email-form').classList.add('active');
+                }
+            }, 1000);
         } else {
             showMessage(getErrorMessage(error.code) || error.message);
         }
@@ -455,15 +466,16 @@ function getErrorMessage(errorCode) {
         'auth/user-not-found': 'Пользователь не найден',
         'auth/wrong-password': 'Неверный пароль',
         'auth/invalid-verification-code': 'Неверный код подтверждения',
-        'auth/invalid-verification-id': 'Код подтверждения истек',
-        'auth/invalid-phone-number': 'Неверный формат номера телефона',
+        'auth/invalid-verification-id': 'Неверный код подтверждения',
+        'auth/missing-verification-code': 'Введите код подтверждения',
+        'auth/missing-client-identifier': 'Ошибка конфигурации приложения',
+        'auth/captcha-check-failed': 'Не удалось пройти проверку безопасности',
+        'auth/operation-not-allowed': 'SMS авторизация не настроена. Проверьте настройки Firebase или используйте email вход.',
+        'auth/invalid-phone-number': 'Неверный формат номера телефона. Используйте формат: +7XXXXXXXXXX',
         'auth/missing-phone-number': 'Введите номер телефона',
-        'auth/quota-exceeded': 'Превышен лимит SMS. Попробуйте позже',
-        'auth/captcha-check-failed': 'Ошибка проверки reCAPTCHA',
-        'auth/missing-client-identifier': 'Ошибка конфигурации Firebase',
-        'auth/invalid-app-credential': 'Ошибка приложения. Обновите страницу',
-        'auth/missing-app-credential': 'Ошибка безопасности. Обновите страницу',
-        'auth/too-many-requests': 'Слишком много попыток. Попробуйте позже',
+        'auth/quota-exceeded': 'Превышен лимит SMS. Попробуйте позже или используйте email.',
+        'auth/user-disabled': 'Аккаунт заблокирован. Обратитесь к администратору.',
+        'auth/sms-quota-exceeded': 'Превышен дневной лимит SMS. Используйте email вход.',
         'default': 'Произошла ошибка. Попробуйте еще раз'
     };
     return errors[errorCode] || errors.default;
