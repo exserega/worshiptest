@@ -329,21 +329,21 @@
     height: 100%; cursor: pointer;
     transition: background-color 0.2s ease; border-radius: 0;
     background-image: none !important; position: relative;
+    /* Добавляем правую границу для всех кнопок кроме последней */
+    border-right: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+/* Убираем границу у последней кнопки */
+.mobile-nav-button:last-child {
+    border-right: none;
+}
+
+/* Удаляем старые разделительные линии через псевдоэлементы */
+.mobile-nav-button:not(:last-child)::after {
+    display: none;
 }
 
 /* Разделительные линии между кнопками */
-.mobile-nav-button:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 15%;
-    bottom: 15%;
-    width: 1px;
-    background-color: var(--border-color);
-    opacity: 0.3;
-    transition: opacity 0.2s ease;
-}
-
 .mobile-nav-button i { font-size: 1.3rem; margin-bottom: 3px; transition: color 0.2s ease; }
 .mobile-nav-button span { 
     transition: color 0.2s ease; 
@@ -365,8 +365,11 @@ nav.mobile-bottom-nav .mobile-nav-button:hover { background-color: var(--hover-c
 nav.mobile-bottom-nav .mobile-nav-button:active { background-color: var(--border-color); }
 
 /* Разделительные линии для темной темы */
-[data-theme="dark"] .mobile-nav-button:not(:last-child)::after {
-    background-color: rgba(255, 255, 255, 0.1);
+[data-theme="dark"] .mobile-nav-button {
+    border-right-color: rgba(255, 255, 255, 0.1);
+}
+[data-theme="dark"] .mobile-nav-button:last-child {
+    border-right: none;
 }
 
 /* Активная кнопка */
@@ -389,42 +392,11 @@ body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button:hover { backgr
 body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button:active { background-color: var(--border-color); }
 
 /* Разделительные линии для светлой темы */
-[data-theme="light"] .mobile-nav-button:not(:last-child)::after {
-    background-color: rgba(0, 0, 0, 0.1);
+[data-theme="light"] .mobile-nav-button {
+    border-right-color: rgba(0, 0, 0, 0.1);
 }
-
-/* Активное состояние для светлой темы */
-body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button.active {
-    background-color: var(--accent-color) !important;
-}
-body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button.active i,
-body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button.active span {
-    color: var(--button-text-color) !important;
-}
-
-/* Состояние загрузки */
-.mobile-nav-button.loading {
-    opacity: 0.6;
-    pointer-events: none;
-    position: relative;
-}
-
-.mobile-nav-button.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 16px;
-    height: 16px;
-    margin: -8px 0 0 -8px;
-    border: 2px solid var(--border-color);
-    border-radius: 50%;
-    border-top-color: var(--accent-color);
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
+[data-theme="light"] .mobile-nav-button:last-child {
+    border-right: none;
 }
 
 /* Разделительные линии для кнопок */
