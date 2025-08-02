@@ -612,7 +612,7 @@ body {
         gap: var(--spacing-md);
     }
     
-    /* Requests Grid */
+    /* Requests Grid - Commented out to use inline styles
     .requests-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -620,7 +620,7 @@ body {
         padding: var(--spacing-lg);
     }
     
-    /* Request Card - Compact Design */
+    /* Request Card - Compact Design - Commented out to use inline styles
     .request-card {
         display: block;
         background: var(--card-bg);
@@ -630,7 +630,7 @@ body {
         transition: all 0.3s ease;
         position: relative;
         margin-bottom: var(--spacing-sm);
-    }
+    } */
     
     /* Убрана яркая оранжевая полоска для единообразия с другими карточками
     .request-card::before {
@@ -643,6 +643,7 @@ body {
         background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%);
     } */
     
+    /* Request card hover states - Commented out to use inline styles
     .request-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -670,7 +671,7 @@ body {
         justify-content: center;
     }
     
-    /* Request Header */
+    /* Request Header, Info and other styles - Commented out to use inline styles
     .request-header {
         display: flex;
         justify-content: space-between;
@@ -689,7 +690,6 @@ body {
         opacity: 0.6;
     }
     
-    /* Request Info */
     .request-info {
         margin-bottom: var(--spacing-md);
     }
@@ -712,16 +712,15 @@ body {
     
     .request-info .info-row span {
         flex: 1;
-    }
+    } */
     
-    /* Request Actions */
+    /* Request Actions and Buttons - Commented out to use inline styles
     .request-actions {
         display: flex;
         gap: var(--spacing-xs);
         margin-top: var(--spacing-sm);
     }
     
-    /* Base button styles for btn-action */
     .btn-action {
         display: inline-flex;
         align-items: center;
@@ -774,7 +773,7 @@ body {
     [data-theme="dark"] .request-actions .btn-action.danger:hover {
         background: #dc3545;
         color: white;
-    }
+    } */
     
     /* Cards */
     .user-card,
@@ -795,7 +794,7 @@ body {
         font-size: var(--font-sm);
     }
     
-    /* Requests Grid Mobile */
+    /* Requests Grid Mobile - Commented out to use inline styles
     .requests-grid {
         grid-template-columns: 1fr;
         gap: var(--spacing-sm);
@@ -816,8 +815,9 @@ body {
     
     .request-info {
         margin-bottom: 12px;
-    }
+    } */
     
+    /* Request info and actions - Commented out to use inline styles
     .request-info .info-row {
         font-size: 13px;
         margin-bottom: 4px;
@@ -841,7 +841,7 @@ body {
     
     .request-actions .btn-action i {
         font-size: 11px;
-    }
+    } */
 }
 
 /* ====================================

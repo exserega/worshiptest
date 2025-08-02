@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v34'; // v34, fix admin panel button icons on mobile
+const CACHE_NAME = 'agape-worship-cache-v35'; // v35, unify branch request cards styles with user request cards
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

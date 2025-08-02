@@ -32,7 +32,7 @@ export async function displayBranchRequests() {
     
     // Создаем карточки заявок
     const html = pendingRequests.map(request => createBranchRequestCard(request, branches, users)).join('');
-    container.innerHTML = `<div class="requests-grid">${html}</div>`;
+    container.innerHTML = `<div class="requests-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--spacing-md);">${html}</div>`;
     
     updateBranchRequestsCount(pendingRequests.length);
 }
@@ -59,46 +59,52 @@ function createBranchRequestCard(request, branches, users) {
         : 'fa-plus';
     
     return `
-        <div class="request-card" data-request-id="${request.id}">
-            <div class="request-header">
-                <h3><i class="fas ${typeIcon}"></i> ${typeText}</h3>
-                <span class="request-date">${formatDate(request.createdAt)}</span>
+        <div class="request-card" data-request-id="${request.id}" style="background: var(--card-bg); border-radius: var(--radius); padding: var(--spacing-md); margin-bottom: var(--spacing-sm); box-shadow: var(--shadow);">
+            <div class="request-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 600;"><i class="fas ${typeIcon}" style="margin-right: 6px; font-size: 14px;"></i>${typeText}</h3>
+                <span class="request-date" style="font-size: 12px; opacity: 0.6;">${formatDate(request.createdAt)}</span>
             </div>
             
-            <div class="request-info">
-                <div class="info-row">
-                    <i class="fas fa-user"></i>
+            <div class="request-info" style="margin-bottom: var(--spacing-md);">
+                <div class="info-row" style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 14px; opacity: 0.8;">
+                    <i class="fas fa-user" style="width: 16px; text-align: center; opacity: 0.6;"></i>
                     <span>${user.name || user.email}</span>
                 </div>
                 
                 ${currentBranch ? `
-                <div class="info-row">
-                    <i class="fas fa-building"></i>
+                <div class="info-row" style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 14px; opacity: 0.8;">
+                    <i class="fas fa-building" style="width: 16px; text-align: center; opacity: 0.6;"></i>
                     <span>Текущий: ${currentBranch.name}</span>
                 </div>
                 ` : ''}
                 
-                <div class="info-row">
-                    <i class="fas fa-arrow-right"></i>
+                <div class="info-row" style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 14px; opacity: 0.8;">
+                    <i class="fas fa-arrow-right" style="width: 16px; text-align: center; opacity: 0.6;"></i>
                     <span>Запрашивает: ${requestedBranch.name}</span>
                 </div>
                 
                 ${request.reason ? `
-                <div class="info-row">
-                    <i class="fas fa-comment"></i>
+                <div class="info-row" style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 14px; opacity: 0.8;">
+                    <i class="fas fa-comment" style="width: 16px; text-align: center; opacity: 0.6;"></i>
                     <span>${request.reason}</span>
                 </div>
                 ` : ''}
             </div>
             
-            <div class="request-actions">
-                <button class="btn-action success" onclick="window.adminBranchRequests.approveRequest('${request.id}')">
-                    <i class="fas fa-check"></i>
-                    Одобрить
+            <div class="request-actions" style="display: flex; gap: var(--spacing-xs); margin-top: var(--spacing-sm);">
+                <button class="btn-action success" 
+                        onclick="window.adminBranchRequests.approveRequest('${request.id}')"
+                        title="Одобрить заявку"
+                        style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.2s;">
+                    <i class="fas fa-check" style="font-size: 12px;"></i>
+                    <span>Одобрить</span>
                 </button>
-                <button class="btn-action danger" onclick="window.adminBranchRequests.showRejectDialog('${request.id}')">
-                    <i class="fas fa-times"></i>
-                    Отклонить
+                <button class="btn-action danger" 
+                        onclick="window.adminBranchRequests.showRejectDialog('${request.id}')"
+                        title="Отклонить заявку"
+                        style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; background: transparent; color: #dc3545; border: 1px solid #dc3545; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.2s;">
+                    <i class="fas fa-times" style="font-size: 12px;"></i>
+                    <span>Отклонить</span>
                 </button>
             </div>
         </div>
