@@ -679,7 +679,9 @@ body {
     border-radius: 8px;
     color: var(--text-primary);
     font-size: 1rem;
+    line-height: 1.4;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
 }
 
 .form-control:focus {
@@ -705,20 +707,24 @@ body {
 :root select.form-control {
     background: #2a2a2a;
     color: #ffffff !important;
-    padding: 14px 16px;
+    padding: 12px 16px;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23999' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 16px center;
     background-size: 12px;
     padding-right: 40px;
+    line-height: 1.4;
+    height: auto;
 }
 
 /* Large select for modal windows */
 :root select.form-control-large {
-    padding: 18px 20px;
-    font-size: 1.1rem;
-    min-height: 56px;
+    padding: 16px 20px;
+    font-size: 1rem;
+    min-height: 52px;
+    line-height: 1.5;
+    height: auto;
 }
 
 :root select.form-control option {
@@ -748,9 +754,11 @@ body {
 
 /* Large select for light theme */
 [data-theme="light"] select.form-control-large {
-    padding: 18px 20px;
-    font-size: 1.1rem;
-    min-height: 56px;
+    padding: 16px 20px;
+    font-size: 1rem;
+    min-height: 52px;
+    line-height: 1.5;
+    height: auto;
 }
 
 [data-theme="light"] select.form-control option {

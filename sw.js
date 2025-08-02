@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v32'; // v32, remove reason fields and enhance select element in modals
+const CACHE_NAME = 'agape-worship-cache-v33'; // v33, fix text clipping in select elements
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
