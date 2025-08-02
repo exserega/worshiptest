@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v60'; // v60, Исправлен импорт login.js как ES6 модуль
+const CACHE_NAME = 'agape-worship-cache-v61'; // v61, Улучшена обработка ошибок гостевого входа
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

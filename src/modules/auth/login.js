@@ -193,7 +193,21 @@ async function handleGuestLogin() {
         
     } catch (error) {
         logger.error('❌ Guest login error:', error);
-        showMessage('Ошибка гостевого входа. Попробуйте еще раз.');
+        
+        // Специальная обработка для отключенной анонимной авторизации
+        if (error.code === 'auth/admin-restricted-operation' || 
+            error.code === 'auth/operation-not-allowed') {
+            showMessage('Гостевой вход временно недоступен. Используйте email или Google для входа.', 'error');
+            
+            // Автоматически предлагаем email вход
+            setTimeout(() => {
+                if (confirm('Хотите войти через email?')) {
+                    showScreen('email-form');
+                }
+            }, 1000);
+        } else {
+            showMessage(getErrorMessage(error.code) || 'Ошибка гостевого входа. Попробуйте другой способ.');
+        }
     } finally {
         showLoading(false);
     }
