@@ -5,13 +5,13 @@
 
 /* CSS Variables from main theme */
 :root {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
+    --bg-color: #111827;
+    --text-color: #e5e7eb;
     --accent-color: #4CAF50;
     --hover-color: rgba(255, 255, 255, 0.1);
-    --border-color: rgba(255, 255, 255, 0.1);
-    --card-bg: #1e1e1e;
-    --input-bg: #2a2a2a;
+    --border-color: #374151;
+    --card-bg: #1f2937;
+    --input-bg: #374151;
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     --radius: 8px;
     

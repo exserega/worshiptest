@@ -5,12 +5,12 @@
 /* CSS Variables - из основного сайта */
 :root {
     /* Темная тема по умолчанию */
-    --bg-color: #1a1a1a;
-    --bg-secondary: #2a2a2a;
-    --text-color: #ffffff;
-    --text-secondary: #b0b0b0;
-    --text-tertiary: #808080;
-    --border-color: #444444;
+    --bg-color: #111827;
+    --bg-secondary: #1f2937;
+    --text-color: #e5e7eb;
+    --text-secondary: #9ca3af;
+    --text-tertiary: #6b7280;
+    --border-color: #374151;
     --accent-color: #ff6b6b;
     --accent-hover: #ff5252;
     --accent-danger: #f44336;
@@ -19,9 +19,9 @@
     --success-color: #4caf50;
     --accent-primary: #ff6b6b;
     --accent-primary-hover: #ff5252;
-    --bg-primary: #1a1a1a;
-    --bg-tertiary: #3a3a3a;
-    --text-primary: #ffffff;
+    --bg-primary: #111827;
+    --bg-tertiary: #374151;
+    --text-primary: #e5e7eb;
     --hover-bg: rgba(255, 255, 255, 0.1);
 }
 
