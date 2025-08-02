@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v39'; // v39, remove transfers tab (functionality moved to branch requests)
+const CACHE_NAME = 'agape-worship-cache-v40'; // v40, auth page dark theme only
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
