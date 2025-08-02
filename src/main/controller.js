@@ -155,10 +155,10 @@ export async function refreshSetlists() {
 export function handleSetlistSelect(setlist) {
     console.log('🎯 [Controller] handleSetlistSelect:', setlist.name);
     
-    // Сохраняем выбранный сетлист в состояние
-    state.currentSetlistId = setlist.id;
-    state.currentSetlistName = setlist.name;
-    state.currentSetlistSongs = setlist.songs || [];
+    // Сохраняем выбранный сетлист в состояние используя функции обновления
+    state.setCurrentSetlistId(setlist.id);
+    state.setCurrentSetlistName(setlist.name);
+    state.setCurrentSetlistSongs(setlist.songs || []);
     
     // Обновляем Event Bus
     eventBus.setState('currentSetlistId', setlist.id);

@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v26'; // v26, auto-select created setlist and update UI
+const CACHE_NAME = 'agape-worship-cache-v27'; // v27, fix read-only module property error
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
