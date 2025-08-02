@@ -863,4 +863,35 @@ textarea.form-control {
     .action-button {
         width: 100%;
     }
+    
+    /* Fix admin panel button on mobile */
+    .settings-link {
+        padding: 16px 24px;
+        gap: 16px;
+        justify-content: space-between;
+    }
+    
+    .settings-link i:first-child {
+        font-size: 1rem;
+        flex-shrink: 0;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .settings-link span {
+        flex: 1;
+        text-align: left;
+        padding: 0 8px;
+    }
+    
+    .settings-link i:last-child {
+        margin-left: auto;
+        flex-shrink: 0;
+        font-size: 0.9rem;
+    }
+    
+    /* Prevent hover transform on mobile */
+    .settings-link:hover {
+        transform: none;
+    }
 }
