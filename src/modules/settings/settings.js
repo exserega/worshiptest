@@ -268,7 +268,7 @@ async function loadBranchRequests() {
                     </div>
                     <div class="branch-request-name">${branches[request.requestedBranchId]}</div>
                 </div>
-                <div>
+                <div class="branch-request-actions">
                     <span class="branch-request-status pending">Ожидает</span>
                     <button class="branch-request-cancel" onclick="cancelRequest('${request.id}')">
                         <i class="fas fa-times"></i>

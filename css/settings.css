@@ -444,14 +444,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
+    padding: 12px 16px;
     background: var(--bg-secondary);
     border-radius: 8px;
     margin-bottom: 8px;
+    min-height: 60px;
 }
 
 .branch-request-info {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .branch-request-type {
@@ -465,33 +469,83 @@ body {
     color: var(--text-primary);
 }
 
+.branch-request-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .branch-request-status {
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 16px;
     font-size: 0.85rem;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
 }
 
 .branch-request-status.pending {
-    background: var(--warning-bg);
-    color: var(--warning);
+    background: rgba(255, 152, 0, 0.15);
+    color: #ff9800;
+}
+
+/* Dark theme specific */
+:root .branch-request-status.pending {
+    background: rgba(255, 152, 0, 0.2);
+    color: #ffa726;
+}
+
+/* Light theme specific */
+[data-theme="light"] .branch-request-status.pending {
+    background: rgba(255, 152, 0, 0.1);
+    color: #f57c00;
 }
 
 .branch-request-cancel {
-    margin-left: 8px;
-    padding: 4px 8px;
+    padding: 6px 8px;
     background: transparent;
-    color: var(--danger);
-    border: 1px solid var(--danger);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.branch-request-cancel i {
+    color: inherit;
+    font-size: 0.9rem;
+}
+
+/* Dark theme - light icon */
+:root .branch-request-cancel {
+    color: #999999;
+}
+
+:root .branch-request-cancel i {
+    color: #999999;
+}
+
+/* Light theme - dark icon */
+[data-theme="light"] .branch-request-cancel {
+    color: #666666;
+}
+
+[data-theme="light"] .branch-request-cancel i {
+    color: #666666;
 }
 
 .branch-request-cancel:hover {
     background: var(--danger);
-    color: white;
+    color: white !important;
+    border-color: var(--danger);
+}
+
+.branch-request-cancel:hover i {
+    color: white !important;
 }
 
 .branch-actions {

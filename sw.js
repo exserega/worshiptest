@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v35'; // v35, unify branch request cards styles with user request cards
+const CACHE_NAME = 'agape-worship-cache-v36'; // v36, fix active requests alignment and cancel button colors
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
