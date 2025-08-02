@@ -321,15 +321,38 @@
 .mobile-nav-button {
     background: none; border: none; box-shadow: none; padding: 5px; margin: 0;
     font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; flex-grow: 1;
-    /* !!! ИЗМЕНЕНИЕ: Адаптация под 4 кнопки !!! */
-    max-width: 25%;
+    justify-content: center; 
+    /* Равномерный размер для всех кнопок */
+    flex: 1 1 25%;
+    width: 25%;
+    min-width: 0; /* Предотвращает переполнение */
     height: 100%; cursor: pointer;
     transition: background-color 0.2s ease; border-radius: 0;
     background-image: none !important; position: relative;
 }
+
+/* Разделительные линии между кнопками */
+.mobile-nav-button:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 24px;
+    width: 1px;
+    background-color: var(--border-color);
+    opacity: 0.3;
+}
+
 .mobile-nav-button i { font-size: 1.3rem; margin-bottom: 3px; transition: color 0.2s ease; }
-.mobile-nav-button span { transition: color 0.2s ease; }
+.mobile-nav-button span { 
+    transition: color 0.2s ease; 
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
 
 /* Цвета для темной темы */
 nav.mobile-bottom-nav .mobile-nav-button i,
