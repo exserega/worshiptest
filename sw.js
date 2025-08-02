@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v44'; // v44, Montserrat font fixes for form elements
+const CACHE_NAME = 'agape-worship-cache-v45'; // v45, Complete Montserrat font on settings page
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
