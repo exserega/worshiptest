@@ -274,15 +274,35 @@ async function handlePhoneSend(e) {
             if (!container) {
                 container = document.createElement('div');
                 container.id = 'recaptcha-container';
-                container.style.position = 'fixed';
-                container.style.bottom = '20px';
-                container.style.right = '20px';
-                container.style.zIndex = '9999';
-                document.body.appendChild(container);
+                
+                // Адаптивное позиционирование для мобильных
+                if (window.innerWidth < 768) {
+                    // На мобильных - внутри формы
+                    const phoneForm = document.getElementById('phone-form');
+                    const submitButton = phoneForm.querySelector('button[type="submit"]');
+                    phoneForm.insertBefore(container, submitButton);
+                    
+                    container.style.margin = '20px auto';
+                    container.style.display = 'flex';
+                    container.style.justifyContent = 'center';
+                    container.style.transform = 'scale(0.9)';
+                    container.style.transformOrigin = 'center';
+                } else {
+                    // На десктопе - фиксированная позиция
+                    document.body.appendChild(container);
+                    container.style.position = 'fixed';
+                    container.style.bottom = '20px';
+                    container.style.right = '20px';
+                    container.style.zIndex = '9999';
+                    container.style.background = 'white';
+                    container.style.padding = '10px';
+                    container.style.borderRadius = '8px';
+                    container.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+                }
             }
             
             recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                size: 'normal', // Меняем на обычную видимую reCAPTCHA
+                size: window.innerWidth < 768 ? 'compact' : 'normal', // Компактная версия для мобильных
                 callback: (response) => {
                     console.log('✅ reCAPTCHA solved');
                     // Автоматически отправляем SMS после решения капчи
