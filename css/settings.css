@@ -17,6 +17,12 @@
     --accent-warning: #ff9800;
     --hover-color: rgba(255, 107, 107, 0.1);
     --success-color: #4caf50;
+    --accent-primary: #ff6b6b;
+    --accent-primary-hover: #ff5252;
+    --bg-primary: #1a1a1a;
+    --bg-tertiary: #3a3a3a;
+    --text-primary: #ffffff;
+    --hover-bg: rgba(255, 255, 255, 0.1);
 }
 
 /* Светлая тема */
@@ -33,6 +39,12 @@
     --accent-warning: #ff9800;
     --hover-color: rgba(255, 107, 107, 0.1);
     --success-color: #4caf50;
+    --accent-primary: #ff6b6b;
+    --accent-primary-hover: #ff5252;
+    --bg-primary: #ffffff;
+    --bg-tertiary: #e5e5e5;
+    --text-primary: #333333;
+    --hover-bg: rgba(0, 0, 0, 0.05);
 }
 
 body {
@@ -227,6 +239,60 @@ body {
     margin: 15px 0;
 }
 
+/* Settings Link */
+.settings-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary) !important;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.settings-link:hover {
+    background: var(--hover-bg);
+    border-color: var(--accent-primary);
+}
+
+.settings-link i {
+    color: var(--accent-primary) !important;
+}
+
+/* Logout Button */
+.logout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    background: transparent;
+    color: var(--accent-danger) !important;
+    border: 1px solid var(--accent-danger);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logout-button i {
+    color: var(--accent-danger) !important;
+}
+
+.logout-button:hover {
+    background: var(--accent-danger);
+    color: white !important;
+}
+
+.logout-button:hover i {
+    color: white !important;
+}
+
 /* Action Buttons */
 .action-button {
     display: flex;
@@ -236,14 +302,19 @@ body {
     width: 100%;
     padding: 12px 20px;
     background: var(--accent-color);
-    color: white;
-    border: none;
+    color: white !important;
+    border: 1px solid var(--accent-color);
     border-radius: 8px;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
     margin-top: 15px;
+    text-decoration: none;
+}
+
+.action-button i {
+    color: white !important;
 }
 
 .action-button:hover {
@@ -400,13 +471,21 @@ body {
 
 .action-button.secondary {
     background: transparent;
-    color: var(--accent-primary);
+    color: var(--accent-primary) !important;
     border: 1px solid var(--accent-primary);
+}
+
+.action-button.secondary i {
+    color: var(--accent-primary) !important;
 }
 
 .action-button.secondary:hover {
     background: var(--accent-primary);
-    color: white;
+    color: white !important;
+}
+
+.action-button.secondary:hover i {
+    color: white !important;
 }
 
 /* Modal Styles */
@@ -428,13 +507,14 @@ body {
 }
 
 .modal-content {
-    background: var(--bg-primary);
+    background: var(--bg-secondary);
     border-radius: 12px;
     width: 90%;
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
 }
 
 .modal-header {
