@@ -993,6 +993,9 @@ async function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         .filter(s => s.id)
         .sort((a,b) => a.order - b.order);
 
+    // Проверяем права для текущего филиала один раз для всех песен
+    const canEdit = await canEditInCurrentBranch();
+
     fullSongsData.forEach(song => {
         const songItem = document.createElement('div');
         songItem.className = 'setlist-song-item';
@@ -1038,8 +1041,7 @@ async function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         removeBtn.innerHTML = '<i class="fas fa-times"></i>';
         removeBtn.className = 'song-action-btn';
         
-        // Проверяем права для текущего филиала
-        const canEdit = await canEditInCurrentBranch();
+        // Используем результат проверки прав
         if (!canEdit) {
             // Не используем disabled, чтобы обработчик клика работал
             removeBtn.title = isUserMainBranch() ? 'Недоступно. Ваша заявка на рассмотрении' : 'Недоступно в чужом филиале';
@@ -1179,6 +1181,9 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
         return;
     }
 
+    // Проверяем права для текущего филиала один раз для всех сет-листов
+    const canEdit = await canEditInCurrentBranch();
+    
     setlists.forEach(setlist => {
         const item = document.createElement('div');
         item.className = 'setlist-item';
@@ -1212,8 +1217,7 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
         editBtn.innerHTML = '<i class="fas fa-edit"></i>';
         editBtn.className = 'edit-button';
         
-        // Проверяем права для текущего филиала
-        const canEdit = await canEditInCurrentBranch();
+        // Используем результат проверки прав
         if (!canEdit) {
             // Не используем disabled, чтобы обработчик клика работал
             editBtn.title = isUserMainBranch() ? 'Недоступно. Ваша заявка на рассмотрении' : 'Недоступно в чужом филиале';
