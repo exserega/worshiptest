@@ -256,13 +256,27 @@ async function handlePhoneSend(e) {
         // Initialize reCAPTCHA
         if (!recaptchaVerifier) {
             recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                size: 'normal',
-                callback: () => {
-                    console.log('reCAPTCHA solved');
+                size: 'invisible', // Используем невидимую reCAPTCHA
+                callback: (response) => {
+                    console.log('reCAPTCHA solved:', response);
+                },
+                'error-callback': (error) => {
+                    console.error('reCAPTCHA error:', error);
+                    showMessage('Ошибка проверки безопасности. Попробуйте еще раз.');
                 }
             });
+            
+            // Рендерим reCAPTCHA
+            try {
+                await recaptchaVerifier.render();
+                console.log('reCAPTCHA rendered successfully');
+            } catch (renderError) {
+                console.error('reCAPTCHA render error:', renderError);
+                throw new Error('Не удалось инициализировать проверку безопасности');
+            }
         }
         
+        console.log('Sending SMS to:', phoneNumber);
         phoneConfirmationResult = await auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
         
         console.log('📱 SMS sent to:', phoneNumber);
@@ -272,7 +286,17 @@ async function handlePhoneSend(e) {
         elements.verificationGroup.style.display = 'block';
     } catch (error) {
         console.error('Phone login error:', error);
-        showMessage(getErrorMessage(error.code));
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        
+        // Более подробные сообщения об ошибках
+        if (error.code === 'auth/missing-client-identifier') {
+            showMessage('Ошибка настройки: Добавьте домен в Firebase Console');
+        } else if (error.code === 'auth/captcha-check-failed') {
+            showMessage('Ошибка проверки безопасности. Обновите страницу и попробуйте снова');
+        } else {
+            showMessage(getErrorMessage(error.code) || error.message);
+        }
         
         // Reset reCAPTCHA on error
         if (recaptchaVerifier) {
@@ -317,22 +341,25 @@ async function handlePhoneVerify() {
 // ====================================
 
 function getErrorMessage(errorCode) {
-    const messages = {
-        'auth/email-already-in-use': 'Email уже используется',
+    const errors = {
+        'auth/email-already-in-use': 'Этот email уже используется',
         'auth/invalid-email': 'Неверный формат email',
-        'auth/operation-not-allowed': 'Операция не разрешена',
-        'auth/weak-password': 'Слишком слабый пароль',
-        'auth/user-disabled': 'Пользователь заблокирован',
+        'auth/weak-password': 'Пароль должен быть не менее 6 символов',
         'auth/user-not-found': 'Пользователь не найден',
         'auth/wrong-password': 'Неверный пароль',
-        'auth/invalid-phone-number': 'Неверный формат номера телефона',
         'auth/invalid-verification-code': 'Неверный код подтверждения',
-        'auth/popup-closed-by-user': 'Окно входа было закрыто',
-        'auth/network-request-failed': 'Ошибка сети. Проверьте подключение',
-        'auth/too-many-requests': 'Слишком много попыток. Попробуйте позже'
+        'auth/invalid-verification-id': 'Код подтверждения истек',
+        'auth/invalid-phone-number': 'Неверный формат номера телефона',
+        'auth/missing-phone-number': 'Введите номер телефона',
+        'auth/quota-exceeded': 'Превышен лимит SMS. Попробуйте позже',
+        'auth/captcha-check-failed': 'Ошибка проверки reCAPTCHA',
+        'auth/missing-client-identifier': 'Ошибка конфигурации Firebase',
+        'auth/invalid-app-credential': 'Ошибка приложения. Обновите страницу',
+        'auth/missing-app-credential': 'Ошибка безопасности. Обновите страницу',
+        'auth/too-many-requests': 'Слишком много попыток. Попробуйте позже',
+        'default': 'Произошла ошибка. Попробуйте еще раз'
     };
-    
-    return messages[errorCode] || 'Произошла ошибка. Попробуйте еще раз';
+    return errors[errorCode] || errors.default;
 }
 
 // ====================================
