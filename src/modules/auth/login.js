@@ -245,12 +245,16 @@ async function handleGoogleLogin() {
     }
 }
 
+// Глобальная переменная для хранения номера телефона
+let pendingPhoneNumber = null;
+
 // Phone Login - Step 1: Send SMS
 async function handlePhoneSend(e) {
     e.preventDefault();
     showLoading();
     
     const phoneNumber = e.target.phone.value;
+    pendingPhoneNumber = phoneNumber; // Сохраняем номер для последующей отправки
     
     // Список тестовых номеров (для разработки)
     const testPhones = [
@@ -278,12 +282,15 @@ async function handlePhoneSend(e) {
             }
             
             recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                size: 'invisible',
+                size: 'normal', // Меняем на обычную видимую reCAPTCHA
                 callback: (response) => {
                     console.log('✅ reCAPTCHA solved');
+                    // Автоматически отправляем SMS после решения капчи
+                    submitPhoneForm();
                 },
                 'expired-callback': () => {
                     console.log('⏰ reCAPTCHA expired');
+                    showMessage('Капча истекла. Попробуйте еще раз', 'warning');
                     if (recaptchaVerifier) {
                         recaptchaVerifier.clear();
                         recaptchaVerifier = null;
@@ -291,6 +298,7 @@ async function handlePhoneSend(e) {
                 },
                 'error-callback': (error) => {
                     console.error('❌ reCAPTCHA error:', error);
+                    showMessage('Ошибка капчи. Попробуйте обновить страницу', 'error');
                 }
             });
             
@@ -298,6 +306,9 @@ async function handlePhoneSend(e) {
             try {
                 await recaptchaVerifier.render();
                 console.log('✅ reCAPTCHA rendered');
+                showMessage('Пожалуйста, пройдите проверку безопасности', 'info');
+                showLoading(false);
+                return; // Ждем пока пользователь решит капчу
             } catch (renderError) {
                 console.error('❌ reCAPTCHA render failed:', renderError);
                 // Продолжаем без reCAPTCHA для тестовых номеров
@@ -307,9 +318,34 @@ async function handlePhoneSend(e) {
             }
         }
         
-        console.log('📱 Отправка SMS на:', phoneNumber);
+        // Для тестовых номеров сразу отправляем
+        if (isTestPhone) {
+            await submitPhoneForm();
+        }
         
-        // Для тестовых номеров показываем сообщение
+    } catch (error) {
+        console.error('❌ Phone login error:', error);
+        showMessage(getErrorMessage(error.code) || error.message);
+        showLoading(false);
+    }
+}
+
+// Отдельная функция для отправки SMS
+async function submitPhoneForm() {
+    if (!pendingPhoneNumber) {
+        showMessage('Ошибка: номер телефона не найден', 'error');
+        return;
+    }
+    
+    showLoading();
+    
+    try {
+        console.log('📱 Отправка SMS на:', pendingPhoneNumber);
+        
+        // Проверяем тестовый номер
+        const testPhones = ['+79999999999', '+71234567890', '+70000000000'];
+        const isTestPhone = testPhones.includes(pendingPhoneNumber.replace(/\s/g, ''));
+        
         if (isTestPhone) {
             console.log('🧪 Тестовый номер обнаружен');
             showMessage('Используйте код: 123456', 'info');
@@ -317,7 +353,7 @@ async function handlePhoneSend(e) {
         
         // Отправляем SMS
         phoneConfirmationResult = await auth.signInWithPhoneNumber(
-            phoneNumber, 
+            pendingPhoneNumber, 
             recaptchaVerifier || undefined
         );
         
@@ -329,7 +365,7 @@ async function handlePhoneSend(e) {
         elements.verificationCodeInput.focus();
         
     } catch (error) {
-        console.error('❌ Phone login error:', error);
+        console.error('❌ Phone send error:', error);
         console.error('Error details:', {
             code: error.code,
             message: error.message,
