@@ -341,7 +341,7 @@ window.showAddBranchModal = async function() {
 
 window.submitMainBranchChange = async function() {
     const branchId = document.getElementById('new-main-branch').value;
-    const reason = document.getElementById('change-reason').value;
+    const reason = ''; // Поле причины убрано из UI
     
     if (!branchId) {
         alert('Выберите филиал');
@@ -372,7 +372,7 @@ window.submitMainBranchChange = async function() {
 
 window.submitAdditionalBranchRequest = async function() {
     const branchId = document.getElementById('additional-branch').value;
-    const reason = document.getElementById('add-reason').value;
+    const reason = ''; // Поле причины убрано из UI
     
     if (!branchId) {
         alert('Выберите филиал');

@@ -651,6 +651,15 @@ body {
     padding: 20px;
 }
 
+/* Simplified modal with single select */
+.modal-body:has(.form-control-large):not(:has(.form-group:nth-child(2))) {
+    padding: 30px 20px;
+}
+
+.modal-body:has(.form-control-large) .form-group:only-child {
+    margin-bottom: 0;
+}
+
 .form-group {
     margin-bottom: 16px;
 }
@@ -705,6 +714,13 @@ body {
     padding-right: 40px;
 }
 
+/* Large select for modal windows */
+:root select.form-control-large {
+    padding: 18px 20px;
+    font-size: 1.1rem;
+    min-height: 56px;
+}
+
 :root select.form-control option {
     background: #2a2a2a;
     color: #ffffff;
@@ -728,6 +744,13 @@ body {
     background: #ffffff;
     color: #333333 !important;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+}
+
+/* Large select for light theme */
+[data-theme="light"] select.form-control-large {
+    padding: 18px 20px;
+    font-size: 1.1rem;
+    min-height: 56px;
 }
 
 [data-theme="light"] select.form-control option {
