@@ -4630,7 +4630,7 @@ body:not([data-theme="light"]) mark.search-highlight {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: var(--font-sm);
     line-height: 1.6;
     color: var(--text-color);
@@ -4870,7 +4870,7 @@ body:not([data-theme="light"]) mark.search-highlight {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.6;
     color: var(--text-color);
