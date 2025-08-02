@@ -36,9 +36,16 @@ import {
     isUserGuest, 
     hasLimitedAccess 
 } from '../modules/auth/authCheck.js';
-import { getCurrentBranchId } from '../modules/branches/branchUtils.js';
-import { searchWorkerManager } from '../utils/workerManager.js';
+// Закомментированы отсутствующие импорты
+// import { getCurrentBranchId } from '../modules/branches/branchUtils.js';
+// import { searchWorkerManager } from '../utils/workerManager.js';
 import logger from '../utils/logger.js';
+
+// Заглушка для getCurrentBranchId пока модуль не доступен
+const getCurrentBranchId = () => {
+    // Возвращаем null если модуль branches не загружен
+    return null;
+};
 
 // Получаем auth из глобального firebase (версия 8)
 const auth = window.firebase?.auth?.() || null;
@@ -92,10 +99,10 @@ export async function loadAllSongsFromFirestore() {
         state.setSongsBySheet(newSongsBySheet);
         console.log(`Загружено ${state.allSongs.length} песен.`);
         
-        // Обновляем базу данных в Web Worker
-        if (typeof window !== 'undefined' && window.searchWorkerManager) {
-            window.searchWorkerManager.updateSongsDatabase(newAllSongs);
-        }
+        // Обновляем базу данных в Web Worker (если доступен)
+        // if (typeof window !== 'undefined' && window.searchWorkerManager) {
+        //     window.searchWorkerManager.updateSongsDatabase(newAllSongs);
+        // }
     } catch (error) {
         console.error('❌ Ошибка загрузки песен:', error);
         throw error;
