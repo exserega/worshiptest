@@ -1,7 +1,12 @@
 // ====================================
 // 🚀 USER NAVIGATION MODULE
 // ====================================
-// Обработка кнопки "Пользователь" в нижней навигации
+// Обработка кнопки "Профиль" в нижней навигации
+// Для гостей показывает предложение зарегистрироваться
+// ====================================
+
+import { isUserGuest, showGuestProfileMessage } from './authCheck.js';
+import logger from '../../utils/logger.js';
 
 /**
  * Инициализирует обработчик кнопки пользователя
@@ -10,14 +15,20 @@ export function initUserNavigation() {
     const userButton = document.getElementById('toggle-user');
     
     if (!userButton) {
-        console.warn('User navigation button not found');
+        logger.warn('User navigation button not found');
         return;
     }
     
     userButton.addEventListener('click', () => {
-        // Переход на страницу настроек
+        // Проверяем, является ли пользователь гостем
+        if (isUserGuest()) {
+            showGuestProfileMessage();
+            return;
+        }
+        
+        // Для зарегистрированных пользователей - переход на страницу настроек
         window.location.href = '/public/settings.html';
     });
     
-    console.log('👤 User navigation initialized');
+    logger.log('👤 User navigation initialized');
 }

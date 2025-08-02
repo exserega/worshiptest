@@ -12,17 +12,37 @@
  * - setupKeyboardEventHandlers() - обработчики клавиатуры
  */
 
-// Импорты
-import * as controller from './controller.js';
+// ====================================
+// IMPORTS
+// ====================================
 import { 
-    startAddingSongs as startAddingSongsModule,
-    closeAddSongsOverlay as closeAddSongsOverlayModule,
-    filterAndDisplaySongs as filterAndDisplaySongsModule
-} from '../core/index.js';
-import { showMobileSongPreview } from '../core/index.js';
-import * as ui from '../../ui.js';
-import * as state from '../../js/state.js';
-import { isUserPending, getUserStatus, showPendingUserMessage } from '../modules/auth/authCheck.js';
+    loadSongs, 
+    searchAndFilterSongs, 
+    displayFilteredSongs, 
+    displaySongs, 
+    displayFavoriteSongs 
+} from '../api/index.js';
+import { displaySong } from '../../ui.js';
+import { openSetlistSelector } from '../modules/setlists/setlist-selector.js';
+import { 
+    showFullScreenMobilePreview, 
+    closeFullScreenMobilePreview 
+} from '../../js/mobilePreview.js';
+import { 
+    openCreateSetlistModal, 
+    openConfirmModal 
+} from '../modules/setlists/setlistModals.js';
+import { setCurrentSearchQuery } from '../../js/shared.js';
+import { getFavorites, addFavorite } from '../modules/my-list/myListState.js';
+import { 
+    isUserPending, 
+    isUserGuest, 
+    hasLimitedAccess, 
+    getUserStatus, 
+    showPendingUserMessage, 
+    showGuestMessage 
+} from '../modules/auth/authCheck.js';
+import logger from '../utils/logger.js';
 
 // ====================================
 // MAIN SETUP FUNCTION
@@ -576,7 +596,7 @@ function setupSetlistEventHandlers() {
                         canEdit = canEditInCurrentBranch();
                     } catch (e) {
                         // Если модуль не загружен, проверяем только статус пользователя
-                        canEdit = !isUserPending();
+                        canEdit = !hasLimitedAccess();
                     }
                     
                     if (!canEdit) {
@@ -783,13 +803,17 @@ function setupSetlistEventHandlers() {
                 }
             } catch (e) {
                 // Если модуль не загружен, проверяем только статус
-                canEdit = !isUserPending();
+                canEdit = !hasLimitedAccess();
             }
             
             // Проверяем статус пользователя
             if (!canEdit) {
                 console.log('⚠️ [EventHandlers] User cannot edit, creation blocked');
-                showPendingUserMessage('Создание сет-листов');
+                if (isUserGuest()) {
+                    showGuestMessage('Создание сет-листов');
+                } else {
+                    showPendingUserMessage('Создание сет-листов');
+                }
                 return;
             }
             
@@ -949,9 +973,13 @@ function setupSetlistEventHandlers() {
             console.log('🎵 [EventHandlers] Add song button clicked');
             
             // Проверяем статус пользователя
-            if (isUserPending()) {
-                console.log('⚠️ [EventHandlers] User is pending, add songs blocked');
-                showPendingUserMessage('Добавление песен в сет-листы');
+            if (hasLimitedAccess()) {
+                console.log('⚠️ [EventHandlers] User has limited access, add songs blocked');
+                if (isUserGuest()) {
+                    showGuestMessage('Добавление песен в сет-листы');
+                } else {
+                    showPendingUserMessage('Добавление песен в сет-листы');
+                }
                 return;
             }
             
@@ -1196,9 +1224,13 @@ function setupSongEventHandlers() {
             console.log('📋 [EventHandlers] Add to setlist button clicked');
             
             // Проверяем статус пользователя
-            if (isUserPending()) {
-                console.log('⚠️ [EventHandlers] User is pending, add to setlist blocked');
-                showPendingUserMessage('Добавление песен в сет-листы');
+            if (hasLimitedAccess()) {
+                console.log('⚠️ [EventHandlers] User has limited access, add to setlist blocked');
+                if (isUserGuest()) {
+                    showGuestMessage('Добавление песен в сет-листы');
+                } else {
+                    showPendingUserMessage('Добавление песен в сет-листы');
+                }
                 return;
             }
             

@@ -31,10 +31,16 @@ import {
     distributeSongBlocksToColumns
 } from './js/core.js';
 import * as api from './js/api.js';
-import { isUserPending, showPendingUserMessage } from './src/modules/auth/authCheck.js';
+import { 
+    isUserPending, 
+    isUserGuest, 
+    hasLimitedAccess, 
+    showPendingUserMessage, 
+    showGuestMessage 
+} from './src/modules/auth/authCheck.js';
 
-// Функции для проверки прав в филиалах (загружаются динамически)
-let canEditInCurrentBranch = async () => !isUserPending(); // По умолчанию проверяем только pending
+// Проверка может ли пользователь редактировать
+let canEditInCurrentBranch = async () => !hasLimitedAccess(); // Проверяем и pending, и guest
 let isUserMainBranch = () => true; // По умолчанию считаем что это основной филиал
 let showOtherBranchMessage = () => {}; // Пустая функция по умолчанию
 
@@ -381,9 +387,13 @@ export function displaySongDetails(songData, keyToSelect) {
     favoriteButton.disabled = false;
     
     // Проверяем статус пользователя для кнопки добавления в сет-лист
-    if (isUserPending()) {
+    if (hasLimitedAccess()) {
         // Не используем disabled, чтобы обработчик клика работал
-        addToSetlistButton.title = 'Недоступно. Ваша заявка на рассмотрении';
+        if (isUserGuest()) {
+            addToSetlistButton.title = 'Недоступно для гостей. Зарегистрируйтесь для полного доступа';
+        } else {
+            addToSetlistButton.title = 'Недоступно. Ваша заявка на рассмотрении';
+        }
         addToSetlistButton.style.opacity = '0.5';
         addToSetlistButton.style.cursor = 'not-allowed';
         addToSetlistButton.classList.add('pending-disabled');
@@ -1058,7 +1068,11 @@ async function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
             // Дополнительная проверка при клике
             if (!(await canEditInCurrentBranch())) {
                 if (isUserMainBranch()) {
-                    showPendingUserMessage('Удаление песен из сет-листов');
+                    if (isUserGuest()) {
+                showGuestMessage('Удаление песен из сет-листов');
+            } else {
+                showPendingUserMessage('Удаление песен из сет-листов');
+            }
                 } else {
                     showOtherBranchMessage('Удаление песен из сет-листов');
                 }
@@ -1234,7 +1248,11 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
             // Дополнительная проверка при клике
             if (!(await canEditInCurrentBranch())) {
                 if (isUserMainBranch()) {
-                    showPendingUserMessage('Редактирование сет-листов');
+                    if (isUserGuest()) {
+                showGuestMessage('Редактирование сет-листов');
+            } else {
+                showPendingUserMessage('Редактирование сет-листов');
+            }
                 } else {
                     showOtherBranchMessage('Редактирование сет-листов');
                 }
@@ -1278,7 +1296,11 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
             // Дополнительная проверка при клике
             if (!(await canEditInCurrentBranch())) {
                 if (isUserMainBranch()) {
-                    showPendingUserMessage('Удаление сет-листов');
+                    if (isUserGuest()) {
+                showGuestMessage('Удаление сет-листов');
+            } else {
+                showPendingUserMessage('Удаление сет-листов');
+            }
                 } else {
                     showOtherBranchMessage('Удаление сет-листов');
                 }

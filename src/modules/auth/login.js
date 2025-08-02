@@ -1,170 +1,205 @@
 // ====================================
 // 🔐 LOGIN MODULE
 // ====================================
-// Обработка входа, регистрации и авторизации
-
-// Firebase imports
-const auth = firebase.auth();
-const db = firebase.firestore();
-const GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
-const RecaptchaVerifier = firebase.auth.RecaptchaVerifier;
-
-// ====================================
-// DOM ELEMENTS
+// Модуль авторизации пользователей
+// Поддерживает: Email, Google, Apple, Guest
+// Новые пользователи получают статус 'pending'
 // ====================================
 
-const screens = {
-    main: document.getElementById('main-auth'),
-    email: document.getElementById('email-form'),
-    register: document.getElementById('register-form'),
-    phone: document.getElementById('phone-form')
-};
+import logger from '../../utils/logger.js';
 
-const forms = {
-    login: document.getElementById('login-form'),
-    register: document.getElementById('register-form-element'),
-    phone: document.getElementById('phone-form-element')
-};
+// Firebase references
+const auth = window.firebase.auth();
+const db = window.firebase.firestore();
 
+// DOM elements
 const elements = {
+    // Screens
+    mainAuth: document.getElementById('main-auth'),
+    emailForm: document.getElementById('email-form'),
+    registerForm: document.getElementById('register-form'),
+    
+    // Buttons
     googleBtn: document.getElementById('google-login-btn'),
-    phoneBtn: document.getElementById('phone-login-btn'),
     emailBtn: document.getElementById('email-login-btn'),
-    showRegister: document.getElementById('show-register'),
+    appleBtn: document.getElementById('apple-login-btn'),
+    guestBtn: document.getElementById('guest-login-btn'),
+    showRegisterBtn: document.getElementById('show-register'),
     backFromEmail: document.getElementById('back-from-email'),
     backFromRegister: document.getElementById('back-from-register'),
-    backFromPhone: document.getElementById('back-from-phone'),
-    verifyCodeBtn: document.getElementById('verify-code-btn'),
-    verificationGroup: document.getElementById('verification-code-group'),
+    
+    // Forms
+    loginForm: document.getElementById('login-form'),
+    registerFormElement: document.getElementById('register-form-element'),
+    
+    // Messages
     authMessage: document.getElementById('auth-message'),
-    loading: document.getElementById('auth-loading')
+    authLoading: document.getElementById('auth-loading')
 };
 
 // ====================================
-// STATE
+// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 // ====================================
 
-let phoneConfirmationResult = null;
-let recaptchaVerifier = null;
-let inviteId = null;
-
-// Check for invite in URL
-const urlParams = new URLSearchParams(window.location.search);
-inviteId = urlParams.get('invite');
-
-if (inviteId) {
-    console.log('Invite ID found:', inviteId);
-    // Show invite message
-    setTimeout(() => {
-        showMessage('You have been invited! Please sign up to accept the invitation.', 'info');
-    }, 500);
-}
-
-// ====================================
-// UTILITY FUNCTIONS
-// ====================================
-
-function showLoading(show = true) {
-    elements.loading.style.display = show ? 'flex' : 'none';
-}
-
+// Показать сообщение
 function showMessage(message, type = 'error') {
     elements.authMessage.textContent = message;
-    elements.authMessage.className = `auth-message show ${type}`;
+    elements.authMessage.className = `auth-message ${type}`;
+    elements.authMessage.style.display = 'block';
     
     setTimeout(() => {
-        elements.authMessage.classList.remove('show');
+        elements.authMessage.style.display = 'none';
     }, 5000);
 }
 
-function clearMessages() {
-    elements.authMessage.classList.remove('show');
-    elements.authMessage.textContent = '';
+// Показать/скрыть загрузку
+function showLoading(show = true) {
+    elements.authLoading.style.display = show ? 'flex' : 'none';
 }
 
-function switchForm(screenName) {
-    // Hide all screens
-    Object.values(screens).forEach(screen => {
+// Переключение экранов
+function showScreen(screenId) {
+    document.querySelectorAll('.auth-screen').forEach(screen => {
         screen.classList.remove('active');
     });
     
-    // Show requested screen
-    if (screens[screenName]) {
-        screens[screenName].classList.add('active');
+    const screen = document.getElementById(screenId);
+    if (screen) {
+        screen.classList.add('active');
     }
-    
-    clearMessages();
 }
 
 // ====================================
-// CREATE USER PROFILE
+// СОЗДАНИЕ/ОБНОВЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
 // ====================================
 
-async function createUserProfile(user, additionalData = {}) {
+async function createOrUpdateUser(user, additionalData = {}) {
     const userRef = db.collection('users').doc(user.uid);
     
-    // ВАЖНО: Проверяем, не существует ли уже профиль
-    const existingDoc = await userRef.get();
-    if (existingDoc.exists) {
-        console.warn('⚠️ Profile already exists, skipping creation');
-        return existingDoc.data();
-    }
-    
-    // Check if there's an invite
-    if (inviteId) {
-        try {
-            const inviteDoc = await db.collection('invites').doc(inviteId).get();
+    try {
+        const doc = await userRef.get();
+        const now = new Date();
+        
+        if (!doc.exists) {
+            // Новый пользователь
+            const userData = {
+                email: user.email || null,
+                name: additionalData.name || user.displayName || 'Пользователь',
+                phone: user.phoneNumber || null,
+                status: additionalData.isGuest ? 'guest' : 'pending', // Гость или pending
+                role: 'user',
+                createdAt: now,
+                updatedAt: now,
+                lastLogin: now,
+                photoURL: user.photoURL || null,
+                ...additionalData
+            };
             
-            if (inviteDoc.exists) {
-                const invite = inviteDoc.data();
-                
-                // Validate invite
-                if (invite.status === 'pending' && 
-                    invite.email === user.email && 
-                    new Date(invite.expiresAt.toDate()) > new Date()) {
-                    
-                    // Apply invite role
-                    additionalData.role = invite.role;
-                    additionalData.status = 'active';
-                    additionalData.invitedBy = invite.invitedBy;
-                    
-                    // Mark invite as accepted
-                    await db.collection('invites').doc(inviteId).update({
-                        status: 'accepted',
-                        acceptedBy: user.uid,
-                        acceptedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    console.log('Invite accepted successfully');
-                }
-            }
-        } catch (error) {
-            console.error('Error processing invite:', error);
+            await userRef.set(userData);
+            logger.log('✅ Новый пользователь создан:', userData);
+        } else {
+            // Существующий пользователь - обновляем lastLogin
+            await userRef.update({
+                lastLogin: now,
+                updatedAt: now
+            });
+            logger.log('✅ Пользователь обновлен');
         }
+        
+        return true;
+    } catch (error) {
+        logger.error('❌ Ошибка создания/обновления пользователя:', error);
+        throw error;
     }
-    
-    const userData = {
-        id: user.uid,
-        name: user.displayName || additionalData.name || 'Новый пользователь',
-        email: user.email,
-        phone: user.phoneNumber,
-        photoURL: user.photoURL,
-        role: additionalData.role || 'user',
-        branchId: null,
-        status: additionalData.status || 'pending', // Новые пользователи ожидают подтверждения
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        ...additionalData
-    };
-    
-    await userRef.set(userData, { merge: true });
 }
 
 // ====================================
-// AUTH HANDLERS
+// МЕТОДЫ АВТОРИЗАЦИИ
 // ====================================
 
-// Email/Password Login
+// Google Login
+async function handleGoogleLogin() {
+    showLoading();
+    
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const result = await auth.signInWithPopup(provider);
+        
+        await createOrUpdateUser(result.user);
+        
+        logger.log('✅ Google авторизация успешна');
+        showMessage('Вход выполнен успешно!', 'success');
+        
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+        
+    } catch (error) {
+        logger.error('❌ Google login error:', error);
+        showMessage(getErrorMessage(error.code));
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Apple Login
+async function handleAppleLogin() {
+    showLoading();
+    
+    try {
+        const provider = new firebase.auth.OAuthProvider('apple.com');
+        provider.addScope('email');
+        provider.addScope('name');
+        
+        const result = await auth.signInWithPopup(provider);
+        
+        await createOrUpdateUser(result.user);
+        
+        logger.log('✅ Apple авторизация успешна');
+        showMessage('Вход выполнен успешно!', 'success');
+        
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+        
+    } catch (error) {
+        logger.error('❌ Apple login error:', error);
+        showMessage(getErrorMessage(error.code));
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Guest Login
+async function handleGuestLogin() {
+    showLoading();
+    
+    try {
+        // Создаем анонимного пользователя
+        const result = await auth.signInAnonymously();
+        
+        // Создаем запись в БД со статусом guest
+        await createOrUpdateUser(result.user, {
+            isGuest: true,
+            name: 'Гость'
+        });
+        
+        logger.log('✅ Гостевой вход выполнен');
+        showMessage('Вы вошли как гость', 'success');
+        
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+        
+    } catch (error) {
+        logger.error('❌ Guest login error:', error);
+        showMessage('Ошибка гостевого входа. Попробуйте еще раз.');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Email Login
 async function handleEmailLogin(e) {
     e.preventDefault();
     showLoading();
@@ -174,19 +209,25 @@ async function handleEmailLogin(e) {
     
     try {
         const result = await auth.signInWithEmailAndPassword(email, password);
-        console.log('🔐 Login successful:', result.user.email);
         
-        // Redirect to main app
-        window.location.href = '/';
+        await createOrUpdateUser(result.user);
+        
+        logger.log('✅ Email авторизация успешна');
+        showMessage('Вход выполнен успешно!', 'success');
+        
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+        
     } catch (error) {
-        console.error('Login error:', error);
+        logger.error('❌ Email login error:', error);
         showMessage(getErrorMessage(error.code));
     } finally {
         showLoading(false);
     }
 }
 
-// Registration
+// Register
 async function handleRegister(e) {
     e.preventDefault();
     showLoading();
@@ -205,391 +246,119 @@ async function handleRegister(e) {
     try {
         const result = await auth.createUserWithEmailAndPassword(email, password);
         
-        // Update display name
-        await result.user.updateProfile({ displayName: name });
+        // Обновляем displayName
+        await result.user.updateProfile({
+            displayName: name
+        });
         
-        // Create user profile
-        await createUserProfile(result.user, { name });
+        await createOrUpdateUser(result.user, { name });
         
-        console.log('🔐 Registration successful:', result.user.email);
-        showMessage('Регистрация успешна! Перенаправление...', 'success');
+        logger.log('✅ Регистрация успешна');
+        showMessage('Регистрация успешна! Ожидайте подтверждения администратора.', 'success');
         
         setTimeout(() => {
             window.location.href = '/';
         }, 2000);
+        
     } catch (error) {
-        console.error('Registration error:', error);
+        logger.error('❌ Register error:', error);
         showMessage(getErrorMessage(error.code));
-    } finally {
-        showLoading(false);
-    }
-}
-
-// Google Login
-async function handleGoogleLogin() {
-    showLoading();
-    
-    try {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        const result = await auth.signInWithPopup(provider);
-        
-        // Create/update user profile
-        await createUserProfile(result.user);
-        
-        console.log('🔐 Google login successful:', result.user.email);
-        window.location.href = '/';
-    } catch (error) {
-        console.error('Google login error:', error);
-        showMessage(getErrorMessage(error.code));
-        showLoading(false);
-    }
-}
-
-// Глобальная переменная для хранения номера телефона
-let pendingPhoneNumber = null;
-
-// Phone Login - Step 1: Send SMS
-async function handlePhoneSend(e) {
-    e.preventDefault();
-    showLoading();
-    
-    const phoneNumber = e.target.phone.value;
-    pendingPhoneNumber = phoneNumber; // Сохраняем номер для последующей отправки
-    
-    // Список тестовых номеров (для разработки)
-    const testPhones = [
-        '+79999999999',
-        '+71234567890',
-        '+70000000000'
-    ];
-    
-    // Проверяем, является ли номер тестовым
-    const isTestPhone = testPhones.includes(phoneNumber.replace(/\s/g, ''));
-    
-    try {
-        // Initialize reCAPTCHA только для реальных номеров
-        if (!recaptchaVerifier && !isTestPhone) {
-            // Создаем контейнер для reCAPTCHA если его нет
-            let container = document.getElementById('recaptcha-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'recaptcha-container';
-                
-                // Адаптивное позиционирование для мобильных
-                if (window.innerWidth < 768) {
-                    // На мобильных - внутри формы
-                    const phoneForm = document.getElementById('phone-form');
-                    const submitButton = phoneForm.querySelector('button[type="submit"]');
-                    phoneForm.insertBefore(container, submitButton);
-                    
-                    container.style.margin = '20px auto';
-                    container.style.display = 'flex';
-                    container.style.justifyContent = 'center';
-                    container.style.transform = 'scale(0.9)';
-                    container.style.transformOrigin = 'center';
-                } else {
-                    // На десктопе - фиксированная позиция
-                    document.body.appendChild(container);
-                    container.style.position = 'fixed';
-                    container.style.bottom = '20px';
-                    container.style.right = '20px';
-                    container.style.zIndex = '9999';
-                    container.style.background = 'white';
-                    container.style.padding = '10px';
-                    container.style.borderRadius = '8px';
-                    container.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
-                }
-            }
-            
-            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                size: window.innerWidth < 768 ? 'compact' : 'normal', // Компактная версия для мобильных
-                callback: (response) => {
-                    console.log('✅ reCAPTCHA solved');
-                    // Автоматически отправляем SMS после решения капчи
-                    submitPhoneForm();
-                },
-                'expired-callback': () => {
-                    console.log('⏰ reCAPTCHA expired');
-                    showMessage('Капча истекла. Попробуйте еще раз', 'warning');
-                    if (recaptchaVerifier) {
-                        recaptchaVerifier.clear();
-                        recaptchaVerifier = null;
-                    }
-                },
-                'error-callback': (error) => {
-                    console.error('❌ reCAPTCHA error:', error);
-                    showMessage('Ошибка капчи. Попробуйте обновить страницу', 'error');
-                }
-            });
-            
-            // Пробуем отрендерить
-            try {
-                await recaptchaVerifier.render();
-                console.log('✅ reCAPTCHA rendered');
-                showMessage('Пожалуйста, пройдите проверку безопасности', 'info');
-                showLoading(false);
-                return; // Ждем пока пользователь решит капчу
-            } catch (renderError) {
-                console.error('❌ reCAPTCHA render failed:', renderError);
-                // Продолжаем без reCAPTCHA для тестовых номеров
-                if (!isTestPhone) {
-                    throw new Error('Не удалось инициализировать проверку безопасности. Попробуйте обновить страницу.');
-                }
-            }
-        }
-        
-        // Для тестовых номеров сразу отправляем
-        if (isTestPhone) {
-            await submitPhoneForm();
-        }
-        
-    } catch (error) {
-        console.error('❌ Phone login error:', error);
-        showMessage(getErrorMessage(error.code) || error.message);
-        showLoading(false);
-    }
-}
-
-// Отдельная функция для отправки SMS
-async function submitPhoneForm() {
-    if (!pendingPhoneNumber) {
-        showMessage('Ошибка: номер телефона не найден', 'error');
-        return;
-    }
-    
-    showLoading();
-    
-    try {
-        console.log('📱 Отправка SMS на:', pendingPhoneNumber);
-        
-        // Проверяем тестовый номер
-        const testPhones = ['+79999999999', '+71234567890', '+70000000000'];
-        const isTestPhone = testPhones.includes(pendingPhoneNumber.replace(/\s/g, ''));
-        
-        if (isTestPhone) {
-            console.log('🧪 Тестовый номер обнаружен');
-            showMessage('Используйте код: 123456', 'info');
-        }
-        
-        // Отправляем SMS
-        phoneConfirmationResult = await auth.signInWithPhoneNumber(
-            pendingPhoneNumber, 
-            recaptchaVerifier || undefined
-        );
-        
-        console.log('✅ SMS отправлен');
-        showMessage('Код отправлен на ваш телефон', 'success');
-        
-        // Show verification code input
-        elements.verificationGroup.style.display = 'block';
-        elements.verificationCodeInput.focus();
-        
-    } catch (error) {
-        console.error('❌ Phone send error:', error);
-        console.error('Error details:', {
-            code: error.code,
-            message: error.message,
-            details: error.details
-        });
-        
-        // Специальные сообщения для разных ошибок
-        if (error.code === 'auth/captcha-check-failed') {
-            showMessage('Проблема с проверкой безопасности. Попробуйте использовать тестовый номер: +79999999999 с кодом 123456');
-        } else if (error.code === 'auth/too-many-requests') {
-            showMessage('Слишком много попыток. Подождите несколько минут или используйте email');
-        } else if (error.code === 'auth/operation-not-allowed') {
-            showMessage('SMS авторизация не настроена или недоступна в вашем регионе', 'error');
-            
-            // Автоматически предлагаем email вход
-            setTimeout(() => {
-                if (confirm('Хотите войти через email?')) {
-                    // Переключаемся на email форму
-                    document.getElementById('phone-form').classList.remove('active');
-                    document.getElementById('email-form').classList.add('active');
-                }
-            }, 1000);
-        } else {
-            showMessage(getErrorMessage(error.code) || error.message);
-        }
-        
-        // Reset reCAPTCHA on error
-        if (recaptchaVerifier) {
-            try {
-                recaptchaVerifier.clear();
-            } catch (e) {
-                console.error('Error clearing reCAPTCHA:', e);
-            }
-            recaptchaVerifier = null;
-        }
-    } finally {
-        showLoading(false);
-    }
-}
-
-// Phone Login - Step 2: Verify Code
-async function handlePhoneVerify() {
-    showLoading();
-    
-    const code = document.getElementById('verification-code').value;
-    
-    if (!phoneConfirmationResult) {
-        showMessage('Сначала запросите код');
-        showLoading(false);
-        return;
-    }
-    
-    try {
-        const result = await phoneConfirmationResult.confirm(code);
-        
-        // Create user profile
-        await createUserProfile(result.user);
-        
-        console.log('📱 Phone login successful:', result.user.phoneNumber);
-        window.location.href = '/';
-    } catch (error) {
-        console.error('Verification error:', error);
-        showMessage('Неверный код подтверждения');
     } finally {
         showLoading(false);
     }
 }
 
 // ====================================
-// ERROR MESSAGES
+// ОБРАБОТКА ОШИБОК
 // ====================================
 
 function getErrorMessage(errorCode) {
     const errors = {
-        'auth/email-already-in-use': 'Этот email уже используется',
+        'auth/email-already-in-use': 'Email уже используется',
         'auth/invalid-email': 'Неверный формат email',
-        'auth/weak-password': 'Пароль должен быть не менее 6 символов',
         'auth/user-not-found': 'Пользователь не найден',
         'auth/wrong-password': 'Неверный пароль',
-        'auth/invalid-verification-code': 'Неверный код подтверждения',
-        'auth/invalid-verification-id': 'Неверный код подтверждения',
-        'auth/missing-verification-code': 'Введите код подтверждения',
-        'auth/missing-client-identifier': 'Ошибка конфигурации приложения',
-        'auth/captcha-check-failed': 'Не удалось пройти проверку безопасности',
-        'auth/operation-not-allowed': 'SMS авторизация не настроена. Проверьте настройки Firebase или используйте email вход.',
-        'auth/invalid-phone-number': 'Неверный формат номера телефона. Используйте формат: +7XXXXXXXXXX',
-        'auth/missing-phone-number': 'Введите номер телефона',
-        'auth/quota-exceeded': 'Превышен лимит SMS. Попробуйте позже или используйте email.',
-        'auth/user-disabled': 'Аккаунт заблокирован. Обратитесь к администратору.',
-        'auth/sms-quota-exceeded': 'Превышен дневной лимит SMS. Используйте email вход.',
+        'auth/weak-password': 'Пароль слишком простой (минимум 6 символов)',
+        'auth/popup-closed-by-user': 'Вход отменен',
+        'auth/cancelled-popup-request': 'Вход отменен',
+        'auth/account-exists-with-different-credential': 'Аккаунт уже существует с другим способом входа',
+        'auth/network-request-failed': 'Ошибка сети. Проверьте подключение к интернету',
+        'auth/too-many-requests': 'Слишком много попыток. Попробуйте позже',
         'default': 'Произошла ошибка. Попробуйте еще раз'
     };
     return errors[errorCode] || errors.default;
 }
 
 // ====================================
-// EVENT LISTENERS
+// ИНИЦИАЛИЗАЦИЯ
 // ====================================
 
-// Form submissions
-forms.login.addEventListener('submit', handleEmailLogin);
-forms.register.addEventListener('submit', handleRegister);
-forms.phone.addEventListener('submit', handlePhoneSend);
-
-// Button clicks
-elements.googleBtn.addEventListener('click', handleGoogleLogin);
-elements.phoneBtn.addEventListener('click', () => switchForm('phone'));
-elements.emailBtn.addEventListener('click', () => switchForm('email'));
-elements.showRegister.addEventListener('click', (e) => {
-    e.preventDefault();
-    switchForm('register');
-});
-
-// Back buttons
-elements.backFromEmail.addEventListener('click', () => switchForm('main'));
-elements.backFromRegister.addEventListener('click', () => switchForm('main'));
-elements.backFromPhone.addEventListener('click', () => switchForm('main'));
-
-elements.verifyCodeBtn.addEventListener('click', handlePhoneVerify);
-
-// ====================================
-// CHECK AUTH STATE
-// ====================================
-
-// Check if we just came from auth redirect
-if (sessionStorage.getItem('auth_redirecting') === 'true') {
-    console.log('⚠️ Clearing auth redirect flag');
-    sessionStorage.removeItem('auth_redirecting');
+function init() {
+    // Google login
+    if (elements.googleBtn) {
+        elements.googleBtn.addEventListener('click', handleGoogleLogin);
+    }
+    
+    // Apple login
+    if (elements.appleBtn) {
+        elements.appleBtn.addEventListener('click', handleAppleLogin);
+    }
+    
+    // Guest login
+    if (elements.guestBtn) {
+        elements.guestBtn.addEventListener('click', handleGuestLogin);
+    }
+    
+    // Email button
+    if (elements.emailBtn) {
+        elements.emailBtn.addEventListener('click', () => {
+            showScreen('email-form');
+        });
+    }
+    
+    // Show register
+    if (elements.showRegisterBtn) {
+        elements.showRegisterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showScreen('register-form');
+        });
+    }
+    
+    // Back buttons
+    if (elements.backFromEmail) {
+        elements.backFromEmail.addEventListener('click', () => {
+            showScreen('main-auth');
+        });
+    }
+    
+    if (elements.backFromRegister) {
+        elements.backFromRegister.addEventListener('click', () => {
+            showScreen('main-auth');
+        });
+    }
+    
+    // Forms
+    if (elements.loginForm) {
+        elements.loginForm.addEventListener('submit', handleEmailLogin);
+    }
+    
+    if (elements.registerFormElement) {
+        elements.registerFormElement.addEventListener('submit', handleRegister);
+    }
+    
+    // Проверяем, не авторизован ли уже пользователь
+    auth.onAuthStateChanged(user => {
+        if (user && window.location.pathname.includes('login.html')) {
+            window.location.href = '/';
+        }
+    });
 }
 
-// If already logged in, redirect to main app
-let redirecting = false;
-let checkingAuth = false;
+// Запуск при загрузке
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 
-auth.onAuthStateChanged(async (user) => {
-    // Избегаем множественных проверок
-    if (checkingAuth || redirecting) return;
-    
-    if (user) {
-        checkingAuth = true;
-        console.log('🔐 User already logged in:', user.email || user.phoneNumber);
-        
-        // Добавляем небольшую задержку чтобы избежать гонки состояний
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Проверяем есть ли профиль в Firestore
-        try {
-            const userDoc = await db.collection('users').doc(user.uid).get();
-            if (userDoc.exists) {
-                const userData = userDoc.data();
-                
-                // Проверяем статус пользователя
-                if (userData.status === 'banned' || userData.status === 'blocked') {
-                    console.warn('🚫 User is blocked');
-                    await auth.signOut();
-                    alert('Ваш аккаунт заблокирован. Обратитесь к администратору.');
-                    checkingAuth = false;
-                    return;
-                }
-                
-                console.log('✅ User profile exists, redirecting...');
-                redirecting = true;
-                // Сохраняем флаг что идет редирект
-                sessionStorage.setItem('auth_redirecting', 'true');
-                // Используем replace чтобы не было истории для возврата
-                window.location.replace('/');
-                    } else {
-            console.log('⚠️ User profile not found, creating...');
-            
-            // ВАЖНО: Проверяем количество ВСЕХ пользователей, а не только админов
-            // чтобы избежать race conditions
-            const allUsersQuery = await db.collection('users')
-                .limit(1)
-                .get();
-                
-            const isFirstUserEver = allUsersQuery.empty;
-            
-            // Создаем профиль
-            await createUserProfile(user);
-            
-            // Делаем админом ТОЛЬКО если это самый первый пользователь в системе
-            if (isFirstUserEver) {
-                console.log('🌟 Very first user in system - setting up as founder');
-                await db.collection('users').doc(user.uid).update({
-                    role: 'admin',
-                    status: 'active',
-                    isFounder: true,
-                    permissions: ['*']
-                });
-            } else {
-                console.log('📝 Regular user profile created');
-            }
-            
-            console.log('✅ Profile created, redirecting...');
-                redirecting = true;
-                // Сохраняем флаг что идет редирект
-                sessionStorage.setItem('auth_redirecting', 'true');
-                window.location.replace('/');
-            }
-        } catch (error) {
-            console.error('Error checking user profile:', error);
-            checkingAuth = false;
-        }
-    }
-});
-
-console.log('🔐 Login module initialized');
+logger.log('🔐 Login module initialized');

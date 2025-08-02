@@ -232,6 +232,21 @@ export function isUserPending() {
     return currentUser?.status === 'pending';
 }
 
+/**
+ * Проверить является ли пользователь гостем
+ * @returns {boolean}
+ */
+export function isUserGuest() {
+    return currentUser?.status === 'guest';
+}
+
+/**
+ * Проверить имеет ли пользователь ограниченный доступ (pending или guest)
+ * @returns {boolean}
+ */
+export function hasLimitedAccess() {
+    return currentUser?.status === 'pending' || currentUser?.status === 'guest';
+}
 
 
 /**
@@ -249,8 +264,29 @@ export function getUserStatus() {
 export function showPendingUserMessage(action) {
     const message = `${action} временно недоступно.\n\nВаша заявка находится на рассмотрении администратора.\nПожалуйста, дождитесь подтверждения.\n\nЕсли у вас есть вопросы, обратитесь к администратору:\nTelegram: @Sha1oom`;
     
-    if (confirm(message + '\n\nНажмите OK, чтобы связаться с администратором в Telegram')) {
-        window.open('https://t.me/Sha1oom', '_blank');
+    alert(message);
+}
+
+/**
+ * Показать сообщение о том, что функция недоступна для гостей
+ * @param {string} action - Название действия (например, "Создание сет-листов")
+ */
+export function showGuestMessage(action) {
+    const message = `${action} доступно только для зарегистрированных пользователей.\n\nХотите получить полный доступ ко всем функциям?\n\nЗарегистрируйтесь или войдите в свой аккаунт.`;
+    
+    if (confirm(message + '\n\nПерейти к регистрации?')) {
+        window.location.href = '/public/login.html';
+    }
+}
+
+/**
+ * Показать сообщение для гостя при попытке открыть профиль
+ */
+export function showGuestProfileMessage() {
+    const message = `Вы вошли как гость.\n\nУ гостей нет профиля.\n\nЗарегистрируйтесь, чтобы получить полный доступ ко всем функциям сайта.`;
+    
+    if (confirm(message + '\n\nПерейти к регистрации?')) {
+        window.location.href = '/public/login.html';
     }
 }
 

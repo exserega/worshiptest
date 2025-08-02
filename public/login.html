@@ -20,27 +20,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Мобильная адаптация для reCAPTCHA */
-        @media (max-width: 768px) {
-            #recaptcha-container {
-                width: 100%;
-                max-width: 304px; /* Стандартная ширина reCAPTCHA */
-                margin: 20px auto !important;
-            }
-            
-            /* Уменьшаем масштаб на очень маленьких экранах */
-            @media (max-width: 320px) {
-                #recaptcha-container {
-                    transform: scale(0.85) !important;
-                    transform-origin: center !important;
-                    margin: 10px auto !important;
-                }
-            }
+        /* Стили для новых элементов */
+        .auth-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 10px 0;
+            font-weight: 500;
         }
         
-        /* Фикс для iframe reCAPTCHA */
-        #recaptcha-container iframe {
-            max-width: 100%;
+        .guest-link {
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+        
+        .guest-link a {
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
+        
+        /* Скрываем Apple кнопку если не поддерживается */
+        .auth-btn[id="apple-login-btn"] {
+            display: none;
+        }
+        
+        /* Показываем Apple кнопку только на устройствах Apple */
+        @supports (-webkit-touch-callout: none) {
+            .auth-btn[id="apple-login-btn"] {
+                display: flex;
+            }
         }
     </style>
     
@@ -53,24 +61,30 @@
     <div class="auth-container">
         <!-- Main Screen - Minimalist Login -->
         <div id="main-auth" class="auth-screen active">
-            <h1 class="logo">AGAPE WORSHIP</h1>
+            <h1 class="app-title">Agape Worship</h1>
+            
+            <p class="auth-subtitle">Войти через</p>
             
             <div class="auth-buttons">
                 <button type="button" id="google-login-btn" class="auth-btn" title="Войти через Google">
                     <i class="fab fa-google"></i>
                 </button>
                 
-                <button type="button" id="email-login-btn" class="auth-btn" title="Войти по Email">
+                <button type="button" id="email-login-btn" class="auth-btn" title="Войти по email">
                     <i class="fas fa-envelope"></i>
                 </button>
                 
-                <button type="button" id="phone-login-btn" class="auth-btn" title="Войти по телефону">
-                    <i class="fas fa-phone"></i>
+                <button type="button" id="apple-login-btn" class="auth-btn" title="Войти через Apple">
+                    <i class="fab fa-apple"></i>
                 </button>
             </div>
             
             <p class="auth-link">
                 <a href="#" id="show-register">Создать аккаунт</a>
+            </p>
+            
+            <p class="auth-link guest-link">
+                <a href="#" id="guest-login-btn">Войти как гость</a>
             </p>
         </div>
 
@@ -159,55 +173,7 @@
             </form>
         </div>
 
-        <!-- Phone Login Form -->
-        <div id="phone-form" class="auth-screen">
-            <button class="back-btn" id="back-from-phone">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            
-            <h2 class="form-title">Вход по телефону</h2>
-            
-            <form id="phone-form-element" class="minimal-form">
-                <input 
-                    type="tel" 
-                    id="phone-number" 
-                    name="phone" 
-                    required 
-                    placeholder="+7 (999) 123-45-67"
-                    autocomplete="tel"
-                >
-                
-                <div id="recaptcha-container"></div>
-                
-                <button type="submit" class="submit-btn">
-                    Получить код
-                </button>
-                
-                <div class="form-info">
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 10px;">
-                        <strong>Не видите капчу?</strong><br>
-                        • Отключите блокировщики рекламы<br>
-                        • Разрешите cookies от Google<br>
-                        • Попробуйте Chrome браузер<br>
-                        • Или используйте <a href="#" id="switch-to-email" style="color: #22d3ee;">email вход</a>
-                    </p>
-                </div>
-                
-                <div id="verification-code-group" style="display: none;">
-                    <input 
-                        type="text" 
-                        id="verification-code" 
-                        name="code" 
-                        placeholder="Код подтверждения"
-                        maxlength="6"
-                        autocomplete="one-time-code"
-                    >
-                    <button type="button" id="verify-code-btn" class="submit-btn">
-                        Подтвердить
-                    </button>
-                </div>
-            </form>
-        </div>
+
 
         <!-- Error/Success Messages -->
         <div id="auth-message" class="auth-message"></div>

@@ -7,31 +7,46 @@
  */
 
 // ====================================
-// FIREBASE IMPORTS
+// API MODULE
 // ====================================
 
-// Используем адаптер для совместимости v8/v9
+// Firebase импорты
+import firebase from '../../firebase-init.js';
 import { 
-    db,
     collection, 
+    doc, 
+    getDocs, 
+    getDoc, 
     addDoc, 
-    query, 
-    onSnapshot, 
     updateDoc, 
     deleteDoc, 
-    setDoc, 
-    doc,
-    orderBy, 
-    getDocs, 
+    query, 
     where, 
-    getDoc, 
-    runTransaction, 
-    serverTimestamp, 
-    deleteField
-} from '../utils/firebase-v8-adapter.js';
+    orderBy, 
+    serverTimestamp 
+} from '../../src/utils/firebase-v8-adapter.js';
 
-import * as state from '../../js/state.js';
-import { isUserPending } from '../modules/auth/authCheck.js';
+const db = firebase.firestore();
+
+import {
+    displaySongBlock,
+    displaySong,
+    getSongBlocksContainer,
+    clearSongBlocks,
+    startLoading,
+    stopLoading,
+    distributeSongBlocksToColumns
+} from '../core/index.js';
+
+import { songCache, getFromCache, setInCache } from '../utils/cache.js';
+import { 
+    isUserPending, 
+    isUserGuest, 
+    hasLimitedAccess 
+} from '../modules/auth/authCheck.js';
+import { getCurrentBranchId } from '../modules/branches/branchUtils.js';
+import { searchWorkerManager } from '../utils/workerManager.js';
+import logger from '../utils/logger.js';
 
 // Получаем auth из глобального firebase (версия 8)
 const auth = window.firebase?.auth?.() || null;
@@ -269,8 +284,12 @@ export async function loadSetlists() {
  */
 export async function createSetlist(name) {
     // Проверяем статус пользователя
-    if (isUserPending()) {
-        throw new Error('Создание сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+    if (hasLimitedAccess()) {
+        if (isUserGuest()) {
+            throw new Error('Создание сет-листов доступно только зарегистрированным пользователям.');
+        } else {
+            throw new Error('Создание сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+        }
     }
     
     if (!name || !name.trim()) {
@@ -320,8 +339,12 @@ export async function createSetlist(name) {
  */
 export async function deleteSetlist(setlistId) {
     // Проверяем статус пользователя
-    if (isUserPending()) {
-        throw new Error('Удаление сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+    if (hasLimitedAccess()) {
+        if (isUserGuest()) {
+            throw new Error('Удаление сет-листов доступно только зарегистрированным пользователям.');
+        } else {
+            throw new Error('Удаление сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+        }
     }
     
     if (!setlistId) {
@@ -369,8 +392,12 @@ export async function updateSetlistName(setlistId, newName) {
  */
 export async function addSongToSetlist(setlistId, songId, preferredKey) {
     // Проверяем статус пользователя
-    if (isUserPending()) {
-        throw new Error('Добавление песен в сет-листы недоступно. Ваша заявка находится на рассмотрении.');
+    if (hasLimitedAccess()) {
+        if (isUserGuest()) {
+            throw new Error('Добавление песен доступно только зарегистрированным пользователям.');
+        } else {
+            throw new Error('Добавление песен в сет-листы недоступно. Ваша заявка находится на рассмотрении.');
+        }
     }
     
     if (!setlistId || !songId) {
@@ -461,8 +488,12 @@ export async function removeSongFromSetlist(setlistId, songId) {
         }
     } catch (e) {
         // Если модуль не загружен, проверяем только статус
-        if (isUserPending()) {
-            throw new Error('Удаление песен из сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+        if (hasLimitedAccess()) {
+            if (isUserGuest()) {
+                throw new Error('Удаление песен доступно только зарегистрированным пользователям.');
+            } else {
+                throw new Error('Удаление песен из сет-листов недоступно. Ваша заявка находится на рассмотрении.');
+            }
         }
     }
     
