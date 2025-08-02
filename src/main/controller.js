@@ -53,7 +53,39 @@ export async function handleCreateSetlist(name) {
         console.log('🎯 [Controller] Synced with window:', window.currentCreatedSetlistId, window.currentCreatedSetlistName);
         
         // Обновляем список сетлистов
-        await refreshSetlists();
+        const setlists = await refreshSetlists();
+        
+        // Находим созданный сет-лист
+        const createdSetlist = setlists.find(s => s.id === setlistId);
+        if (createdSetlist) {
+            // Автоматически выбираем новый сет-лист
+            handleSetlistSelect(createdSetlist);
+            
+            // Обновляем UI для отображения выбранного сет-листа
+            if (typeof ui.displaySelectedSetlist === 'function') {
+                ui.displaySelectedSetlist(createdSetlist, 
+                    window.handleFavoriteOrRepertoireSelect,
+                    window.handleRemoveSongFromSetlist
+                );
+            }
+            
+            // Обновляем текст в селекторе
+            const dropdownBtnText = document.querySelector('#setlist-dropdown-btn .selector-text');
+            if (dropdownBtnText) {
+                dropdownBtnText.textContent = name.trim();
+            }
+            
+            // Показываем панель выбранного сет-листа
+            const selectedSetlistControl = document.getElementById('selected-setlist-control');
+            if (selectedSetlistControl) {
+                selectedSetlistControl.style.display = 'block';
+            }
+            
+            const currentSetlistName = document.getElementById('current-setlist-name');
+            if (currentSetlistName) {
+                currentSetlistName.textContent = name.trim();
+            }
+        }
         
         // Показываем модальное окно подтверждения добавления песен
         if (ui.createdSetlistName) {
@@ -95,6 +127,16 @@ export async function refreshSetlists() {
         // Обновляем UI если есть соответствующие элементы
         if (typeof window.updateSetlistsUI === 'function') {
             window.updateSetlistsUI(setlists);
+        }
+        
+        // Если панель сет-листов открыта, обновляем отображение
+        if (ui.setlistsPanel?.classList.contains('open')) {
+            if (typeof ui.renderSetlists === 'function') {
+                await ui.renderSetlists(setlists, 
+                    window.handleSetlistSelect,
+                    window.handleSetlistDelete
+                );
+            }
         }
         
         return setlists;
