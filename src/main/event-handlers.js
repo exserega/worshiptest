@@ -1,39 +1,30 @@
+// ====================================
+// 🎮 EVENT HANDLERS MODULE
+// ====================================
+// Основной модуль обработчиков событий
+
 /**
- * ===================================================================
- * EVENT HANDLERS MODULE
- * ===================================================================
- * Модуль для обработчиков событий - связывает UI элементы с функциями
+ * @module EventHandlers
+ * @description Централизованная настройка всех обработчиков событий
  * 
- * Функции:
- * - setupEventListeners() - настройка всех обработчиков событий
+ * Основные функции:
+ * - setupEventListeners() - главная функция инициализации
  * - setupUIEventHandlers() - обработчики UI элементов
  * - setupSearchEventHandlers() - обработчики поиска
  * - setupModalEventHandlers() - обработчики модальных окон
  * - setupKeyboardEventHandlers() - обработчики клавиатуры
  */
 
-// ====================================
-// IMPORTS
-// ====================================
+// Импорты
+import * as controller from './controller.js';
 import { 
-    loadSongs, 
-    searchAndFilterSongs, 
-    displayFilteredSongs, 
-    displaySongs, 
-    displayFavoriteSongs 
-} from '../api/index.js';
-import { displaySong } from '../../ui.js';
-import { openSetlistSelector } from '../modules/setlists/setlist-selector.js';
-import { 
-    showFullScreenMobilePreview, 
-    closeFullScreenMobilePreview 
-} from '../../js/mobilePreview.js';
-import { 
-    openCreateSetlistModal, 
-    openConfirmModal 
-} from '../modules/setlists/setlistModals.js';
-import { setCurrentSearchQuery } from '../../js/shared.js';
-import { getFavorites, addFavorite } from '../modules/my-list/myListState.js';
+    startAddingSongs as startAddingSongsModule,
+    closeAddSongsOverlay as closeAddSongsOverlayModule,
+    filterAndDisplaySongs as filterAndDisplaySongsModule
+} from '../core/index.js';
+import { showMobileSongPreview } from '../core/index.js';
+import * as ui from '../../ui.js';
+import * as state from '../../js/state.js';
 import { 
     isUserPending, 
     isUserGuest, 
@@ -487,7 +478,7 @@ function setupSetlistEventHandlers() {
                 }
                 
                 // Загружаем сет-листы нового филиала
-                const setlists = await api.loadSetlists();
+                const setlists = await controller.loadSetlists();
                 
                 // Обновляем отображение с правильными обработчиками
                 if (typeof ui.renderSetlists === 'function') {
@@ -506,7 +497,7 @@ function setupSetlistEventHandlers() {
                             console.log('📋 Delete setlist:', setlistName);
                             if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
                                 try {
-                                    await api.deleteSetlist(setlistId);
+                                    await controller.deleteSetlist(setlistId);
                                     ui.toggleSetlistsButton.click(); // Refresh panel
                                 } catch (error) {
                                     console.error('Ошибка удаления:', error);
@@ -616,7 +607,7 @@ function setupSetlistEventHandlers() {
                         }
                     }
                     // Прямой вызов API и UI функций
-                    const setlists = await api.loadSetlists();
+                    const setlists = await controller.loadSetlists();
                     console.log('📋 [EventHandlers] Loaded setlists:', setlists.length);
                     if (window.state && typeof window.state.setSetlists === 'function') {
                         window.state.setSetlists(setlists);
@@ -637,7 +628,7 @@ function setupSetlistEventHandlers() {
                                 console.log('📋 Delete setlist:', setlistName);
                                 if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
                                     try {
-                                        await api.deleteSetlist(setlistId);
+                                        await controller.deleteSetlist(setlistId);
                                         ui.toggleSetlistsButton.click(); // Refresh panel
                                     } catch (error) {
                                         console.error('Ошибка удаления:', error);
@@ -694,7 +685,7 @@ function setupSetlistEventHandlers() {
                             async function(songId) {
                                 if(confirm("Удалить песню из 'Моих'?")) {
                                     try {
-                                        await api.removeFromFavorites(songId);
+                                        await controller.removeFromFavorites(songId);
                                         ui.toggleMyListButton.click(); // Refresh panel
                                     } catch (error) {
                                         console.error('Ошибка удаления из избранного:', error);
@@ -727,7 +718,7 @@ function setupSetlistEventHandlers() {
                 try {
                     ui.repertoirePanel.classList.add('open');
                     console.log('🎭 [EventHandlers] Loading repertoire...');
-                    api.loadRepertoire(
+                    controller.loadRepertoire(
                         window.state ? window.state.currentVocalistId : null, 
                         window.handleRepertoireUpdate || function(data) {
                             console.log('🎭 Repertoire loaded:', data);
@@ -1249,7 +1240,7 @@ function setupSongEventHandlers() {
         console.log('📋 [EventHandlers] Setlist updated event:', event.detail);
         
         try {
-            const setlists = await api.loadSetlists();
+            const setlists = await controller.loadSetlists();
             if (window.state && typeof window.state.setSetlists === 'function') {
                 window.state.setSetlists(setlists);
             }

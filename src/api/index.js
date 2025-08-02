@@ -7,38 +7,30 @@
  */
 
 // ====================================
-// API MODULE
+// FIREBASE IMPORTS
 // ====================================
 
-// Firebase импорты
-import firebase from '../../firebase-init.js';
+// Используем адаптер для совместимости v8/v9
 import { 
+    db,
     collection, 
-    doc, 
-    getDocs, 
-    getDoc, 
     addDoc, 
+    query, 
+    onSnapshot, 
     updateDoc, 
     deleteDoc, 
-    query, 
-    where, 
+    setDoc, 
+    doc,
     orderBy, 
-    serverTimestamp 
-} from '../../src/utils/firebase-v8-adapter.js';
+    getDocs, 
+    where, 
+    getDoc, 
+    runTransaction, 
+    serverTimestamp, 
+    deleteField
+} from '../utils/firebase-v8-adapter.js';
 
-const db = firebase.firestore();
-
-import {
-    displaySongBlock,
-    displaySong,
-    getSongBlocksContainer,
-    clearSongBlocks,
-    startLoading,
-    stopLoading,
-    distributeSongBlocksToColumns
-} from '../core/index.js';
-
-import { songCache, getFromCache, setInCache } from '../utils/cache.js';
+import * as state from '../../js/state.js';
 import { 
     isUserPending, 
     isUserGuest, 
