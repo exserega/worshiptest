@@ -4,6 +4,7 @@
 
 import { db } from '../../../js/firebase-config.js';
 import { getCurrentBranchId, getUserStatus } from '../auth/authCheck.js';
+import logger from '../../utils/logger.js';
 
 // Состояние выбранного филиала
 let selectedBranchId = null;
@@ -14,7 +15,7 @@ let branches = [];
  * Инициализация селектора филиалов
  */
 export function initBranchSelector() {
-    console.log('🏢 Initializing branch selector for setlists...');
+    logger.log('🏢 Initializing branch selector for setlists...');
     
     const selector = document.getElementById('setlist-branch-selector');
     if (!selector) {
