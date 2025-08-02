@@ -47,19 +47,3 @@ input, button, select, textarea {
 [data-theme="dark"] {
     color-scheme: dark;
 }
-
-/* ====================================
-   СКРЫТИЕ ИНСТРУМЕНТОВ ПЕСНИ ПО УМОЛЧАНИЮ
-   Предотвращает мерцание при загрузке
-   ==================================== */
-
-/* Скрываем инструменты управления песней до выбора песни */
-.control-group,
-.song-legend-action,
-.metronome-control-bar,
-#edit-song-button,
-#copy-text-button {
-    display: none;
-}
-
-/* Эти элементы будут показаны через JS когда песня выбрана */

@@ -35,6 +35,17 @@
       background-color: #111827;
       color: #e5e7eb;
     }
+    
+    /* Критические стили для предотвращения мерцания UI элементов */
+    /* Скрываем инструменты управления песней до выбора песни */
+    .control-group,
+    .song-legend-action,
+    .metronome-control-bar,
+    #edit-song-button,
+    #copy-text-button,
+    #holychords-button {
+      display: none !important; /* !important чтобы гарантированно перезаписать другие стили */
+    }
   </style>
 </head>
 <body>

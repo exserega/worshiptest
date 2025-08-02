@@ -243,7 +243,20 @@ window.toggleSongControls = function(show) {
     elementsToToggle.forEach(selector => {
         const elements = document.querySelectorAll(selector);
         elements.forEach(element => {
-            element.style.display = show ? '' : 'none';
+            if (show) {
+                // Для control-group нужно установить flex, для остальных - убрать display
+                if (selector === '.control-group') {
+                    element.style.display = 'flex';
+                } else {
+                    element.style.display = '';
+                }
+                // Убираем атрибут style чтобы применились оригинальные CSS стили
+                if (element.style.length === 0) {
+                    element.removeAttribute('style');
+                }
+            } else {
+                element.style.display = 'none';
+            }
         });
     });
     
