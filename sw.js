@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v38'; // v38, add badge counter for branch requests tab
+const CACHE_NAME = 'agape-worship-cache-v39'; // v39, remove transfers tab (functionality moved to branch requests)
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

@@ -18,7 +18,7 @@ window.adminState = {
     currentTab: 'users',
     users: [],
     branches: [],
-    transfers: [],
+
     filters: {
         role: '',
         status: '',
@@ -90,22 +90,19 @@ async function loadInitialData() {
         // Показываем индикаторы загрузки
         showLoadingState('users');
         showLoadingState('branches');
-        showLoadingState('transfers');
         showLoadingState('requests');
         showLoadingState('branch-requests');
         
         // Загружаем данные параллельно
-        const [users, branches, transfers, branchRequests] = await Promise.all([
+        const [users, branches, branchRequests] = await Promise.all([
             loadUsers(),
             loadBranches(), 
-            loadTransfers(),
             loadBranchRequests()
         ]);
         
         // Сохраняем в состояние
         window.adminState.users = users;
         window.adminState.branches = branches;
-        window.adminState.transfers = transfers;
         window.adminState.branchRequests = branchRequests;
         
         // Фильтруем пользователей со статусом pending для заявок
@@ -117,13 +114,12 @@ async function loadInitialData() {
         // Отображаем данные
         const { displayUsers } = await import('./usersModule.js');
         const { displayBranches } = await import('./branchesModule.js');
-        const { displayTransfers } = await import('./transfersModule.js');
+
         const { displayRequests } = await import('./requestsModule.js');
         const { displayBranchRequests } = await import('./branchRequestsModule.js');
         
         displayUsers();
         displayBranches();
-        displayTransfers();
         displayRequests();
         displayBranchRequests();
         
@@ -177,14 +173,6 @@ async function loadBranches() {
 /**
  * Загружает заявки на перевод
  */
-async function loadTransfers() {
-    const db = firebase.firestore();
-    const snapshot = await db.collection('transferRequests')
-        .where('status', '==', 'pending')
-        .get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-}
-
 /**
  * Загрузка заявок на филиалы
  */
@@ -296,7 +284,7 @@ function updateBranchFilter() {
 
 /**
  * Показывает состояние загрузки
- * @param {string} section - Секция (users, branches, transfers)
+ * @param {string} section - Секция (users, branches, requests, branch-requests)
  */
 function showLoadingState(section) {
     const container = document.getElementById(`${section}-list`);

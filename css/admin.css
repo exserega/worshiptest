@@ -451,7 +451,7 @@ body {
     justify-content: flex-end;
 }
 
-/* Transfer Card - Compact Design */
+/* Transfer Card - Compact Design - REMOVED (functionality moved to branch requests)
 .transfers-list {
     display: flex;
     flex-direction: column;
@@ -485,7 +485,7 @@ body {
     display: flex;
     gap: var(--spacing-xs);
     margin-top: var(--spacing-sm);
-}
+} */
 
 /* ====================================
    BADGES
