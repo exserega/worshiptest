@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v47'; // v47, Match admin and settings page colors with main site
+const CACHE_NAME = 'agape-worship-cache-v48'; // v48, Оптимизация производительности и удаление лишних логов
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
@@ -26,20 +26,30 @@ const URLS_TO_CACHE = [
   // Аудио файл метронома убран из кэша - токен может быть недействительным
 ];
 
+// Проверяем, разработка ли это
+const isDevelopment = self.location.hostname === 'localhost' || 
+                     self.location.hostname === '127.0.0.1';
+
 // Событие 'install' (установка): открываем кэш и добавляем в него все наши файлы
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(async (cache) => {
-        console.log('Service Worker: Кэшируем основные файлы приложения');
+        if (isDevelopment) {
+          console.log('Service Worker: Кэшируем основные файлы приложения');
+        }
         
         // Кэшируем файлы по одному, пропуская те, которые не удается загрузить
         const cachePromises = URLS_TO_CACHE.map(async (url) => {
           try {
             await cache.add(url);
-            console.log(`Service Worker: Успешно кэширован ${url}`);
+            if (isDevelopment) {
+              console.log(`Service Worker: Успешно кэширован ${url}`);
+            }
           } catch (error) {
-            console.warn(`Service Worker: Не удалось кэшировать ${url}:`, error);
+            if (isDevelopment) {
+              console.warn(`Service Worker: Не удалось кэшировать ${url}:`, error);
+            }
           }
         });
         
@@ -77,7 +87,9 @@ self.addEventListener('fetch', (event) => {
         }
         // Если в кэше ничего нет, идем в интернет
         return fetch(event.request).catch((error) => {
-          console.warn('Service Worker: Ошибка fetch для', event.request.url, error);
+          if (isDevelopment) {
+            console.warn('Service Worker: Ошибка fetch для', event.request.url, error);
+          }
           // Возвращаем fallback-ответ для критически важных ресурсов
           if (event.request.url.includes('index.html') || event.request.url.endsWith('/')) {
             return caches.match('./index.html');

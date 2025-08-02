@@ -869,7 +869,7 @@
     // Устанавливаем persistence для сохранения сессии между страницами
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => {
-            console.log('✅ Firebase persistence set to LOCAL');
+            // Логирование отключено для продакшена
         })
         .catch((error) => {
             console.error('Error setting persistence:', error);
@@ -877,7 +877,7 @@
 </script>
 
 <!-- Development Testing Scripts -->
-<script src="tests/baseline-test.js"></script>
+<!-- Удалено для продакшена: <script src="tests/baseline-test.js"></script> -->
 
 </body>
 </html>

@@ -3,6 +3,9 @@
 // ====================================
 // Проверка авторизации и управление доступом
 
+// Импортируем logger для условного логирования
+import logger from '../../utils/logger.js';
+
 // Firebase instances from global scope
 const auth = window.firebase?.auth();
 const db = window.firebase?.firestore();
@@ -46,7 +49,7 @@ export function checkAuth() {
                                 firebaseUser
                             };
                             
-                            console.log('🔐 User authenticated:', currentUser.email || currentUser.phone);
+                            logger.log('🔐 User authenticated:', currentUser.email || currentUser.phone);
                             
                             // Проверяем статус пользователя
                             if (currentUser.status === 'banned' || currentUser.status === 'blocked') {
@@ -76,7 +79,7 @@ export function checkAuth() {
                                 }
                                 resolve({ user: currentUser, isAuthenticated: true });
                             } else if (currentUser.status === 'active' && currentUser.approvedAt && !currentUser.approvalShown) {
-                                console.log('✅ User was recently approved');
+                                logger.log('✅ User was recently approved');
                                 // Показываем уведомление об одобрении один раз
                                 if (typeof window !== 'undefined') {
                                     const message = `Поздравляем! Ваша заявка одобрена.\n\nТеперь вы можете:\n• Создавать сет-листы\n• Редактировать сет-листы\n• Добавлять песни в сет-листы\n\nДобро пожаловать в команду!`;
@@ -111,7 +114,7 @@ export function checkAuth() {
                             };
                             
                             await db.collection('users').doc(firebaseUser.uid).set(newUserData);
-                            console.log('✅ User profile created');
+                            logger.log('✅ User profile created');
                             
                             currentUser = {
                                 ...newUserData,
@@ -130,7 +133,7 @@ export function checkAuth() {
                     resolve({ user: null, isAuthenticated: false });
                 }
             } else {
-                console.log('🔒 No authenticated user');
+                logger.log('🔒 No authenticated user');
                 resolve({ user: null, isAuthenticated: false });
             }
             
@@ -274,12 +277,12 @@ export async function initAuthGate(options = {}) {
         redirectTo = '/public/login.html'
     } = options;
     
-    console.log('🔒 Initializing auth gate...');
-    console.log('Current path:', window.location.pathname);
+    logger.log('🔒 Initializing auth gate...');
+    logger.log('Current path:', window.location.pathname);
     
     // Проверяем флаг редиректа
     if (sessionStorage.getItem('auth_redirecting') === 'true') {
-        console.log('⚠️ Auth redirecting in progress, waiting...');
+        logger.log('⚠️ Auth redirecting in progress, waiting...');
         sessionStorage.removeItem('auth_redirecting');
         // Даем время Firebase синхронизироваться
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -287,7 +290,7 @@ export async function initAuthGate(options = {}) {
     
     // Добавляем защиту от повторных проверок
     if (window._authGateChecking) {
-        console.log('⚠️ Auth gate already checking, skipping...');
+        logger.log('⚠️ Auth gate already checking, skipping...');
         return false;
     }
     window._authGateChecking = true;
@@ -297,7 +300,7 @@ export async function initAuthGate(options = {}) {
         
         // Проверка авторизации
         if (requireAuth && !isAuthenticated) {
-            console.log('🚫 Authentication required, redirecting to login...');
+            logger.log('🚫 Authentication required, redirecting to login...');
             // Проверяем что мы не на странице логина чтобы избежать цикла
             if (!window.location.pathname.includes('login')) {
                 // Используем replace чтобы не было цикла через историю
@@ -308,26 +311,26 @@ export async function initAuthGate(options = {}) {
         
         // Проверка бана
         if (isBanned) {
-            console.log('🚫 User is banned');
+            logger.log('🚫 User is banned');
             showAuthMessage('Ваш аккаунт заблокирован. Обратитесь к администратору.');
             return false;
         }
         
         // Проверка филиала
         if (requireBranch && user && !user.branchId) {
-            console.log('⚠️ User not assigned to any branch');
+            logger.log('⚠️ User not assigned to any branch');
             showAuthMessage('Ваш аккаунт еще не привязан к филиалу. Ожидайте подтверждения администратора.');
             return false;
         }
         
         // Проверка админских прав
         if (requireAdmin && user && user.role !== 'admin') {
-            console.log('🚫 Admin access required');
+            logger.log('🚫 Admin access required');
             window.location.href = '/';
             return false;
         }
         
-        console.log('✅ Auth gate passed');
+        logger.log('✅ Auth gate passed');
         window._authGateChecking = false;
         return true;
     } catch (error) {

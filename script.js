@@ -8,7 +8,7 @@
 // ====================================
 // 📋 RESTRUCTURE STAGE INDICATOR
 // ====================================
-// console.log('🎉 AGAPE WORSHIP - MODULAR ARCHITECTURE v2.0');
+// logger.log('🎉 AGAPE WORSHIP - MODULAR ARCHITECTURE v2.0');
 
 // ====================================
 // 📦 CORE IMPORTS
@@ -16,6 +16,7 @@
 import * as state from './js/state.js';
 import * as api from './js/api.js';
 import * as ui from './ui.js';
+import logger from './src/utils/logger.js';
 
 // ====================================
 // 🚀 MAIN INITIALIZATION IMPORT
@@ -110,7 +111,7 @@ window.USE_MODULE_FUNCTIONS = false; // По умолчанию использу
 
 // Font size functions
 window.increaseFontSize = function() {
-    console.log('🔤 [Legacy] increaseFontSize called');
+    logger.log('🔤 [Legacy] increaseFontSize called');
     if (window.state) {
         window.state.setCurrentFontSize(Math.min(window.state.currentFontSize + 2, 30));
         if (typeof ui.updateFontSize === 'function') {
@@ -120,7 +121,7 @@ window.increaseFontSize = function() {
 };
 
 window.decreaseFontSize = function() {
-    console.log('🔤 [Legacy] decreaseFontSize called');
+    logger.log('🔤 [Legacy] decreaseFontSize called');
     if (window.state) {
         window.state.setCurrentFontSize(Math.max(16, window.state.currentFontSize - 2));
         if (typeof ui.updateFontSize === 'function') {
@@ -131,7 +132,7 @@ window.decreaseFontSize = function() {
 
 // Theme toggle
 window.toggleTheme = function() {
-    console.log('🎨 [Legacy] toggleTheme called');
+    logger.log('🎨 [Legacy] toggleTheme called');
     const currentTheme = document.body.dataset.theme;
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     if (typeof ui.applyTheme === 'function') {
@@ -141,7 +142,7 @@ window.toggleTheme = function() {
 
 // Text manipulation
 window.splitTextIntoColumns = function() {
-    console.log('📄 [Legacy] splitTextIntoColumns called');
+    logger.log('📄 [Legacy] splitTextIntoColumns called');
     if (ui.songContent) {
         ui.songContent.classList.toggle('split-columns');
         if (typeof ui.updateSplitButton === 'function') {
@@ -151,7 +152,7 @@ window.splitTextIntoColumns = function() {
 };
 
 window.toggleChords = function() {
-    console.log('🎵 [Legacy] toggleChords called');
+    logger.log('🎵 [Legacy] toggleChords called');
     if (window.state) {
         window.state.setAreChordsVisible(!window.state.areChordsVisible);
         if (ui.songContent) {
@@ -161,7 +162,7 @@ window.toggleChords = function() {
 };
 
 window.showChordsOnly = function() {
-    console.log('🎼 [Legacy] showChordsOnly called');
+    logger.log('🎼 [Legacy] showChordsOnly called');
     if (window.state) {
         window.state.setIsChordsOnlyMode(!window.state.isChordsOnlyMode);
         if (ui.songContent) {
@@ -172,15 +173,15 @@ window.showChordsOnly = function() {
 
 // ВОССТАНАВЛИВАЕМ поиск ОСТОРОЖНО - используем проверенную логику
 window.handleMainSearch = function() {
-    console.log('🔍 [Legacy] handleMainSearch called');
+    logger.log('🔍 [Legacy] handleMainSearch called');
     
     if (!ui.searchInput) {
-        console.log('🔍 [Legacy] No search input found');
+        logger.log('🔍 [Legacy] No search input found');
         return;
     }
     
     const rawQuery = ui.searchInput.value.trim();
-    console.log('🔍 [Legacy] Search query:', rawQuery);
+    logger.log('🔍 [Legacy] Search query:', rawQuery);
     
     if (!rawQuery) {
         if (ui.searchResults) ui.searchResults.innerHTML = '';
@@ -189,7 +190,7 @@ window.handleMainSearch = function() {
     
     // Простой поиск без Worker (безопасно)
     if (window.state && window.state.allSongs) {
-        console.log('🔍 [Legacy] Searching in allSongs:', window.state.allSongs.length);
+        logger.log('🔍 [Legacy] Searching in allSongs:', window.state.allSongs.length);
         
         const results = window.state.allSongs.filter(song => {
             const titleMatch = song.name.toLowerCase().includes(rawQuery.toLowerCase());
@@ -198,12 +199,12 @@ window.handleMainSearch = function() {
             return titleMatch || lyricsMatch;
         }).slice(0, 10); // Ограничиваем результаты
         
-        console.log('🔍 [Legacy] Found results:', results.length);
+        logger.log('🔍 [Legacy] Found results:', results.length);
         
         // Используем существующую функцию отображения
         if (typeof ui.displaySearchResults === 'function') {
             ui.displaySearchResults(results, (song) => {
-                console.log('🔍 [Legacy] Search result selected:', song.name);
+                logger.log('🔍 [Legacy] Search result selected:', song.name);
                 ui.searchInput.value = song.name;
                 if (ui.searchResults) ui.searchResults.innerHTML = '';
                 
@@ -218,10 +219,10 @@ window.handleMainSearch = function() {
                 }
             }, rawQuery);
         } else {
-            console.log('🔍 [Legacy] ui.displaySearchResults not available');
+            logger.log('🔍 [Legacy] ui.displaySearchResults not available');
         }
     } else {
-        console.log('🔍 [Legacy] No songs data available');
+        logger.log('🔍 [Legacy] No songs data available');
     }
 };
 
@@ -287,14 +288,14 @@ window.updateAddedSongsCount = function() {
         ui.addedSongsCountBadge.style.display = count > 0 ? 'inline-flex' : 'none';
     }
     
-    console.log('🔢 [Legacy] Updated counter to:', count);
+    logger.log('🔢 [Legacy] Updated counter to:', count);
 };
 
 // Функция заполнения фильтра категорий в overlay
 window.populateCategoryFilter = function() {
     const categoryFilter = document.getElementById('category-filter');
     if (!categoryFilter) {
-        console.error('❌ [Legacy] category-filter не найден!');
+        logger.error('❌ [Legacy] category-filter не найден!');
         return;
     }
     
@@ -328,15 +329,15 @@ window.populateCategoryFilter = function() {
         });
     }
     
-    console.log('📂 [Legacy] Категории в фильтре обновлены');
+    logger.log('📂 [Legacy] Категории в фильтре обновлены');
 };
 
 // ДОБАВЛЯЕМ НЕДОСТАЮЩУЮ ФУНКЦИЮ displaySongsGrid ИЗ ОРИГИНАЛА
 window.displaySongsGrid = function(songs, searchTerm = '') {
-    console.log('🎵 [Legacy] displaySongsGrid called with', songs.length, 'songs');
+    logger.log('🎵 [Legacy] displaySongsGrid called with', songs.length, 'songs');
     
     if (!ui.songsGrid) {
-        console.error('🎵 [Legacy] ui.songsGrid not found');
+        logger.error('🎵 [Legacy] ui.songsGrid not found');
         return;
     }
     
@@ -404,7 +405,7 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
         ui.songsGrid.appendChild(songCard);
     });
     
-    console.log('🎵 [Legacy] displaySongsGrid completed, rendered', songs.length, 'songs');
+    logger.log('🎵 [Legacy] displaySongsGrid completed, rendered', songs.length, 'songs');
 };
 
 // УБРАЛИ toggleMyListPanel - логика теперь в обработчике событий
@@ -413,25 +414,25 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
 
 // ВОССТАНАВЛИВАЕМ ТОЧНО КАК В ОРИГИНАЛЕ
 window.refreshSetlists = async function() {
-    console.log('📋 [Legacy] refreshSetlists called');
+    logger.log('📋 [Legacy] refreshSetlists called');
     
     try {
         const setlists = await api.loadSetlists();
-        console.log('📋 [Legacy] Loaded setlists:', setlists.length);
+        logger.log('📋 [Legacy] Loaded setlists:', setlists.length);
         
         // ТОЧНО КАК В ОРИГИНАЛЕ
         window.state.setSetlists(setlists);
         ui.renderSetlists(setlists, window.handleSetlistSelect, window.handleSetlistDelete);
         
     } catch (error) {
-        console.error("📋 [Legacy] Ошибка при загрузке сет-листов:", error);
+        logger.error("📋 [Legacy] Ошибка при загрузке сет-листов:", error);
         ui.renderSetlists([], window.handleSetlistSelect, window.handleSetlistDelete); // Render empty list on error
     }
 };
 
 // ОРИГИНАЛЬНЫЕ ОБРАБОТЧИКИ ТОЧНО КАК БЫЛИ
 window.handleSetlistSelect = function(setlist) {
-    console.log('📋 [Legacy] handleSetlistSelect:', setlist.name);
+    logger.log('📋 [Legacy] handleSetlistSelect:', setlist.name);
     window.state.setCurrentSetlistId(setlist.id);
     // ИСПРАВЛЕНО: Используем правильную функцию для установки названия
     window.state.setCurrentSetlistName(setlist.name);
@@ -439,7 +440,7 @@ window.handleSetlistSelect = function(setlist) {
 };
 
 window.handleSetlistDelete = async function(setlistId, setlistName) {
-    console.log('📋 [Legacy] handleSetlistDelete:', setlistName);
+    logger.log('📋 [Legacy] handleSetlistDelete:', setlistName);
     if (confirm(`Вы уверены, что хотите удалить сет-лист "${setlistName}"?`)) {
         try {
             const wasSelected = window.state.currentSetlistId === setlistId;
@@ -452,14 +453,14 @@ window.handleSetlistDelete = async function(setlistId, setlistName) {
                 ui.clearSetlistSelection();
             }
         } catch (error) {
-            console.error("Ошибка при удалении сет-листа:", error);
+            logger.error("Ошибка при удалении сет-листа:", error);
             alert("Не удалось удалить сет-лист.");
         }
     }
 };
 
 window.handleFavoriteOrRepertoireSelect = function(song) {
-    console.log('🎵 [Legacy] Song selected from panel:', song.name);
+    logger.log('🎵 [Legacy] Song selected from panel:', song.name);
     
     if (!song || !song.id) return;
     
@@ -483,12 +484,12 @@ window.handleFavoriteOrRepertoireSelect = function(song) {
     // КРИТИЧЕСКИ ВАЖНО: Убираем анимацию загрузки с кнопки репертуара
     if (ui.toggleRepertoireButton) {
         ui.toggleRepertoireButton.classList.remove('loading');
-        console.log('🎭 [Legacy] Repertoire loading animation removed');
+        logger.log('🎭 [Legacy] Repertoire loading animation removed');
     }
 };
 
 window.handleRemoveSongFromSetlist = async function(songId, songName) {
-    console.log('🗑️ [Legacy] handleRemoveSongFromSetlist:', songName);
+    logger.log('🗑️ [Legacy] handleRemoveSongFromSetlist:', songName);
     const setlistId = window.state.currentSetlistId;
     if (!setlistId) return;
 
@@ -509,22 +510,22 @@ window.handleRemoveSongFromSetlist = async function(songId, songName) {
                 ui.clearSetlistSelection();
             }
         } catch (error) {
-            console.error("Ошибка при удалении песни из сет-листа:", error);
+            logger.error("Ошибка при удалении песни из сет-листа:", error);
             alert("Не удалось удалить песню.");
         }
     }
 };
 
 window.handleRepertoireUpdate = function(data) {
-    console.log('🎭 [Legacy] handleRepertoireUpdate called:', data);
+    logger.log('🎭 [Legacy] handleRepertoireUpdate called:', data);
     
     if (data.error) {
-        console.error('🎭 [Legacy] Repertoire error:', data.error);
+        logger.error('🎭 [Legacy] Repertoire error:', data.error);
         if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
             window.state.setCurrentRepertoireSongsData([]);
         }
     } else {
-        console.log('🎭 [Legacy] Repertoire data loaded:', data.data?.length || 0);
+        logger.log('🎭 [Legacy] Repertoire data loaded:', data.data?.length || 0);
         if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
             window.state.setCurrentRepertoireSongsData(data.data || []);
         }
@@ -547,23 +548,23 @@ window.handleRepertoireUpdate = function(data) {
     // КРИТИЧЕСКИ ВАЖНО: Убираем анимацию загрузки после обновления данных
     if (ui.toggleRepertoireButton) {
         ui.toggleRepertoireButton.classList.remove('loading');
-        console.log('🎭 [Legacy] Repertoire loading animation removed after data update');
+        logger.log('🎭 [Legacy] Repertoire loading animation removed after data update');
     }
 };
 
 // КРИТИЧЕСКИ ВАЖНАЯ ФУНКЦИЯ ДЛЯ РЕПЕРТУАРА - ОТСУТСТВОВАЛА!
 window.handleVocalistChange = function(vocalistId) {
-    console.log('🎭 [Legacy] handleVocalistChange called:', vocalistId);
+    logger.log('🎭 [Legacy] handleVocalistChange called:', vocalistId);
     
     // Устанавливаем текущего вокалиста в state
     if (window.state && typeof window.state.setCurrentVocalistId === 'function') {
         window.state.setCurrentVocalistId(vocalistId);
-        console.log('🎭 [Legacy] Current vocalist ID set:', vocalistId);
+        logger.log('🎭 [Legacy] Current vocalist ID set:', vocalistId);
     }
     
     // Если выбран вокалист и панель репертуара открыта, обновляем данные
     if (vocalistId && ui.repertoirePanel && ui.repertoirePanel.classList.contains('open')) {
-        console.log('🎭 [Legacy] Repertoire panel is open, reloading data...');
+        logger.log('🎭 [Legacy] Repertoire panel is open, reloading data...');
         
         // Показываем индикатор загрузки
         if (ui.toggleRepertoireButton) {
@@ -574,14 +575,14 @@ window.handleVocalistChange = function(vocalistId) {
         if (typeof api.loadRepertoire === 'function') {
             api.loadRepertoire(vocalistId, window.handleRepertoireUpdate);
         } else {
-            console.error('🎭 [Legacy] api.loadRepertoire not found');
+            logger.error('🎭 [Legacy] api.loadRepertoire not found');
             if (ui.toggleRepertoireButton) {
                 ui.toggleRepertoireButton.classList.remove('loading');
             }
         }
     } else if (!vocalistId) {
         // Если вокалист не выбран, очищаем репертуар
-        console.log('🎭 [Legacy] No vocalist selected, clearing repertoire');
+        logger.log('🎭 [Legacy] No vocalist selected, clearing repertoire');
         if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
             window.state.setCurrentRepertoireSongsData([]);
         }
@@ -603,7 +604,7 @@ window.handleVocalistChange = function(vocalistId) {
  * Обработчик сохранения отредактированной песни
  */
 window.handleSaveEdit = async function() {
-    console.log('💾 [Legacy] handleSaveEdit called');
+    logger.log('💾 [Legacy] handleSaveEdit called');
     
     try {
         // Получаем элементы редактора
@@ -611,7 +612,7 @@ window.handleSaveEdit = async function() {
         const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
         
         if (!editorTextarea || !currentSong) {
-            console.error('❌ [Legacy] Editor elements or current song not found');
+            logger.error('❌ [Legacy] Editor elements or current song not found');
             return;
         }
         
@@ -619,11 +620,11 @@ window.handleSaveEdit = async function() {
         const editedContent = editorTextarea.value;
         
         if (!songId) {
-            console.error('❌ [Legacy] No song ID found');
+            logger.error('❌ [Legacy] No song ID found');
             return;
         }
         
-        console.log('💾 [Legacy] Saving song:', songId);
+        logger.log('💾 [Legacy] Saving song:', songId);
         
         // Сохраняем изменения через API
         if (typeof api.saveSongEdit === 'function') {
@@ -660,12 +661,12 @@ window.handleSaveEdit = async function() {
                 ui.showModal('Изменения сохранены!', 'success');
             }
             
-            console.log('✅ [Legacy] Song saved successfully');
+            logger.log('✅ [Legacy] Song saved successfully');
         } else {
-            console.error('❌ [Legacy] api.saveSongEdit not found');
+            logger.error('❌ [Legacy] api.saveSongEdit not found');
         }
     } catch (error) {
-        console.error('❌ [Legacy] Error saving song:', error);
+        logger.error('❌ [Legacy] Error saving song:', error);
         if (typeof ui.showModal === 'function') {
             ui.showModal('Ошибка при сохранении: ' + error.message, 'error');
         }
@@ -676,18 +677,18 @@ window.handleSaveEdit = async function() {
  * Обработчик отката к оригинальной версии песни
  */
 window.handleRevertToOriginal = async function() {
-    console.log('🔄 [Legacy] handleRevertToOriginal called');
+    logger.log('🔄 [Legacy] handleRevertToOriginal called');
     
     try {
         const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
         if (!currentSong) {
-            console.error('❌ [Legacy] No current song found');
+            logger.error('❌ [Legacy] No current song found');
             return;
         }
         
         const songId = currentSong.id;
         if (!songId) {
-            console.error('❌ [Legacy] No song ID found');
+            logger.error('❌ [Legacy] No song ID found');
             return;
         }
         
@@ -697,7 +698,7 @@ window.handleRevertToOriginal = async function() {
             return;
         }
         
-        console.log('🔄 [Legacy] Reverting song:', songId);
+        logger.log('🔄 [Legacy] Reverting song:', songId);
         
         // Откатываем через API
         if (typeof api.revertToOriginal === 'function') {
@@ -730,12 +731,12 @@ window.handleRevertToOriginal = async function() {
                 ui.showModal('Песня откачена к оригинальной версии!', 'success');
             }
             
-            console.log('✅ [Legacy] Song reverted successfully');
+            logger.log('✅ [Legacy] Song reverted successfully');
         } else {
-            console.error('❌ [Legacy] api.revertToOriginal not found');
+            logger.error('❌ [Legacy] api.revertToOriginal not found');
         }
     } catch (error) {
-        console.error('❌ [Legacy] Error reverting song:', error);
+        logger.error('❌ [Legacy] Error reverting song:', error);
         if (typeof ui.showModal === 'function') {
             ui.showModal('Ошибка при откате: ' + error.message, 'error');
         }
@@ -747,7 +748,7 @@ window.handleRevertToOriginal = async function() {
 // ====================================
 // Единственная задача этого файла - запустить приложение!
 
-console.log('🎯 [EntryPoint] script.js загружен - запуск инициализации...');
+logger.log('🎯 [EntryPoint] script.js загружен - запуск инициализации...');
 
 // Инициализация уже настроена в модуле initialization.js
 // Она автоматически запустится при готовности DOM
@@ -773,7 +774,7 @@ export const metadata = {
 
 // ФУНКЦИЯ УВЕДОМЛЕНИЙ - ИЗ РАБОЧЕГО КОДА
 window.showNotification = function(message, type = 'info') {
-    console.log('📢 [EntryPoint] showNotification:', message, type);
+    logger.log('📢 [EntryPoint] showNotification:', message, type);
     
     // Используем импортированную модульную функцию - ИСПРАВЛЕНО!
     if (typeof showNotificationModule === 'function') {
@@ -824,7 +825,7 @@ window.showNotification = function(message, type = 'info') {
 
 // ФУНКЦИЯ ДОБАВЛЕНИЯ ПЕСНИ В СЕТ-ЛИСТ
 window.handleAddSongToSetlist = async function() {
-    console.log('📋 [EntryPoint] handleAddSongToSetlist called');
+    logger.log('📋 [EntryPoint] handleAddSongToSetlist called');
     
     // Получаем ID текущей выбранной песни
     const songId = ui.songSelect?.value;
@@ -844,26 +845,26 @@ window.handleAddSongToSetlist = async function() {
     
     // Получаем выбранную тональность
     const keySelect = ui.keySelect;
-    console.log('📋 [EntryPoint] keySelect element:', keySelect);
-    console.log('📋 [EntryPoint] keySelect value:', keySelect?.value);
-    console.log('📋 [EntryPoint] song keys:', currentSong.keys);
+    logger.log('📋 [EntryPoint] keySelect element:', keySelect);
+    logger.log('📋 [EntryPoint] keySelect value:', keySelect?.value);
+    logger.log('📋 [EntryPoint] song keys:', currentSong.keys);
     
     const selectedKey = keySelect?.value || currentSong.keys?.[0] || 'C';
     
-    console.log('📋 [EntryPoint] Adding song to setlist:', currentSong.name, 'in key:', selectedKey);
+    logger.log('📋 [EntryPoint] Adding song to setlist:', currentSong.name, 'in key:', selectedKey);
     
     // Открываем overlay выбора сет-листа с тональностью
     if (typeof window.openSetlistSelector === 'function') {
         await window.openSetlistSelector(currentSong, selectedKey);
     } else {
-        console.error('openSetlistSelector function not found');
+        logger.error('openSetlistSelector function not found');
         window.showNotification('❌ Ошибка: модуль выбора сет-листа не загружен', 'error');
     }
 };
 
 // ФУНКЦИЯ СОЗДАНИЯ СЕТЛИСТА - ТОЧНО КАК В РАБОЧЕМ КОДЕ
 window.handleCreateSetlist = async function() {
-    console.log('🎵 [EntryPoint] handleCreateSetlist called');
+    logger.log('🎵 [EntryPoint] handleCreateSetlist called');
     const name = ui.newSetlistNameInput.value.trim();
     if (!name) {
         window.showNotification('❌ Название сет-листа не может быть пустым', 'error');
@@ -879,7 +880,7 @@ window.handleCreateSetlist = async function() {
         window.currentCreatedSetlistId = docRef; // docRef это уже строка ID
         window.currentCreatedSetlistName = name;
         
-        console.log('🎯 [DEBUG] Created setlist:', window.currentCreatedSetlistId, window.currentCreatedSetlistName);
+        logger.log('🎯 [DEBUG] Created setlist:', window.currentCreatedSetlistId, window.currentCreatedSetlistName);
         
         // Закрываем модал (функция должна быть в ui)
         if (typeof ui.closeCreateSetlistModal === 'function') {
@@ -899,7 +900,7 @@ window.handleCreateSetlist = async function() {
         window.showNotification('✅ Сет-лист создан успешно!', 'success');
         
     } catch (error) {
-        console.error('Ошибка создания сет-листа:', error);
+        logger.error('Ошибка создания сет-листа:', error);
         window.showNotification('❌ Ошибка при создании сет-листа', 'error');
     } finally {
         ui.createSetlistButton.disabled = false;
@@ -907,6 +908,6 @@ window.handleCreateSetlist = async function() {
     }
 };
 
-console.log('✨ [EntryPoint] Agape Worship App v2.0 - Modular Architecture Ready!');
+logger.log('✨ [EntryPoint] Agape Worship App v2.0 - Modular Architecture Ready!');
 
 // ОБРАБОТЧИКИ ПАНЕЛЕЙ ТЕПЕРЬ В event-handlers.js - МОДУЛЬНО И ПРАВИЛЬНО!
