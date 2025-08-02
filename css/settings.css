@@ -85,15 +85,42 @@ body {
     background: none;
     border: none;
     font-size: 20px;
-    color: var(--text-color);
+    color: var(--text-secondary);
     cursor: pointer;
     padding: 8px;
     border-radius: 8px;
-    transition: background 0.2s;
+    transition: all 0.2s;
+}
+
+.back-button i {
+    color: inherit;
+}
+
+/* Dark theme - light arrow */
+:root .back-button {
+    color: #b0b0b0;
+}
+
+:root .back-button i {
+    color: #b0b0b0;
+}
+
+/* Light theme - dark arrow */
+[data-theme="light"] .back-button {
+    color: #666666;
+}
+
+[data-theme="light"] .back-button i {
+    color: #666666;
 }
 
 .back-button:hover {
-    background: var(--hover-color);
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.back-button:hover i {
+    color: var(--text-primary);
 }
 
 .settings-header h1 {

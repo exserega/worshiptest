@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v36'; // v36, fix active requests alignment and cancel button colors
+const CACHE_NAME = 'agape-worship-cache-v37'; // v37, fix back button arrow colors in dark/light themes
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
