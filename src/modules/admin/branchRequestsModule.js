@@ -115,7 +115,7 @@ function createBranchRequestCard(request, branches, users) {
  * Обновление счетчика заявок
  */
 function updateBranchRequestsCount(count) {
-    const badge = document.querySelector('#branch-requests-tab-btn .badge');
+    const badge = document.getElementById('branch-requests-count');
     if (badge) {
         badge.textContent = count;
         badge.style.display = count > 0 ? 'inline-block' : 'none';
@@ -205,6 +205,9 @@ async function approveRequest(requestId) {
         const { displayUsers } = await import('./usersModule.js');
         displayUsers();
         
+        // Вызываем событие обновления данных
+        window.dispatchEvent(new Event('admin-data-updated'));
+        
     } catch (error) {
         console.error('Error approving request:', error);
         showError('Ошибка при одобрении заявки');
@@ -265,6 +268,9 @@ async function rejectRequest(requestId, reason) {
         
         showSuccess('Заявка отклонена');
         displayBranchRequests();
+        
+        // Вызываем событие обновления данных
+        window.dispatchEvent(new Event('admin-data-updated'));
         
     } catch (error) {
         console.error('Error rejecting request:', error);
@@ -327,3 +333,12 @@ window.adminBranchRequests = {
     approveRequest,
     showRejectDialog
 };
+
+// Подписка на обновление данных админки
+window.addEventListener('admin-data-updated', () => {
+    const { branchRequests } = window.adminState;
+    if (branchRequests) {
+        const pendingRequests = branchRequests.filter(r => r.status === 'pending');
+        updateBranchRequestsCount(pendingRequests.length);
+    }
+});

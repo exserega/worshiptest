@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v37'; // v37, fix back button arrow colors in dark/light themes
+const CACHE_NAME = 'agape-worship-cache-v38'; // v38, add badge counter for branch requests tab
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
