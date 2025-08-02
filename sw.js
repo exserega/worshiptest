@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v47'; // v47, Match admin and settings page colors with main site
+const CACHE_NAME = 'agape-worship-cache-v48'; // v48, Оптимизация производительности - удален тестовый файл
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
