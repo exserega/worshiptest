@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v24'; // v24, fix async/await in forEach loops
+const CACHE_NAME = 'agape-worship-cache-v25'; // v25, fix createSetlist to use selected branch
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

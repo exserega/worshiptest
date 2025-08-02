@@ -278,11 +278,20 @@ export async function createSetlist(name) {
     }
     
     try {
-        // Получаем branchId текущего пользователя
+        // Получаем выбранный филиал из селектора
         let branchId = null;
         const currentUser = auth?.currentUser || null;
         
-        if (currentUser) {
+        // Сначала пробуем получить выбранный филиал из селектора
+        try {
+            const { getSelectedBranchId } = await import('../modules/branches/branchSelector.js');
+            branchId = getSelectedBranchId();
+        } catch (e) {
+            console.log('Branch selector not available, using user main branch');
+        }
+        
+        // Если филиал не выбран в селекторе, используем основной филиал пользователя
+        if (!branchId && currentUser) {
             const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
             if (userDoc.exists) {
                 branchId = userDoc.data().branchId || null;
@@ -292,7 +301,7 @@ export async function createSetlist(name) {
         const docRef = await addDoc(setlistsCollection, {
             name: name.trim(),
             songs: [],
-            branchId: branchId, // Привязываем к филиалу пользователя
+            branchId: branchId, // Привязываем к выбранному филиалу
             createdAt: serverTimestamp()
         });
         
