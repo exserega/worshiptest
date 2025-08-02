@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v42'; // v42, minimalist auth page redesign
+const CACHE_NAME = 'agape-worship-cache-v43'; // v43, Montserrat font globally (except song text)
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
