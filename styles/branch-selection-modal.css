@@ -60,7 +60,7 @@
 /* Интерактивная карточка для выбора филиала */
 
 .branch-card {
-    background: var(--bg-tertiary);      /* Третичный фон */
+    background: var(--bg-secondary);     /* Изменено для лучшей видимости */
     border: 2px solid var(--border-color); /* Граница */
     border-radius: 12px;                 /* Скругление углов */
     padding: 20px;                       /* Внутренние отступы */
@@ -311,5 +311,80 @@
     .modal-footer-info {
         flex-direction: column;      /* Вертикальное расположение */
         text-align: center;          /* Центрирование текста */
+    }
+}
+
+/* === ИСПРАВЛЕНИЕ КНОПКИ ЗАКРЫТИЯ === */
+/* Переопределение стилей для правильных цветов иконки X */
+
+#branch-selection-modal .overlay-close-btn {
+    color: var(--text-secondary) !important;
+}
+
+#branch-selection-modal .overlay-close-btn i {
+    color: inherit !important;
+}
+
+/* Темная тема - светлая иконка */
+:root #branch-selection-modal .overlay-close-btn {
+    color: #b0b0b0 !important;
+}
+
+:root #branch-selection-modal .overlay-close-btn i {
+    color: #b0b0b0 !important;
+}
+
+/* Светлая тема - темная иконка */
+[data-theme="light"] #branch-selection-modal .overlay-close-btn {
+    color: #666666 !important;
+}
+
+[data-theme="light"] #branch-selection-modal .overlay-close-btn i {
+    color: #666666 !important;
+}
+
+/* При наведении - всегда белая на красном фоне */
+#branch-selection-modal .overlay-close-btn:hover {
+    background: #ff4444 !important;
+    color: white !important;
+}
+
+#branch-selection-modal .overlay-close-btn:hover i {
+    color: white !important;
+}
+
+/* === УЛУЧШЕНИЕ ВИДИМОСТИ ТЕКСТА НА МОБИЛЬНЫХ === */
+/* Увеличение контраста для лучшей читаемости */
+
+@media (max-width: 768px) {
+    .branch-card h3 {
+        color: var(--text-primary) !important;
+        font-weight: 600 !important;
+    }
+    
+    .branch-card p {
+        color: var(--text-secondary) !important;
+        opacity: 0.9;
+    }
+    
+    .branch-card .member-count {
+        font-weight: 700 !important;
+    }
+    
+    /* Увеличение контраста для выбранной карточки */
+    .branch-card.selected {
+        background: var(--accent-primary) !important;
+        border-color: var(--accent-primary) !important;
+    }
+    
+    .branch-card.selected h3,
+    .branch-card.selected p {
+        color: white !important;
+    }
+    
+    /* Улучшение hover состояния на тач-устройствах */
+    .branch-card:active {
+        transform: scale(0.98);
+        background: var(--bg-tertiary);
     }
 }
