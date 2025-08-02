@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v63'; // v63, Исправлены отсутствующие импорты branchUtils и workerManager
+const CACHE_NAME = 'agape-worship-cache-v64'; // v64, Исправлен гостевой функционал и импорты controller
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

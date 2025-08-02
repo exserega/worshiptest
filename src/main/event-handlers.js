@@ -478,7 +478,8 @@ function setupSetlistEventHandlers() {
                 }
                 
                 // Загружаем сет-листы нового филиала
-                const setlists = await controller.loadSetlists();
+                const { loadSetlists } = await import('../api/index.js');
+                const setlists = await loadSetlists();
                 
                 // Обновляем отображение с правильными обработчиками
                 if (typeof ui.renderSetlists === 'function') {
@@ -497,7 +498,8 @@ function setupSetlistEventHandlers() {
                             console.log('📋 Delete setlist:', setlistName);
                             if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
                                 try {
-                                    await controller.deleteSetlist(setlistId);
+                                                                            const { deleteSetlist } = await import('../api/index.js');
+                                        await deleteSetlist(setlistId);
                                     ui.toggleSetlistsButton.click(); // Refresh panel
                                 } catch (error) {
                                     console.error('Ошибка удаления:', error);
@@ -607,7 +609,8 @@ function setupSetlistEventHandlers() {
                         }
                     }
                     // Прямой вызов API и UI функций
-                    const setlists = await controller.loadSetlists();
+                    const { loadSetlists } = await import('../api/index.js');
+                    const setlists = await loadSetlists();
                     console.log('📋 [EventHandlers] Loaded setlists:', setlists.length);
                     if (window.state && typeof window.state.setSetlists === 'function') {
                         window.state.setSetlists(setlists);
@@ -628,7 +631,8 @@ function setupSetlistEventHandlers() {
                                 console.log('📋 Delete setlist:', setlistName);
                                 if (confirm(`Удалить сет-лист "${setlistName}"?`)) {
                                     try {
-                                        await controller.deleteSetlist(setlistId);
+                                        const { deleteSetlist } = await import('../api/index.js');
+                                        await deleteSetlist(setlistId);
                                         ui.toggleSetlistsButton.click(); // Refresh panel
                                     } catch (error) {
                                         console.error('Ошибка удаления:', error);
@@ -685,7 +689,8 @@ function setupSetlistEventHandlers() {
                             async function(songId) {
                                 if(confirm("Удалить песню из 'Моих'?")) {
                                     try {
-                                        await controller.removeFromFavorites(songId);
+                                        const { removeFromFavorites } = await import('../api/index.js');
+                                    await removeFromFavorites(songId);
                                         ui.toggleMyListButton.click(); // Refresh panel
                                     } catch (error) {
                                         console.error('Ошибка удаления из избранного:', error);
@@ -718,7 +723,8 @@ function setupSetlistEventHandlers() {
                 try {
                     ui.repertoirePanel.classList.add('open');
                     console.log('🎭 [EventHandlers] Loading repertoire...');
-                    controller.loadRepertoire(
+                    const { loadRepertoire } = await import('../api/index.js');
+                    loadRepertoire(
                         window.state ? window.state.currentVocalistId : null, 
                         window.handleRepertoireUpdate || function(data) {
                             console.log('🎭 Repertoire loaded:', data);
@@ -1240,7 +1246,8 @@ function setupSongEventHandlers() {
         console.log('📋 [EventHandlers] Setlist updated event:', event.detail);
         
         try {
-            const setlists = await controller.loadSetlists();
+            const { loadSetlists } = await import('../api/index.js');
+        const setlists = await loadSetlists();
             if (window.state && typeof window.state.setSetlists === 'function') {
                 window.state.setSetlists(setlists);
             }

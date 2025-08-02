@@ -178,11 +178,8 @@ async function handleGuestLogin() {
         // Создаем анонимного пользователя
         const result = await auth.signInAnonymously();
         
-        // Создаем запись в БД со статусом guest
-        await createOrUpdateUser(result.user, {
-            isGuest: true,
-            name: 'Гость'
-        });
+        // НЕ создаем запись в БД для гостей!
+        // Гости должны быть полностью анонимными
         
         logger.log('✅ Гостевой вход выполнен');
         showMessage('Вы вошли как гость', 'success');

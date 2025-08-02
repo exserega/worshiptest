@@ -35,8 +35,30 @@ export function checkAuth() {
     authCheckPromise = new Promise((resolve) => {
         const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
             if (firebaseUser) {
+                logger.log('🔐 User authenticated:', firebaseUser.email || firebaseUser.phone || 'Anonymous');
+                
                 try {
-                    // Проверка пользователя в Firestore
+                    // Проверяем, является ли пользователь анонимным (гостем)
+                    if (firebaseUser.isAnonymous) {
+                        logger.log('👤 Anonymous guest user detected');
+                        
+                        // Для гостей НЕ создаем профиль в БД
+                        currentUser = {
+                            uid: firebaseUser.uid,
+                            email: null,
+                            name: 'Гость',
+                            role: 'guest',
+                            status: 'guest',
+                            isAnonymous: true,
+                            firebaseUser
+                        };
+                        
+                        resolve({ user: currentUser, isAuthenticated: true });
+                        return;
+                    }
+                    
+                    // Для обычных пользователей проверяем профиль в БД
+                    const db = firebase.firestore();
                     const userDoc = await db.collection('users').doc(firebaseUser.uid).get();
                         
                         if (userDoc.exists) {
@@ -237,7 +259,7 @@ export function isUserPending() {
  * @returns {boolean}
  */
 export function isUserGuest() {
-    return currentUser?.status === 'guest';
+    return currentUser?.isAnonymous === true || currentUser?.status === 'guest';
 }
 
 /**

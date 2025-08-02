@@ -184,7 +184,21 @@ function addConfirmButton() {
  * Подтвердить выбор филиала
  */
 async function confirmBranchSelection() {
-    if (!selectedBranchId || !auth.currentUser) return;
+    const user = auth.currentUser;
+    if (!user) return;
+    
+    // Проверяем, является ли пользователь гостем
+    if (user.isAnonymous) {
+        alert('Для выбора филиала необходимо зарегистрироваться');
+        hideBranchSelection();
+        return;
+    }
+    
+    const selectedBranch = branchesList.querySelector('input[name="branch"]:checked');
+    if (!selectedBranch) {
+        alert('Пожалуйста, выберите филиал');
+        return;
+    }
     
     // Показываем индикатор загрузки на выбранной карточке
     const selectedCard = document.querySelector('.branch-card.selected');
@@ -241,6 +255,12 @@ async function confirmBranchSelection() {
 export async function checkAndShowBranchSelection() {
     const user = auth.currentUser;
     if (!user) return false;
+    
+    // Проверяем, является ли пользователь гостем
+    if (user.isAnonymous) {
+        console.log('👤 Guest user - skipping branch selection');
+        return false;
+    }
     
     try {
         const userDoc = await db.collection('users').doc(user.uid).get();
