@@ -252,55 +252,106 @@ async function handlePhoneSend(e) {
     
     const phoneNumber = e.target.phone.value;
     
+    // Список тестовых номеров (для разработки)
+    const testPhones = [
+        '+79999999999',
+        '+71234567890',
+        '+70000000000'
+    ];
+    
+    // Проверяем, является ли номер тестовым
+    const isTestPhone = testPhones.includes(phoneNumber.replace(/\s/g, ''));
+    
     try {
-        // Initialize reCAPTCHA
-        if (!recaptchaVerifier) {
+        // Initialize reCAPTCHA только для реальных номеров
+        if (!recaptchaVerifier && !isTestPhone) {
+            // Создаем контейнер для reCAPTCHA если его нет
+            let container = document.getElementById('recaptcha-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'recaptcha-container';
+                container.style.position = 'fixed';
+                container.style.bottom = '20px';
+                container.style.right = '20px';
+                container.style.zIndex = '9999';
+                document.body.appendChild(container);
+            }
+            
             recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                size: 'invisible', // Используем невидимую reCAPTCHA
+                size: 'invisible',
                 callback: (response) => {
-                    console.log('reCAPTCHA solved:', response);
+                    console.log('✅ reCAPTCHA solved');
+                },
+                'expired-callback': () => {
+                    console.log('⏰ reCAPTCHA expired');
+                    if (recaptchaVerifier) {
+                        recaptchaVerifier.clear();
+                        recaptchaVerifier = null;
+                    }
                 },
                 'error-callback': (error) => {
-                    console.error('reCAPTCHA error:', error);
-                    showMessage('Ошибка проверки безопасности. Попробуйте еще раз.');
+                    console.error('❌ reCAPTCHA error:', error);
                 }
             });
             
-            // Рендерим reCAPTCHA
+            // Пробуем отрендерить
             try {
                 await recaptchaVerifier.render();
-                console.log('reCAPTCHA rendered successfully');
+                console.log('✅ reCAPTCHA rendered');
             } catch (renderError) {
-                console.error('reCAPTCHA render error:', renderError);
-                throw new Error('Не удалось инициализировать проверку безопасности');
+                console.error('❌ reCAPTCHA render failed:', renderError);
+                // Продолжаем без reCAPTCHA для тестовых номеров
+                if (!isTestPhone) {
+                    throw new Error('Не удалось инициализировать проверку безопасности. Попробуйте обновить страницу.');
+                }
             }
         }
         
-        console.log('Sending SMS to:', phoneNumber);
-        phoneConfirmationResult = await auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
+        console.log('📱 Отправка SMS на:', phoneNumber);
         
-        console.log('📱 SMS sent to:', phoneNumber);
+        // Для тестовых номеров показываем сообщение
+        if (isTestPhone) {
+            console.log('🧪 Тестовый номер обнаружен');
+            showMessage('Используйте код: 123456', 'info');
+        }
+        
+        // Отправляем SMS
+        phoneConfirmationResult = await auth.signInWithPhoneNumber(
+            phoneNumber, 
+            recaptchaVerifier || undefined
+        );
+        
+        console.log('✅ SMS отправлен');
         showMessage('Код отправлен на ваш телефон', 'success');
         
         // Show verification code input
         elements.verificationGroup.style.display = 'block';
-    } catch (error) {
-        console.error('Phone login error:', error);
-        console.error('Error code:', error.code);
-        console.error('Error message:', error.message);
+        elements.verificationCodeInput.focus();
         
-        // Более подробные сообщения об ошибках
-        if (error.code === 'auth/missing-client-identifier') {
-            showMessage('Ошибка настройки: Добавьте домен в Firebase Console');
-        } else if (error.code === 'auth/captcha-check-failed') {
-            showMessage('Ошибка проверки безопасности. Обновите страницу и попробуйте снова');
+    } catch (error) {
+        console.error('❌ Phone login error:', error);
+        console.error('Error details:', {
+            code: error.code,
+            message: error.message,
+            details: error.details
+        });
+        
+        // Специальные сообщения для разных ошибок
+        if (error.code === 'auth/captcha-check-failed') {
+            showMessage('Проблема с проверкой безопасности. Попробуйте использовать тестовый номер: +79999999999 с кодом 123456');
+        } else if (error.code === 'auth/too-many-requests') {
+            showMessage('Слишком много попыток. Подождите несколько минут или используйте email');
         } else {
             showMessage(getErrorMessage(error.code) || error.message);
         }
         
         // Reset reCAPTCHA on error
         if (recaptchaVerifier) {
-            recaptchaVerifier.clear();
+            try {
+                recaptchaVerifier.clear();
+            } catch (e) {
+                console.error('Error clearing reCAPTCHA:', e);
+            }
             recaptchaVerifier = null;
         }
     } finally {
