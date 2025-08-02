@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v22'; // v22, firebase-config.js перемещен в /js/
+const CACHE_NAME = 'agape-worship-cache-v23'; // v23, async/await updates for multi-branch support
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
