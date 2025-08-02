@@ -611,22 +611,40 @@ body {
 
 /* Dark theme specific for close button */
 :root .close-modal {
-    color: #999999;
+    color: #b0b0b0 !important; /* Светлая иконка в темной теме */
+}
+
+:root .close-modal i {
+    color: #b0b0b0 !important;
 }
 
 :root .close-modal:hover {
     background: #ff4444;
     border-color: #ff4444;
+    color: white !important;
+}
+
+:root .close-modal:hover i {
+    color: white !important;
 }
 
 /* Light theme specific for close button */
 [data-theme="light"] .close-modal {
-    color: #666666;
+    color: #666666 !important; /* Темная иконка в светлой теме */
+}
+
+[data-theme="light"] .close-modal i {
+    color: #666666 !important;
 }
 
 [data-theme="light"] .close-modal:hover {
     background: #ff5252;
     border-color: #ff5252;
+    color: white !important;
+}
+
+[data-theme="light"] .close-modal:hover i {
+    color: white !important;
 }
 
 .modal-body {
@@ -674,6 +692,25 @@ body {
     border-color: #ff6b6b;
 }
 
+/* Select elements specific styles */
+:root select.form-control {
+    background: #2a2a2a;
+    color: #ffffff !important;
+    padding: 14px 16px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23999' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 12px;
+    padding-right: 40px;
+}
+
+:root select.form-control option {
+    background: #2a2a2a;
+    color: #ffffff;
+    padding: 10px;
+}
+
 /* Light theme form controls */
 [data-theme="light"] .form-control {
     background: #ffffff;
@@ -684,6 +721,18 @@ body {
 [data-theme="light"] .form-control:focus {
     background: #f9f9f9;
     border-color: #ff6b6b;
+}
+
+/* Light theme select */
+[data-theme="light"] select.form-control {
+    background: #ffffff;
+    color: #333333 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+}
+
+[data-theme="light"] select.form-control option {
+    background: #ffffff;
+    color: #333333;
 }
 
 textarea.form-control {
