@@ -336,12 +336,12 @@
     content: '';
     position: absolute;
     right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 24px;
+    top: 15%;
+    bottom: 15%;
     width: 1px;
     background-color: var(--border-color);
     opacity: 0.3;
+    transition: opacity 0.2s ease;
 }
 
 .mobile-nav-button i { font-size: 1.3rem; margin-bottom: 3px; transition: color 0.2s ease; }
@@ -364,13 +364,18 @@ nav.mobile-bottom-nav .mobile-nav-button:active span { color: var(--accent-color
 nav.mobile-bottom-nav .mobile-nav-button:hover { background-color: var(--hover-color); }
 nav.mobile-bottom-nav .mobile-nav-button:active { background-color: var(--border-color); }
 
-/* Активное состояние кнопки */
+/* Разделительные линии для темной темы */
+[data-theme="dark"] .mobile-nav-button:not(:last-child)::after {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Активная кнопка */
 nav.mobile-bottom-nav .mobile-nav-button.active {
-    background-color: var(--accent-color) !important;
+    background-color: var(--active-background-color);
 }
 nav.mobile-bottom-nav .mobile-nav-button.active i,
 nav.mobile-bottom-nav .mobile-nav-button.active span {
-    color: var(--button-text-color) !important;
+    color: var(--accent-color) !important;
 }
 
 /* Цвета для светлой темы */
@@ -382,6 +387,11 @@ body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button:active i,
 body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button:active span { color: var(--accent-color) !important; }
 body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button:hover { background-color: var(--hover-color); }
 body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button:active { background-color: var(--border-color); }
+
+/* Разделительные линии для светлой темы */
+[data-theme="light"] .mobile-nav-button:not(:last-child)::after {
+    background-color: rgba(0, 0, 0, 0.1);
+}
 
 /* Активное состояние для светлой темы */
 body[data-theme="light"] nav.mobile-bottom-nav .mobile-nav-button.active {
