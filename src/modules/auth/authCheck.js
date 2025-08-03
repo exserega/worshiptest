@@ -300,7 +300,13 @@ export function showGuestMessage(action) {
     const message = `${action} доступно только для зарегистрированных пользователей.\n\nХотите получить полный доступ ко всем функциям?\n\nЗарегистрируйтесь или войдите в свой аккаунт.`;
     
     if (confirm(message + '\n\nПерейти к регистрации?')) {
-        window.location.href = '/public/login.html';
+        // Выходим из гостевого режима
+        auth.signOut().then(() => {
+            window.location.href = './public/login.html';
+        }).catch((error) => {
+            console.error('Error signing out guest:', error);
+            window.location.href = './public/login.html';
+        });
     }
 }
 
@@ -311,7 +317,13 @@ export function showGuestProfileMessage() {
     const message = `Вы вошли как гость.\n\nУ гостей нет профиля.\n\nЗарегистрируйтесь, чтобы получить полный доступ ко всем функциям сайта.`;
     
     if (confirm(message + '\n\nПерейти к регистрации?')) {
-        window.location.href = '/public/login.html';
+        // Выходим из гостевого режима
+        auth.signOut().then(() => {
+            window.location.href = './public/login.html';
+        }).catch((error) => {
+            console.error('Error signing out guest:', error);
+            window.location.href = './public/login.html';
+        });
     }
 }
 

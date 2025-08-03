@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v65'; // v65, Исправлен импорт logger в authCheck.js
+const CACHE_NAME = 'agape-worship-cache-v66'; // v66, Исправлен переход на страницу логина для гостей
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
