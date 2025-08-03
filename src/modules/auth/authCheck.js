@@ -1,11 +1,14 @@
 // ====================================
-// 🔒 AUTH CHECK MODULE
+// 🔐 AUTH CHECK MODULE
 // ====================================
-// Проверка авторизации и управление доступом
+// Проверка авторизации и прав доступа
+// ====================================
 
-// Firebase instances from global scope
-const auth = window.firebase?.auth();
-const db = window.firebase?.firestore();
+import logger from '../../utils/logger.js';
+
+// Firebase references
+const auth = window.firebase.auth();
+const db = window.firebase.firestore();
 
 // ====================================
 // STATE
