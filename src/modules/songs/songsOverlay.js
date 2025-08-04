@@ -7,7 +7,7 @@
 
 import logger from '../../utils/logger.js';
 import { loadSongs } from '../../api/index.js';
-import { displaySong } from '../../../ui.js';
+import { displaySongDetails } from '../../../ui.js';
 
 // Категории песен
 const CATEGORIES = {
@@ -226,7 +226,7 @@ class SongsOverlay {
             logger.log(`🎵 Selected song: ${song.name}`);
             this.close();
             // Отображаем песню на главном экране
-            displaySong(song);
+            displaySongDetails(song);
         }
     }
 }

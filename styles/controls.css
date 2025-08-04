@@ -11,14 +11,14 @@
 
 .search-icon {
     position: absolute;
-    left: 15px;
+    right: 15px;
     color: var(--text-secondary);
     font-size: 16px;
     pointer-events: none;
 }
 
 #search-input {
-    padding-left: 40px; /* Отступ для иконки */
+    padding-right: 40px; /* Отступ для иконки справа */
     width: 100%;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
@@ -38,48 +38,83 @@
 .songs-button-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .songs-overlay-button {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
+    gap: 10px;
+    padding: 14px 28px;
+    background: var(--accent-color);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 2px 8px rgba(34, 211, 238, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.songs-overlay-button:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
 }
 
 .songs-overlay-button:hover {
-    background: var(--bg-hover);
-    border-color: var(--accent-color);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.35);
+}
+
+.songs-overlay-button:hover:before {
+    width: 300px;
+    height: 300px;
 }
 
 .songs-overlay-button:active {
     transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(34, 211, 238, 0.25);
 }
 
 .songs-overlay-button i {
-    font-size: 18px;
-    color: var(--accent-color);
+    font-size: 20px;
+}
+
+/* Темная тема */
+[data-theme="dark"] .songs-overlay-button {
+    background: var(--accent-color);
+    color: #111827;
+}
+
+/* Светлая тема */
+[data-theme="light"] .songs-overlay-button {
+    background: var(--accent-color);
+    color: #ffffff;
 }
 
 /* Адаптация для мобильных */
 @media (max-width: 768px) {
     .songs-button-container {
-        margin-top: 15px;
+        margin-top: 12px;
+        padding: 0 16px;
     }
     
     .songs-overlay-button {
         width: 100%;
         justify-content: center;
+        padding: 16px;
+        font-size: 16px;
     }
 }
