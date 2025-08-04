@@ -6,8 +6,8 @@
 // ====================================
 
 import logger from '../../utils/logger.js';
-import { loadAllSongsFromFirestore as loadSongs } from '../../api/index.js';
 import { displaySongDetails } from '../../../ui.js';
+import * as state from '../../../js/state.js';
 
 // Категории песен
 const CATEGORIES = {
@@ -114,12 +114,10 @@ class SongsOverlay {
         this.overlay.classList.add('visible');
         document.body.style.overflow = 'hidden';
         
-        // Загружаем песни если еще не загружены
-        if (this.songs.length === 0) {
-            await this.loadSongs();
-        }
-        
+        // Загружаем песни из state
+        this.loadSongs();
         this.renderSongs();
+        
         logger.log('🎵 Songs overlay opened');
     }
     
@@ -134,15 +132,18 @@ class SongsOverlay {
     }
     
     /**
-     * Загрузка песен
+     * Загрузка песен из state
      */
-    async loadSongs() {
+    loadSongs() {
         try {
-            this.songs = await loadSongs();
+            // Получаем песни из глобального state
+            this.songs = state.allSongs || [];
             this.filteredSongs = [...this.songs];
-            logger.log(`🎵 Loaded ${this.songs.length} songs`);
+            logger.log(`🎵 Loaded ${this.songs.length} songs from state`);
         } catch (error) {
             logger.error('Error loading songs:', error);
+            this.songs = [];
+            this.filteredSongs = [];
         }
     }
     

@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v73'; // v73, Добавлены импорты стилей и исправлен импорт loadAllSongsFromFirestore
+const CACHE_NAME = 'agape-worship-cache-v74'; // v74, Исправлена загрузка песен из state в оверлее
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
