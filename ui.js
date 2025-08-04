@@ -513,6 +513,12 @@ export function updateMetronomeButton(isActive) {
 
 /** Заполняет выпадающий список категорий (листов) */
 export function populateSheetSelect() {
+    // Проверяем существование элемента (он может быть удален в новом дизайне)
+    if (!sheetSelect) {
+        logger.log('📋 sheetSelect element not found, skipping population');
+        return;
+    }
+    
     sheetSelect.innerHTML = '<option value="">-- Выберите категорию --</option>';
     SONG_CATEGORIES_ORDER.forEach(categoryName => {
         if (state.songsBySheet[categoryName] && state.songsBySheet[categoryName].length > 0) {
@@ -533,45 +539,23 @@ export function populateSheetSelect() {
 }
 
 /** Загрузка песен в select#song-select для выбранной категории или всех песен */
-export function populateSongSelect() {
-    const sheetName = sheetSelect.value;
-    songSelect.innerHTML = '<option value="">-- Песня --</option>';
-
-    if (sheetName) {
-        // Показываем песни выбранной категории
-        const songs = state.songsBySheet[sheetName];
-        if (songs && songs.length > 0) {
-            songs.forEach(song => {
-                const option = document.createElement('option');
-                option.value = song.id;
-                option.textContent = song.name;
-                songSelect.appendChild(option);
-            });
-            songSelect.disabled = false;
-        } else {
-            songSelect.innerHTML = '<option value="">-- Нет песен в категории --</option>';
-            songSelect.disabled = true;
-        }
-    } else {
-        // Показываем все песни в алфавитном порядке
-        const allSongs = state.allSongs || [];
-        if (allSongs.length > 0) {
-            // Сортируем все песни по алфавиту
-            const sortedSongs = [...allSongs].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-            sortedSongs.forEach(song => {
-                const option = document.createElement('option');
-                option.value = song.id;
-                // Показываем название песни и категорию для удобства
-                option.textContent = `${song.name}${song.sheet ? ` (${song.sheet})` : ''}`;
-                songSelect.appendChild(option);
-            });
-            songSelect.disabled = false;
-        } else {
-            songSelect.innerHTML = '<option value="">-- Песни не загружены --</option>';
-            songSelect.disabled = true;
-        }
+export function populateSongSelect(categoryName) {
+    // Проверяем существование элемента (он может быть удален в новом дизайне)
+    if (!songSelect) {
+        logger.log('🎵 songSelect element not found, skipping population');
+        return;
     }
-    displaySongDetails(null);
+    
+    songSelect.innerHTML = '<option value="">-- Песня --</option>';
+    
+    if (categoryName && state.songsBySheet[categoryName]) {
+        state.songsBySheet[categoryName].forEach(song => {
+            const option = document.createElement('option');
+            option.value = song.id;
+            option.textContent = song.name;
+            songSelect.appendChild(option);
+        });
+    }
 }
 
 // --- SEARCH ---
