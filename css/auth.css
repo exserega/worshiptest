@@ -48,14 +48,34 @@ body {
     font-weight: 700;
     letter-spacing: 0.1em;
     color: #22d3ee;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
+    text-transform: uppercase;
     text-align: center;
+}
+
+/* App Title (вместо Logo для согласованности) */
+.app-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #22d3ee;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Auth Subtitle */
+.auth-subtitle {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
 }
 
 /* Auth Buttons */
 .auth-buttons {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     margin-bottom: 40px;
 }
 
@@ -85,17 +105,39 @@ body {
 .auth-link {
     font-size: 0.9rem;
     color: #9ca3af;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
 .auth-link a {
     color: #22d3ee;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 5px 10px;
 }
 
 .auth-link a:hover {
     color: #06b6d4;
+    transform: translateY(-1px);
+}
+
+/* Guest Link */
+.guest-link {
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.guest-link a {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.guest-link a:hover {
+    color: #e5e7eb;
 }
 
 /* Forms */
