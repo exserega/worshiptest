@@ -16,6 +16,7 @@
 import * as state from './js/state.js';
 import * as api from './js/api.js';
 import * as ui from './ui.js';
+import logger from './src/utils/logger.js';
 
 // ====================================
 // 🚀 MAIN INITIALIZATION IMPORT
