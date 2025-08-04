@@ -6,7 +6,7 @@
 // ====================================
 
 import logger from '../../utils/logger.js';
-import { loadSongs } from '../../api/index.js';
+import { loadAllSongsFromFirestore as loadSongs } from '../../api/index.js';
 import { displaySongDetails } from '../../../ui.js';
 
 // Категории песен
