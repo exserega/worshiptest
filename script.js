@@ -230,60 +230,16 @@ window.currentCreatedSetlistId = null;
 window.currentCreatedSetlistName = '';
 window.addedSongsToCurrentSetlist = new Map(); // Map для хранения песен с их тональностями
 
-// Функция для управления видимостью элементов управления
+/** Показать/скрыть элементы управления песней */
 window.toggleSongControls = function(show) {
-    const elementsToToggle = [
-        '.control-group',           // Группа с тональностью и кнопками
-        '.song-legend-action',      // Кнопки добавления в списки
-        '.metronome-control-bar',   // Панель метронома
-        '#edit-song-button',        // Кнопка редактирования
-        '#copy-text-button'         // Кнопка копирования
-    ];
+    logger.log(`🎛️ [Legacy] toggleSongControls called with show=${show}`);
     
-    elementsToToggle.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(element => {
-            if (show) {
-                // Для control-group нужно установить flex, для остальных - убрать display
-                if (selector === '.control-group') {
-                    element.style.display = 'flex';
-                } else {
-                    element.style.display = '';
-                }
-                // Убираем атрибут style чтобы применились оригинальные CSS стили
-                if (element.style.length === 0) {
-                    element.removeAttribute('style');
-                }
-            } else {
-                element.style.display = 'none';
-            }
-        });
-    });
-    
-    // Также скрываем/показываем заголовок песни
-    const songTitle = document.querySelector('.song-title-text');
-    if (songTitle && !show) {
-        songTitle.textContent = 'Выберите песню';
-    }
-    
-    // Обновляем стиль fieldset с контентом песни
-    const songContent = document.getElementById('song-content');
-    if (songContent) {
-        if (!show) {
-            songContent.style.minHeight = '200px';
-            songContent.style.display = 'flex';
-            songContent.style.alignItems = 'center';
-            songContent.style.justifyContent = 'center';
-            songContent.style.color = 'var(--label-color)';
-            songContent.style.fontSize = '1.1rem';
-        } else {
-            songContent.style.minHeight = '';
-            songContent.style.display = '';
-            songContent.style.alignItems = '';
-            songContent.style.justifyContent = '';
-            songContent.style.color = '';
-            songContent.style.fontSize = '';
-        }
+    if (show) {
+        // Добавляем атрибут для показа элементов
+        document.body.setAttribute('data-song-loaded', 'true');
+    } else {
+        // Удаляем атрибут для скрытия элементов
+        document.body.removeAttribute('data-song-loaded');
     }
 };
 

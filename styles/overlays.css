@@ -233,16 +233,35 @@
     border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
+[data-theme="dark"] .songs-overlay-title {
+    color: #e5e7eb;
+}
+
+[data-theme="dark"] .songs-overlay-close {
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .songs-overlay-close:hover {
+    color: #e5e7eb;
+}
+
 [data-theme="dark"] .songs-category-filters {
     border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="dark"] .category-chip {
     background: #1f2937;
+    color: #e5e7eb;
 }
 
 [data-theme="dark"] .category-chip:hover {
     background: #374151;
+    color: #f3f4f6;
+}
+
+[data-theme="dark"] .category-chip.active {
+    background: var(--accent-color);
+    color: #111827;
 }
 
 [data-theme="dark"] .song-item {
@@ -251,6 +270,22 @@
 
 [data-theme="dark"] .song-item:hover {
     background: #374151;
+}
+
+[data-theme="dark"] .song-name {
+    color: #e5e7eb;
+}
+
+[data-theme="dark"] .song-key {
+    color: var(--accent-color);
+}
+
+[data-theme="dark"] .song-bpm {
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .no-songs-message {
+    color: #9ca3af;
 }
 
 /* Светлая тема - специфичные цвета */
@@ -262,16 +297,35 @@
     border-bottom-color: rgba(0, 0, 0, 0.1);
 }
 
+[data-theme="light"] .songs-overlay-title {
+    color: #111827;
+}
+
+[data-theme="light"] .songs-overlay-close {
+    color: #6b7280;
+}
+
+[data-theme="light"] .songs-overlay-close:hover {
+    color: #111827;
+}
+
 [data-theme="light"] .songs-category-filters {
     border-bottom-color: rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="light"] .category-chip {
     background: #f3f4f6;
+    color: #374151;
 }
 
 [data-theme="light"] .category-chip:hover {
     background: #e5e7eb;
+    color: #111827;
+}
+
+[data-theme="light"] .category-chip.active {
+    background: var(--accent-color);
+    color: #ffffff;
 }
 
 [data-theme="light"] .song-item {
@@ -280,4 +334,20 @@
 
 [data-theme="light"] .song-item:hover {
     background: #e5e7eb;
+}
+
+[data-theme="light"] .song-name {
+    color: #111827;
+}
+
+[data-theme="light"] .song-key {
+    color: var(--accent-color);
+}
+
+[data-theme="light"] .song-bpm {
+    color: #6b7280;
+}
+
+[data-theme="light"] .no-songs-message {
+    color: #6b7280;
 }

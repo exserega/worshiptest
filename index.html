@@ -30,21 +30,23 @@
     /* Критические стили для предотвращения мигания светлой темы */
     html[data-theme-loading="dark"] {
       background-color: #111827;
-    }
-    html[data-theme-loading="dark"] body {
-      background-color: #111827;
       color: #e5e7eb;
     }
     
     /* Критические стили для предотвращения мерцания UI элементов */
     /* Скрываем инструменты управления песней до выбора песни */
-    .control-group,
-    .song-legend-action,
-    .metronome-control-bar,
-    #edit-song-button,
-    #copy-text-button,
-    #holychords-button {
-      display: none !important; /* !important чтобы гарантированно перезаписать другие стили */
+    body:not([data-song-loaded]) .control-group,
+    body:not([data-song-loaded]) .song-legend-action,
+    body:not([data-song-loaded]) .metronome-control-bar,
+    body:not([data-song-loaded]) #edit-song-button,
+    body:not([data-song-loaded]) #copy-text-button,
+    body:not([data-song-loaded]) #holychords-button {
+      display: none !important;
+    }
+    
+    /* Показываем control-group как flex когда песня загружена */
+    body[data-song-loaded] .control-group {
+      display: flex !important;
     }
   </style>
 </head>
