@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v70'; // v70, Исправлены ошибки с отсутствующими селекторами
+const CACHE_NAME = 'agape-worship-cache-v71'; // v71, Исправлен импорт logger в ui.js
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
