@@ -98,65 +98,22 @@
 
 <main class="container">
     <section class="controls">
+        <!-- Поиск с иконкой лупы -->
         <fieldset class="search-group">
             <legend>Поиск</legend>
-            <input type="text" id="search-input" placeholder="Введите название песни...">
+            <div class="search-input-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Поиск песен...">
+            </div>
             <div id="search-results"></div>
         </fieldset>
-        <div class="select-filters-container">
-            <div class="filter-group">
-                <select id="sheet-select">
-                    <option value="">-- Выберите категорию --</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <select id="song-select">
-                    <option value="">-- Песня --</option>
-                </select>
-            </div>
-        </div>
-        <div class="control-group">
-            <fieldset class="key-group">
-                <legend>Тональность</legend>
-                <select id="key-select">
-                    <option value="C">C</option>
-                    <option value="C#">C#</option>
-                    <option value="Db">Db</option>
-                    <option value="D">D</option>
-                    <option value="D#">D#</option>
-                    <option value="Eb">Eb</option>
-                    <option value="E">E</option>
-                    <option value="F">F</option>
-                    <option value="F#">F#</option>
-                    <option value="Gb">Gb</option>
-                    <option value="G">G</option>
-                    <option value="G#">G#</option>
-                    <option value="Ab">Ab</option>
-                    <option value="A">A</option>
-                    <option value="A#">A#</option>
-                    <option value="Bb">Bb</option>
-                    <option value="H">H</option>
-                    <option value="B">B</option>
-                </select>
-            </fieldset>
-            <div class="function-buttons-group">
-                <button id="toggle-chords-button" class="control-group-button icon-button simple" title="Скрыть аккорды">
-                    <i class="fas fa-guitar"></i>
-                    <span class="button-text">Аккорды</span>
-                </button>
-                <button id="chords-only-button" class="control-group-button icon-button simple" title="Показать только аккорды">
-                    <span class="text-icon">T</span>
-                    <span class="button-text">Только аккорды</span>
-                </button>
-                <button id="split-text-button" aria-label="Разделить текст" class="control-group-button icon-button simple">
-                    <i class="fas fa-columns"></i>
-                    <span class="button-text">Разделить</span>
-                </button>
-            </div>
-            <div class="font-size-controls">
-                <button id="zoom-out" class="icon-button simple" title="Уменьшить шрифт"><i class="fas fa-search-minus"></i></button>
-                <button id="zoom-in" class="icon-button simple" title="Увеличить шрифт"><i class="fas fa-search-plus"></i></button>
-            </div>
+        
+        <!-- Кнопка для открытия оверлея с песнями -->
+        <div class="songs-button-container">
+            <button id="open-songs-overlay" class="songs-overlay-button">
+                <i class="fas fa-music"></i>
+                <span>Все песни</span>
+            </button>
         </div>
     </section>
 

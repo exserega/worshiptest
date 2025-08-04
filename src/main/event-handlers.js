@@ -63,6 +63,26 @@ export function setupEventListeners() {
     // Обработчики песен
     setupSongEventHandlers();
     
+    // ====================================
+    // ОБРАБОТЧИК КНОПКИ "ВСЕ ПЕСНИ"
+    // ====================================
+    
+    const openSongsOverlayBtn = document.getElementById('open-songs-overlay');
+    if (openSongsOverlayBtn) {
+        openSongsOverlayBtn.addEventListener('click', async () => {
+            console.log('🎵 [EventHandlers] Open songs overlay button clicked');
+            try {
+                const { openSongsOverlay } = await import('../modules/songs/songsOverlay.js');
+                openSongsOverlay();
+            } catch (error) {
+                console.error('Error opening songs overlay:', error);
+            }
+        });
+        console.log('🎵 [EventHandlers] Songs overlay button attached');
+    } else {
+        console.error('🎵 [EventHandlers] open-songs-overlay button not found!');
+    }
+
     console.log('🎮 [EventHandlers] setupEventListeners COMPLETED');
 }
 
