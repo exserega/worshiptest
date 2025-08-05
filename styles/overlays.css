@@ -71,22 +71,20 @@
     justify-content: center;
     background: transparent;
     border: none;
-    color: var(--text-primary); /* Используем основной цвет текста вместо secondary */
+    color: var(--text-primary);
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s ease;
-    font-size: 18px; /* Нормальный размер крестика */
     padding: 0;
+    font-size: 24px;
     line-height: 1;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.songs-overlay-close i {
-    font-weight: normal; /* Нормальная толщина */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+.songs-overlay-close .close-icon {
+    display: block;
+    font-weight: 200;
+    transform: scale(1.2);
 }
 
 .songs-overlay-close:hover {
@@ -346,8 +344,8 @@
     color: #e5e7eb !important; /* Светлый крестик на темном фоне */
 }
 
-[data-theme="dark"] .songs-overlay-close i {
-    color: #e5e7eb !important; /* Явно задаем цвет для иконки */
+[data-theme="dark"] .songs-overlay-close .close-icon {
+    color: #e5e7eb !important;
 }
 
 [data-theme="dark"] .songs-overlay-close:hover {
@@ -355,7 +353,7 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
-[data-theme="dark"] .songs-overlay-close:hover i {
+[data-theme="dark"] .songs-overlay-close:hover .close-icon {
     color: #ffffff !important;
 }
 
@@ -433,8 +431,8 @@
     color: #374151 !important; /* Темный крестик на светлом фоне */
 }
 
-[data-theme="light"] .songs-overlay-close i {
-    color: #374151 !important; /* Явно задаем цвет для иконки */
+[data-theme="light"] .songs-overlay-close .close-icon {
+    color: #374151 !important;
 }
 
 [data-theme="light"] .songs-overlay-close:hover {
@@ -442,7 +440,7 @@
     background: rgba(0, 0, 0, 0.05);
 }
 
-[data-theme="light"] .songs-overlay-close:hover i {
+[data-theme="light"] .songs-overlay-close:hover .close-icon {
     color: #111827 !important;
 }
 
