@@ -796,33 +796,27 @@ window.showNotification = function(message, type = 'info') {
 
 // ФУНКЦИЯ ДОБАВЛЕНИЯ ПЕСНИ В СЕТ-ЛИСТ
 window.handleAddSongToSetlist = async function() {
-    console.log('📋 [EntryPoint] handleAddSongToSetlist called');
+    logger.log('📋 [EntryPoint] handleAddSongToSetlist called');
     
-    // Получаем ID текущей выбранной песни
-    const songId = ui.songSelect?.value;
+    // Получаем текущую песню из глобального состояния
+    const currentSong = window.currentSong;
     
-    if (!songId) {
+    if (!currentSong || !currentSong.id) {
         window.showNotification('❌ Сначала выберите песню', 'error');
         return;
     }
     
-    // Находим данные песни
-    const currentSong = window.state?.allSongs?.find(s => s.id === songId);
-    
-    if (!currentSong) {
-        window.showNotification('❌ Песня не найдена', 'error');
-        return;
-    }
+    const songId = currentSong.id;
     
     // Получаем выбранную тональность
     const keySelect = ui.keySelect;
-    console.log('📋 [EntryPoint] keySelect element:', keySelect);
-    console.log('📋 [EntryPoint] keySelect value:', keySelect?.value);
-    console.log('📋 [EntryPoint] song keys:', currentSong.keys);
+    logger.log('📋 [EntryPoint] keySelect element:', keySelect);
+    logger.log('📋 [EntryPoint] keySelect value:', keySelect?.value);
+    logger.log('📋 [EntryPoint] song keys:', currentSong.keys);
     
     const selectedKey = keySelect?.value || currentSong.keys?.[0] || 'C';
     
-    console.log('📋 [EntryPoint] Adding song to setlist:', currentSong.name, 'in key:', selectedKey);
+    logger.log('📋 [EntryPoint] Adding song to setlist:', currentSong.name, 'in key:', selectedKey);
     
     // Открываем overlay выбора сет-листа с тональностью
     if (typeof window.openSetlistSelector === 'function') {
