@@ -137,8 +137,10 @@ class RepertoireOverlay {
         //     logger.warn('⚠️ Ошибка проверки документа пользователя:', error);
         // }
         
-        const repertoireRef = collection(db, 'users', user.uid, 'repertoire');
-        const q = query(repertoireRef, orderBy('name'));
+        // В Firebase v8 нужно использовать правильный путь к подколлекции
+        const userDocRef = doc(db, 'users', user.uid);
+        const repertoireRef = userDocRef.collection('repertoire');
+        const q = repertoireRef.orderBy('name');
         
         // Подписываемся на изменения
         this.unsubscribe = onSnapshot(q, (snapshot) => {

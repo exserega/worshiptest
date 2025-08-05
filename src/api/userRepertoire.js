@@ -31,8 +31,10 @@ export async function addToUserRepertoire(song, preferredKey) {
             throw new Error('Пользователь не авторизован');
         }
         
-        const repertoireRef = collection(db, 'users', user.uid, 'repertoire');
-        const songDoc = doc(repertoireRef, song.id);
+        // В Firebase v8 нужно сначала получить документ пользователя, потом его коллекцию
+        const userDocRef = doc(db, 'users', user.uid);
+        const repertoireRef = userDocRef.collection('repertoire');
+        const songDoc = repertoireRef.doc(song.id);
         
         // Проверяем, есть ли уже эта песня
         const existingDoc = await getDoc(songDoc);
@@ -84,7 +86,9 @@ export async function removeFromUserRepertoire(songId) {
             throw new Error('Пользователь не авторизован');
         }
         
-        const songDoc = doc(db, 'users', user.uid, 'repertoire', songId);
+        // В Firebase v8 правильный путь к документу в подколлекции
+        const userDocRef = doc(db, 'users', user.uid);
+        const songDoc = userDocRef.collection('repertoire').doc(songId);
         await deleteDoc(songDoc);
         
         logger.log(`✅ Песня удалена из репертуара`);
@@ -106,7 +110,9 @@ export async function checkSongInUserRepertoire(songId) {
             return null;
         }
         
-        const songDoc = doc(db, 'users', user.uid, 'repertoire', songId);
+        // В Firebase v8 правильный путь к документу в подколлекции
+        const userDocRef = doc(db, 'users', user.uid);
+        const songDoc = userDocRef.collection('repertoire').doc(songId);
         const docSnap = await getDoc(songDoc);
         
         if (docSnap.exists) {
@@ -131,8 +137,10 @@ export async function getUserRepertoire() {
             return [];
         }
         
-        const repertoireRef = collection(db, 'users', user.uid, 'repertoire');
-        const snapshot = await getDocs(repertoireRef);
+        // В Firebase v8 правильный путь к подколлекции
+        const userDocRef = doc(db, 'users', user.uid);
+        const repertoireRef = userDocRef.collection('repertoire');
+        const snapshot = await repertoireRef.get();
         
         const songs = [];
         snapshot.forEach(doc => {
