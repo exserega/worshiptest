@@ -30,6 +30,7 @@ import {
     deleteField
 } from '../utils/firebase-v8-adapter.js';
 
+import logger from '../utils/logger.js';
 import * as state from '../../js/state.js';
 import { 
     isUserPending, 
@@ -554,12 +555,12 @@ export async function loadVocalists() {
 }
 
 /**
- * Загружает репертуар вокалиста с использованием callback для обновления UI
+ * Загружает репертуар вокалиста (подписка на изменения)
  * @param {string} vocalistId - ID вокалиста
- * @param {Function} onRepertoireUpdate - Callback для обновления UI
+ * @param {Function} onRepertoireUpdate - Коллбэк для обновления репертуара
  */
 export function loadRepertoire(vocalistId, onRepertoireUpdate) {
-    console.log(`📊 Загрузка репертуара для вокалиста: ${vocalistId}`);
+    logger.log(`📊 Загрузка репертуара для вокалиста: ${vocalistId}`);
     
     if (state.currentRepertoireUnsubscribe) {
         state.currentRepertoireUnsubscribe();
@@ -570,23 +571,58 @@ export function loadRepertoire(vocalistId, onRepertoireUpdate) {
         return;
     }
     
+    // Загружаем категории репертуара
     const repertoireColRef = collection(db, "vocalists", vocalistId, "repertoire");
-    const q = query(repertoireColRef);
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-        if (vocalistId !== state.currentVocalistId) return;
-        const songsData = snapshot.docs.map(doc => ({ 
-            ...doc.data(), 
-            repertoireDocId: doc.id 
-        }));
-        console.log(`✅ Загружено ${songsData.length} песен в репертуаре`);
-        onRepertoireUpdate({ data: songsData, error: null });
-    }, (error) => {
-        console.error(`!!! ОШИБКА Firestore onSnapshot для репертуара ${vocalistId}:`, error);
+    
+    getDocs(repertoireColRef).then(async (categoriesSnapshot) => {
+        const allSongs = [];
+        
+        // Для каждой категории загружаем песни
+        for (const categoryDoc of categoriesSnapshot.docs) {
+            const categoryName = categoryDoc.id;
+            const songsRef = collection(db, "vocalists", vocalistId, "repertoire", categoryName, "songs");
+            
+            try {
+                const songsSnapshot = await getDocs(songsRef);
+                songsSnapshot.docs.forEach(songDoc => {
+                    allSongs.push({
+                        ...songDoc.data(),
+                        category: categoryName,
+                        repertoireDocId: songDoc.id
+                    });
+                });
+            } catch (error) {
+                logger.error(`Ошибка загрузки песен из категории ${categoryName}:`, error);
+            }
+        }
+        
+        logger.log(`✅ Загружено ${allSongs.length} песен в репертуаре`);
+        onRepertoireUpdate({ data: allSongs, error: null });
+        
+        // Подписываемся на изменения в каждой категории
+        const unsubscribes = [];
+        
+        for (const categoryDoc of categoriesSnapshot.docs) {
+            const categoryName = categoryDoc.id;
+            const songsRef = collection(db, "vocalists", vocalistId, "repertoire", categoryName, "songs");
+            
+            const unsubscribe = onSnapshot(songsRef, (snapshot) => {
+                // При изменении перезагружаем весь репертуар
+                loadRepertoire(vocalistId, onRepertoireUpdate);
+            });
+            
+            unsubscribes.push(unsubscribe);
+        }
+        
+        // Сохраняем функцию отписки
+        state.setCurrentRepertoireUnsubscribe(() => {
+            unsubscribes.forEach(unsub => unsub());
+        });
+        
+    }).catch(error => {
+        logger.error(`!!! ОШИБКА загрузки репертуара для ${vocalistId}:`, error);
         onRepertoireUpdate({ data: [], error });
     });
-    
-    state.setCurrentRepertoireUnsubscribe(unsubscribe);
 }
 
 /**

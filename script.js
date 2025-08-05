@@ -501,15 +501,16 @@ window.handleRemoveSongFromSetlist = async function(songId, songName) {
 };
 
 window.handleRepertoireUpdate = function(data) {
-    console.log('🎭 [Legacy] handleRepertoireUpdate called:', data);
+    logger.log('🎭 [Legacy] handleRepertoireUpdate called:', data);
     
     if (data.error) {
-        console.error('🎭 [Legacy] Repertoire error:', data.error);
+        logger.error('🎭 [Legacy] Repertoire error:', data.error);
         if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
             window.state.setCurrentRepertoireSongsData([]);
         }
     } else {
-        console.log('🎭 [Legacy] Repertoire data loaded:', data.data?.length || 0);
+        logger.log('🎭 [Legacy] Repertoire data loaded:', data.data?.length || 0);
+        logger.log('🎭 [Legacy] Repertoire songs:', data.data);
         if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
             window.state.setCurrentRepertoireSongsData(data.data || []);
         }
