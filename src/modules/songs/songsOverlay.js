@@ -9,13 +9,18 @@ import logger from '../../utils/logger.js';
 import { displaySongDetails } from '../../../ui.js';
 import * as state from '../../../js/state.js';
 
-// Категории песен
-const CATEGORIES = {
-    'all': 'Все песни',
-    'fast-vertical': 'Быстрые вертикаль',
-    'fast-horizontal': 'Быстрые горизонталь', 
-    'slow-vertical': 'Поклонение вертикаль',
-    'slow-horizontal': 'Поклонение горизонталь'
+// Основные категории (первый уровень)
+const MAIN_CATEGORIES = {
+    'all': 'Все',
+    'fast': 'Быстрые',
+    'worship': 'Поклонение'
+};
+
+// Подкатегории (второй уровень)
+const SUB_CATEGORIES = {
+    'all': 'Все',
+    'vertical': 'Вертикаль',
+    'horizontal': 'Горизонталь'
 };
 
 class SongsOverlay {
@@ -23,7 +28,8 @@ class SongsOverlay {
         this.overlay = null;
         this.songs = [];
         this.filteredSongs = [];
-        this.selectedCategory = 'all';
+        this.selectedMainCategory = 'all';
+        this.selectedSubCategory = 'all';
         this.isOpen = false;
         
         this.init();
@@ -55,13 +61,26 @@ class SongsOverlay {
                     </div>
                     
                     <!-- Фильтры категорий -->
-                    <div class="songs-category-filters">
-                        ${Object.entries(CATEGORIES).map(([key, label]) => `
-                            <button class="category-chip ${key === 'all' ? 'active' : ''}" 
-                                    data-category="${key}">
-                                ${label}
-                            </button>
-                        `).join('')}
+                    <div class="songs-filters-container">
+                        <!-- Основные категории -->
+                        <div class="songs-category-filters main-filters">
+                            ${Object.entries(MAIN_CATEGORIES).map(([key, label]) => `
+                                <button class="category-chip main-category ${key === 'all' ? 'active' : ''}" 
+                                        data-main-category="${key}">
+                                    ${label}
+                                </button>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- Подкатегории (скрыты изначально) -->
+                        <div class="songs-category-filters sub-filters" style="display: none;">
+                            ${Object.entries(SUB_CATEGORIES).map(([key, label]) => `
+                                <button class="category-chip sub-category ${key === 'all' ? 'active' : ''}" 
+                                        data-sub-category="${key}">
+                                    ${label}
+                                </button>
+                            `).join('')}
+                        </div>
                     </div>
                     
                     <!-- Список песен -->
@@ -89,12 +108,21 @@ class SongsOverlay {
         closeBtn.addEventListener('click', () => this.close());
         backdrop.addEventListener('click', () => this.close());
         
-        // Фильтры категорий
-        const categoryChips = this.overlay.querySelectorAll('.category-chip');
-        categoryChips.forEach(chip => {
+        // Основные категории
+        const mainCategoryChips = this.overlay.querySelectorAll('.main-category');
+        mainCategoryChips.forEach(chip => {
             chip.addEventListener('click', (e) => {
-                const category = e.target.dataset.category;
-                this.selectCategory(category);
+                const category = e.target.dataset.mainCategory;
+                this.selectMainCategory(category);
+            });
+        });
+        
+        // Подкатегории
+        const subCategoryChips = this.overlay.querySelectorAll('.sub-category');
+        subCategoryChips.forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                const subCategory = e.target.dataset.subCategory;
+                this.selectSubCategory(subCategory);
             });
         });
         
@@ -165,45 +193,87 @@ class SongsOverlay {
     }
     
     /**
-     * Выбор категории
+     * Выбор основной категории
      */
-    selectCategory(category) {
-        this.selectedCategory = category;
+    selectMainCategory(category) {
+        this.selectedMainCategory = category;
+        this.selectedSubCategory = 'all'; // Сбрасываем подкатегорию
         
         // Обновляем активную кнопку
-        const chips = this.overlay.querySelectorAll('.category-chip');
+        const chips = this.overlay.querySelectorAll('.main-category');
         chips.forEach(chip => {
-            chip.classList.toggle('active', chip.dataset.category === category);
+            chip.classList.toggle('active', chip.dataset.mainCategory === category);
         });
         
-        // Фильтруем песни
-        if (category === 'all') {
+        // Показываем/скрываем подкатегории
+        const subFilters = this.overlay.querySelector('.sub-filters');
+        if (category === 'fast' || category === 'worship') {
+            subFilters.style.display = 'flex';
+        } else {
+            subFilters.style.display = 'none';
+        }
+        
+        // Сбрасываем активную подкатегорию на "Все"
+        const subChips = this.overlay.querySelectorAll('.sub-category');
+        subChips.forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.subCategory === 'all');
+        });
+        
+        this.filterSongs();
+    }
+    
+    /**
+     * Выбор подкатегории
+     */
+    selectSubCategory(subCategory) {
+        this.selectedSubCategory = subCategory;
+        
+        // Обновляем активную кнопку
+        const chips = this.overlay.querySelectorAll('.sub-category');
+        chips.forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.subCategory === subCategory);
+        });
+        
+        this.filterSongs();
+    }
+    
+    /**
+     * Фильтрация песен по выбранным категориям
+     */
+    filterSongs() {
+        logger.log(`🎵 Filtering: main=${this.selectedMainCategory}, sub=${this.selectedSubCategory}`);
+        
+        if (this.selectedMainCategory === 'all') {
             this.filteredSongs = [...this.songs];
         } else {
-            // Маппинг категорий на значения из Firebase (поле sheet)
+            // Маппинг категорий
             const categoryMap = {
-                'fast-vertical': 'Быстрые (вертикаль)',
-                'fast-horizontal': 'Быстрые (горизонталь)',
-                'slow-vertical': 'Поклонение (вертикаль)',
-                'slow-horizontal': 'Поклонение (горизонталь)'
+                'fast': {
+                    'all': ['Быстрые (вертикаль)', 'Быстрые (горизонталь)'],
+                    'vertical': ['Быстрые (вертикаль)'],
+                    'horizontal': ['Быстрые (горизонталь)']
+                },
+                'worship': {
+                    'all': ['Поклонение (вертикаль)', 'Поклонение (горизонталь)'],
+                    'vertical': ['Поклонение (вертикаль)'],
+                    'horizontal': ['Поклонение (горизонталь)']
+                }
             };
             
-            const firebaseCategory = categoryMap[category];
-            logger.log(`🎵 Filtering by category: ${category} -> ${firebaseCategory}`);
+            const targetSheets = categoryMap[this.selectedMainCategory]?.[this.selectedSubCategory] || [];
+            logger.log(`🎵 Target sheets: ${targetSheets.join(', ')}`);
             
             this.filteredSongs = this.songs.filter(song => {
-                const matches = song.sheet === firebaseCategory;
+                const matches = targetSheets.includes(song.sheet);
                 if (matches) {
-                    logger.log(`✅ Song "${song.name}" matches category ${firebaseCategory}`);
+                    logger.log(`✅ Song "${song.name}" matches filter`);
                 }
                 return matches;
             });
-            
-            logger.log(`🎵 Filtered songs count: ${this.filteredSongs.length}`);
         }
         
+        logger.log(`🎵 Filtered songs count: ${this.filteredSongs.length}`);
         this.renderSongs();
-        logger.log(`🎵 Selected category: ${category}, songs: ${this.filteredSongs.length}`);
     }
     
     /**
