@@ -75,7 +75,18 @@
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s ease;
-    font-size: 20px; /* Увеличиваем размер крестика */
+    font-size: 16px; /* Оптимальный размер крестика */
+    padding: 0;
+    line-height: 1;
+}
+
+.songs-overlay-close i {
+    font-weight: 300; /* Делаем крестик тоньше */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .songs-overlay-close:hover {
@@ -337,6 +348,7 @@
 
 [data-theme="dark"] .songs-overlay-close i {
     color: #e5e7eb !important; /* Явно задаем цвет для иконки */
+    font-weight: 300 !important; /* Сохраняем тонкое начертание */
 }
 
 [data-theme="dark"] .songs-overlay-close:hover {
@@ -424,6 +436,7 @@
 
 [data-theme="light"] .songs-overlay-close i {
     color: #374151 !important; /* Явно задаем цвет для иконки */
+    font-weight: 300 !important; /* Сохраняем тонкое начертание */
 }
 
 [data-theme="light"] .songs-overlay-close:hover {
