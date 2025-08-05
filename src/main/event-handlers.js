@@ -1251,6 +1251,20 @@ function setupSongEventHandlers() {
                 return;
             }
             
+            // Проверяем доступ к текущему филиалу
+            try {
+                const { canEditInCurrentBranch, showOtherBranchMessage } = await import('../modules/branches/branchSelector.js');
+                const canEdit = await canEditInCurrentBranch();
+                
+                if (!canEdit) {
+                    console.log('⚠️ [EventHandlers] User cannot edit in current branch');
+                    await showOtherBranchMessage('Добавление песен в сет-листы');
+                    return;
+                }
+            } catch (error) {
+                console.error('❌ [EventHandlers] Error checking branch access:', error);
+            }
+            
             if (typeof window.handleAddSongToSetlist === 'function') {
                 await window.handleAddSongToSetlist();
             } else {

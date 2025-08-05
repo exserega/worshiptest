@@ -96,6 +96,32 @@ export const editSetlistBtn = document.getElementById('edit-setlist-btn');
 export const deleteSetlistButton = document.getElementById('delete-setlist-button');
 export const songsCount = document.getElementById('songs-count');
 export const currentSetlistSongsContainer = document.getElementById('current-setlist-songs-container');
+
+// Слушаем событие изменения филиала
+window.addEventListener('branchChanged', () => {
+    // Обновляем состояние кнопки сет-лист при изменении филиала
+    if (window.currentSong && addToSetlistButton && !hasLimitedAccess()) {
+        import('../src/modules/branches/branchSelector.js').then(({ canEditInCurrentBranch }) => {
+            return canEditInCurrentBranch();
+        }).then(canEdit => {
+            if (!canEdit) {
+                addToSetlistButton.title = 'Недоступно. Вы не состоите в этом филиале';
+                addToSetlistButton.style.opacity = '0.5';
+                addToSetlistButton.style.cursor = 'not-allowed';
+                addToSetlistButton.classList.add('branch-disabled');
+            } else {
+                addToSetlistButton.disabled = false;
+                addToSetlistButton.title = 'Добавить в сет-лист';
+                addToSetlistButton.style.opacity = '1';
+                addToSetlistButton.style.cursor = 'pointer';
+                addToSetlistButton.classList.remove('pending-disabled');
+                addToSetlistButton.classList.remove('branch-disabled');
+            }
+        }).catch(error => {
+            logger.error('Error checking branch access on branch change:', error);
+        });
+    }
+});
 export const selectedSetlistControl = document.getElementById('selected-setlist-control');
 export const songsCountText = document.getElementById('songs-count-text');
 
@@ -391,7 +417,7 @@ export function displaySongDetails(songData, keyToSelect) {
 
     favoriteButton.disabled = false;
     
-    // Проверяем статус пользователя для кнопки добавления в сет-лист
+    // Проверяем статус пользователя и доступ к филиалу для кнопки добавления в сет-лист
     if (hasLimitedAccess()) {
         // Не используем disabled, чтобы обработчик клика работал
         if (isUserGuest()) {
@@ -403,11 +429,33 @@ export function displaySongDetails(songData, keyToSelect) {
         addToSetlistButton.style.cursor = 'not-allowed';
         addToSetlistButton.classList.add('pending-disabled');
     } else {
-        addToSetlistButton.disabled = false;
-        addToSetlistButton.title = 'Добавить в сет-лист';
-        addToSetlistButton.style.opacity = '1';
-        addToSetlistButton.style.cursor = 'pointer';
-        addToSetlistButton.classList.remove('pending-disabled');
+        // Проверяем доступ к текущему филиалу
+        import('../src/modules/branches/branchSelector.js').then(({ canEditInCurrentBranch }) => {
+            return canEditInCurrentBranch();
+        }).then(canEdit => {
+            if (!canEdit) {
+                addToSetlistButton.title = 'Недоступно. Вы не состоите в этом филиале';
+                addToSetlistButton.style.opacity = '0.5';
+                addToSetlistButton.style.cursor = 'not-allowed';
+                addToSetlistButton.classList.add('branch-disabled');
+            } else {
+                addToSetlistButton.disabled = false;
+                addToSetlistButton.title = 'Добавить в сет-лист';
+                addToSetlistButton.style.opacity = '1';
+                addToSetlistButton.style.cursor = 'pointer';
+                addToSetlistButton.classList.remove('pending-disabled');
+                addToSetlistButton.classList.remove('branch-disabled');
+            }
+        }).catch(error => {
+            logger.error('Error checking branch access:', error);
+            // В случае ошибки разрешаем доступ
+            addToSetlistButton.disabled = false;
+            addToSetlistButton.title = 'Добавить в сет-лист';
+            addToSetlistButton.style.opacity = '1';
+            addToSetlistButton.style.cursor = 'pointer';
+            addToSetlistButton.classList.remove('pending-disabled');
+            addToSetlistButton.classList.remove('branch-disabled');
+        });
     }
     
     repertoireButton.disabled = false;
