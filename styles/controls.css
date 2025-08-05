@@ -47,9 +47,9 @@
     align-items: center;
     justify-content: center;
     padding: 10px 20px;
-    background: linear-gradient(145deg, #0f172a, #111827) !important; /* Градиент для объема */
-    color: #e5e7eb !important; /* Светлый текст */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, #1ab8cf, #22d3ee) !important; /* Градиент на основе primary-color */
+    color: #111827 !important; /* Темный текст на светлом фоне */
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     font-size: 14px;
     font-weight: 500;
@@ -57,9 +57,9 @@
     transition: all 0.2s ease;
     font-family: 'Montserrat', sans-serif;
     box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.1), /* Блик сверху */
-        inset 0 -1px 0 rgba(0, 0, 0, 0.3), /* Тень снизу */
-        0 2px 4px rgba(0, 0, 0, 0.2) !important; /* Внешняя тень */
+        inset 0 1px 0 rgba(255, 255, 255, 0.3), /* Блик сверху */
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2), /* Тень снизу */
+        0 2px 4px rgba(0, 0, 0, 0.15) !important; /* Внешняя тень */
     white-space: nowrap;
     position: relative;
     overflow: hidden;
@@ -74,30 +74,30 @@
     right: 0;
     height: 50%;
     background: linear-gradient(to bottom, 
-        rgba(255, 255, 255, 0.05), 
+        rgba(255, 255, 255, 0.2), 
         transparent
     );
     pointer-events: none;
 }
 
 .songs-overlay-button:hover:not(:disabled) {
-    background: linear-gradient(145deg, #1a202c, #1f2937) !important;
-    color: #e5e7eb !important;
-    border-color: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(145deg, #22d3ee, #67e8f9) !important;
+    color: #111827 !important;
+    border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-        0 3px 6px rgba(0, 0, 0, 0.3) !important;
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+        0 3px 6px rgba(0, 0, 0, 0.2) !important;
 }
 
 .songs-overlay-button:active:not(:disabled) {
-    background: linear-gradient(145deg, #111827, #0a0f1e) !important;
-    color: #e5e7eb !important;
-    border-color: rgba(255, 255, 255, 0.05);
+    background: linear-gradient(145deg, #18a8bd, #1ab8cf) !important;
+    color: #111827 !important;
+    border-color: rgba(255, 255, 255, 0.1);
     transform: translateY(1px);
     box-shadow: 
-        inset 0 2px 4px rgba(0, 0, 0, 0.3),
-        0 1px 2px rgba(0, 0, 0, 0.2) !important;
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
+        0 1px 2px rgba(0, 0, 0, 0.1) !important;
 }
 
 .songs-overlay-button:focus {
@@ -107,33 +107,33 @@
 
 /* Светлая тема */
 [data-theme="light"] .songs-overlay-button {
-    background: linear-gradient(145deg, #ffffff, #f3f4f6) !important;
-    color: #1e293b !important;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: linear-gradient(145deg, #2b88e6, #339af0) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.15),
         0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
 [data-theme="light"] .songs-overlay-button::before {
     background: linear-gradient(to bottom, 
-        rgba(255, 255, 255, 0.7), 
+        rgba(255, 255, 255, 0.3), 
         transparent
     );
 }
 
 [data-theme="light"] .songs-overlay-button:hover:not(:disabled) {
-    background: linear-gradient(145deg, #f9fafb, #e5e7eb) !important;
-    color: #1e293b !important;
-    border-color: rgba(0, 0, 0, 0.15);
+    background: linear-gradient(145deg, #339af0, #5eb0f5) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 [data-theme="light"] .songs-overlay-button:active:not(:disabled) {
-    background: linear-gradient(145deg, #e5e7eb, #d1d5db) !important;
-    color: #1e293b !important;
+    background: linear-gradient(145deg, #2681de, #2b88e6) !important;
+    color: #ffffff !important;
     box-shadow: 
-        inset 0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
         0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 

@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v107'; // v107, Исправлено открытие песен из сет-листов
+const CACHE_NAME = 'agape-worship-cache-v108'; // v108, Кнопка "Все песни" в цвете primary-color
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
