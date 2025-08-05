@@ -347,8 +347,9 @@ export async function handleAddToRepertoire(song) {
             await removeFromUserRepertoire(song.id);
             showNotification(`🎤 "${song.name}" удалена из репертуара`, 'info');
         } else {
-            // Получаем текущую тональность
-            const currentKey = window.state?.currentKey || song.defaultKey || 'C';
+            // Получаем текущую тональность из селектора
+            const keySelect = document.getElementById('key-select');
+            const currentKey = keySelect?.value || song.defaultKey || song.keys?.[0] || 'C';
             
             // Добавляем песню в репертуар пользователя
             const result = await addToUserRepertoire(song, currentKey);

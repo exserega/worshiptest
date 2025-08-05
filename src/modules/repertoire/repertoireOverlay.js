@@ -129,7 +129,7 @@ class RepertoireOverlay {
         // Проверяем структуру базы данных
         const userDocRef = doc(db, 'users', user.uid);
         const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
+        if (userDoc.exists) {  // В Firebase v8 exists - это свойство, не функция
             logger.log('📊 Документ пользователя найден:', userDoc.data());
         }
         

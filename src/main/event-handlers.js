@@ -1296,18 +1296,27 @@ function setupSongEventHandlers() {
     
     // Кнопка добавления в репертуар
     if (ui.repertoireButton) {
+        console.log('🎤 [EventHandlers] Repertoire (mic) button found, attaching handler');
         ui.repertoireButton.addEventListener('click', async () => {
-            const currentSong = state.currentSong;
+            console.log('🎤 [EventHandlers] Repertoire (mic) button clicked');
+            // Используем window.currentSong, так как там хранится текущая песня
+            const currentSong = window.currentSong;
+            console.log('🎤 [EventHandlers] Current song:', currentSong);
             if (currentSong) {
                 await controller.handleAddToRepertoire(currentSong);
+            } else {
+                console.error('🎤 [EventHandlers] No current song selected');
+                console.log('🎤 [EventHandlers] Checked: window.currentSong, state.currentSong:', state.currentSong);
             }
         });
+    } else {
+        console.error('🎤 [EventHandlers] Repertoire (mic) button NOT FOUND');
     }
     
     // Кнопка избранного
     if (ui.favoriteButton) {
         ui.favoriteButton.addEventListener('click', async () => {
-            const currentSong = state.currentSong;
+            const currentSong = window.currentSong;
             if (currentSong) {
                 controller.handleFavoriteOrRepertoireSelect(currentSong);
             }
