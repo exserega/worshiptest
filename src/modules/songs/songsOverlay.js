@@ -55,7 +55,7 @@ class SongsOverlay {
                     <div class="songs-overlay-header">
                         <h2 class="songs-overlay-title">Выбор песни</h2>
                         <button class="songs-overlay-close" aria-label="Закрыть">
-                            <span class="close-icon">×</span>
+                            <span class="close-icon"></span>
                         </button>
                     </div>
                     
