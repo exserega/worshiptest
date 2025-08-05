@@ -71,7 +71,6 @@
     justify-content: center;
     background: transparent;
     border: none;
-    color: var(--text-primary);
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -93,7 +92,7 @@
     position: absolute;
     width: 20px;
     height: 3px;
-    background-color: currentColor;
+    background-color: #374151; /* Темный цвет по умолчанию для светлой темы */
     top: 50%;
     left: 50%;
     transform-origin: center;
@@ -110,11 +109,6 @@
 
 .songs-overlay-close:hover {
     background: var(--bg-secondary);
-}
-
-.songs-overlay-close:hover .close-icon::before,
-.songs-overlay-close:hover .close-icon::after {
-    background-color: var(--text-primary);
 }
 
 /* Контейнер фильтров */
@@ -365,13 +359,18 @@
     color: #e5e7eb;
 }
 
-[data-theme="dark"] .songs-overlay-close {
-    color: #e5e7eb;
+[data-theme="dark"] .songs-overlay-close .close-icon::before,
+[data-theme="dark"] .songs-overlay-close .close-icon::after {
+    background-color: #e5e7eb; /* Светлый крестик в темной теме */
 }
 
 [data-theme="dark"] .songs-overlay-close:hover {
     background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
+}
+
+[data-theme="dark"] .songs-overlay-close:hover .close-icon::before,
+[data-theme="dark"] .songs-overlay-close:hover .close-icon::after {
+    background-color: #ffffff; /* Белый при наведении */
 }
 
 [data-theme="dark"] .songs-category-filters {
@@ -444,13 +443,13 @@
     color: #111827;
 }
 
-[data-theme="light"] .songs-overlay-close {
-    color: #374151;
-}
-
 [data-theme="light"] .songs-overlay-close:hover {
     background: rgba(0, 0, 0, 0.05);
-    color: #111827;
+}
+
+[data-theme="light"] .songs-overlay-close:hover .close-icon::before,
+[data-theme="light"] .songs-overlay-close:hover .close-icon::after {
+    background-color: #111827; /* Более темный при наведении */
 }
 
 [data-theme="light"] .songs-category-filters {
