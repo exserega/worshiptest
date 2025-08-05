@@ -320,9 +320,7 @@ export function displaySongDetails(songData, keyToSelect) {
         toggleChordsButton.disabled = true;
         chordsOnlyButton.disabled = true;
         songContent.classList.remove('chords-hidden');
-        const copyBtn = songContent.querySelector('#copy-text-button');
         const editBtn = songContent.querySelector('#edit-song-button');
-        if (copyBtn) copyBtn.style.display = 'none';
         if (editBtn) editBtn.style.display = 'none';
         return;
     }
@@ -375,10 +373,7 @@ export function displaySongDetails(songData, keyToSelect) {
     const cleanTitle = title.includes('(') ? title.split('(')[0].trim() : title;
     if (songTitleText) songTitleText.textContent = cleanTitle;
     if (songPre) songPre.innerHTML = finalHighlightedLyrics;
-            if (copyBtn) {
-            copyBtn.style.display = 'block';
-            // Позиционирование больше не нужно - кнопка в legend
-        }
+            // Кнопка копирования теперь управляется через CSS
     if (editBtn) {
         editBtn.style.display = 'block';
         console.log('📝 [UI] Edit button shown for song:', cleanTitle);
