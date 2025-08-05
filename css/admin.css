@@ -42,12 +42,12 @@ button, input, select, textarea,
 }
 
 [data-theme="light"] {
-    --bg-color: #f5f5f5;
+    --bg-color: #ffffff;
     --text-color: #333333;
     --accent-color: #4CAF50;
     --hover-color: rgba(0, 0, 0, 0.05);
     --border-color: rgba(0, 0, 0, 0.1);
-    --card-bg: #ffffff;
+    --card-bg: #f8fafc;
     --input-bg: #f0f0f0;
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

@@ -28,11 +28,11 @@
 /* Светлая тема */
 [data-theme="light"] {
     --bg-color: #ffffff;
-    --bg-secondary: #f5f5f5;
+    --bg-secondary: #f8fafc;
     --text-color: #333333;
     --text-secondary: #666666;
     --text-tertiary: #999999;
-    --border-color: #dddddd;
+    --border-color: #e2e8f0;
     --accent-color: #ff6b6b;
     --accent-hover: #ff5252;
     --accent-danger: #f44336;
@@ -42,7 +42,7 @@
     --accent-primary: #ff6b6b;
     --accent-primary-hover: #ff5252;
     --bg-primary: #ffffff;
-    --bg-tertiary: #e5e5e5;
+    --bg-tertiary: #f1f5f9;
     --text-primary: #333333;
     --hover-bg: rgba(0, 0, 0, 0.05);
 }
