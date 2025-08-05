@@ -4,7 +4,7 @@
  */
 
 import logger from '../../utils/logger.js';
-import { db, collection, getDocs, query, orderBy, onSnapshot } from '../../utils/firebase-v8-adapter.js';
+import { db, collection, getDocs, getDoc, doc, query, orderBy, onSnapshot } from '../../utils/firebase-v8-adapter.js';
 import { auth } from '../../../firebase-init.js';
 import { displaySongDetails } from '../../../ui.js';
 
@@ -126,6 +126,13 @@ class RepertoireOverlay {
         
         logger.log(`🎤 Загружаем репертуар для пользователя: ${user.uid}`);
         
+        // Проверяем структуру базы данных
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+            logger.log('📊 Документ пользователя найден:', userDoc.data());
+        }
+        
         const repertoireRef = collection(db, 'users', user.uid, 'repertoire');
         const q = query(repertoireRef, orderBy('name'));
         
@@ -192,9 +199,6 @@ class RepertoireOverlay {
         } else if (filter === 'Быстрые' || filter === 'Поклонение') {
             // Показываем подфильтры Вертикаль/Горизонталь
             subFilters.innerHTML = `
-                <button class="category-chip sub-category active" data-sub-filter="all">
-                    Все
-                </button>
                 <button class="category-chip sub-category" data-sub-filter="вертикаль">
                     Вертикаль
                 </button>
@@ -256,7 +260,7 @@ class RepertoireOverlay {
             
             // Дополнительная фильтрация по подкатегории
             const activeSubFilter = this.overlay.querySelector('.sub-filters [data-sub-filter].active');
-            if (activeSubFilter && activeSubFilter.dataset.subFilter !== 'all') {
+            if (activeSubFilter) {
                 const subFilter = activeSubFilter.dataset.subFilter;
                 this.filteredSongs = this.filteredSongs.filter(song => 
                     song.category?.toLowerCase().includes(subFilter)
@@ -291,6 +295,8 @@ class RepertoireOverlay {
             `;
             return;
         }
+        
+        logger.log('🎨 Отрисовка песен:', this.filteredSongs);
         
         songsList.innerHTML = this.filteredSongs.map(song => `
             <div class="song-item" data-song-id="${song.id}">
