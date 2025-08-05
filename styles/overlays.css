@@ -174,9 +174,12 @@
 }
 
 .song-key {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--accent-color);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 4px 8px;
+    border-radius: 6px;
     min-width: 30px;
     text-align: center;
 }
@@ -184,8 +187,11 @@
 .song-bpm {
     font-size: 12px;
     color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 4px 8px;
+    border-radius: 6px;
     min-width: 50px;
-    text-align: right;
+    text-align: center;
 }
 
 /* Сообщение об отсутствии песен */
@@ -277,11 +283,15 @@
 }
 
 [data-theme="dark"] .song-key {
-    color: var(--accent-color);
+    background: #111827;
+    color: #e5e7eb;
+    border: 1px solid #374151;
 }
 
 [data-theme="dark"] .song-bpm {
+    background: #111827;
     color: #9ca3af;
+    border: 1px solid #374151;
 }
 
 [data-theme="dark"] .no-songs-message {
@@ -341,11 +351,15 @@
 }
 
 [data-theme="light"] .song-key {
-    color: var(--accent-color);
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
 }
 
 [data-theme="light"] .song-bpm {
+    background: #f3f4f6;
     color: #6b7280;
+    border: 1px solid #e5e7eb;
 }
 
 [data-theme="light"] .no-songs-message {
