@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v103'; // v103, Кнопка "Все песни" стала более выразительной
+const CACHE_NAME = 'agape-worship-cache-v104'; // v104, Убрана legend "Поиск" и граница fieldset
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

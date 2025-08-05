@@ -71,28 +71,14 @@ input:focus, select:focus {
 
 #sheet-select, #song-select { width: auto; flex-grow: 1; min-width: 140px;}
 
-/* Поисковая группа как fieldset */
+/* Поисковая группа */
 .search-group {
     position: relative;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 4px 8px 8px 8px; /* Возвращаем исходные отступы для естественного вида */
-    margin: 0 0 -3px 0; /* ОТРИЦАТЕЛЬНЫЙ margin для еще большего сближения с фильтрами */
+    margin: 0 0 12px 0;
     background: transparent;
-    transition: border-color 0.3s ease;
 }
 
-.search-group legend {
-    font-size: 0.75rem; /* Увеличили размер текста для legend поиска */
-    color: var(--label-color);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 0 12px; /* Стандартные отступы как у других legend */
-    background: var(--container-background-color);
-    border-radius: 2px;
-    transition: color 0.3s ease;
-}
+/* Стили legend убраны, так как элемент больше не используется */
 
 .search-group #search-input {
     width: 100%;
