@@ -55,34 +55,20 @@ class RepertoireOverlay {
                             <button class="category-chip active" data-main-filter="all">
                                 Все
                             </button>
-                            <button class="category-chip" data-main-filter="key">
-                                По тональности
-                            </button>
-                            <button class="category-chip" data-main-filter="category">
-                                По категориям
-                            </button>
-                        </div>
-                        
-                        <!-- Фильтры тональности (скрыты по умолчанию) -->
-                        <div class="songs-category-filters key-filters" style="display: none;">
-                            ${['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map(key => `
-                                <button class="category-chip sub-category" data-key-filter="${key}">
-                                    ${key}
-                                </button>
-                            `).join('')}
-                        </div>
-                        
-                        <!-- Фильтры категорий (скрыты по умолчанию) -->
-                        <div class="songs-category-filters category-filters" style="display: none;">
-                            <button class="category-chip sub-category active" data-category-filter="all">
-                                Все
-                            </button>
-                            <button class="category-chip sub-category" data-category-filter="Быстрые">
+                            <button class="category-chip" data-main-filter="Быстрые">
                                 Быстрые
                             </button>
-                            <button class="category-chip sub-category" data-category-filter="Поклонение">
+                            <button class="category-chip" data-main-filter="Поклонение">
                                 Поклонение
                             </button>
+                            <button class="category-chip" data-main-filter="tonality">
+                                Тональность
+                            </button>
+                        </div>
+                        
+                        <!-- Подфильтры категорий (скрыты по умолчанию) -->
+                        <div class="songs-category-filters sub-filters" style="display: none;">
+                            <!-- Будут добавлены динамически -->
                         </div>
                     </div>
                     
@@ -120,24 +106,6 @@ class RepertoireOverlay {
             });
         });
         
-        // Фильтры тональности
-        const keyFilterButtons = this.overlay.querySelectorAll('[data-key-filter]');
-        keyFilterButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const key = e.target.dataset.keyFilter;
-                this.selectKeyFilter(key);
-            });
-        });
-        
-        // Фильтры категорий
-        const categoryFilterButtons = this.overlay.querySelectorAll('[data-category-filter]');
-        categoryFilterButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const category = e.target.dataset.categoryFilter;
-                this.selectCategoryFilter(category);
-            });
-        });
-        
         // Закрытие по Escape
         this.escapeHandler = (e) => {
             if (e.key === 'Escape' && this.isOpen) {
@@ -156,24 +124,31 @@ class RepertoireOverlay {
             return;
         }
         
+        logger.log(`🎤 Загружаем репертуар для пользователя: ${user.uid}`);
+        
         const repertoireRef = collection(db, 'users', user.uid, 'repertoire');
         const q = query(repertoireRef, orderBy('name'));
         
         // Подписываемся на изменения
         this.unsubscribe = onSnapshot(q, (snapshot) => {
             this.repertoireSongs = [];
+            logger.log(`📊 Получено документов: ${snapshot.size}`);
+            
             snapshot.forEach(doc => {
+                const data = doc.data();
+                logger.log(`📄 Документ ${doc.id}:`, data);
+                
                 this.repertoireSongs.push({
                     id: doc.id,
-                    ...doc.data()
+                    ...data
                 });
             });
             
-            logger.log(`Загружено ${this.repertoireSongs.length} песен из репертуара`);
+            logger.log(`✅ Загружено ${this.repertoireSongs.length} песен из репертуара`);
             this.filterSongs();
             this.renderSongs();
         }, (error) => {
-            logger.error('Ошибка загрузки репертуара:', error);
+            logger.error('❌ Ошибка загрузки репертуара:', error);
         });
     }
     
@@ -189,18 +164,62 @@ class RepertoireOverlay {
             btn.classList.toggle('active', btn.dataset.mainFilter === filter);
         });
         
-        // Показываем/скрываем подфильтры
-        const keyFilters = this.overlay.querySelector('.key-filters');
-        const categoryFilters = this.overlay.querySelector('.category-filters');
+        // Управляем подфильтрами
+        const subFilters = this.overlay.querySelector('.sub-filters');
         
-        keyFilters.style.display = filter === 'key' ? 'flex' : 'none';
-        categoryFilters.style.display = filter === 'category' ? 'flex' : 'none';
-        
-        // Сбрасываем подфильтры при смене основного фильтра
-        if (filter !== 'key') {
+        if (filter === 'tonality') {
+            // Показываем тональности из репертуара
+            const tonalities = [...new Set(this.repertoireSongs.map(s => s.preferredKey).filter(Boolean))].sort();
+            
+            if (tonalities.length > 0) {
+                subFilters.innerHTML = tonalities.map(key => `
+                    <button class="category-chip sub-category ${this.currentKeyFilter === key ? 'active' : ''}" data-key-filter="${key}">
+                        ${key}
+                    </button>
+                `).join('');
+                
+                // Добавляем обработчики для тональностей
+                subFilters.querySelectorAll('[data-key-filter]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.selectKeyFilter(e.target.dataset.keyFilter);
+                    });
+                });
+                
+                subFilters.style.display = 'flex';
+            } else {
+                subFilters.style.display = 'none';
+            }
+        } else if (filter === 'Быстрые' || filter === 'Поклонение') {
+            // Показываем подфильтры Вертикаль/Горизонталь
+            subFilters.innerHTML = `
+                <button class="category-chip sub-category active" data-sub-filter="all">
+                    Все
+                </button>
+                <button class="category-chip sub-category" data-sub-filter="вертикаль">
+                    Вертикаль
+                </button>
+                <button class="category-chip sub-category" data-sub-filter="горизонталь">
+                    Горизонталь
+                </button>
+            `;
+            
+            // Добавляем обработчики для подфильтров
+            subFilters.querySelectorAll('[data-sub-filter]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Обновляем активность
+                    subFilters.querySelectorAll('[data-sub-filter]').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    this.filterSongs();
+                    this.renderSongs();
+                });
+            });
+            
+            subFilters.style.display = 'flex';
+        } else {
+            // Скрываем подфильтры для "Все"
+            subFilters.style.display = 'none';
             this.currentKeyFilter = null;
-            const keyButtons = this.overlay.querySelectorAll('[data-key-filter]');
-            keyButtons.forEach(btn => btn.classList.remove('active'));
         }
         
         this.filterSongs();
@@ -224,41 +243,32 @@ class RepertoireOverlay {
     }
     
     /**
-     * Выбор фильтра категории
-     */
-    selectCategoryFilter(category) {
-        // Обновляем активную кнопку
-        const categoryButtons = this.overlay.querySelectorAll('[data-category-filter]');
-        categoryButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.categoryFilter === category);
-        });
-        
-        this.filterSongs();
-        this.renderSongs();
-    }
-    
-    /**
      * Фильтрация песен
      */
     filterSongs() {
         this.filteredSongs = [...this.repertoireSongs];
         
+        // Фильтрация по основной категории
+        if (this.currentFilter === 'Быстрые' || this.currentFilter === 'Поклонение') {
+            this.filteredSongs = this.filteredSongs.filter(song => 
+                song.category?.includes(this.currentFilter)
+            );
+            
+            // Дополнительная фильтрация по подкатегории
+            const activeSubFilter = this.overlay.querySelector('.sub-filters [data-sub-filter].active');
+            if (activeSubFilter && activeSubFilter.dataset.subFilter !== 'all') {
+                const subFilter = activeSubFilter.dataset.subFilter;
+                this.filteredSongs = this.filteredSongs.filter(song => 
+                    song.category?.toLowerCase().includes(subFilter)
+                );
+            }
+        }
+        
         // Фильтрация по тональности
-        if (this.currentFilter === 'key' && this.currentKeyFilter) {
+        if (this.currentFilter === 'tonality' && this.currentKeyFilter) {
             this.filteredSongs = this.filteredSongs.filter(song => 
                 song.preferredKey === this.currentKeyFilter
             );
-        }
-        
-        // Фильтрация по категории
-        if (this.currentFilter === 'category') {
-            const activeCategory = this.overlay.querySelector('[data-category-filter].active');
-            if (activeCategory && activeCategory.dataset.categoryFilter !== 'all') {
-                const category = activeCategory.dataset.categoryFilter;
-                this.filteredSongs = this.filteredSongs.filter(song => 
-                    song.category?.includes(category)
-                );
-            }
         }
         
         // Сортировка по имени
