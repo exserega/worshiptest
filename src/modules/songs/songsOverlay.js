@@ -18,7 +18,7 @@ const MAIN_CATEGORIES = {
 
 // Подкатегории (второй уровень)
 const SUB_CATEGORIES = {
-    'all': 'Все',
+    'all': 'Обе',
     'vertical': 'Вертикаль',
     'horizontal': 'Горизонталь'
 };

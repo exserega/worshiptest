@@ -100,6 +100,19 @@
     padding-top: 0;
     padding-bottom: 12px;
     animation: slideDown 0.2s ease-out;
+    position: relative;
+}
+
+/* Визуальный разделитель перед подкатегориями */
+.sub-filters::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: var(--border-color);
+    opacity: 0.3;
 }
 
 @keyframes slideDown {
@@ -136,6 +149,7 @@
     background: var(--accent-color);
     color: var(--bg-primary);
     border-color: var(--accent-color);
+    opacity: 1; /* Полная непрозрачность для активных кнопок */
 }
 
 /* Контейнер списка песен */
@@ -251,6 +265,8 @@
         padding: 5px 12px;
         font-size: 12px;
         background: rgba(0, 0, 0, 0.05); /* Чуть прозрачнее */
+        border-radius: 12px; /* Меньше радиус */
+        opacity: 0.9; /* Чуть прозрачнее для визуального отличия */
     }
     
     .songs-overlay-header {
