@@ -797,11 +797,19 @@ window.showNotification = function(message, type = 'info') {
 // ФУНКЦИЯ ДОБАВЛЕНИЯ ПЕСНИ В СЕТ-ЛИСТ
 window.handleAddSongToSetlist = async function() {
     logger.log('📋 [EntryPoint] handleAddSongToSetlist called');
+    logger.log('📋 [EntryPoint] window.currentSong:', window.currentSong);
     
     // Получаем текущую песню из глобального состояния
-    const currentSong = window.currentSong;
+    let currentSong = window.currentSong;
+    
+    // Проверяем также stateManager
+    if (!currentSong && window.stateManager && typeof window.stateManager.getCurrentSong === 'function') {
+        currentSong = window.stateManager.getCurrentSong();
+        logger.log('📋 [EntryPoint] Got song from stateManager:', currentSong);
+    }
     
     if (!currentSong || !currentSong.id) {
+        logger.error('❌ [EntryPoint] No current song found:', currentSong);
         window.showNotification('❌ Сначала выберите песню', 'error');
         return;
     }

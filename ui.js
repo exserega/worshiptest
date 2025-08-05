@@ -252,12 +252,15 @@ export function displaySongDetails(songData, keyToSelect) {
     // Устанавливаем текущую песню через stateManager
     if (window.stateManager && typeof window.stateManager.setCurrentSong === 'function') {
         window.stateManager.setCurrentSong(songData);
-        console.log('📝 [UI] Set currentSong via stateManager:', songData?.name);
-    } else {
-        // Fallback: сохраняем в window напрямую
-        window.currentSong = songData;
-        console.log('📝 [UI] Set currentSong on window:', songData?.name);
+        logger.log('📝 [UI] Set currentSong via stateManager:', songData?.name);
     }
+    
+    // ВСЕГДА сохраняем в window.currentSong для обратной совместимости
+    window.currentSong = songData;
+    logger.log('📝 [UI] Set currentSong on window:', songData?.name);
+    
+    // Убедимся, что песня действительно установлена
+    logger.log('📝 [UI] After setting - window.currentSong:', window.currentSong);
 
     if (!songData) {
         // Обновляем legend и pre, сохраняя fieldset структуру
