@@ -289,6 +289,7 @@ export function displaySongDetails(songData, keyToSelect) {
         addToSetlistButton.disabled = true;
         repertoireButton.disabled = true;
         toggleChordsButton.disabled = true;
+        chordsOnlyButton.disabled = true;
         songContent.classList.remove('chords-hidden');
         const copyBtn = songContent.querySelector('#copy-text-button');
         const editBtn = songContent.querySelector('#edit-song-button');
@@ -465,7 +466,8 @@ export function updateToggleChordsButton() {
 
     toggleChordsButton.innerHTML = icon + (isMobileView() ? '' : textShow);
     toggleChordsButton.title = currentTitle;
-    toggleChordsButton.disabled = !songSelect || !songSelect.value;
+    // Кнопка доступна когда песня загружена
+    toggleChordsButton.disabled = false;
     
     // Меняем цвет кнопки в зависимости от состояния
     toggleChordsButton.classList.toggle('chords-hidden-active', !state.areChordsVisible);
@@ -483,7 +485,8 @@ export function updateChordsOnlyButton() {
 
     chordsOnlyButton.innerHTML = icon + (isMobileView() ? '' : textShow);
     chordsOnlyButton.title = currentTitle;
-    chordsOnlyButton.disabled = !songSelect || !songSelect.value;
+    // Кнопка доступна когда песня загружена
+    chordsOnlyButton.disabled = false;
     
     // Меняем цвет кнопки в зависимости от состояния
     chordsOnlyButton.classList.toggle('chords-only-active', state.isChordsOnlyMode);

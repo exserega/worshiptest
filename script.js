@@ -152,21 +152,23 @@ window.splitTextIntoColumns = function() {
 };
 
 window.toggleChords = function() {
-    console.log('🎵 [Legacy] toggleChords called');
+    logger.log('🎵 [Legacy] toggleChords called');
     if (window.state) {
         window.state.setAreChordsVisible(!window.state.areChordsVisible);
         if (ui.songContent) {
             ui.songContent.classList.toggle('chords-hidden', !window.state.areChordsVisible);
+            ui.updateToggleChordsButton();
         }
     }
 };
 
 window.showChordsOnly = function() {
-    console.log('🎼 [Legacy] showChordsOnly called');
+    logger.log('🎼 [Legacy] showChordsOnly called');
     if (window.state) {
         window.state.setIsChordsOnlyMode(!window.state.isChordsOnlyMode);
         if (ui.songContent) {
             ui.songContent.classList.toggle('chords-only-mode', window.state.isChordsOnlyMode);
+            ui.updateChordsOnlyButton();
         }
     }
 };
