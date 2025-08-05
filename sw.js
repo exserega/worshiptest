@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v84'; // v84, Исправлен путь к manifest.json
+const CACHE_NAME = 'agape-worship-cache-v85'; // v85, Исправлен фильтр категорий в оверлее песен
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

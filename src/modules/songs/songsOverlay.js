@@ -140,6 +140,11 @@ class SongsOverlay {
             this.songs = state.allSongs || [];
             this.filteredSongs = [...this.songs];
             logger.log(`🎵 Loaded ${this.songs.length} songs from state`);
+            
+            // Выводим уникальные категории для отладки
+            const uniqueSheets = [...new Set(this.songs.map(s => s.sheet))];
+            logger.log('📂 Available sheets (categories):', uniqueSheets);
+            
         } catch (error) {
             logger.error('Error loading songs:', error);
             this.songs = [];
@@ -163,18 +168,26 @@ class SongsOverlay {
         if (category === 'all') {
             this.filteredSongs = [...this.songs];
         } else {
-            // Маппинг категорий на значения из Firebase
+            // Маппинг категорий на значения из Firebase (поле sheet)
             const categoryMap = {
-                'fast-vertical': 'Быстрые вертикаль',
-                'fast-horizontal': 'Быстрые горизонталь',
-                'slow-vertical': 'Медленные вертикаль',
-                'slow-horizontal': 'Медленные горизонталь'
+                'fast-vertical': 'Быстрые (вертикаль)',
+                'fast-horizontal': 'Быстрые (горизонталь)',
+                'slow-vertical': 'Медленные (вертикаль)',
+                'slow-horizontal': 'Медленные (горизонталь)'
             };
             
             const firebaseCategory = categoryMap[category];
-            this.filteredSongs = this.songs.filter(song => 
-                song.category === firebaseCategory
-            );
+            logger.log(`🎵 Filtering by category: ${category} -> ${firebaseCategory}`);
+            
+            this.filteredSongs = this.songs.filter(song => {
+                const matches = song.sheet === firebaseCategory;
+                if (matches) {
+                    logger.log(`✅ Song "${song.name}" matches category ${firebaseCategory}`);
+                }
+                return matches;
+            });
+            
+            logger.log(`🎵 Filtered songs count: ${this.filteredSongs.length}`);
         }
         
         this.renderSongs();
