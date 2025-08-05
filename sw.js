@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v79'; // v79, Добавлена отладка для поиска проблемы с window.currentSong
+const CACHE_NAME = 'agape-worship-cache-v80'; // v80, Исправлена установка window.currentSong для кнопки сет-лист
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
