@@ -310,7 +310,7 @@
     }
     header { padding: 4px 6px; margin-bottom: 4px; } /* Уменьшили с 5px 8px до 4px 6px */
     h1 { font-size: 1.2rem; }
-    .controls { gap: 8px; margin-bottom: 8px; } /* Уменьшили с 10px до 8px */
+    .controls { gap: 8px; margin-bottom: 16px; } /* Увеличили margin-bottom для отступа от контейнера песни */
     
     /* Мобильные стили для fieldset поиска */
     .search-group {

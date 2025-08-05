@@ -3,7 +3,7 @@
 /* ======================================== */
 
 /* --- Forms --- */
-.controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; } /* Уменьшили gap и margin с 12px до 8px */
+.controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; } /* Увеличили margin-bottom для отступа от контейнера песни */
 .control-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .control-group label { font-size: 0.8rem; color: var(--label-color); margin-bottom: 4px; flex-basis: 100%; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s ease;}
 

@@ -39,7 +39,7 @@
     body:not([data-song-loaded]) .song-legend-action,
     body:not([data-song-loaded]) .metronome-control-bar,
     body:not([data-song-loaded]) #edit-song-button,
-    body:not([data-song-loaded]) #copy-text-button,
+    
     body:not([data-song-loaded]) #holychords-button {
       display: none !important;
     }
@@ -156,6 +156,10 @@
                 <i class="fas fa-columns"></i>
                 <span class="button-text">Разделить</span>
             </button>
+            <button id="copy-text-button" class="control-group-button icon-button simple" title="Копировать текст песни" style="display: none;">
+                <i class="far fa-copy"></i>
+                <span class="button-text">Копировать</span>
+            </button>
         </div>
         <div class="font-size-controls">
             <button id="zoom-out" class="icon-button simple" title="Уменьшить шрифт"><i class="fas fa-search-minus"></i></button>
@@ -187,10 +191,6 @@
                 </button>
             </div>
         </div>
-        <!-- Кнопка копирования в верхнем правом углу контейнера -->
-        <button id="copy-text-button" class="icon-button simple" title="Копировать текст песни" style="display: none;">
-            <i class="far fa-copy"></i>
-        </button>
         <pre id="song-display"></pre>
     </fieldset>
 
