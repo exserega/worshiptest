@@ -176,7 +176,7 @@
 
 .category-chip.active {
     background: var(--accent-color);
-    color: var(--bg-primary);
+    color: var(--button-text-color);
     border-color: var(--accent-color);
     opacity: 1; /* Полная непрозрачность для активных кнопок */
 }
@@ -458,17 +458,17 @@
 
 [data-theme="light"] .category-chip {
     background: #f3f4f6;
-    color: #374151;
+    color: #374151 !important;
 }
 
 [data-theme="light"] .category-chip:hover {
     background: #e5e7eb;
-    color: #111827;
+    color: #111827 !important;
 }
 
 [data-theme="light"] .category-chip.active {
     background: var(--accent-color);
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 [data-theme="light"] .song-item {
