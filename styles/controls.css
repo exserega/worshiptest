@@ -47,8 +47,8 @@
     align-items: center;
     justify-content: center;
     padding: 8px 16px;
-    background: transparent;
-    color: #e5e7eb; /* Светлый текст для темной темы */
+    background: transparent !important;
+    color: #e5e7eb !important; /* Светлый текст для темной темы - ВАЖНО */
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     font-size: 0.875rem;
@@ -56,19 +56,19 @@
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: 'Montserrat', sans-serif;
-    box-shadow: none;
+    box-shadow: none !important;
     height: 38px;
 }
 
 .songs-overlay-button:hover:not(:disabled) {
-    background: var(--hover-color);
+    background: var(--hover-color) !important;
     border-color: color-mix(in srgb, var(--border-color) 80%, black);
-    color: #e5e7eb; /* Светлый текст остается */
+    color: #e5e7eb !important; /* Светлый текст остается */
 }
 
 .songs-overlay-button:active:not(:disabled) {
-    background: var(--primary-color);
-    color: #111827; /* Темный текст на светлом фоне */
+    background: var(--primary-color) !important;
+    color: #111827 !important; /* Темный текст на светлом фоне */
     border-color: var(--primary-color);
     transform: translateY(1px);
 }
@@ -80,18 +80,18 @@
 
 /* Светлая тема */
 [data-theme="light"] .songs-overlay-button {
-    color: #1e293b; /* Темный текст для светлой темы */
+    color: #1e293b !important; /* Темный текст для светлой темы - ВАЖНО */
 }
 
 [data-theme="light"] .songs-overlay-button:hover:not(:disabled) {
-    background: var(--hover-color);
+    background: var(--hover-color) !important;
     border-color: color-mix(in srgb, var(--border-color) 80%, #475569);
-    color: #1e293b; /* Темный текст остается */
+    color: #1e293b !important; /* Темный текст остается */
 }
 
 [data-theme="light"] .songs-overlay-button:active:not(:disabled) {
-    background: var(--primary-color);
-    color: #ffffff; /* Белый текст на синем фоне */
+    background: var(--primary-color) !important;
+    color: #ffffff !important; /* Белый текст на синем фоне */
     border-color: var(--primary-color);
 }
 
