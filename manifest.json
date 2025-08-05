@@ -1,8 +1,8 @@
 {
   "name": "Agape Worship",
   "short_name": "Agape",
-  "id": "/Song-archiv/",
-  "start_url": "/Song-archiv/",
+  "id": "/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#111827",
   "theme_color": "#1f2937",

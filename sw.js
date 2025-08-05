@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v83'; // v83, Возвращены дефолтные размеры шрифта
+const CACHE_NAME = 'agape-worship-cache-v84'; // v84, Исправлен путь к manifest.json
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
