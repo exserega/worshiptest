@@ -474,6 +474,35 @@ export function displaySongDetails(songData, keyToSelect) {
 /** Обновление размера шрифта текста песни */
 export function updateFontSize() {
     document.documentElement.style.setProperty('--lyrics-font-size', `${state.currentFontSize}px`);
+    
+    // Обновляем состояние кнопок
+    if (zoomOutButton) {
+        // Импортируем MIN_FONT_SIZE из constants.js
+        const minSize = MIN_FONT_SIZE || 12;
+        if (state.currentFontSize <= minSize) {
+            zoomOutButton.disabled = true;
+            zoomOutButton.style.opacity = '0.5';
+            zoomOutButton.style.cursor = 'not-allowed';
+        } else {
+            zoomOutButton.disabled = false;
+            zoomOutButton.style.opacity = '1';
+            zoomOutButton.style.cursor = 'pointer';
+        }
+    }
+    
+    if (zoomInButton) {
+        // Максимальный размер 32px
+        const maxSize = 32;
+        if (state.currentFontSize >= maxSize) {
+            zoomInButton.disabled = true;
+            zoomInButton.style.opacity = '0.5';
+            zoomInButton.style.cursor = 'not-allowed';
+        } else {
+            zoomInButton.disabled = false;
+            zoomInButton.style.opacity = '1';
+            zoomInButton.style.cursor = 'pointer';
+        }
+    }
 }
 
 /** Обновление отображения и логики BPM */

@@ -4939,6 +4939,17 @@ body:not([data-theme="light"]) mark.search-highlight {
     background-color: inherit !important;
 }
 
+/* Стили для отключенных кнопок изменения размера шрифта */
+.font-size-controls button:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+.font-size-controls button:disabled:hover {
+    transform: none !important;
+    background-color: inherit !important;
+}
+
 /* Мобильная адаптация - новая структура */
 @media (max-width: 768px) {
     .header-top {

@@ -168,6 +168,18 @@ function setupUI() {
         ui.updateFontSize();
     }
     
+    // Устанавливаем начальный размер шрифта из сохраненного или дефолтного
+    const savedFontSize = localStorage.getItem('songFontSize');
+    if (savedFontSize && window.state) {
+        const size = parseInt(savedFontSize, 10);
+        if (!isNaN(size) && size >= 12 && size <= 32) {
+            window.state.setCurrentFontSize(size);
+            if (typeof ui.updateFontSize === 'function') {
+                ui.updateFontSize();
+            }
+        }
+    }
+    
     // Устанавливаем двухколоночный режим по умолчанию
     if (ui.songContent) {
         ui.songContent.classList.add('split-columns');

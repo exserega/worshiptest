@@ -111,22 +111,36 @@ window.USE_MODULE_FUNCTIONS = false; // По умолчанию использу
 
 // Font size functions
 window.increaseFontSize = function() {
-    console.log('🔤 [Legacy] increaseFontSize called');
+    logger.log('🔤 [Legacy] increaseFontSize called');
     if (window.state) {
-        window.state.setCurrentFontSize(Math.min(window.state.currentFontSize + 2, 30));
-        if (typeof ui.updateFontSize === 'function') {
-            ui.updateFontSize();
-        }
+        // Импортируем константы
+        import('./js/constants.js').then(({ MAX_FONT_SIZE }) => {
+            const newSize = Math.min(window.state.currentFontSize + 2, MAX_FONT_SIZE || 32);
+            window.state.setCurrentFontSize(newSize);
+            if (typeof ui.updateFontSize === 'function') {
+                ui.updateFontSize();
+            }
+            // Сохраняем размер шрифта
+            localStorage.setItem('songFontSize', newSize.toString());
+            logger.log(`🔤 Font size increased to: ${newSize}px`);
+        });
     }
 };
 
 window.decreaseFontSize = function() {
-    console.log('🔤 [Legacy] decreaseFontSize called');
+    logger.log('🔤 [Legacy] decreaseFontSize called');
     if (window.state) {
-        window.state.setCurrentFontSize(Math.max(16, window.state.currentFontSize - 2));
-        if (typeof ui.updateFontSize === 'function') {
-            ui.updateFontSize();
-        }
+        // Импортируем константы
+        import('./js/constants.js').then(({ MIN_FONT_SIZE }) => {
+            const newSize = Math.max(MIN_FONT_SIZE || 12, window.state.currentFontSize - 2);
+            window.state.setCurrentFontSize(newSize);
+            if (typeof ui.updateFontSize === 'function') {
+                ui.updateFontSize();
+            }
+            // Сохраняем размер шрифта
+            localStorage.setItem('songFontSize', newSize.toString());
+            logger.log(`🔤 Font size decreased to: ${newSize}px`);
+        });
     }
 };
 
