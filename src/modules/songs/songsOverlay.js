@@ -145,6 +145,18 @@ class SongsOverlay {
             const uniqueSheets = [...new Set(this.songs.map(s => s.sheet))];
             logger.log('📂 Available sheets (categories):', uniqueSheets);
             
+            // Проверяем структуру данных первой песни для отладки
+            if (this.songs.length > 0) {
+                const firstSong = this.songs[0];
+                logger.log('🎵 Sample song structure:', {
+                    name: firstSong.name,
+                    'Оригинальная тональность': firstSong['Оригинальная тональность'],
+                    defaultKey: firstSong.defaultKey,
+                    BPM: firstSong.BPM,
+                    bpm: firstSong.bpm
+                });
+            }
+            
         } catch (error) {
             logger.error('Error loading songs:', error);
             this.songs = [];
@@ -215,8 +227,8 @@ class SongsOverlay {
                     <span class="song-name">${song.name || 'Без названия'}</span>
                 </div>
                 <div class="song-meta">
-                    <span class="song-key">${song.defaultKey || 'C'}</span>
-                    <span class="song-bpm">${song.bpm || '—'} BPM</span>
+                    <span class="song-key">${song['Оригинальная тональность'] || song.defaultKey || 'C'}</span>
+                    <span class="song-bpm">${song.BPM || song.bpm || '—'} BPM</span>
                 </div>
             </div>
         `).join('');
