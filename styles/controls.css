@@ -52,8 +52,9 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
+    gap: 8px;
     transition: all 0.2s ease;
     font-family: 'Montserrat', sans-serif;
     box-shadow: 
@@ -63,6 +64,10 @@
     white-space: nowrap;
     position: relative;
     overflow: hidden;
+}
+
+.songs-overlay-button i {
+    font-size: 16px;
 }
 
 /* Дополнительный блик для объема */
