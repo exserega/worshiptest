@@ -110,6 +110,30 @@ export async function loadAllSongsFromFirestore() {
     }
 }
 
+/**
+ * Получает песню по ID
+ * @param {string} songId - ID песни
+ * @returns {Promise<Object|null>} Данные песни или null
+ */
+export async function getSongById(songId) {
+    try {
+        const songDoc = doc(db, 'songs', songId);
+        const docSnap = await getDoc(songDoc);
+        
+        if (docSnap.exists) {
+            return {
+                id: docSnap.id,
+                ...docSnap.data()
+            };
+        }
+        
+        return null;
+    } catch (error) {
+        logger.error('Ошибка получения песни:', error);
+        return null;
+    }
+}
+
 // ====================================
 // SONG EDITING API
 // ====================================

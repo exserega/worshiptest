@@ -329,27 +329,47 @@ export function handleFavoriteOrRepertoireSelect(song) {
 }
 
 /**
- * Добавляет песню в репертуар
+ * Добавляет или удаляет песню из репертуара пользователя
  * @param {Object} song - Объект песни
  */
 export async function handleAddToRepertoire(song) {
     console.log('📚 [Controller] handleAddToRepertoire:', song.name);
     
     try {
-        await api.addToRepertoire(song.id);
+        // Импортируем API для работы с репертуаром пользователя
+        const { addToUserRepertoire, removeFromUserRepertoire, checkSongInUserRepertoire } = await import('../api/userRepertoire.js');
         
-        showNotification(`📚 "${song.name}" добавлена в репертуар`, 'success');
+        // Проверяем, есть ли уже песня в репертуаре
+        const existingSong = await checkSongInUserRepertoire(song.id);
         
-        // Обновляем состояние репертуара
-        if (typeof window.updateRepertoireUI === 'function') {
-            window.updateRepertoireUI();
+        if (existingSong) {
+            // Удаляем из репертуара
+            await removeFromUserRepertoire(song.id);
+            showNotification(`🎤 "${song.name}" удалена из репертуара`, 'info');
+        } else {
+            // Получаем текущую тональность
+            const currentKey = window.state?.currentKey || song.defaultKey || 'C';
+            
+            // Добавляем песню в репертуар пользователя
+            const result = await addToUserRepertoire(song, currentKey);
+            
+            if (result.status === 'added') {
+                showNotification(`🎤 "${song.name}" добавлена в репертуар (${currentKey})`, 'success');
+            } else if (result.status === 'updated') {
+                showNotification(`🎤 Тональность "${song.name}" обновлена на ${currentKey}`, 'success');
+            }
+        }
+        
+        // Обновляем кнопку репертуара
+        if (typeof ui.updateRepertoireButton === 'function') {
+            await ui.updateRepertoireButton(song);
         }
         
         return true;
         
     } catch (error) {
-        console.error('❌ [Controller] Ошибка добавления в репертуар:', error);
-        showNotification('❌ Ошибка добавления в репертуар', 'error');
+        console.error('❌ [Controller] Ошибка работы с репертуаром:', error);
+        showNotification('❌ Ошибка работы с репертуаром', 'error');
         throw error;
     }
 }

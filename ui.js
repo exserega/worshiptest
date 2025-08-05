@@ -511,28 +511,33 @@ export function updateBPM(newBPM) {
 }
 
 /** Обновление состояния кнопки репертуара */
-export function updateRepertoireButton(songData) {
-    if (!songData || !state.currentVocalistId) {
+export async function updateRepertoireButton(songData) {
+    if (!songData) {
         repertoireButton.classList.remove('active');
         repertoireButton.parentElement.classList.remove('active');
         return;
     }
     
-    // Проверяем, есть ли песня в репертуаре текущего вокалиста
-    const isInRepertoire = state.repertoire && state.repertoire.some(item => 
-        item.songId === songData.id
-    );
-    
-    if (isInRepertoire) {
-        repertoireButton.classList.add('active');
-        repertoireButton.parentElement.classList.add('active');
-        repertoireButton.title = 'Песня в репертуаре';
-        repertoireButton.setAttribute('aria-label', 'Песня в репертуаре');
-    } else {
+    try {
+        // Проверяем, есть ли песня в репертуаре пользователя
+        const { checkSongInUserRepertoire } = await import('../src/api/userRepertoire.js');
+        const repertoireSong = await checkSongInUserRepertoire(songData.id);
+        
+        if (repertoireSong) {
+            repertoireButton.classList.add('active');
+            repertoireButton.parentElement.classList.add('active');
+            repertoireButton.title = `В репертуаре (${repertoireSong.preferredKey})`;
+            repertoireButton.setAttribute('aria-label', `В репертуаре (${repertoireSong.preferredKey})`);
+        } else {
+            repertoireButton.classList.remove('active');
+            repertoireButton.parentElement.classList.remove('active');
+            repertoireButton.title = 'Добавить в репертуар';
+            repertoireButton.setAttribute('aria-label', 'Добавить в репертуар');
+        }
+    } catch (error) {
+        logger.error('Ошибка проверки репертуара:', error);
         repertoireButton.classList.remove('active');
         repertoireButton.parentElement.classList.remove('active');
-        repertoireButton.title = 'Добавить в репертуар';
-        repertoireButton.setAttribute('aria-label', 'Добавить в репертуар');
     }
 }
 

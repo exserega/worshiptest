@@ -732,46 +732,24 @@ function setupSetlistEventHandlers() {
         console.log('⭐ [EventHandlers] My List panel handler attached');
     }
     
-    // Панель "Репертуар" - ПРЯМАЯ ЛОГИКА
+    // Панель "Репертуар" - Новый оверлей
     if (ui.toggleRepertoireButton) {
         ui.toggleRepertoireButton.addEventListener('click', async () => {
             console.log('🎭 [EventHandlers] Repertoire button clicked');
-            const isAlreadyOpen = ui.repertoirePanel.classList.contains('open');
+            
+            // Закрываем все панели
             ui.closeAllSidePanels();
-            if (!isAlreadyOpen) {
-                ui.toggleRepertoireButton.classList.add('loading');
-                try {
-                    ui.repertoirePanel.classList.add('open');
-                    console.log('🎭 [EventHandlers] Loading repertoire...');
-                    const { loadRepertoire } = await import('../api/index.js');
-                    loadRepertoire(
-                        window.state ? window.state.currentVocalistId : null, 
-                        window.handleRepertoireUpdate || function(data) {
-                            console.log('🎭 Repertoire loaded:', data);
-                            if (data.error) {
-                                console.error('🎭 Repertoire error:', data.error);
-                                if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
-                                    window.state.setCurrentRepertoireSongsData([]);
-                                }
-                            } else {
-                                console.log('🎭 Repertoire data loaded:', data.data?.length || 0);
-                                if (window.state && typeof window.state.setCurrentRepertoireSongsData === 'function') {
-                                    window.state.setCurrentRepertoireSongsData(data.data || []);
-                                }
-                            }
-                            if (typeof ui.renderRepertoire === 'function') {
-                                ui.renderRepertoire(window.handleFavoriteOrRepertoireSelect);
-                            }
-                        }
-                    );
-                } catch (error) {
-                    console.error('Ошибка загрузки репертуара:', error);
-                } finally {
-                    ui.toggleRepertoireButton.classList.remove('loading');
-                }
+            
+            try {
+                // Загружаем и открываем новый оверлей репертуара
+                const { openRepertoireOverlay } = await import('../modules/repertoire/repertoireOverlay.js');
+                openRepertoireOverlay();
+                console.log('🎭 [EventHandlers] Repertoire overlay opened');
+            } catch (error) {
+                console.error('Ошибка открытия репертуара:', error);
+                window.showNotification('❌ Ошибка открытия репертуара', 'error');
             }
         });
-        console.log('🎭 [EventHandlers] Repertoire panel handler attached');
     }
     
     // ОБРАБОТЧИК DROPDOWN СЕТЛИСТОВ - КРИТИЧЕСКИ ВАЖНО!
