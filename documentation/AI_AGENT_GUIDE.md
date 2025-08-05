@@ -244,3 +244,4 @@ DevTools → Application → Clear Storage
 
 ---
 **См. также**: AI_AGENT_CRITICAL_GUIDE.md для критически важной информации
+**Последнее обновление**: Август 2025
