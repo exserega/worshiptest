@@ -34,7 +34,7 @@
 .songs-overlay-content {
     position: relative;
     width: 100%;
-    max-height: 85vh;
+    max-height: 92vh; /* Увеличиваем для мобильных */
     background: var(--bg-primary);
     border-radius: 20px 20px 0 0;
     display: flex;
@@ -94,7 +94,7 @@
 .category-chip {
     padding: 8px 16px;
     background: var(--bg-secondary);
-    color: var(--text-secondary);
+    color: var(--text-primary); /* Изменяем на основной цвет текста */
     border: 1px solid transparent;
     border-radius: 20px;
     font-size: 14px;
@@ -202,6 +202,28 @@
     font-size: 16px;
 }
 
+/* Мобильные оптимизации */
+@media (max-width: 767px) {
+    .songs-category-filters {
+        padding: 12px; /* Уменьшаем отступы */
+        gap: 6px; /* Меньше расстояние между кнопками */
+    }
+    
+    .category-chip {
+        padding: 6px 12px; /* Компактнее кнопки */
+        font-size: 13px; /* Меньше шрифт */
+        border-radius: 16px; /* Меньше радиус */
+    }
+    
+    .songs-overlay-header {
+        padding: 16px; /* Меньше отступ заголовка */
+    }
+    
+    .songs-overlay-title {
+        font-size: 20px; /* Меньше заголовок */
+    }
+}
+
 /* Адаптация для десктопа */
 @media (min-width: 768px) {
     .songs-overlay {
@@ -257,7 +279,7 @@
 
 [data-theme="dark"] .category-chip {
     background: #1f2937;
-    color: #e5e7eb;
+    color: #e5e7eb !important; /* Принудительно светлый текст */
 }
 
 [data-theme="dark"] .category-chip:hover {
