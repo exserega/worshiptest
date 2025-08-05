@@ -132,7 +132,7 @@ window.decreaseFontSize = function() {
     if (window.state) {
         // Импортируем константы
         import('./js/constants.js').then(({ MIN_FONT_SIZE }) => {
-            const newSize = Math.max(MIN_FONT_SIZE || 12, window.state.currentFontSize - 2);
+            const newSize = Math.max(MIN_FONT_SIZE || 4, window.state.currentFontSize - 2);
             window.state.setCurrentFontSize(newSize);
             if (typeof ui.updateFontSize === 'function') {
                 ui.updateFontSize();

@@ -478,7 +478,7 @@ export function updateFontSize() {
     // Обновляем состояние кнопок
     if (zoomOutButton) {
         // Импортируем MIN_FONT_SIZE из constants.js
-        const minSize = MIN_FONT_SIZE || 12;
+        const minSize = MIN_FONT_SIZE || 4;
         if (state.currentFontSize <= minSize) {
             zoomOutButton.disabled = true;
             zoomOutButton.style.opacity = '0.5';
