@@ -46,30 +46,58 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
-    background: #1f2937 !important; /* Как у категорий в темной теме */
+    padding: 10px 20px;
+    background: linear-gradient(145deg, #0f172a, #111827) !important; /* Градиент для объема */
     color: #e5e7eb !important; /* Светлый текст */
-    border: 1px solid transparent;
-    border-radius: 12px; /* Не такой закругленный как категории */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: 'Montserrat', sans-serif;
-    box-shadow: none !important;
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1), /* Блик сверху */
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3), /* Тень снизу */
+        0 2px 4px rgba(0, 0, 0, 0.2) !important; /* Внешняя тень */
     white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Дополнительный блик для объема */
+.songs-overlay-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0.05), 
+        transparent
+    );
+    pointer-events: none;
 }
 
 .songs-overlay-button:hover:not(:disabled) {
-    background: #374151 !important; /* hover цвет как у категорий */
+    background: linear-gradient(145deg, #1a202c, #1f2937) !important;
     color: #e5e7eb !important;
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 3px 6px rgba(0, 0, 0, 0.3) !important;
 }
 
 .songs-overlay-button:active:not(:disabled) {
-    background: #22d3ee !important; /* Акцентный цвет */
-    color: #111827 !important; /* Темный текст на светлом фоне */
-    border-color: #22d3ee;
-    transform: none;
+    background: linear-gradient(145deg, #111827, #0a0f1e) !important;
+    color: #e5e7eb !important;
+    border-color: rgba(255, 255, 255, 0.05);
+    transform: translateY(1px);
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
 .songs-overlay-button:focus {
@@ -79,19 +107,34 @@
 
 /* Светлая тема */
 [data-theme="light"] .songs-overlay-button {
-    background: #f3f4f6 !important; /* Светлый фон */
-    color: #1e293b !important; /* Темный текст */
+    background: linear-gradient(145deg, #ffffff, #f3f4f6) !important;
+    color: #1e293b !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .songs-overlay-button::before {
+    background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0.7), 
+        transparent
+    );
 }
 
 [data-theme="light"] .songs-overlay-button:hover:not(:disabled) {
-    background: #e5e7eb !important;
+    background: linear-gradient(145deg, #f9fafb, #e5e7eb) !important;
     color: #1e293b !important;
+    border-color: rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="light"] .songs-overlay-button:active:not(:disabled) {
-    background: #1c7ed6 !important; /* Синий акцент */
-    color: #ffffff !important; /* Белый текст */
-    border-color: #1c7ed6;
+    background: linear-gradient(145deg, #e5e7eb, #d1d5db) !important;
+    color: #1e293b !important;
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 /* Адаптация для мобильных */
