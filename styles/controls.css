@@ -38,65 +38,75 @@
 .songs-button-container {
     display: flex;
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 12px;
+    margin-bottom: 8px;
 }
 
 .songs-overlay-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 24px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
+    padding: 8px 16px;
+    background: transparent;
+    color: var(--text-color);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: 'Montserrat', sans-serif;
     box-shadow: none;
+    height: 38px;
 }
 
-.songs-overlay-button:hover {
+.songs-overlay-button:hover:not(:disabled) {
     background: var(--hover-color);
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-    transform: none;
+    border-color: color-mix(in srgb, var(--border-color) 80%, black);
+    color: var(--text-color);
 }
 
-.songs-overlay-button:active {
+.songs-overlay-button:active:not(:disabled) {
+    background: var(--primary-color);
+    color: var(--button-text-color);
+    border-color: var(--primary-color);
     transform: translateY(1px);
-    background: var(--bg-primary);
 }
 
 .songs-overlay-button:focus {
     outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
-}
-
-/* Темная тема - уже использует базовые переменные */
-[data-theme="dark"] .songs-overlay-button:hover {
-    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 2px var(--primary-color);
 }
 
 /* Светлая тема */
-[data-theme="light"] .songs-overlay-button:hover {
-    background: rgba(0, 0, 0, 0.03);
+[data-theme="light"] .songs-overlay-button {
+    color: var(--label-color);
+}
+
+[data-theme="light"] .songs-overlay-button:hover:not(:disabled) {
+    background: var(--hover-color);
+    border-color: color-mix(in srgb, var(--border-color) 80%, #475569);
+    color: var(--text-color);
+}
+
+[data-theme="light"] .songs-overlay-button:active:not(:disabled) {
+    background: var(--primary-color);
+    color: var(--button-text-color);
+    border-color: var(--primary-color);
 }
 
 /* Адаптация для мобильных */
 @media (max-width: 768px) {
     .songs-button-container {
-        margin-top: 10px;
+        margin-top: 8px;
         padding: 0 16px;
     }
     
     .songs-overlay-button {
         width: 100%;
         justify-content: center;
-        padding: 14px 20px;
-        font-size: 15px;
+        padding: 10px 16px;
+        font-size: 0.875rem;
+        height: 42px;
     }
 }
