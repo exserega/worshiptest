@@ -417,7 +417,7 @@ window.refreshSetlists = async function() {
 
 // ОРИГИНАЛЬНЫЕ ОБРАБОТЧИКИ ТОЧНО КАК БЫЛИ
 window.handleSetlistSelect = function(setlist) {
-    console.log('📋 [Legacy] handleSetlistSelect:', setlist.name);
+    logger.log('📋 [Legacy] handleSetlistSelect:', setlist.name);
     window.state.setCurrentSetlistId(setlist.id);
     // ИСПРАВЛЕНО: Используем правильную функцию для установки названия
     window.state.setCurrentSetlistName(setlist.name);
@@ -425,7 +425,7 @@ window.handleSetlistSelect = function(setlist) {
 };
 
 window.handleSetlistDelete = async function(setlistId, setlistName) {
-    console.log('📋 [Legacy] handleSetlistDelete:', setlistName);
+    logger.log('📋 [Legacy] handleSetlistDelete:', setlistName);
     if (confirm(`Вы уверены, что хотите удалить сет-лист "${setlistName}"?`)) {
         try {
             const wasSelected = window.state.currentSetlistId === setlistId;
@@ -438,27 +438,26 @@ window.handleSetlistDelete = async function(setlistId, setlistName) {
                 ui.clearSetlistSelection();
             }
         } catch (error) {
-            console.error("Ошибка при удалении сет-листа:", error);
+            logger.error("Ошибка при удалении сет-листа:", error);
             alert("Не удалось удалить сет-лист.");
         }
     }
 };
 
 window.handleFavoriteOrRepertoireSelect = function(song) {
-    console.log('🎵 [Legacy] Song selected from panel:', song.name);
+    logger.log('🎵 [Legacy] Song selected from panel:', song.name);
     
     if (!song || !song.id) return;
     
-    // Выбираем категорию
-    if (ui.sheetSelect && song.sheet) {
-        ui.sheetSelect.value = song.sheet;
-        ui.sheetSelect.dispatchEvent(new Event('change'));
-    }
-    
-    // Выбираем песню
-    if (ui.songSelect) {
-        ui.songSelect.value = song.id;
-        ui.songSelect.dispatchEvent(new Event('change'));
+    // Используем новый метод отображения песни
+    if (typeof ui.displaySongDetails === 'function') {
+        // Ищем полные данные песни в state
+        const fullSongData = window.state.allSongs?.find(s => s.id === song.id) || song;
+        logger.log('🎵 [Legacy] Displaying song details for:', fullSongData.name);
+        
+        // Передаем также тональность, если она указана в песне из сет-листа
+        const keyToSelect = song.keyToSelect || song.defaultKey || fullSongData.defaultKey;
+        ui.displaySongDetails(fullSongData, keyToSelect);
     }
     
     // Закрываем панели
@@ -469,7 +468,7 @@ window.handleFavoriteOrRepertoireSelect = function(song) {
     // КРИТИЧЕСКИ ВАЖНО: Убираем анимацию загрузки с кнопки репертуара
     if (ui.toggleRepertoireButton) {
         ui.toggleRepertoireButton.classList.remove('loading');
-        console.log('🎭 [Legacy] Repertoire loading animation removed');
+        logger.log('🎭 [Legacy] Repertoire loading animation removed');
     }
 };
 
@@ -532,8 +531,8 @@ window.handleRepertoireUpdate = function(data) {
     
     // КРИТИЧЕСКИ ВАЖНО: Убираем анимацию загрузки после обновления данных
     if (ui.toggleRepertoireButton) {
-        ui.toggleRepertoireButton.classList.remove('loading');
-        console.log('🎭 [Legacy] Repertoire loading animation removed after data update');
+                    ui.toggleRepertoireButton.classList.remove('loading');
+            logger.log('🎭 [Legacy] Repertoire loading animation removed after data update');
     }
 };
 
