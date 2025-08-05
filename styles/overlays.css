@@ -81,8 +81,8 @@
 
 .songs-overlay-close .close-icon {
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     position: relative;
 }
 
@@ -91,12 +91,13 @@
 .songs-overlay-close .close-icon::after {
     content: '';
     position: absolute;
-    width: 16px;
-    height: 2px;
-    background-color: var(--text-primary);
+    width: 20px;
+    height: 3px;
+    background-color: currentColor;
     top: 50%;
     left: 50%;
     transform-origin: center;
+    border-radius: 2px;
 }
 
 .songs-overlay-close .close-icon::before {
@@ -364,8 +365,13 @@
     color: #e5e7eb;
 }
 
+[data-theme="dark"] .songs-overlay-close {
+    color: #e5e7eb;
+}
+
 [data-theme="dark"] .songs-overlay-close:hover {
     background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
 }
 
 [data-theme="dark"] .songs-category-filters {
@@ -438,8 +444,13 @@
     color: #111827;
 }
 
+[data-theme="light"] .songs-overlay-close {
+    color: #374151;
+}
+
 [data-theme="light"] .songs-overlay-close:hover {
     background: rgba(0, 0, 0, 0.05);
+    color: #111827;
 }
 
 [data-theme="light"] .songs-category-filters {
