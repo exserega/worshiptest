@@ -193,24 +193,11 @@
 
 /* --- Кнопка Копировать текст над началом текста --- */
 #copy-text-button {
-    position: absolute;
-    top: 50px;              /* Между действиями и блоками контента */
-    right: 8px;             /* Отступ от правой границы fieldset */
-    z-index: 10;            /* Поверх содержимого */
-    width: 32px;            /* Компактный размер */
-    height: 32px;
-    font-size: 0.9rem;      /* Размер иконки */
-    background: var(--container-background-color) !important;
-    border: none !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-    opacity: 0.8;           /* Полупрозрачная */
-    transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
-    display: none;          /* По умолчанию скрыта */
+    /* Убираем старые стили позиционирования, теперь кнопка в ряду с другими */
+    /* border наследуется от icon-button.simple */
 }
 
-#copy-text-button:hover {
-    opacity: 1;             /* Полностью видимая при наведении */
-}
+/* hover наследуется от icon-button.simple */
 
 /* Стиль для состояния "Скопировано" */
 #copy-text-button.copied {
