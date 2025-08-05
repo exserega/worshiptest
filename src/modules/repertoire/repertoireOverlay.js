@@ -126,12 +126,16 @@ class RepertoireOverlay {
         
         logger.log(`🎤 Загружаем репертуар для пользователя: ${user.uid}`);
         
-        // Проверяем структуру базы данных
-        const userDocRef = doc(db, 'users', user.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists) {  // В Firebase v8 exists - это свойство, не функция
-            logger.log('📊 Документ пользователя найден:', userDoc.data());
-        }
+        // Проверка документа пользователя (временно отключена из-за проблем с кешем)
+        // try {
+        //     const userDocRef = doc(db, 'users', user.uid);
+        //     const userDoc = await getDoc(userDocRef);
+        //     if (userDoc.exists) {
+        //         logger.log('📊 Документ пользователя найден:', userDoc.data());
+        //     }
+        // } catch (error) {
+        //     logger.warn('⚠️ Ошибка проверки документа пользователя:', error);
+        // }
         
         const repertoireRef = collection(db, 'users', user.uid, 'repertoire');
         const q = query(repertoireRef, orderBy('name'));
@@ -144,6 +148,11 @@ class RepertoireOverlay {
             snapshot.forEach(doc => {
                 const data = doc.data();
                 logger.log(`📄 Документ ${doc.id}:`, data);
+                
+                // Проверяем структуру данных
+                if (!data.name) {
+                    logger.warn(`⚠️ Документ ${doc.id} не содержит поля name:`, data);
+                }
                 
                 this.repertoireSongs.push({
                     id: doc.id,
@@ -298,17 +307,23 @@ class RepertoireOverlay {
         
         logger.log('🎨 Отрисовка песен:', this.filteredSongs);
         
-        songsList.innerHTML = this.filteredSongs.map(song => `
-            <div class="song-item" data-song-id="${song.id}">
-                <div class="song-info">
-                    <span class="song-name">${song.name}</span>
+        songsList.innerHTML = this.filteredSongs.map(song => {
+            // Проверяем наличие обязательных полей
+            const songName = song.name || `Песня ${song.id}`;
+            const songId = song.id || 'unknown';
+            
+            return `
+                <div class="song-item" data-song-id="${songId}">
+                    <div class="song-info">
+                        <span class="song-name">${songName}</span>
+                    </div>
+                    <div class="song-meta">
+                        ${song.preferredKey ? `<span class="song-key">${song.preferredKey}</span>` : ''}
+                        ${song.BPM ? `<span class="song-bpm">${song.BPM} BPM</span>` : ''}
+                    </div>
                 </div>
-                <div class="song-meta">
-                    ${song.preferredKey ? `<span class="song-key">${song.preferredKey}</span>` : ''}
-                    ${song.BPM ? `<span class="song-bpm">${song.BPM} BPM</span>` : ''}
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
         
         // Добавляем обработчики кликов
         const songItems = songsList.querySelectorAll('.song-item');
