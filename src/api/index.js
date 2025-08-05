@@ -40,7 +40,6 @@ import {
 // Закомментированы отсутствующие импорты
 // import { getCurrentBranchId } from '../modules/branches/branchUtils.js';
 // import { searchWorkerManager } from '../utils/workerManager.js';
-import logger from '../utils/logger.js';
 
 // Заглушка для getCurrentBranchId пока модуль не доступен
 const getCurrentBranchId = () => {
