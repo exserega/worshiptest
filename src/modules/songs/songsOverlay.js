@@ -14,8 +14,8 @@ const CATEGORIES = {
     'all': 'Все песни',
     'fast-vertical': 'Быстрые вертикаль',
     'fast-horizontal': 'Быстрые горизонталь', 
-    'slow-vertical': 'Медленные вертикаль',
-    'slow-horizontal': 'Медленные горизонталь'
+    'slow-vertical': 'Поклонение вертикаль',
+    'slow-horizontal': 'Поклонение горизонталь'
 };
 
 class SongsOverlay {
@@ -172,8 +172,8 @@ class SongsOverlay {
             const categoryMap = {
                 'fast-vertical': 'Быстрые (вертикаль)',
                 'fast-horizontal': 'Быстрые (горизонталь)',
-                'slow-vertical': 'Медленные (вертикаль)',
-                'slow-horizontal': 'Медленные (горизонталь)'
+                'slow-vertical': 'Поклонение (вертикаль)',
+                'slow-horizontal': 'Поклонение (горизонталь)'
             };
             
             const firebaseCategory = categoryMap[category];
