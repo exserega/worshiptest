@@ -38,26 +38,32 @@ export async function addToUserRepertoire(song, preferredKey) {
         const existingDoc = await getDoc(songDoc);
         
         if (existingDoc.exists) {
-            // Обновляем только тональность и время
+            // Обновляем тональность, BPM и время
+            const bpmValue = song.BPM || song.bpm || song['Оригинальный BPM'] || null;
+            
             await setDoc(songDoc, {
                 preferredKey: preferredKey,
+                BPM: bpmValue,
                 updatedAt: serverTimestamp()
             }, { merge: true });
             
-            logger.log(`✅ Тональность песни "${song.name}" обновлена на ${preferredKey}`);
+            logger.log(`✅ Тональность песни "${song.name}" обновлена на ${preferredKey}, BPM: ${bpmValue}`);
             return { status: 'updated', key: preferredKey };
         } else {
             // Добавляем новую песню
+            const bpmValue = song.BPM || song.bpm || song['Оригинальный BPM'] || null;
+            logger.log(`🎵 Добавляем песню с BPM: ${bpmValue}, данные песни:`, song);
+            
             await setDoc(songDoc, {
                 name: song.name,
                 category: song.sheet || song.category,
                 preferredKey: preferredKey,
-                BPM: song.BPM || song.bpm || null,
+                BPM: bpmValue,
                 addedAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             });
             
-            logger.log(`✅ Песня "${song.name}" добавлена в репертуар с тональностью ${preferredKey}`);
+            logger.log(`✅ Песня "${song.name}" добавлена в репертуар с тональностью ${preferredKey} и BPM ${bpmValue}`);
             return { status: 'added', key: preferredKey };
         }
     } catch (error) {

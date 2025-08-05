@@ -149,15 +149,17 @@ class RepertoireOverlay {
                 const data = doc.data();
                 logger.log(`📄 Документ ${doc.id}:`, data);
                 
-                // Проверяем структуру данных
-                if (!data.name) {
-                    logger.warn(`⚠️ Документ ${doc.id} не содержит поля name:`, data);
+                // Фильтруем только песни (должны иметь preferredKey или category)
+                if (data.preferredKey || data.category || data.BPM) {
+                    // Это песня
+                    this.repertoireSongs.push({
+                        id: doc.id,
+                        ...data
+                    });
+                } else {
+                    // Это не песня, пропускаем
+                    logger.warn(`⚠️ Документ ${doc.id} не является песней, пропускаем:`, data);
                 }
-                
-                this.repertoireSongs.push({
-                    id: doc.id,
-                    ...data
-                });
             });
             
             logger.log(`✅ Загружено ${this.repertoireSongs.length} песен из репертуара`);
@@ -319,7 +321,7 @@ class RepertoireOverlay {
                     </div>
                     <div class="song-meta">
                         ${song.preferredKey ? `<span class="song-key">${song.preferredKey}</span>` : ''}
-                        ${song.BPM ? `<span class="song-bpm">${song.BPM} BPM</span>` : ''}
+                        ${(song.BPM || song.bpm) ? `<span class="song-bpm">${song.BPM || song.bpm} BPM</span>` : ''}
                     </div>
                 </div>
             `;
