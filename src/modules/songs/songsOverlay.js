@@ -18,7 +18,6 @@ const MAIN_CATEGORIES = {
 
 // Подкатегории (второй уровень)
 const SUB_CATEGORIES = {
-    'all': 'Обе',
     'vertical': 'Вертикаль',
     'horizontal': 'Горизонталь'
 };
@@ -29,7 +28,7 @@ class SongsOverlay {
         this.songs = [];
         this.filteredSongs = [];
         this.selectedMainCategory = 'all';
-        this.selectedSubCategory = 'all';
+        this.selectedSubCategory = null; // null означает "показать все"
         this.isOpen = false;
         
         this.init();
@@ -75,7 +74,7 @@ class SongsOverlay {
                         <!-- Подкатегории (скрыты изначально) -->
                         <div class="songs-category-filters sub-filters" style="display: none;">
                             ${Object.entries(SUB_CATEGORIES).map(([key, label]) => `
-                                <button class="category-chip sub-category ${key === 'all' ? 'active' : ''}" 
+                                <button class="category-chip sub-category" 
                                         data-sub-category="${key}">
                                     ${label}
                                 </button>
@@ -197,7 +196,7 @@ class SongsOverlay {
      */
     selectMainCategory(category) {
         this.selectedMainCategory = category;
-        this.selectedSubCategory = 'all'; // Сбрасываем подкатегорию
+        this.selectedSubCategory = null; // Сбрасываем подкатегорию
         
         // Обновляем активную кнопку
         const chips = this.overlay.querySelectorAll('.main-category');
@@ -213,10 +212,10 @@ class SongsOverlay {
             subFilters.style.display = 'none';
         }
         
-        // Сбрасываем активную подкатегорию на "Все"
+        // Убираем активный класс со всех подкатегорий
         const subChips = this.overlay.querySelectorAll('.sub-category');
         subChips.forEach(chip => {
-            chip.classList.toggle('active', chip.dataset.subCategory === 'all');
+            chip.classList.remove('active');
         });
         
         this.filterSongs();
@@ -226,12 +225,17 @@ class SongsOverlay {
      * Выбор подкатегории
      */
     selectSubCategory(subCategory) {
-        this.selectedSubCategory = subCategory;
+        // Если кликнули на уже активную подкатегорию - снимаем выбор
+        if (this.selectedSubCategory === subCategory) {
+            this.selectedSubCategory = null;
+        } else {
+            this.selectedSubCategory = subCategory;
+        }
         
         // Обновляем активную кнопку
         const chips = this.overlay.querySelectorAll('.sub-category');
         chips.forEach(chip => {
-            chip.classList.toggle('active', chip.dataset.subCategory === subCategory);
+            chip.classList.toggle('active', chip.dataset.subCategory === this.selectedSubCategory);
         });
         
         this.filterSongs();
@@ -249,18 +253,24 @@ class SongsOverlay {
             // Маппинг категорий
             const categoryMap = {
                 'fast': {
-                    'all': ['Быстрые (вертикаль)', 'Быстрые (горизонталь)'],
                     'vertical': ['Быстрые (вертикаль)'],
                     'horizontal': ['Быстрые (горизонталь)']
                 },
                 'worship': {
-                    'all': ['Поклонение (вертикаль)', 'Поклонение (горизонталь)'],
                     'vertical': ['Поклонение (вертикаль)'],
                     'horizontal': ['Поклонение (горизонталь)']
                 }
             };
             
-            const targetSheets = categoryMap[this.selectedMainCategory]?.[this.selectedSubCategory] || [];
+            // Если подкатегория не выбрана (null), показываем все песни категории
+            let targetSheets;
+            if (this.selectedSubCategory) {
+                targetSheets = categoryMap[this.selectedMainCategory]?.[this.selectedSubCategory] || [];
+            } else {
+                // Показываем все подкатегории основной категории
+                const allSubCategories = categoryMap[this.selectedMainCategory] || {};
+                targetSheets = Object.values(allSubCategories).flat();
+            }
             logger.log(`🎵 Target sheets: ${targetSheets.join(', ')}`);
             
             this.filteredSongs = this.songs.filter(song => {

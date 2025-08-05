@@ -266,7 +266,18 @@
         font-size: 12px;
         background: rgba(0, 0, 0, 0.05); /* Чуть прозрачнее */
         border-radius: 12px; /* Меньше радиус */
-        opacity: 0.9; /* Чуть прозрачнее для визуального отличия */
+        opacity: 0.7; /* Прозрачнее, пока не выбраны */
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+    }
+    
+    .sub-category:hover {
+        opacity: 0.85;
+    }
+    
+    .sub-category.active {
+        opacity: 1;
+        border-color: var(--accent-color);
     }
     
     .songs-overlay-header {
