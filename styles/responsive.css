@@ -470,14 +470,25 @@
         color: var(--button-text-color) !important;
         border-color: var(--accent-color) !important;
     }
-         /* Кнопка Копировать на мобильных */
-     #copy-text-button {
-         width: 28px;    /* Компактнее на мобильных */
-         height: 28px;
-         font-size: 0.8rem;
-         top: 45px;      /* Выше блоков на мобильных */
-         right: 6px;     /* Ближе к правому краю */
-     }
+                 /* Кнопка Копировать на мобильных */
+    #copy-text-button {
+        width: 36px;    /* Такой же размер как у других кнопок */
+        height: 36px;
+        padding: 0;
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: static !important; /* Убираем абсолютное позиционирование */
+        margin-left: 3px; /* Небольшой отступ от предыдущей кнопки */
+    }
+    #copy-text-button .button-text {
+        display: none; /* Скрываем текст на мобильных */
+    }
+    #copy-text-button > i {
+        font-size: 0.9rem;
+        margin: 0;
+    }
      /* --- Конец мобильных стилей для новых кнопок --- */
 
     /* Footer */
