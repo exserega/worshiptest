@@ -75,6 +75,7 @@
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s ease;
+    font-size: 20px; /* Увеличиваем размер крестика */
 }
 
 .songs-overlay-close:hover {
@@ -331,11 +332,12 @@
 }
 
 [data-theme="dark"] .songs-overlay-close {
-    color: #9ca3af;
+    color: #e5e7eb; /* Светлый крестик на темном фоне */
 }
 
 [data-theme="dark"] .songs-overlay-close:hover {
-    color: #e5e7eb;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="dark"] .songs-category-filters {
@@ -414,6 +416,7 @@
 
 [data-theme="light"] .songs-overlay-close:hover {
     color: #111827;
+    background: rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="light"] .songs-category-filters {
