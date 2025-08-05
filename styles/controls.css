@@ -48,7 +48,7 @@
     justify-content: center;
     padding: 8px 16px;
     background: transparent;
-    color: var(--text-color);
+    color: #e5e7eb; /* Светлый текст для темной темы */
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     font-size: 0.875rem;
@@ -63,12 +63,12 @@
 .songs-overlay-button:hover:not(:disabled) {
     background: var(--hover-color);
     border-color: color-mix(in srgb, var(--border-color) 80%, black);
-    color: var(--text-color);
+    color: #e5e7eb; /* Светлый текст остается */
 }
 
 .songs-overlay-button:active:not(:disabled) {
     background: var(--primary-color);
-    color: var(--button-text-color);
+    color: #111827; /* Темный текст на светлом фоне */
     border-color: var(--primary-color);
     transform: translateY(1px);
 }
@@ -80,18 +80,18 @@
 
 /* Светлая тема */
 [data-theme="light"] .songs-overlay-button {
-    color: var(--label-color);
+    color: #1e293b; /* Темный текст для светлой темы */
 }
 
 [data-theme="light"] .songs-overlay-button:hover:not(:disabled) {
     background: var(--hover-color);
     border-color: color-mix(in srgb, var(--border-color) 80%, #475569);
-    color: var(--text-color);
+    color: #1e293b; /* Темный текст остается */
 }
 
 [data-theme="light"] .songs-overlay-button:active:not(:disabled) {
     background: var(--primary-color);
-    color: var(--button-text-color);
+    color: #ffffff; /* Белый текст на синем фоне */
     border-color: var(--primary-color);
 }
 
