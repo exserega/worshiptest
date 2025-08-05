@@ -23,9 +23,10 @@ export const chordsExtended = [
     "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "H", "B"
 ];
 
-export const DEFAULT_FONT_SIZE = 8; // Дефолтный размер для мобильных
-export const MIN_FONT_SIZE = 4; // Минимальный размер  
-export const MAX_FONT_SIZE = 32; // Максимальный размер
+// Размеры шрифта
+export const MIN_FONT_SIZE = 4;
+export const MAX_FONT_SIZE = 32;
+export const DEFAULT_FONT_SIZE = 10; // Дефолтный размер
 export const MAX_SHARED_SONGS = 8;
 
 // Константы для режима презентации

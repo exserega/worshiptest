@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v114'; // v114, Полностью исправлены цвета крестика через background-color
+const CACHE_NAME = 'agape-worship-cache-v115'; // v115, Изменен размер шрифта по умолчанию с 8px на 10px
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
