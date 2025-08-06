@@ -348,57 +348,34 @@ export async function handleAddToRepertoire(song) {
         const keySelect = document.getElementById('key-select');
         const currentKey = keySelect?.value || song.defaultKey || song.keys?.[0] || 'C';
         
-        // Проверяем, есть ли уже песня в репертуаре
-        const existingSong = await checkSongInUserRepertoire(song.id);
+        // Добавляем песню или проверяем статус
+        const result = await addToUserRepertoire(song, currentKey);
         
-        if (existingSong) {
-            const existingKeys = existingSong.keys || [existingSong.preferredKey];
+        if (result.status === 'exists') {
+            // Песня уже есть в той же тональности
+            const action = confirm(
+                `Песня "${song.name}" уже есть в репертуаре в тональности ${currentKey}.\n\n` +
+                `Удалить её из репертуара?`
+            );
             
-            // Если пытаемся добавить ту же тональность
-            if (existingKeys.includes(currentKey)) {
-                const action = confirm(
-                    `Песня "${song.name}" уже есть в репертуаре в тональности ${currentKey}.\n\n` +
-                    `Удалить её из репертуара?`
-                );
-                
-                if (action) {
-                    await removeFromUserRepertoire(song.id);
-                    showNotification(`🎤 "${song.name}" удалена из репертуара`, 'info');
-                }
-            } else {
-                // Проверяем количество тональностей
-                if (existingKeys.length >= 2) {
-                    // Показываем диалог замены
-                    const message = `Песня "${song.name}" уже есть в репертуаре в тональностях: ${existingKeys.join(', ')}.\n\n` +
-                                  `Заменить одну из них на ${currentKey}?`;
-                    
-                    if (confirm(message)) {
-                        // Спрашиваем какую заменить
-                        const keyToReplace = prompt(
-                            `Какую тональность заменить на ${currentKey}?\n` +
-                            `Введите одну из: ${existingKeys.join(', ')}`
-                        );
-                        
-                        if (keyToReplace && existingKeys.includes(keyToReplace)) {
-                            await replaceKeyInRepertoire(song.id, keyToReplace, currentKey);
-                            showNotification(`🎤 Тональность ${keyToReplace} заменена на ${currentKey}`, 'success');
-                        }
-                    }
-                } else {
-                    // Добавляем вторую тональность
-                    const result = await addToUserRepertoire(song, currentKey);
-                    if (result.status === 'key_added') {
-                        showNotification(`🎤 Добавлена тональность ${currentKey} к песне "${song.name}"`, 'success');
-                    }
-                }
+            if (action) {
+                await removeFromUserRepertoire(song.id);
+                showNotification(`🎤 "${song.name}" удалена из репертуара`, 'info');
             }
-        } else {
-            // Добавляем новую песню
-            const result = await addToUserRepertoire(song, currentKey);
+        } else if (result.status === 'different_key') {
+            // Песня есть в другой тональности
+            const action = confirm(
+                `Песня "${song.name}" уже добавлена в репертуар в тональности ${result.key}.\n\n` +
+                `Заменить на тональность ${currentKey}?`
+            );
             
-            if (result.status === 'added') {
-                showNotification(`🎤 "${song.name}" добавлена в репертуар (${currentKey})`, 'success');
+            if (action) {
+                await replaceKeyInRepertoire(song.id, currentKey);
+                showNotification(`🎤 Тональность изменена с ${result.key} на ${currentKey}`, 'success');
             }
+        } else if (result.status === 'added') {
+            // Песня успешно добавлена
+            showNotification(`🎤 "${song.name}" добавлена в репертуар (${currentKey})`, 'success');
         }
         
         // Обновляем кнопку репертуара

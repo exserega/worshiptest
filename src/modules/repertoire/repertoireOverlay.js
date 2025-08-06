@@ -189,8 +189,7 @@ class RepertoireOverlay {
         
         if (filter === 'tonality') {
             // Показываем тональности из репертуара
-            const allKeys = this.repertoireSongs.flatMap(s => s.keys || [s.preferredKey]).filter(Boolean);
-            const tonalities = [...new Set(allKeys)].sort();
+            const tonalities = [...new Set(this.repertoireSongs.map(s => s.preferredKey).filter(Boolean))].sort();
             
             if (tonalities.length > 0) {
                 subFilters.innerHTML = tonalities.map(key => `
@@ -284,10 +283,9 @@ class RepertoireOverlay {
         
         // Фильтрация по тональности
         if (this.currentFilter === 'tonality' && this.currentKeyFilter) {
-            this.filteredSongs = this.filteredSongs.filter(song => {
-                const keys = song.keys || [song.preferredKey];
-                return keys.includes(this.currentKeyFilter);
-            });
+            this.filteredSongs = this.filteredSongs.filter(song => 
+                song.preferredKey === this.currentKeyFilter
+            );
         }
         
         // Сортировка по имени
@@ -318,10 +316,6 @@ class RepertoireOverlay {
             const songName = song.name || `Песня ${song.id}`;
             const songId = song.id || 'unknown';
             
-            // Получаем все тональности
-            const keys = song.keys || [song.preferredKey];
-            const keysDisplay = keys.filter(k => k).join(', ');
-            
             return `
                 <div class="song-item" data-song-id="${songId}">
                     <div class="song-info">
@@ -331,7 +325,7 @@ class RepertoireOverlay {
                         </button>
                     </div>
                     <div class="song-meta">
-                        ${keysDisplay ? `<span class="song-key">${keysDisplay}</span>` : ''}
+                        ${song.preferredKey ? `<span class="song-key">${song.preferredKey}</span>` : ''}
                         ${(song.BPM || song.bpm) ? `<span class="song-bpm">${song.BPM || song.bpm} BPM</span>` : ''}
                     </div>
                 </div>
@@ -396,32 +390,9 @@ class RepertoireOverlay {
             const fullSongData = await getSongById(song.id);
             
             if (fullSongData) {
-                // Определяем тональность для открытия
-                const keys = song.keys || [song.preferredKey];
-                let selectedKey = song.preferredKey;
-                
-                // Если есть несколько тональностей, даем выбор
-                if (keys.length > 1) {
-                    const keyChoice = prompt(
-                        `Выберите тональность для открытия песни "${song.name}":\n\n` +
-                        keys.map((key, index) => `${index + 1}. ${key}`).join('\n') +
-                        '\n\nВведите номер тональности:'
-                    );
-                    
-                    if (keyChoice) {
-                        const index = parseInt(keyChoice) - 1;
-                        if (index >= 0 && index < keys.length) {
-                            selectedKey = keys[index];
-                        }
-                    } else {
-                        // Пользователь отменил выбор
-                        return;
-                    }
-                }
-                
-                // Открываем песню в основном окне с выбранной тональностью
+                // Открываем песню в основном окне с сохраненной тональностью
                 if (typeof displaySongDetails === 'function') {
-                    displaySongDetails(fullSongData, selectedKey);
+                    displaySongDetails(fullSongData, song.preferredKey);
                 }
                 
                 // Закрываем оверлей
