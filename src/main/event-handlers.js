@@ -559,11 +559,13 @@ function setupSetlistEventHandlers() {
                         addSongBtn.title = 'Недоступно для редактирования';
                         addSongBtn.style.opacity = '0.5';
                         addSongBtn.style.cursor = 'not-allowed';
+                        addSongBtn.disabled = true; // Полностью блокируем кнопку
                     } else {
                         addSongBtn.classList.remove('pending-disabled');
                         addSongBtn.title = '';
                         addSongBtn.style.opacity = '';
                         addSongBtn.style.cursor = '';
+                        addSongBtn.disabled = false; // Разблокируем кнопку
                     }
                 }
                 
@@ -966,6 +968,12 @@ function setupSetlistEventHandlers() {
     if (addSongBtn) {
         addSongBtn.addEventListener('click', async () => {
             console.log('🎵 [EventHandlers] Add song button clicked');
+            
+            // Если кнопка отключена, не выполняем действие
+            if (addSongBtn.disabled) {
+                console.log('⚠️ [EventHandlers] Add song button is disabled');
+                return;
+            }
             
             // Проверяем статус пользователя
             if (hasLimitedAccess()) {
