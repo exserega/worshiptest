@@ -253,6 +253,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     flex: 1;
+    text-align: left;
 }
 
 /* Кнопка удаления песни */
@@ -261,7 +262,7 @@
     height: 32px;
     border: 1px solid rgba(239, 68, 68, 0.3);
     background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    color: #ef4444 !important; /* Красная иконка */
     border-radius: 8px;
     cursor: pointer;
     display: flex;
@@ -280,7 +281,7 @@
 .song-delete-btn:hover {
     background: rgba(239, 68, 68, 0.2);
     border-color: rgba(239, 68, 68, 0.5);
-    color: #dc2626;
+    color: #dc2626 !important;
     transform: scale(1.05);
 }
 
@@ -290,6 +291,7 @@
 
 .song-delete-btn i {
     font-size: 0.9rem;
+    color: inherit !important; /* Наследуем красный цвет */
     pointer-events: none; /* Фиксим центрирование иконки */
 }
 
@@ -575,11 +577,15 @@
 [data-theme="light"] .song-delete-btn {
     background: rgba(239, 68, 68, 0.08);
     border-color: rgba(239, 68, 68, 0.25);
-    color: #dc2626;
+    color: #dc2626 !important;
 }
 
 [data-theme="light"] .song-delete-btn:hover {
     background: rgba(239, 68, 68, 0.15);
     border-color: rgba(239, 68, 68, 0.4);
-    color: #b91c1c;
+    color: #b91c1c !important;
+}
+
+[data-theme="light"] .song-delete-btn i {
+    color: inherit !important;
 }
