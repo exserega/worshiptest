@@ -224,6 +224,7 @@
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
+    gap: 12px;
 }
 
 .song-item:hover {
@@ -235,12 +236,19 @@
     transform: translateX(2px);
 }
 
-/* Информация о песне */
-.song-info {
+/* Контент песни */
+.song-content {
     flex: 1;
     display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+/* Информация о песне */
+.song-info {
+    display: flex;
     align-items: center;
-    gap: 12px;
     min-width: 0;
 }
 
@@ -252,37 +260,34 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex: 1;
-    text-align: left;
 }
 
 /* Кнопка удаления песни */
 .song-delete-btn {
-    width: 32px;
-    height: 32px;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    background: rgba(239, 68, 68, 0.1);
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
     color: #ef4444 !important; /* Красная иконка */
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    opacity: 0.8;
+    opacity: 0.6;
     flex-shrink: 0;
-    margin-left: 8px;
+    padding: 0;
 }
 
 .song-item:hover .song-delete-btn {
-    opacity: 1;
+    opacity: 0.8;
 }
 
 .song-delete-btn:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: rgba(239, 68, 68, 0.5);
+    opacity: 1 !important;
+    background: rgba(239, 68, 68, 0.1);
     color: #dc2626 !important;
-    transform: scale(1.05);
 }
 
 .song-delete-btn:active {
@@ -290,9 +295,12 @@
 }
 
 .song-delete-btn i {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: inherit !important; /* Наследуем красный цвет */
     pointer-events: none; /* Фиксим центрирование иконки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Мета-информация песни */
@@ -575,14 +583,11 @@
 
 /* Кнопка удаления для светлой темы */
 [data-theme="light"] .song-delete-btn {
-    background: rgba(239, 68, 68, 0.08);
-    border-color: rgba(239, 68, 68, 0.25);
     color: #dc2626 !important;
 }
 
 [data-theme="light"] .song-delete-btn:hover {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.08);
     color: #b91c1c !important;
 }
 
