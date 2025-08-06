@@ -521,8 +521,13 @@ export async function updateRepertoireButton(songData) {
         if (repertoireSong) {
             repertoireButton.classList.add('active');
             repertoireButton.parentElement.classList.add('active');
-            repertoireButton.title = `В репертуаре (${repertoireSong.preferredKey})`;
-            repertoireButton.setAttribute('aria-label', `В репертуаре (${repertoireSong.preferredKey})`);
+            
+            // Получаем все тональности
+            const keys = repertoireSong.keys || [repertoireSong.preferredKey];
+            const keysDisplay = keys.filter(k => k).join(', ');
+            
+            repertoireButton.title = `В репертуаре (${keysDisplay})`;
+            repertoireButton.setAttribute('aria-label', `В репертуаре (${keysDisplay})`);
         } else {
             repertoireButton.classList.remove('active');
             repertoireButton.parentElement.classList.remove('active');

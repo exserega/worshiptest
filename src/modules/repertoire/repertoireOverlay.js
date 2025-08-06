@@ -189,7 +189,8 @@ class RepertoireOverlay {
         
         if (filter === 'tonality') {
             // Показываем тональности из репертуара
-            const tonalities = [...new Set(this.repertoireSongs.map(s => s.preferredKey).filter(Boolean))].sort();
+            const allKeys = this.repertoireSongs.flatMap(s => s.keys || [s.preferredKey]).filter(Boolean);
+            const tonalities = [...new Set(allKeys)].sort();
             
             if (tonalities.length > 0) {
                 subFilters.innerHTML = tonalities.map(key => `
@@ -283,9 +284,10 @@ class RepertoireOverlay {
         
         // Фильтрация по тональности
         if (this.currentFilter === 'tonality' && this.currentKeyFilter) {
-            this.filteredSongs = this.filteredSongs.filter(song => 
-                song.preferredKey === this.currentKeyFilter
-            );
+            this.filteredSongs = this.filteredSongs.filter(song => {
+                const keys = song.keys || [song.preferredKey];
+                return keys.includes(this.currentKeyFilter);
+            });
         }
         
         // Сортировка по имени
@@ -316,13 +318,20 @@ class RepertoireOverlay {
             const songName = song.name || `Песня ${song.id}`;
             const songId = song.id || 'unknown';
             
+            // Получаем все тональности
+            const keys = song.keys || [song.preferredKey];
+            const keysDisplay = keys.filter(k => k).join(', ');
+            
             return `
                 <div class="song-item" data-song-id="${songId}">
                     <div class="song-info">
                         <span class="song-name">${songName}</span>
+                        <button class="song-delete-btn" data-song-id="${songId}" title="Удалить из репертуара">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                     <div class="song-meta">
-                        ${song.preferredKey ? `<span class="song-key">${song.preferredKey}</span>` : ''}
+                        ${keysDisplay ? `<span class="song-key">${keysDisplay}</span>` : ''}
                         ${(song.BPM || song.bpm) ? `<span class="song-bpm">${song.BPM || song.bpm} BPM</span>` : ''}
                     </div>
                 </div>
@@ -332,11 +341,44 @@ class RepertoireOverlay {
         // Добавляем обработчики кликов
         const songItems = songsList.querySelectorAll('.song-item');
         songItems.forEach(item => {
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (e) => {
+                // Игнорируем клик по кнопке удаления
+                if (e.target.closest('.song-delete-btn')) return;
+                
                 const songId = item.dataset.songId;
                 const song = this.filteredSongs.find(s => s.id === songId);
                 if (song) {
                     this.selectSong(song);
+                }
+            });
+        });
+        
+        // Добавляем обработчики для кнопок удаления
+        const deleteButtons = songsList.querySelectorAll('.song-delete-btn');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const songId = btn.dataset.songId;
+                const song = this.filteredSongs.find(s => s.id === songId);
+                
+                if (song && confirm(`Удалить песню "${song.name}" из репертуара?`)) {
+                    try {
+                        const { removeFromUserRepertoire } = await import('../../api/userRepertoire.js');
+                        await removeFromUserRepertoire(songId);
+                        
+                        // Обновляем отображение
+                        await this.loadUserRepertoire();
+                        this.filterSongs();
+                        this.renderSongs();
+                        
+                        // Показываем уведомление
+                        if (window.showNotification) {
+                            window.showNotification(`🎤 "${song.name}" удалена из репертуара`, 'info');
+                        }
+                    } catch (error) {
+                        logger.error('Ошибка удаления песни:', error);
+                        alert('Ошибка удаления песни');
+                    }
                 }
             });
         });
@@ -354,9 +396,32 @@ class RepertoireOverlay {
             const fullSongData = await getSongById(song.id);
             
             if (fullSongData) {
-                // Открываем песню в основном окне с сохраненной тональностью
+                // Определяем тональность для открытия
+                const keys = song.keys || [song.preferredKey];
+                let selectedKey = song.preferredKey;
+                
+                // Если есть несколько тональностей, даем выбор
+                if (keys.length > 1) {
+                    const keyChoice = prompt(
+                        `Выберите тональность для открытия песни "${song.name}":\n\n` +
+                        keys.map((key, index) => `${index + 1}. ${key}`).join('\n') +
+                        '\n\nВведите номер тональности:'
+                    );
+                    
+                    if (keyChoice) {
+                        const index = parseInt(keyChoice) - 1;
+                        if (index >= 0 && index < keys.length) {
+                            selectedKey = keys[index];
+                        }
+                    } else {
+                        // Пользователь отменил выбор
+                        return;
+                    }
+                }
+                
+                // Открываем песню в основном окне с выбранной тональностью
                 if (typeof displaySongDetails === 'function') {
-                    displaySongDetails(fullSongData, song.preferredKey);
+                    displaySongDetails(fullSongData, selectedKey);
                 }
                 
                 // Закрываем оверлей

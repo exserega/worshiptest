@@ -238,6 +238,9 @@
 /* Информация о песне */
 .song-info {
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     min-width: 0;
 }
 
@@ -249,6 +252,41 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
+}
+
+/* Кнопка удаления песни */
+.song-delete-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    opacity: 0;
+    margin-left: auto;
+}
+
+.song-item:hover .song-delete-btn {
+    opacity: 1;
+}
+
+.song-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: scale(1.1);
+}
+
+.song-delete-btn:active {
+    transform: scale(0.95);
+}
+
+.song-delete-btn i {
+    font-size: 0.85rem;
 }
 
 /* Мета-информация песни */
