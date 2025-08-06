@@ -319,7 +319,7 @@ body[data-theme="light"] .repertoire-view-button.active {
 
 /* Сама кнопка - компактная */
 .legend-icon-btn {
-    width: 60px; /* Уменьшили с 80px */
+    width: 68px; /* Увеличили для текста "Репертуар" */
     height: 40px; /* Уменьшили с 50px */
     border: 1.5px solid var(--border-color);
     background: transparent;
@@ -384,7 +384,7 @@ body[data-theme="light"] .legend-icon-btn.mic i {
     white-space: nowrap;
     z-index: 1;
     transition: color 0.2s ease;
-    max-width: 50px;
+    max-width: 64px; /* Увеличили для текста "Репертуар" */
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -458,7 +458,7 @@ body[data-theme="light"] .legend-icon-btn.mic i {
     }
     
     .legend-icon-btn {
-        width: 55px;
+        width: 63px; /* Увеличили для текста "Репертуар" */
         height: 36px;
         font-size: 1rem;
         margin-top: 7px;
@@ -467,7 +467,7 @@ body[data-theme="light"] .legend-icon-btn.mic i {
     .song-legend-action::before {
         font-size: 0.5rem;
         padding: 1px 3px;
-        max-width: 45px;
+        max-width: 58px; /* Увеличили для текста "Репертуар" */
     }
 }
 
@@ -478,7 +478,7 @@ body[data-theme="light"] .legend-icon-btn.mic i {
     }
     
     .legend-icon-btn {
-        width: 50px;
+        width: 58px; /* Увеличили для текста "Репертуар" */
         height: 32px;
         font-size: 0.9rem;
         margin-top: 6px;
@@ -487,6 +487,6 @@ body[data-theme="light"] .legend-icon-btn.mic i {
     .song-legend-action::before {
         font-size: 0.45rem;
         padding: 1px 2px;
-        max-width: 40px;
+        max-width: 52px; /* Увеличили для текста "Репертуар" */
     }
 }
