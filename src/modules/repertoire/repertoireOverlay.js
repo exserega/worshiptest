@@ -320,13 +320,13 @@ class RepertoireOverlay {
                 <div class="song-item" data-song-id="${songId}">
                     <div class="song-info">
                         <span class="song-name">${songName}</span>
-                        <button class="song-delete-btn" data-song-id="${songId}" title="Удалить из репертуара">
-                            <i class="fas fa-trash"></i>
-                        </button>
                     </div>
                     <div class="song-meta">
                         ${song.preferredKey ? `<span class="song-key">${song.preferredKey}</span>` : ''}
                         ${(song.BPM || song.bpm) ? `<span class="song-bpm">${song.BPM || song.bpm} BPM</span>` : ''}
+                        <button class="song-delete-btn" data-song-id="${songId}" title="Удалить из репертуара">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 </div>
             `;
