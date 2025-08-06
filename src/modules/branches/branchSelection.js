@@ -194,8 +194,8 @@ async function confirmBranchSelection() {
         return;
     }
     
-    const selectedBranch = branchesList.querySelector('input[name="branch"]:checked');
-    if (!selectedBranch) {
+    // Проверяем, выбран ли филиал
+    if (!selectedBranchId) {
         alert('Пожалуйста, выберите филиал');
         return;
     }
