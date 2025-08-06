@@ -964,7 +964,7 @@ function setupSetlistEventHandlers() {
     // Кнопка "Добавить" в панели сетлистов
     const addSongBtn = document.getElementById('add-song-btn');
     if (addSongBtn) {
-        addSongBtn.addEventListener('click', () => {
+        addSongBtn.addEventListener('click', async () => {
             console.log('🎵 [EventHandlers] Add song button clicked');
             
             // Проверяем статус пользователя
@@ -976,6 +976,20 @@ function setupSetlistEventHandlers() {
                     showPendingUserMessage('Добавление песен в сет-листы');
                 }
                 return;
+            }
+            
+            // Проверяем доступ к текущему филиалу
+            try {
+                const { canEditInCurrentBranch, showOtherBranchMessage } = await import('../modules/branches/branchSelector.js');
+                const canEdit = await canEditInCurrentBranch();
+                
+                if (!canEdit) {
+                    console.log('⚠️ [EventHandlers] User cannot edit in current branch');
+                    await showOtherBranchMessage('Добавление песен в сет-листы');
+                    return;
+                }
+            } catch (error) {
+                console.error('❌ [EventHandlers] Error checking branch access:', error);
             }
             
             // Проверяем есть ли выбранный сетлист
