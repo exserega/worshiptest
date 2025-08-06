@@ -250,6 +250,7 @@
     display: flex;
     align-items: center;
     min-width: 0;
+    flex: 1;
 }
 
 .song-name {
@@ -260,6 +261,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
 }
 
 /* Кнопка удаления песни */
