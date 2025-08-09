@@ -36,10 +36,26 @@ export async function getDocs(query) {
 }
 
 /**
+ * Эмуляция getDocs() из v9 c источником cache (офлайн)
+ */
+export async function getDocsFromCache(query) {
+    const snapshot = await query.get({ source: 'cache' });
+    return snapshot;
+}
+
+/**
  * Эмуляция getDoc() из v9
  */
 export async function getDoc(docRef) {
     const snapshot = await docRef.get();
+    return snapshot;
+}
+
+/**
+ * Эмуляция getDoc() из v9 c источником cache (офлайн)
+ */
+export async function getDocFromCache(docRef) {
+    const snapshot = await docRef.get({ source: 'cache' });
     return snapshot;
 }
 

@@ -14,7 +14,9 @@ import {
     getDocs,
     query,
     where,
-    serverTimestamp 
+    serverTimestamp,
+    getDocFromCache,
+    getDocsFromCache
 } from '../utils/firebase-v8-adapter.js';
 import { auth } from '../../firebase-init.js';
 
@@ -37,7 +39,13 @@ export async function addToUserRepertoire(song, preferredKey) {
         const songDoc = repertoireRef.doc(song.id);
         
         // Проверяем, есть ли уже эта песня
-        const existingDoc = await getDoc(songDoc);
+        let existingDoc;
+        try {
+            existingDoc = await getDoc(songDoc);
+        } catch (netErr) {
+            logger.log('⚠️ Сеть недоступна, читаем репертуар из офлайн-кэша');
+            existingDoc = await getDocFromCache(songDoc);
+        }
         const bpmValue = song.BPM || song.bpm || song['Оригинальный BPM'] || null;
         
         if (existingDoc.exists) {
@@ -98,7 +106,13 @@ export async function replaceKeyInRepertoire(songId, newKey) {
         
         const userDocRef = doc(db, 'users', user.uid);
         const songDoc = userDocRef.collection('repertoire').doc(songId);
-        const existingDoc = await getDoc(songDoc);
+        let existingDoc;
+        try {
+            existingDoc = await getDoc(songDoc);
+        } catch (netErr) {
+            logger.log('⚠️ Сеть недоступна, читаем репертуар из офлайн-кэша');
+            existingDoc = await getDocFromCache(songDoc);
+        }
         
         if (!existingDoc.exists) {
             throw new Error('Песня не найдена в репертуаре');
@@ -183,7 +197,13 @@ export async function getUserRepertoire() {
         // В Firebase v8 правильный путь к подколлекции
         const userDocRef = doc(db, 'users', user.uid);
         const repertoireRef = userDocRef.collection('repertoire');
-        const snapshot = await repertoireRef.get();
+        let snapshot;
+        try {
+            snapshot = await repertoireRef.get();
+        } catch (netErr) {
+            logger.log('⚠️ Сеть недоступна, читаем список репертуара из офлайн-кэша');
+            snapshot = await repertoireRef.get({ source: 'cache' });
+        }
         
         const songs = [];
         snapshot.forEach(doc => {

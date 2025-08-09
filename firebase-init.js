@@ -36,5 +36,20 @@ window.firebaseAuth = auth;
 window.firebaseDb = db;
 window.firebaseStorage = storage;
 
+// Включаем офлайн-персистентность Firestore (чтение ранее загруженных данных офлайн)
+try {
+    if (firebase?.firestore) {
+        firebase.firestore().enablePersistence({ synchronizeTabs: true })
+            .then(() => {
+                console.log('✅ Firestore persistence enabled');
+            })
+            .catch((error) => {
+                console.warn('⚠️ Firestore persistence not enabled:', error?.code || error?.message || error);
+            });
+    }
+} catch (e) {
+    console.warn('⚠️ Firestore persistence setup failed:', e);
+}
+
 // Экспорт для модулей
 export { firebase, auth, db, storage, firebaseConfig };

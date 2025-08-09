@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v147'; // v147, Унификация Firebase init и фиксы поиска, обновление кэша
+const CACHE_NAME = 'agape-worship-cache-v148'; // v148, офлайн-кэш: базовые страницы/скрипты/иконки
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
@@ -15,6 +15,12 @@ const URLS_TO_CACHE = [
   './js/constants.js',
   './js/firebase-config.js',
   './firebase-init.js',
+  // Модульные UI для офлайн
+  './src/main/initialization.js',
+  './src/main/controller.js',
+  './src/core/index.js',
+  './src/ui/song-display.js',
+  './styles/variables.css',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются

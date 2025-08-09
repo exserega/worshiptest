@@ -27,7 +27,9 @@ import {
     getDoc, 
     runTransaction, 
     serverTimestamp, 
-    deleteField
+    deleteField,
+    getDocsFromCache,
+    getDocFromCache
 } from '../utils/firebase-v8-adapter.js';
 
 import logger from '../utils/logger.js';
@@ -69,7 +71,14 @@ const vocalistsCollection = collection(db, "vocalists");
 export async function loadAllSongsFromFirestore() {
     try {
         console.log("Загрузка всех песен из Firestore...");
-        const querySnapshot = await getDocs(songsCollection);
+        let querySnapshot;
+        try {
+            // Пытаемся читать из сети
+            querySnapshot = await getDocs(songsCollection);
+        } catch (netErr) {
+            console.warn('⚠️ Сеть недоступна, читаем песни из офлайн-кэша');
+            querySnapshot = await getDocsFromCache(songsCollection);
+        }
         let newAllSongs = [];
         let newSongsBySheet = {};
 
@@ -117,7 +126,13 @@ export async function loadAllSongsFromFirestore() {
 export async function getSongById(songId) {
     try {
         const songDoc = doc(db, 'songs', songId);
-        const docSnap = await getDoc(songDoc);
+        let docSnap;
+        try {
+            docSnap = await getDoc(songDoc);
+        } catch (netErr) {
+            console.warn('⚠️ Сеть недоступна, читаем песню из офлайн-кэша');
+            docSnap = await getDocFromCache(songDoc);
+        }
         
         if (docSnap.exists) {
             return {
@@ -276,7 +291,13 @@ export async function loadSetlists() {
             );
         }
         
-        const querySnapshot = await getDocs(queryRef);
+        let querySnapshot;
+        try {
+            querySnapshot = await getDocs(queryRef);
+        } catch (netErr) {
+            console.warn('⚠️ Сеть недоступна, читаем сетлисты из офлайн-кэша');
+            querySnapshot = await getDocsFromCache(queryRef);
+        }
         const setlists = [];
         
         querySnapshot.forEach((doc) => {
