@@ -34,6 +34,9 @@ import * as api from './js/api.js';
 - Экспортирует: `firebase`, `auth`, `db`, `storage`
 - Импортируется в:
   - `index.html`
+  - `public/login.html`
+  - `public/settings.html`
+  - `public/admin.html`
   - `js/firebase-config.js`
 
 ### js/firebase-config.js
@@ -145,7 +148,7 @@ import * as core from './core.js';
 
 ### sw.js (Service Worker)
 - Кэширует все критические файлы
-- Версия: v22
+- Версия: v146
 
 ### manifest.json
 - Конфигурация PWA

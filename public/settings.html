@@ -20,10 +20,11 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <!-- Firebase -->
+    <!-- Firebase (v8) + единая инициализация -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script type="module" src="../firebase-init.js"></script>
 </head>
 <body>
     <div class="settings-container">
@@ -129,42 +130,7 @@
         </div>
     </div>
 
-    <!-- Firebase Config -->
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBlkjVQFtFpMRFexAi6nBqEkIfjFlU5cDo",
-            authDomain: "song-archive-389a6.firebaseapp.com",
-            projectId: "song-archive-389a6",
-            storageBucket: "song-archive-389a6.appspot.com",
-            messagingSenderId: "660585697058",
-            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40",
-            measurementId: "G-Z6QYH5YD2E"
-        };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        
-        // Устанавливаем persistence для сохранения сессии между страницами
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-            .then(() => {
-                console.log('✅ Firebase persistence set to LOCAL');
-            })
-            .catch((error) => {
-                console.error('Error setting persistence:', error);
-            });
-        
-        // Включаем отладку Firestore
-        firebase.firestore().settings({
-            experimentalForceLongPolling: true, // Для обхода проблем с сетью
-            merge: true
-        });
-        
-        // Проверка подключения
-        firebase.firestore().enableNetwork()
-            .then(() => console.log('✅ Firestore network enabled'))
-            .catch(err => console.error('❌ Firestore network error:', err));
-    </script>
+    
     
     <!-- Модальные окна -->
     <!-- Модальное окно смены основного филиала -->
@@ -215,7 +181,10 @@
         </div>
     </div>
     
-    <!-- Settings Module -->
-    <script src="../src/modules/settings/settings.js"></script>
+    <!-- Settings Module: гарантируем порядок инициализации Firebase -->
+    <script type="module">
+        import '../firebase-init.js';
+        import '../src/modules/settings/settings.js';
+    </script>
 </body>
 </html>

@@ -223,8 +223,15 @@ window.handleMainSearch = function() {
                 console.log('🔍 [Legacy] Search result selected:', song.name);
                 ui.searchInput.value = song.name;
                 if (ui.searchResults) ui.searchResults.innerHTML = '';
-                
-                // Выбираем песню через селекторы (безопасно)
+
+                // Новый путь (селекты удалены в новом UI): открываем песню напрямую
+                if (typeof ui.displaySongDetails === 'function') {
+                    const fullSongData = window.state?.allSongs?.find(s => s.id === song.id) || song;
+                    ui.displaySongDetails(fullSongData);
+                    return;
+                }
+
+                // Fallback на старые селекторы, если они все же присутствуют
                 if (ui.sheetSelect && song.sheet) {
                     ui.sheetSelect.value = song.sheet;
                     ui.sheetSelect.dispatchEvent(new Event('change'));

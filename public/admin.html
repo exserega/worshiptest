@@ -148,35 +148,35 @@
     <!-- Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <!-- Единая инициализация Firebase (v8) для всего проекта -->
+    <script type="module" src="../firebase-init.js"></script>
+
+    <script type="module">
+        import logger from '../src/utils/logger.js';
+        window.appLogger = logger;
+    </script>
+
     <script>
         // ====================================
         // FIREBASE INITIALIZATION
         // ====================================
         
-        // Firebase configuration - ВАЖНО: используем тот же проект что и в settings.html!
-        const firebaseConfig = {
-            apiKey: "AIzaSyBlkjVQFtFpMRFexAi6nBqEkIfjFlU5cDo",
-            authDomain: "song-archive-389a6.firebaseapp.com",
-            projectId: "song-archive-389a6",
-            storageBucket: "song-archive-389a6.appspot.com",
-            messagingSenderId: "660585697058",
-            appId: "1:660585697058:web:7ceacf752ce6b21ad8fb40",
-            measurementId: "G-Z6QYH5YD2E"
-        };
+        // Firebase уже инициализирован через ../firebase-init.js
+        let auth, db;
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                auth = firebase.auth();
+                db = firebase.firestore();
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Устанавливаем persistence для сохранения сессии
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-            .then(() => {
-                console.log('✅ Firebase persistence set to LOCAL');
-            })
-            .catch((error) => {
-                console.error('Error setting persistence:', error);
-            });
+                // Гарантируем сохранение сессии между перезапусками страницы
+                auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                    .then(() => (window.appLogger ? window.appLogger.log('✅ Firebase persistence set to LOCAL (admin)') : console.log('✅ Firebase persistence set to LOCAL (admin)')))
+                    .catch((error) => (window.appLogger ? window.appLogger.error('Error setting persistence (admin):', error) : console.error('Error setting persistence (admin):', error)));
+            } catch (e) {
+                if (window.appLogger) window.appLogger.error('Firebase not initialized yet:', e);
+                else console.error('Firebase not initialized yet:', e);
+            }
+        });
 
         // ====================================
         // GLOBAL STATE
@@ -195,7 +195,7 @@
         
         // Основная логика инициализации - как в settings.js
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🔥 Admin page loading...');
+            if (window.appLogger) window.appLogger.log('🔥 Admin page loading...'); else console.log('🔥 Admin page loading...');
             
             // Применяем сохраненную тему
             const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -203,10 +203,10 @@
             
             // Проверка авторизации
             auth.onAuthStateChanged(async (user) => {
-                console.log('🔐 Auth state changed:', user ? user.email : 'No user');
+                if (window.appLogger) window.appLogger.log('🔐 Auth state changed:', user ? user.email : 'No user'); else console.log('🔐 Auth state changed:', user ? user.email : 'No user');
                 
                 if (!user) {
-                    console.log('❌ Not authenticated, showing error');
+                    if (window.appLogger) window.appLogger.warn('❌ Not authenticated, showing error'); else console.log('❌ Not authenticated, showing error');
                     showError('Требуется авторизация');
                     return;
                 }
@@ -216,7 +216,7 @@
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     
                     if (!userDoc.exists) {
-                        console.log('❌ User profile not found');
+                    if (window.appLogger) window.appLogger.warn('❌ User profile not found'); else console.log('❌ User profile not found');
                         showError('Профиль пользователя не найден');
                         return;
                     }
@@ -224,18 +224,18 @@
                     const userData = userDoc.data();
                     currentUser = { id: user.uid, ...userData };
                     
-                    console.log('✅ User profile loaded:', currentUser);
+                    if (window.appLogger) window.appLogger.log('✅ User profile loaded:', currentUser); else console.log('✅ User profile loaded:', currentUser);
                     
                     // Проверяем права администратора
                     if (userData.role !== 'admin') {
-                        console.log('❌ User is not admin:', userData.role);
+                        if (window.appLogger) window.appLogger.warn('❌ User is not admin:', userData.role); else console.log('❌ User is not admin:', userData.role);
                         showError('Требуются права администратора');
                         return;
                     }
                     
                     // Проверяем, является ли пользователь основателем
                     isRootAdmin = userData.isFounder || userData.isRootAdmin || false;
-                    console.log('✅ Admin access granted, isRootAdmin:', isRootAdmin);
+                    if (window.appLogger) window.appLogger.log('✅ Admin access granted, isRootAdmin:', isRootAdmin); else console.log('✅ Admin access granted, isRootAdmin:', isRootAdmin);
                     
                     // Показываем админ панель
                     document.getElementById('error-container').style.display = 'none';
@@ -276,7 +276,7 @@
         // ====================================
         
         async function initAdminPanel(user, isRootAdmin) {
-            console.log('🚀 Initializing admin panel...');
+            if (window.appLogger) window.appLogger.log('🚀 Initializing admin panel...'); else console.log('🚀 Initializing admin panel...');
             
             try {
                 // Импортируем основной модуль админ панели
@@ -288,20 +288,20 @@
                 // Инициализируем админ панель с модульной системой
                 await initAdminCore(user, isRootAdmin);
                 
-                console.log('✅ Admin panel modules loaded successfully');
+                if (window.appLogger) window.appLogger.log('✅ Admin panel modules loaded successfully'); else console.log('✅ Admin panel modules loaded successfully');
                 
             } catch (error) {
                 console.error('❌ Error loading admin modules:', error);
                 
                 // Fallback на старую логику если модули не загрузились
-                console.log('⚠️ Falling back to inline initialization...');
+                if (window.appLogger) window.appLogger.warn('⚠️ Falling back to inline initialization...'); else console.log('⚠️ Falling back to inline initialization...');
                 await                     initAdminPanelFallback(user, isRootAdmin);
             }
         }
         
         // Резервная инициализация (старая логика)
         async function initAdminPanelFallback(user, isRootAdmin) {
-            console.log('🚀 Initializing admin panel (fallback)...');
+            if (window.appLogger) window.appLogger.log('🚀 Initializing admin panel (fallback)...'); else console.log('🚀 Initializing admin panel (fallback)...');
             
             // Загружаем начальные данные
             await Promise.all([
@@ -325,7 +325,7 @@
             try {
                 const snapshot = await db.collection('branches').get();
                 branches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log('✅ Loaded branches:', branches.length);
+                if (window.appLogger) window.appLogger.log('✅ Loaded branches:', branches.length); else console.log('✅ Loaded branches:', branches.length);
                 
                 // Обновляем фильтр филиалов
                 updateBranchFilter();
@@ -341,7 +341,7 @@
             try {
                 const snapshot = await db.collection('users').get();
                 users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log('✅ Loaded users:', users.length);
+                if (window.appLogger) window.appLogger.log('✅ Loaded users:', users.length); else console.log('✅ Loaded users:', users.length);
                 
                 // Отображаем пользователей
                 displayUsers();
@@ -356,7 +356,7 @@
                     .where('status', '==', 'pending')
                     .get();
                 transfers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log('✅ Loaded transfers:', transfers.length);
+                if (window.appLogger) window.appLogger.log('✅ Loaded transfers:', transfers.length); else console.log('✅ Loaded transfers:', transfers.length);
                 
                 // Отображаем заявки
                 displayTransfers();
@@ -599,25 +599,25 @@
         // ====================================
         
         function editUser(userId) {
-            console.log('Edit user:', userId);
+            if (window.appLogger) window.appLogger.info('Edit user:', userId); else console.log('Edit user:', userId);
             alert('Функция редактирования пользователя в разработке');
         }
         
         function deleteUser(userId) {
             if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
-                console.log('Delete user:', userId);
+                if (window.appLogger) window.appLogger.warn('Delete user:', userId); else console.log('Delete user:', userId);
                 alert('Функция удаления пользователя в разработке');
             }
         }
         
         function editBranch(branchId) {
-            console.log('Edit branch:', branchId);
+            if (window.appLogger) window.appLogger.info('Edit branch:', branchId); else console.log('Edit branch:', branchId);
             alert('Функция редактирования филиала в разработке');
         }
         
         function deleteBranch(branchId) {
             if (confirm('Вы уверены, что хотите удалить этот филиал?')) {
-                console.log('Delete branch:', branchId);
+                if (window.appLogger) window.appLogger.warn('Delete branch:', branchId); else console.log('Delete branch:', branchId);
                 alert('Функция удаления филиала в разработке');
             }
         }
@@ -627,12 +627,12 @@
         }
         
         function approveTransfer(transferId) {
-            console.log('Approve transfer:', transferId);
+            if (window.appLogger) window.appLogger.info('Approve transfer:', transferId); else console.log('Approve transfer:', transferId);
             alert('Функция одобрения перевода в разработке');
         }
         
         function rejectTransfer(transferId) {
-            console.log('Reject transfer:', transferId);
+            if (window.appLogger) window.appLogger.info('Reject transfer:', transferId); else console.log('Reject transfer:', transferId);
             alert('Функция отклонения перевода в разработке');
         }
         
