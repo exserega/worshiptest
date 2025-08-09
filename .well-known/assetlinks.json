@@ -10,10 +10,7 @@
         "6D:28:59:FA:38:21:3E:58:2F:C4:71:21:A2:C6:38:B1:6B:9F:7B:8F:2F:CF:24:A5:6B:37:2A:79:D9:9B:F6:9A"
       ]
     }
-  }
-]
-
-[
+  },
   {
     "relation": [
       "delegate_permission/common.handle_all_urls"
@@ -27,5 +24,4 @@
     }
   }
 ]
-
 
