@@ -1,0 +1,31 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "asia.agapeworship.twa",
+      "sha256_cert_fingerprints": [
+        "6D:28:59:FA:38:21:3E:58:2F:C4:71:21:A2:C6:38:B1:6B:9F:7B:8F:2F:CF:24:A5:6B:37:2A:79:D9:9B:F6:9A"
+      ]
+    }
+  }
+]
+
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "asia.agapeworship.twa",
+      "sha256_cert_fingerprints": [
+        "31:0F:63:7C:F6:0B:CD:8B:87:86:C9:1A:38:FE:EB:77:8B:C0:EB:D8:E8:37:AF:7E:6A:55:F3:7A:1E:15:D4:E2"
+      ]
+    }
+  }
+]
+
+
