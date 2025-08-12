@@ -243,6 +243,34 @@ export async function getSongEditStatus(songId) {
  * Загружает все сетлисты
  * @returns {Promise<Array>} Массив сетлистов
  */
+/**
+ * Получить сетлисты по филиалу
+ * @param {string} branchId - ID филиала
+ * @returns {Promise<Array>} Массив сетлистов
+ */
+export async function getSetlistsByBranch(branchId) {
+    try {
+        let query = db.collection('worship_setlists')
+            .where('branchId', '==', branchId)
+            .orderBy('createdAt', 'desc');
+        
+        const snapshot = await query.get();
+        const setlists = [];
+        
+        snapshot.forEach(doc => {
+            setlists.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        
+        return setlists;
+    } catch (error) {
+        console.error('Ошибка загрузки сетлистов филиала:', error);
+        return [];
+    }
+}
+
 export async function loadSetlists() {
     try {
         // Получаем данные текущего пользователя

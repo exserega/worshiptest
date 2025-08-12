@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v160'; // v160, расширенное логирование loadEvents
+const CACHE_NAME = 'agape-worship-cache-v161'; // v161, добавлено создание событий
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

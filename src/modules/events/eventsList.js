@@ -218,6 +218,14 @@ export class EventsList {
                 this.onEventEdit(eventId);
             });
         });
+        
+        // Кнопка создания события
+        const createBtn = this.container.querySelector('.btn-create-event');
+        if (createBtn) {
+            createBtn.addEventListener('click', () => {
+                this.onCreateEvent();
+            });
+        }
     }
     
     /**
@@ -234,5 +242,12 @@ export class EventsList {
      */
     onEventEdit(eventId) {
         logger.log(`Редактирование события: ${eventId}`);
+    }
+    
+    /**
+     * Обработчик создания события (переопределяется извне)
+     */
+    onCreateEvent() {
+        logger.log('Создание нового события');
     }
 }

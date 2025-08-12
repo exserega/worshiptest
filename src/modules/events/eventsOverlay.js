@@ -129,6 +129,10 @@ class EventsOverlay {
                 this.eventsList.onEventEdit = (eventId) => {
                     this.handleEventEdit(eventId);
                 };
+                
+                this.eventsList.onCreateEvent = () => {
+                    this.handleCreateEvent();
+                };
             }
             
             // Отображаем события
@@ -162,6 +166,27 @@ class EventsOverlay {
         logger.log(`Открытие события: ${eventId}`);
         // TODO: Открыть детали события
         alert('Детали события будут реализованы в следующей фазе');
+    }
+    
+    /**
+     * Обработчик создания события
+     */
+    async handleCreateEvent() {
+        console.log('🆕 Открываем модальное окно создания события');
+        
+        try {
+            const { getEventModal } = await import('./eventModal.js');
+            const modal = getEventModal();
+            
+            modal.openForCreate(async (eventId) => {
+                console.log('✅ Событие создано, обновляем список');
+                // Перезагружаем события после создания
+                await this.loadEvents();
+            });
+        } catch (error) {
+            console.error('Ошибка при открытии модального окна:', error);
+            alert('Не удалось открыть форму создания события');
+        }
     }
     
     /**
