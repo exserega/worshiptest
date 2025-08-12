@@ -25,9 +25,11 @@ class EventsOverlay {
      * Инициализация оверлея
      */
     init() {
+        console.log('🎯 EventsOverlay: начало инициализации'); // Временный лог
         logger.log('🎯 EventsOverlay: начало инициализации');
         this.createOverlayHTML();
         this.attachEventListeners();
+        console.log('✅ EventsOverlay инициализирован'); // Временный лог
         logger.log('✅ EventsOverlay инициализирован');
     }
     
@@ -167,9 +169,11 @@ class EventsOverlay {
      * Открытие оверлея
      */
     open() {
+        console.log('📂 EventsOverlay: вызван метод open()'); // Временный лог
         logger.log('📂 EventsOverlay: вызван метод open()');
         
         if (!this.overlay) {
+            console.error('❌ EventsOverlay: overlay элемент не найден!'); // Временный лог
             logger.error('❌ EventsOverlay: overlay элемент не найден!');
             return;
         }
@@ -177,6 +181,7 @@ class EventsOverlay {
         this.overlay.classList.add('visible');
         this.isOpen = true;
         document.addEventListener('keydown', this.escapeHandler);
+        console.log('✅ EventsOverlay открыт'); // Временный лог
         logger.log('✅ EventsOverlay открыт');
         
         // Загружаем события при открытии
@@ -207,13 +212,16 @@ export function initEventsOverlay() {
 }
 
 export function openEventsOverlay() {
+    console.log('🚀 openEventsOverlay вызвана'); // Временный лог для диагностики
     logger.log('🚀 openEventsOverlay вызвана');
     
     if (!eventsOverlayInstance) {
+        console.log('📦 Создаем новый экземпляр EventsOverlay'); // Временный лог
         logger.log('📦 Создаем новый экземпляр EventsOverlay');
         initEventsOverlay();
     }
     
+    console.log('📞 Вызываем open() на экземпляре:', eventsOverlayInstance); // Временный лог
     eventsOverlayInstance.open();
 }
 
