@@ -251,7 +251,7 @@
 }
 
 .song-name {
-    font-size: 16px;
+    font-size: 18px; /* Увеличен на 2px для лучшей читаемости */
     font-weight: 500;
     color: var(--text-primary);
     display: block;
@@ -311,24 +311,24 @@
 }
 
 .song-key {
-    font-size: 12px;
+    font-size: 14px; /* Увеличен на 2px для лучшей читаемости */
     font-weight: 500;
     color: var(--text-secondary);
     background: var(--bg-secondary);
-    padding: 4px 8px;
+    padding: 5px 10px; /* Немного увеличены отступы */
     border-radius: 6px;
-    min-width: 30px;
+    min-width: 35px; /* Увеличена минимальная ширина */
     text-align: center;
     text-transform: none !important; /* Отменяем uppercase для корректного отображения Eb, Ab и т.д. */
 }
 
 .song-bpm {
-    font-size: 12px;
+    font-size: 14px; /* Увеличен на 2px для лучшей читаемости */
     color: var(--text-secondary);
     background: var(--bg-secondary);
-    padding: 4px 8px;
+    padding: 5px 10px; /* Немного увеличены отступы */
     border-radius: 6px;
-    min-width: 50px;
+    min-width: 60px; /* Увеличена минимальная ширина */
     text-align: center;
 }
 
@@ -605,23 +605,24 @@
 /* Адаптивные стили для мобильных устройств */
 @media (max-width: 480px) {
     .song-item {
-        padding: 10px 12px;
+        padding: 12px 14px; /* Немного увеличены отступы */
         gap: 8px;
     }
     
     .song-name {
-        font-size: 15px;
+        font-size: 17px; /* Увеличен на 2px */
     }
     
     .song-key {
-        font-size: 11px;
-        padding: 3px 6px;
-        min-width: 28px;
+        font-size: 13px; /* Увеличен на 2px */
+        padding: 4px 8px;
+        min-width: 32px;
     }
     
     .song-bpm {
-        font-size: 11px;
-        padding: 3px 6px;
+        font-size: 13px; /* Увеличен на 2px */
+        padding: 4px 8px; /* Увеличены отступы для соответствия */
+        min-width: 55px; /* Добавлена минимальная ширина */
     }
     
     .song-meta {
