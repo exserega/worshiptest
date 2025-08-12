@@ -20,23 +20,51 @@ export async function getEventsByBranch(branchId) {
         logger.log(`📅 Загрузка событий для филиала: ${branchId}`);
         
         const eventsRef = collection(db, 'events');
-        const q = query(eventsRef, 
-            where('branchId', '==', branchId),
-            orderBy('date', 'desc')
-        );
         
-        const snapshot = await getDocs(q);
-        const events = [];
+        try {
+            // Пробуем с составным индексом
+            const q = query(eventsRef, 
+                where('branchId', '==', branchId),
+                orderBy('date', 'desc')
+            );
+            
+            const snapshot = await getDocs(q);
+            const events = [];
         
-        snapshot.forEach(doc => {
-            events.push({
-                id: doc.id,
-                ...doc.data()
+            snapshot.forEach(doc => {
+                events.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
             });
-        });
-        
-        logger.log(`✅ Загружено ${events.length} событий`);
-        return events;
+            
+            logger.log(`✅ Загружено ${events.length} событий`);
+            return events;
+        } catch (indexError) {
+            // Если индекс не создан, делаем запрос без сортировки и сортируем в JS
+            logger.warn('⚠️ Индекс не создан, используем альтернативный метод');
+            
+            const q = query(eventsRef, where('branchId', '==', branchId));
+            const snapshot = await getDocs(q);
+            const events = [];
+            
+            snapshot.forEach(doc => {
+                events.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            });
+            
+            // Сортируем в JavaScript
+            events.sort((a, b) => {
+                const dateA = a.date?.toDate ? a.date.toDate() : new Date(a.date);
+                const dateB = b.date?.toDate ? b.date.toDate() : new Date(b.date);
+                return dateB - dateA; // desc
+            });
+            
+            logger.log(`✅ Загружено ${events.length} событий (без индекса)`);
+            return events;
+        }
     } catch (error) {
         logger.error('❌ Ошибка загрузки событий:', error);
         // Если коллекция не существует, возвращаем пустой массив
