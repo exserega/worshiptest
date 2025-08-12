@@ -156,12 +156,12 @@
 }
 
 .category-chip {
-    padding: 10px 16px; /* Увеличена высота для удобства на мобильных */
+    padding: 10px 12px; /* Увеличена только высота, ширина оптимизирована */
     background: var(--bg-secondary);
     color: var(--text-primary); /* Изменяем на основной цвет текста */
     border: 1px solid transparent;
-    border-radius: 20px;
-    font-size: 14px;
+    border-radius: 18px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -187,8 +187,8 @@
 
 /* Стили для подкатегорий */
 .sub-category {
-    padding: 8px 14px; /* Увеличена высота */
-    font-size: 13px;
+    padding: 8px 12px; /* Увеличена высота, ширина оптимизирована */
+    font-size: 12px;
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     opacity: 0.85;
@@ -343,8 +343,8 @@
 /* Мобильные оптимизации */
 @media (max-width: 767px) {
     .songs-category-filters {
-        padding: 12px 14px; /* Оптимальные отступы для мобильных */
-        gap: 8px; /* Достаточное расстояние между кнопками */
+        padding: 12px 12px; /* Оптимальные отступы для мобильных */
+        gap: 5px; /* Уменьшенное расстояние для размещения 4 кнопок */
     }
     
     .main-filters {
@@ -357,8 +357,8 @@
     }
     
     .category-chip {
-        padding: 10px 12px; /* Увеличена высота для удобства нажатия */
-        font-size: 13px; /* Немного увеличен шрифт */
+        padding: 10px 10px; /* Увеличена высота, уменьшена ширина для 4 кнопок в ряд */
+        font-size: 12px; /* Оптимальный размер для мобильных */
         border-radius: 16px; /* Пропорциональный радиус */
         min-height: 40px; /* Минимальная высота для удобства */
         display: flex;
@@ -368,8 +368,8 @@
     
     /* Кнопки подкатегорий */
     .sub-category {
-        padding: 8px 12px; /* Увеличена высота для удобства */
-        font-size: 12px; /* Увеличен шрифт */
+        padding: 8px 10px; /* Увеличена высота, оптимизирована ширина */
+        font-size: 11px; /* Компактный шрифт для подкатегорий */
         background: var(--bg-tertiary);
         border-radius: 14px; /* Пропорциональный радиус */
         opacity: 0.8; /* Немного прозрачнее */
