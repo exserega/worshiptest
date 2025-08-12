@@ -4,8 +4,11 @@
  */
 
 import logger from '../../utils/logger.js';
-import { db, collection, getDocs, getDoc, doc, addDoc, updateDoc, deleteDoc, query, where, orderBy, Timestamp } from '../../utils/firebase-v8-adapter.js';
+import { db, collection, getDocs, getDoc, doc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from '../../utils/firebase-v8-adapter.js';
 import { auth } from '../../../firebase-init.js';
+
+// Firebase v8 Timestamp
+const Timestamp = window.firebase.firestore.Timestamp;
 
 /**
  * Получить события филиала
