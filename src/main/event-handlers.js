@@ -695,11 +695,14 @@ function setupSetlistEventHandlers() {
             ui.closeAllSidePanels(); // Закрываем все панели
             
             try {
+                console.log('📥 Импортируем модуль eventsOverlay...');
                 const { openEventsOverlay } = await import('../modules/events/eventsOverlay.js');
+                console.log('✅ Модуль импортирован, вызываем openEventsOverlay');
                 openEventsOverlay();
             } catch (error) {
-                console.error('Ошибка открытия событий:', error);
-                alert('Не удалось открыть события');
+                console.error('❌ Ошибка открытия событий:', error);
+                console.error('Stack trace:', error.stack);
+                alert('Не удалось открыть события: ' + error.message);
             }
         });
     }
