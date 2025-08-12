@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v155'; // v155, исправлен импорт Timestamp
+const CACHE_NAME = 'agape-worship-cache-v156'; // v156, исправлено получение филиала пользователя
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

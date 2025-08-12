@@ -6,6 +6,7 @@
 import logger from '../../utils/logger.js';
 import { getEventsByBranch } from './eventsApi.js';
 import { EventsList } from './eventsList.js';
+import { getCurrentUser } from '../auth/authCheck.js';
 
 /**
  * Класс для управления оверлеем событий
@@ -81,15 +82,21 @@ class EventsOverlay {
      */
     async loadEvents() {
         try {
-            // Получаем ID филиала пользователя
-            const userDoc = window.state?.user;
-            if (!userDoc || !userDoc.branchId) {
+            // Получаем текущего пользователя
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                logger.warn('Пользователь не авторизован');
+                this.showEmptyState('Необходима авторизация');
+                return;
+            }
+            
+            if (!currentUser.branchId) {
                 logger.warn('У пользователя не установлен филиал');
                 this.showEmptyState('Филиал не выбран');
                 return;
             }
             
-            this.currentBranchId = userDoc.branchId;
+            this.currentBranchId = currentUser.branchId;
             logger.log(`Загрузка событий для филиала: ${this.currentBranchId}`);
             
             // Показываем индикатор загрузки
