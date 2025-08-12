@@ -4,6 +4,8 @@
  */
 
 import logger from '../../utils/logger.js';
+import { getEventsByBranch } from './eventsApi.js';
+import { EventsList } from './eventsList.js';
 
 /**
  * Класс для управления оверлеем событий
@@ -13,6 +15,8 @@ class EventsOverlay {
         this.overlay = null;
         this.isOpen = false;
         this.events = [];
+        this.eventsList = null;
+        this.currentBranchId = null;
         this.init();
     }
     
@@ -41,14 +45,9 @@ class EventsOverlay {
                         </button>
                     </div>
                     
-                    <!-- Временная заглушка -->
-                    <div class="events-content" style="padding: 20px; text-align: center;">
-                        <p style="color: var(--text-primary); font-size: 16px;">
-                            Функционал событий в разработке
-                        </p>
-                        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">
-                            Здесь будет список событий вашего филиала
-                        </p>
+                    <!-- Контент событий -->
+                    <div class="events-content">
+                        <!-- Здесь будет список событий -->
                     </div>
                 </div>
             </div>
@@ -78,6 +77,85 @@ class EventsOverlay {
     }
     
     /**
+     * Загрузить события текущего филиала
+     */
+    async loadEvents() {
+        try {
+            // Получаем ID филиала пользователя
+            const userDoc = window.state?.user;
+            if (!userDoc || !userDoc.branchId) {
+                logger.warn('У пользователя не установлен филиал');
+                this.showEmptyState('Филиал не выбран');
+                return;
+            }
+            
+            this.currentBranchId = userDoc.branchId;
+            logger.log(`Загрузка событий для филиала: ${this.currentBranchId}`);
+            
+            // Показываем индикатор загрузки
+            const contentEl = this.overlay.querySelector('.events-content');
+            contentEl.innerHTML = '<div class="loading-indicator">Загрузка событий...</div>';
+            
+            // Загружаем события
+            this.events = await getEventsByBranch(this.currentBranchId);
+            
+            // Создаем компонент списка если еще не создан
+            if (!this.eventsList) {
+                this.eventsList = new EventsList(contentEl);
+                
+                // Устанавливаем обработчики
+                this.eventsList.onEventClick = (eventId) => {
+                    this.handleEventClick(eventId);
+                };
+                
+                this.eventsList.onEventEdit = (eventId) => {
+                    this.handleEventEdit(eventId);
+                };
+            }
+            
+            // Отображаем события
+            this.eventsList.setEvents(this.events);
+            
+        } catch (error) {
+            logger.error('Ошибка загрузки событий:', error);
+            this.showEmptyState('Ошибка загрузки событий');
+        }
+    }
+    
+    /**
+     * Показать пустое состояние
+     * @param {string} message - Сообщение
+     */
+    showEmptyState(message) {
+        const contentEl = this.overlay.querySelector('.events-content');
+        contentEl.innerHTML = `
+            <div class="empty-events">
+                <p>${message}</p>
+            </div>
+        `;
+    }
+    
+    /**
+     * Обработчик клика по событию
+     * @param {string} eventId - ID события
+     */
+    handleEventClick(eventId) {
+        logger.log(`Открытие события: ${eventId}`);
+        // TODO: Открыть детали события
+        alert('Детали события будут реализованы в следующей фазе');
+    }
+    
+    /**
+     * Обработчик редактирования события
+     * @param {string} eventId - ID события
+     */
+    handleEventEdit(eventId) {
+        logger.log(`Редактирование события: ${eventId}`);
+        // TODO: Открыть редактор события
+        alert('Редактирование событий будет реализовано в следующей фазе');
+    }
+    
+    /**
      * Открытие оверлея
      */
     open() {
@@ -87,6 +165,9 @@ class EventsOverlay {
         this.isOpen = true;
         document.addEventListener('keydown', this.escapeHandler);
         logger.log('EventsOverlay открыт');
+        
+        // Загружаем события при открытии
+        this.loadEvents();
     }
     
     /**
