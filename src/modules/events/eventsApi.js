@@ -16,6 +16,7 @@ const Timestamp = window.firebase.firestore.Timestamp;
  * @returns {Promise<Array>} Массив событий
  */
 export async function getEventsByBranch(branchId) {
+    console.log(`🎯 getEventsByBranch вызвана с branchId: ${branchId}`); // Временный лог
     try {
         logger.log(`📅 Загрузка событий для филиала: ${branchId}`);
         
