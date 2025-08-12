@@ -4,7 +4,7 @@
  */
 
 import logger from '../../utils/logger.js';
-import { getEventsByBranch } from './eventsApi.js';
+import { getEventsByBranch, deleteEvent } from './eventsApi.js';
 import { EventsList } from './eventsList.js';
 import { getCurrentUser } from '../auth/authCheck.js';
 
@@ -134,6 +134,11 @@ class EventsOverlay {
                     console.log('🔔 EventsList.onCreateEvent переопределен в eventsOverlay');
                     this.handleCreateEvent();
                 };
+                
+                this.eventsList.onEventDelete = (eventId, eventName) => {
+                    console.log('🗑️ EventsList.onEventDelete переопределен в eventsOverlay');
+                    this.handleEventDelete(eventId, eventName);
+                };
             }
             
             // Отображаем события
@@ -187,6 +192,34 @@ class EventsOverlay {
         } catch (error) {
             console.error('Ошибка при открытии модального окна:', error);
             alert('Не удалось открыть форму создания события');
+        }
+    }
+    
+    /**
+     * Обработчик удаления события
+     * @param {string} eventId - ID события
+     * @param {string} eventName - Название события
+     */
+    async handleEventDelete(eventId, eventName) {
+        console.log('🗑️ Удаление события:', eventId, eventName);
+        
+        // Подтверждение удаления
+        const confirmMessage = `Вы уверены, что хотите удалить событие "${eventName}"?\n\nЭто действие нельзя отменить.`;
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+        
+        try {
+            // Удаляем событие
+            await deleteEvent(eventId);
+            console.log('✅ Событие удалено');
+            
+            // Перезагружаем список событий
+            await this.loadEvents();
+            
+        } catch (error) {
+            console.error('Ошибка при удалении события:', error);
+            alert('Не удалось удалить событие: ' + error.message);
         }
     }
     

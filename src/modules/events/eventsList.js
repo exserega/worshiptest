@@ -98,11 +98,16 @@ export class EventsList {
             <div class="event-item" data-event-id="${event.id}">
                 <div class="event-header">
                     <div class="event-date">📅 ${date}</div>
-                    ${!hasLimitedAccess() && event.canEdit ? 
-                        `<button class="event-edit-btn" title="Редактировать">
-                            <i class="fas fa-edit"></i>
-                        </button>` : ''
-                    }
+                    <div class="event-actions">
+                        ${!hasLimitedAccess() && event.canEdit ? 
+                            `<button class="event-edit-btn" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="event-delete-btn" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>` : ''
+                        }
+                    </div>
                 </div>
                 <div class="event-name">${event.name}</div>
                 <div class="event-details">
@@ -138,15 +143,20 @@ export class EventsList {
         const { upcoming, archive } = this.categorizeEvents();
         let html = '';
         
-        // Фильтры
+        // Фильтры и кнопка создания
         html += `
-            <div class="events-filters">
-                <button class="filter-btn ${this.currentFilter === 'upcoming' ? 'active' : ''}" 
-                        data-filter="upcoming">Предстоящие</button>
-                <button class="filter-btn ${this.currentFilter === 'all' ? 'active' : ''}" 
-                        data-filter="all">Все</button>
-                <button class="filter-btn ${this.currentFilter === 'archive' ? 'active' : ''}" 
-                        data-filter="archive">Архив</button>
+            <div class="events-header-controls">
+                <div class="events-filters">
+                    <button class="filter-btn ${this.currentFilter === 'upcoming' ? 'active' : ''}" 
+                            data-filter="upcoming">Предстоящие</button>
+                    <button class="filter-btn ${this.currentFilter === 'all' ? 'active' : ''}" 
+                            data-filter="all">Все</button>
+                    <button class="filter-btn ${this.currentFilter === 'archive' ? 'active' : ''}" 
+                            data-filter="archive">Архив</button>
+                </div>
+                ${!hasLimitedAccess() ? 
+                    '<button class="btn-create-event"><i class="fas fa-plus"></i> Создать событие</button>' : ''
+                }
             </div>
         `;
         
@@ -223,6 +233,17 @@ export class EventsList {
             });
         });
         
+        // Кнопки удаления
+        const deleteButtons = this.container.querySelectorAll('.event-delete-btn');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const eventId = btn.closest('.event-item').dataset.eventId;
+                const eventName = btn.closest('.event-item').querySelector('.event-name').textContent;
+                this.onEventDelete(eventId, eventName);
+            });
+        });
+        
         // Кнопка создания события
         const createBtn = this.container.querySelector('.btn-create-event');
         console.log('🔘 Поиск кнопки создания события:', createBtn);
@@ -260,5 +281,15 @@ export class EventsList {
     onCreateEvent() {
         console.log('📝 EventsList.onCreateEvent вызван');
         logger.log('Создание нового события');
+    }
+    
+    /**
+     * Обработчик удаления события (переопределяется извне)
+     * @param {string} eventId - ID события
+     * @param {string} eventName - Название события
+     */
+    onEventDelete(eventId, eventName) {
+        console.log('🗑️ EventsList.onEventDelete вызван:', eventId, eventName);
+        logger.log(`Удаление события: ${eventId}`);
     }
 }

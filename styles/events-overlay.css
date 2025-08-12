@@ -48,12 +48,21 @@
     transform: translateY(-1px);
 }
 
+/* Контейнер для фильтров и кнопки создания */
+.events-header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
 /* Фильтры событий */
 .events-filters {
     display: flex;
     gap: 8px;
-    margin-bottom: 20px;
-    padding: 0 4px;
+    flex: 1;
 }
 
 .filter-btn {
@@ -130,6 +139,12 @@
     margin-bottom: 8px;
 }
 
+/* Кнопки действий события */
+.event-actions {
+    display: flex;
+    gap: 6px;
+}
+
 .event-date {
     font-size: 13px;
     color: var(--accent-color);
@@ -169,8 +184,9 @@
     line-height: 1.4;
 }
 
-/* Кнопка редактирования */
-.event-edit-btn {
+/* Кнопки действий */
+.event-edit-btn,
+.event-delete-btn {
     width: 32px;
     height: 32px;
     background: transparent;
@@ -186,10 +202,16 @@
 
 .event-edit-btn:hover {
     background: var(--bg-hover);
-    color: var(--text-primary);
+    color: var(--accent-color);
 }
 
-.event-edit-btn i {
+.event-delete-btn:hover {
+    background: var(--bg-hover);
+    color: var(--danger-color);
+}
+
+.event-edit-btn i,
+.event-delete-btn i {
     font-size: 14px;
 }
 
