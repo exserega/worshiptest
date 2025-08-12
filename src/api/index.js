@@ -251,8 +251,7 @@ export async function getSongEditStatus(songId) {
 export async function getSetlistsByBranch(branchId) {
     try {
         let query = db.collection('worship_setlists')
-            .where('branchId', '==', branchId)
-            .orderBy('createdAt', 'desc');
+            .where('branchId', '==', branchId);
         
         const snapshot = await query.get();
         const setlists = [];
@@ -264,10 +263,43 @@ export async function getSetlistsByBranch(branchId) {
             });
         });
         
+        // Сортируем в JavaScript, чтобы избежать проблем с индексами
+        setlists.sort((a, b) => {
+            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+            return dateB - dateA; // По убыванию (новые первые)
+        });
+        
         return setlists;
     } catch (error) {
         console.error('Ошибка загрузки сетлистов филиала:', error);
-        return [];
+        // Пробуем загрузить без фильтра по филиалу как запасной вариант
+        try {
+            const snapshot = await db.collection('worship_setlists').get();
+            const setlists = [];
+            
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.branchId === branchId) {
+                    setlists.push({
+                        id: doc.id,
+                        ...data
+                    });
+                }
+            });
+            
+            // Сортируем в JavaScript
+            setlists.sort((a, b) => {
+                const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+                const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+                return dateB - dateA;
+            });
+            
+            return setlists;
+        } catch (fallbackError) {
+            console.error('Ошибка запасного варианта:', fallbackError);
+            return [];
+        }
     }
 }
 
