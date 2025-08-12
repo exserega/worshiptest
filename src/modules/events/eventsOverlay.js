@@ -131,6 +131,7 @@ class EventsOverlay {
                 };
                 
                 this.eventsList.onCreateEvent = () => {
+                    console.log('🔔 EventsList.onCreateEvent переопределен в eventsOverlay');
                     this.handleCreateEvent();
                 };
             }

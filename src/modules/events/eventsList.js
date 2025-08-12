@@ -120,6 +120,7 @@ export class EventsList {
      * Отрендерить список событий
      */
     render() {
+        console.log('🎨 EventsList.render вызван');
         if (this.events.length === 0) {
             this.container.innerHTML = `
                 <div class="empty-events">
@@ -129,6 +130,8 @@ export class EventsList {
                     }
                 </div>
             `;
+            // Привязываем обработчики после рендера
+            this.attachEventHandlers();
             return;
         }
         
@@ -188,6 +191,7 @@ export class EventsList {
      * Привязать обработчики событий
      */
     attachEventHandlers() {
+        console.log('🎯 EventsList.attachEventHandlers вызван');
         // Фильтры
         const filterButtons = this.container.querySelectorAll('.filter-btn');
         filterButtons.forEach(btn => {
@@ -221,10 +225,16 @@ export class EventsList {
         
         // Кнопка создания события
         const createBtn = this.container.querySelector('.btn-create-event');
+        console.log('🔘 Поиск кнопки создания события:', createBtn);
         if (createBtn) {
-            createBtn.addEventListener('click', () => {
+            console.log('✅ Кнопка найдена, добавляем обработчик');
+            createBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('🆕 Клик по кнопке создания события');
                 this.onCreateEvent();
             });
+        } else {
+            console.log('❌ Кнопка создания события не найдена');
         }
     }
     
@@ -248,6 +258,7 @@ export class EventsList {
      * Обработчик создания события (переопределяется извне)
      */
     onCreateEvent() {
+        console.log('📝 EventsList.onCreateEvent вызван');
         logger.log('Создание нового события');
     }
 }
