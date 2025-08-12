@@ -113,8 +113,30 @@ export async function createEvent(eventData) {
             throw new Error('Пользователь не авторизован');
         }
         
+        // Получаем количество песен в сетлисте
+        let songCount = 0;
+        if (eventData.setlistId) {
+            const setlistDoc = await db.collection('worship_setlists').doc(eventData.setlistId).get();
+            if (setlistDoc.exists()) {
+                const setlistData = setlistDoc.data();
+                songCount = setlistData.songs ? setlistData.songs.length : 0;
+            }
+        }
+        
+        // Получаем имя лидера
+        let leaderName = null;
+        if (eventData.leaderId) {
+            const userDoc = await db.collection('users').doc(eventData.leaderId).get();
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                leaderName = userData.displayName || userData.email;
+            }
+        }
+        
         const newEvent = {
             ...eventData,
+            songCount,
+            leaderName,
             createdBy: user.uid,
             createdAt: Timestamp.now(),
             isArchived: false

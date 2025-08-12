@@ -244,6 +244,48 @@ export async function getSongEditStatus(songId) {
  * @returns {Promise<Array>} Массив сетлистов
  */
 /**
+ * Получить пользователей филиала
+ * @param {string} branchId - ID филиала
+ * @returns {Promise<Array>} Массив пользователей
+ */
+export async function getBranchUsers(branchId) {
+    try {
+        const snapshot = await db.collection('branch_users')
+            .where('branchId', '==', branchId)
+            .get();
+        
+        const userIds = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.userId) {
+                userIds.push(data.userId);
+            }
+        });
+        
+        // Получаем данные пользователей
+        const users = [];
+        for (const userId of userIds) {
+            try {
+                const userDoc = await db.collection('users').doc(userId).get();
+                if (userDoc.exists()) {
+                    users.push({
+                        id: userId,
+                        ...userDoc.data()
+                    });
+                }
+            } catch (error) {
+                console.error(`Ошибка загрузки пользователя ${userId}:`, error);
+            }
+        }
+        
+        return users;
+    } catch (error) {
+        console.error('Ошибка загрузки пользователей филиала:', error);
+        return [];
+    }
+}
+
+/**
  * Получить сетлисты по филиалу
  * @param {string} branchId - ID филиала
  * @returns {Promise<Array>} Массив сетлистов

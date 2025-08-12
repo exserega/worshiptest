@@ -79,6 +79,17 @@ export class EventModal {
                         </div>
                         
                         <div class="form-group">
+                            <label for="event-leader">Основной лидер</label>
+                            <select 
+                                id="event-leader" 
+                                name="leaderId" 
+                                class="form-select"
+                            >
+                                <option value="">Не указан</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
                             <label for="event-comment">Комментарий</label>
                             <textarea 
                                 id="event-comment" 
@@ -130,6 +141,37 @@ export class EventModal {
     }
     
     /**
+     * Загрузить пользователей филиала для выбора лидера
+     */
+    async loadBranchUsers() {
+        try {
+            const currentUser = getCurrentUser();
+            if (!currentUser?.branchId) return;
+            
+            // Получаем пользователей филиала
+            const { getBranchUsers } = await import('../../api/index.js');
+            const users = await getBranchUsers(currentUser.branchId);
+            
+            // Фильтруем активных пользователей
+            const activeUsers = users.filter(user => user.status === 'active');
+            
+            // Заполняем select
+            const select = this.modal.querySelector('#event-leader');
+            select.innerHTML = '<option value="">Не указан</option>';
+            
+            activeUsers.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = user.displayName || user.email;
+                select.appendChild(option);
+            });
+            
+        } catch (error) {
+            logger.error('Ошибка загрузки пользователей филиала:', error);
+        }
+    }
+    
+    /**
      * Загрузить сетлисты для выбора
      */
     async loadSetlists() {
@@ -168,6 +210,7 @@ export class EventModal {
             name: formData.get('name'),
             date: new Date(formData.get('date')),
             setlistId: formData.get('setlistId'),
+            leaderId: formData.get('leaderId') || null,
             comment: formData.get('comment') || '',
             branchId: getCurrentUser().branchId
         };
@@ -228,8 +271,9 @@ export class EventModal {
         this.modal.querySelector('.modal-title').textContent = 'Новое событие';
         this.form.querySelector('button[type="submit"]').textContent = 'Создать событие';
         
-        // Загружаем сетлисты
+        // Загружаем сетлисты и пользователей
         this.loadSetlists();
+        this.loadBranchUsers();
         
         // Открываем модальное окно
         this.open();
