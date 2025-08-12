@@ -687,7 +687,24 @@ function setupSetlistEventHandlers() {
         console.log('📋 [EventHandlers] Setlists panel handler attached');
     }
     
-    // Панель "Мои" - ПРЯМАЯ ЛОГИКА
+    // Кнопка "События" - новый функционал
+    const toggleEventsButton = document.getElementById('toggle-events');
+    if (toggleEventsButton) {
+        toggleEventsButton.addEventListener('click', async () => {
+            console.log('📅 [EventHandlers] Events button clicked');
+            ui.closeAllSidePanels(); // Закрываем все панели
+            
+            try {
+                const { openEventsOverlay } = await import('../modules/events/eventsOverlay.js');
+                openEventsOverlay();
+            } catch (error) {
+                console.error('Ошибка открытия событий:', error);
+                alert('Не удалось открыть события');
+            }
+        });
+    }
+    
+    // Панель "Мои" - ПРЯМАЯ ЛОГИКА (оставляем для обратной совместимости, но скрываем)
     if (ui.toggleMyListButton) {
         ui.toggleMyListButton.addEventListener('click', async () => {
             console.log('⭐ [EventHandlers] My List button clicked');
@@ -727,7 +744,6 @@ function setupSetlistEventHandlers() {
                     console.error('Ошибка загрузки избранных:', error);
                 } finally {
                     ui.toggleMyListButton.classList.remove('loading');
-                }
             }
         });
         console.log('⭐ [EventHandlers] My List panel handler attached');
