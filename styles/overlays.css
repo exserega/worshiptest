@@ -156,17 +156,21 @@
 }
 
 .category-chip {
-    padding: 6px 14px;
+    padding: 10px 16px; /* Увеличена высота для удобства на мобильных */
     background: var(--bg-secondary);
     color: var(--text-primary); /* Изменяем на основной цвет текста */
     border: 1px solid transparent;
-    border-radius: 18px;
-    font-size: 13px;
+    border-radius: 20px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
     font-family: 'Montserrat', sans-serif;
+    min-height: 44px; /* Рекомендуемая минимальная высота для тач-элементов */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .category-chip:hover {
@@ -183,11 +187,15 @@
 
 /* Стили для подкатегорий */
 .sub-category {
-    padding: 5px 12px;
-    font-size: 12px;
+    padding: 8px 14px; /* Увеличена высота */
+    font-size: 13px;
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     opacity: 0.85;
+    min-height: 40px; /* Минимальная высота для удобства */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .sub-category:hover {
@@ -335,8 +343,8 @@
 /* Мобильные оптимизации */
 @media (max-width: 767px) {
     .songs-category-filters {
-        padding: 10px 12px; /* Еще компактнее */
-        gap: 6px; /* Меньше расстояние между кнопками */
+        padding: 12px 14px; /* Оптимальные отступы для мобильных */
+        gap: 8px; /* Достаточное расстояние между кнопками */
     }
     
     .main-filters {
@@ -349,20 +357,28 @@
     }
     
     .category-chip {
-        padding: 5px 10px; /* Компактнее кнопки */
-        font-size: 12px; /* Меньше шрифт */
-        border-radius: 14px; /* Меньше радиус */
+        padding: 10px 12px; /* Увеличена высота для удобства нажатия */
+        font-size: 13px; /* Немного увеличен шрифт */
+        border-radius: 16px; /* Пропорциональный радиус */
+        min-height: 40px; /* Минимальная высота для удобства */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
-    /* Кнопки подкатегорий еще компактнее */
+    /* Кнопки подкатегорий */
     .sub-category {
-        padding: 4px 10px;
-        font-size: 11px;
+        padding: 8px 12px; /* Увеличена высота для удобства */
+        font-size: 12px; /* Увеличен шрифт */
         background: var(--bg-tertiary);
-        border-radius: 12px; /* Меньше радиус */
+        border-radius: 14px; /* Пропорциональный радиус */
         opacity: 0.8; /* Немного прозрачнее */
         border: 1px solid var(--border-color);
         transition: all 0.2s ease;
+        min-height: 36px; /* Минимальная высота */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .sub-category:hover {
