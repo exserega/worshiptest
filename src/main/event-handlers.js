@@ -744,6 +744,7 @@ function setupSetlistEventHandlers() {
                     console.error('Ошибка загрузки избранных:', error);
                 } finally {
                     ui.toggleMyListButton.classList.remove('loading');
+                }
             }
         });
         console.log('⭐ [EventHandlers] My List panel handler attached');
