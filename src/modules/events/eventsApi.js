@@ -117,7 +117,7 @@ export async function createEvent(eventData) {
         let songCount = 0;
         if (eventData.setlistId) {
             const setlistDoc = await db.collection('worship_setlists').doc(eventData.setlistId).get();
-            if (setlistDoc.exists()) {
+            if (setlistDoc.exists) {
                 const setlistData = setlistDoc.data();
                 songCount = setlistData.songs ? setlistData.songs.length : 0;
             }
@@ -127,7 +127,7 @@ export async function createEvent(eventData) {
         let leaderName = null;
         if (eventData.leaderId) {
             const userDoc = await db.collection('users').doc(eventData.leaderId).get();
-            if (userDoc.exists()) {
+            if (userDoc.exists) {
                 const userData = userDoc.data();
                 leaderName = userData.displayName || userData.email;
             }

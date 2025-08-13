@@ -146,14 +146,17 @@ export class EventModal {
     async loadBranchUsers() {
         try {
             const currentUser = getCurrentUser();
+            console.log('👤 Загрузка пользователей для филиала:', currentUser?.branchId);
             if (!currentUser?.branchId) return;
             
             // Получаем пользователей филиала
             const { getBranchUsers } = await import('../../api/index.js');
             const users = await getBranchUsers(currentUser.branchId);
+            console.log('👥 Загружено пользователей:', users);
             
             // Фильтруем активных пользователей
             const activeUsers = users.filter(user => user.status === 'active');
+            console.log('✅ Активных пользователей:', activeUsers.length);
             
             // Заполняем select
             const select = this.modal.querySelector('#event-leader');
@@ -167,6 +170,7 @@ export class EventModal {
             });
             
         } catch (error) {
+            console.error('Ошибка загрузки пользователей филиала:', error);
             logger.error('Ошибка загрузки пользователей филиала:', error);
         }
     }

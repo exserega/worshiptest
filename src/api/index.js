@@ -250,9 +250,12 @@ export async function getSongEditStatus(songId) {
  */
 export async function getBranchUsers(branchId) {
     try {
+        console.log('🔍 getBranchUsers: загрузка для филиала', branchId);
         const snapshot = await db.collection('branch_users')
             .where('branchId', '==', branchId)
             .get();
+        
+        console.log(`📋 Найдено записей в branch_users: ${snapshot.size}`);
         
         const userIds = [];
         snapshot.forEach(doc => {
@@ -262,22 +265,27 @@ export async function getBranchUsers(branchId) {
             }
         });
         
+        console.log('👤 IDs пользователей:', userIds);
+        
         // Получаем данные пользователей
         const users = [];
         for (const userId of userIds) {
             try {
                 const userDoc = await db.collection('users').doc(userId).get();
-                if (userDoc.exists()) {
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
                     users.push({
                         id: userId,
-                        ...userDoc.data()
+                        ...userData
                     });
+                    console.log(`✅ Загружен пользователь: ${userData.displayName || userData.email}`);
                 }
             } catch (error) {
                 console.error(`Ошибка загрузки пользователя ${userId}:`, error);
             }
         }
         
+        console.log(`👥 Всего загружено пользователей: ${users.length}`);
         return users;
     } catch (error) {
         console.error('Ошибка загрузки пользователей филиала:', error);
