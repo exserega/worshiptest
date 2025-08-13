@@ -129,6 +129,13 @@ export class ParticipantsSelector {
         console.log('🎸 Найден инструмент:', instrument);
         console.log('👥 Доступные пользователи:', this.users);
         
+        // Удаляем существующий dropdown если есть
+        const existing = document.querySelector('.user-selector-dropdown');
+        if (existing) {
+            console.log('🗑️ Удаляем существующий dropdown');
+            existing.remove();
+        }
+        
         // Создаем простой dropdown
         const dropdown = document.createElement('div');
         dropdown.className = 'user-selector-dropdown';
@@ -158,14 +165,34 @@ export class ParticipantsSelector {
         
         // Добавляем в DOM
         document.body.appendChild(dropdown);
+        console.log('✅ Dropdown добавлен в body');
         
         // Позиционируем рядом с кнопкой
         const btn = this.container.querySelector(`[data-instrument="${instrumentId}"].add-participant-btn`);
-        const rect = btn.getBoundingClientRect();
-        dropdown.style.position = 'fixed';
-        dropdown.style.top = `${rect.bottom + 5}px`;
-        dropdown.style.left = `${rect.left}px`;
-        dropdown.style.zIndex = '10000';
+        console.log('🔘 Ищем кнопку с селектором:', `[data-instrument="${instrumentId}"].add-participant-btn`);
+        console.log('🔘 Найденная кнопка:', btn);
+        
+        if (btn) {
+            const rect = btn.getBoundingClientRect();
+            console.log('📐 Позиция кнопки:', rect);
+            
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = `${rect.bottom + 5}px`;
+            dropdown.style.left = `${rect.left}px`;
+            dropdown.style.width = '250px';
+            dropdown.style.maxWidth = '90vw';
+            dropdown.style.zIndex = '10000';
+            
+            console.log('🎯 Стили dropdown установлены:', {
+                position: dropdown.style.position,
+                top: dropdown.style.top,
+                left: dropdown.style.left,
+                width: dropdown.style.width,
+                zIndex: dropdown.style.zIndex
+            });
+        } else {
+            console.error('❌ Кнопка не найдена!')
+        }
         
         // Обработчики
         dropdown.addEventListener('click', (e) => {
