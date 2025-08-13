@@ -227,11 +227,19 @@
 
 [data-theme="dark"] .filter-btn {
     background: #1f2937;
-    color: #e5e7eb;
+    color: #e5e7eb !important;
+    border-color: #374151;
 }
 
 [data-theme="dark"] .filter-btn:hover {
     background: #374151;
+    color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .filter-btn.active {
+    background: var(--accent-color);
+    color: #111827 !important;
+    border-color: var(--accent-color);
 }
 
 [data-theme="dark"] .event-date {
@@ -241,17 +249,18 @@
 /* Кнопки действий в темной теме */
 [data-theme="dark"] .event-edit-btn,
 [data-theme="dark"] .event-delete-btn {
-    color: #9ca3af;
+    background: transparent;
+    color: #9ca3af !important;
 }
 
 [data-theme="dark"] .event-edit-btn:hover {
-    background: rgba(103, 232, 249, 0.1);
-    color: #67e8f9;
+    background: rgba(103, 232, 249, 0.15);
+    color: #67e8f9 !important;
 }
 
 [data-theme="dark"] .event-delete-btn:hover {
-    background: rgba(251, 113, 133, 0.1);
-    color: #fb7185;
+    background: rgba(251, 113, 133, 0.15);
+    color: #fb7185 !important;
 }
 
 /* Светлая тема */
@@ -265,27 +274,36 @@
 
 [data-theme="light"] .filter-btn {
     background: #f3f4f6;
-    color: #374151;
+    color: #374151 !important;
+    border-color: #e5e7eb;
 }
 
 [data-theme="light"] .filter-btn:hover {
     background: #e5e7eb;
+    color: #111827 !important;
+}
+
+[data-theme="light"] .filter-btn.active {
+    background: var(--accent-color);
+    color: #ffffff !important;
+    border-color: var(--accent-color);
 }
 
 /* Кнопки действий в светлой теме */
 [data-theme="light"] .event-edit-btn,
 [data-theme="light"] .event-delete-btn {
-    color: #6b7280;
+    background: transparent;
+    color: #6b7280 !important;
 }
 
 [data-theme="light"] .event-edit-btn:hover {
-    background: rgba(34, 211, 238, 0.1);
-    color: #06b6d4;
+    background: rgba(34, 211, 238, 0.15);
+    color: #06b6d4 !important;
 }
 
 [data-theme="light"] .event-delete-btn:hover {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444 !important;
 }
 
 /* Мобильные оптимизации */
