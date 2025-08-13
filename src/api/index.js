@@ -251,51 +251,66 @@ export async function getSongEditStatus(songId) {
 export async function getBranchUsers(branchId) {
     try {
         console.log('🔍 getBranchUsers: загрузка для филиала', branchId);
-        const snapshot = await db.collection('branch_users')
+        
+        // Получаем пользователей напрямую из коллекции users по branchId
+        const snapshot = await db.collection('users')
             .where('branchId', '==', branchId)
             .get();
         
-        console.log(`📋 Найдено записей в branch_users: ${snapshot.size}`);
+        console.log(`📋 Найдено пользователей в филиале: ${snapshot.size}`);
         
-        const userIds = [];
+        const users = [];
         snapshot.forEach(doc => {
-            const data = doc.data();
-            console.log('📄 Документ branch_users:', doc.id, data);
-            if (data.userId) {
-                userIds.push(data.userId);
-            }
+            const userData = doc.data();
+            console.log('👤 Пользователь:', userData.displayName || userData.email, userData);
+            
+            users.push({
+                id: doc.id,
+                ...userData
+            });
         });
         
-        console.log('👤 IDs пользователей:', userIds);
-        
-        if (userIds.length === 0) {
-            console.warn('⚠️ Не найдено пользователей в branch_users для филиала:', branchId);
-            return [];
-        }
-        
-        // Получаем данные пользователей
-        const users = [];
-        for (const userId of userIds) {
-            try {
-                const userDoc = await db.collection('users').doc(userId).get();
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    users.push({
-                        id: userId,
-                        ...userData
-                    });
-                    console.log(`✅ Загружен пользователь: ${userData.displayName || userData.email}`);
-                }
-            } catch (error) {
-                console.error(`Ошибка загрузки пользователя ${userId}:`, error);
-            }
-        }
+        // Сортируем пользователей по имени
+        users.sort((a, b) => {
+            const nameA = a.displayName || a.email || '';
+            const nameB = b.displayName || b.email || '';
+            return nameA.localeCompare(nameB);
+        });
         
         console.log(`👥 Всего загружено пользователей: ${users.length}`);
         return users;
     } catch (error) {
         console.error('Ошибка загрузки пользователей филиала:', error);
-        return [];
+        
+        // Если нет индекса, пробуем загрузить всех и фильтровать
+        try {
+            console.log('🔄 Пробуем загрузить без фильтра и отфильтровать в JavaScript');
+            const snapshot = await db.collection('users').get();
+            const users = [];
+            
+            snapshot.forEach(doc => {
+                const userData = doc.data();
+                if (userData.branchId === branchId) {
+                    users.push({
+                        id: doc.id,
+                        ...userData
+                    });
+                }
+            });
+            
+            // Сортируем пользователей по имени
+            users.sort((a, b) => {
+                const nameA = a.displayName || a.email || '';
+                const nameB = b.displayName || b.email || '';
+                return nameA.localeCompare(nameB);
+            });
+            
+            console.log(`👥 Загружено пользователей (без индекса): ${users.length}`);
+            return users;
+        } catch (fallbackError) {
+            console.error('Ошибка запасного варианта:', fallbackError);
+            return [];
+        }
     }
 }
 
