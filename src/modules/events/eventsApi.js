@@ -129,7 +129,7 @@ export async function createEvent(eventData) {
             const userDoc = await db.collection('users').doc(eventData.leaderId).get();
             if (userDoc.exists) {
                 const userData = userDoc.data();
-                leaderName = userData.displayName || userData.email;
+                leaderName = userData.name || userData.displayName || userData.email;
             }
         }
         

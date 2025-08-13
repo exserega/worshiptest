@@ -165,7 +165,9 @@ export class EventModal {
             activeUsers.forEach(user => {
                 const option = document.createElement('option');
                 option.value = user.id;
-                option.textContent = user.displayName || user.email;
+                // Приоритет: name -> displayName -> email
+                const userName = user.name || user.displayName || user.email || 'Пользователь';
+                option.textContent = userName;
                 select.appendChild(option);
             });
             
