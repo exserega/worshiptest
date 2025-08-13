@@ -112,6 +112,9 @@ export class EventsList {
                 <div class="event-name">${event.name}</div>
                 <div class="event-details">
                     <span class="event-leader">🎤 Лидер: ${leaderName}</span>
+                    ${event.participantCount > 0 ? 
+                        `<span class="event-participants">👥 Участников: ${event.participantCount}</span>` : ''
+                    }
                     <span class="event-songs">🎵 ${songCount} песен</span>
                 </div>
                 ${event.comment ? 

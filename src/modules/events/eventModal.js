@@ -6,6 +6,7 @@
 import logger from '../../utils/logger.js';
 import { createEvent, updateEvent } from './eventsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
+import { ParticipantsSelector } from './participantsSelector.js';
 
 /**
  * Класс для управления модальным окном событий
@@ -17,6 +18,8 @@ export class EventModal {
         this.mode = 'create'; // create или edit
         this.currentEventId = null;
         this.onSave = null; // Callback после сохранения
+        this.participantsSelector = null;
+        this.branchUsers = [];
         this.init();
     }
     
@@ -100,6 +103,8 @@ export class EventModal {
                             ></textarea>
                         </div>
                         
+                        <div id="participants-container"></div>
+                        
                         <div class="form-actions">
                             <button type="submit" class="btn-primary">
                                 Создать событие
@@ -158,6 +163,9 @@ export class EventModal {
             const activeUsers = users.filter(user => user.status === 'active');
             console.log('✅ Активных пользователей:', activeUsers.length);
             
+            // Сохраняем для селектора участников
+            this.branchUsers = activeUsers;
+            
             // Заполняем select
             const select = this.modal.querySelector('#event-leader');
             select.innerHTML = '<option value="">Не указан</option>';
@@ -170,6 +178,9 @@ export class EventModal {
                 option.textContent = userName;
                 select.appendChild(option);
             });
+            
+            // Инициализируем селектор участников
+            this.initParticipantsSelector();
             
         } catch (error) {
             console.error('Ошибка загрузки пользователей филиала:', error);
@@ -206,6 +217,24 @@ export class EventModal {
     }
     
     /**
+     * Инициализировать селектор участников
+     */
+    initParticipantsSelector() {
+        const container = this.modal.querySelector('#participants-container');
+        if (!container) return;
+        
+        // Создаем селектор если еще не создан
+        if (!this.participantsSelector) {
+            this.participantsSelector = new ParticipantsSelector(container, this.branchUsers);
+            
+            // Callback при изменении
+            this.participantsSelector.onChange = (participants) => {
+                console.log('📝 Участники изменены:', participants);
+            };
+        }
+    }
+    
+    /**
      * Обработка отправки формы
      */
     async handleSubmit(e) {
@@ -218,7 +247,8 @@ export class EventModal {
             setlistId: formData.get('setlistId'),
             leaderId: formData.get('leaderId') || null,
             comment: formData.get('comment') || '',
-            branchId: getCurrentUser().branchId
+            branchId: getCurrentUser().branchId,
+            participants: this.participantsSelector ? this.participantsSelector.getParticipants() : []
         };
         
         try {

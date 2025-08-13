@@ -137,6 +137,8 @@ export async function createEvent(eventData) {
             ...eventData,
             songCount,
             leaderName,
+            participants: eventData.participants || [],
+            participantCount: eventData.participants ? eventData.participants.length : 0,
             createdBy: user.uid,
             createdAt: Timestamp.now(),
             isArchived: false
