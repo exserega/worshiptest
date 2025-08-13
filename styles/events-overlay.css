@@ -238,6 +238,22 @@
     color: var(--accent-color);
 }
 
+/* Кнопки действий в темной теме */
+[data-theme="dark"] .event-edit-btn,
+[data-theme="dark"] .event-delete-btn {
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .event-edit-btn:hover {
+    background: rgba(103, 232, 249, 0.1);
+    color: #67e8f9;
+}
+
+[data-theme="dark"] .event-delete-btn:hover {
+    background: rgba(251, 113, 133, 0.1);
+    color: #fb7185;
+}
+
 /* Светлая тема */
 [data-theme="light"] .event-item {
     background: #f3f4f6;
@@ -254,6 +270,22 @@
 
 [data-theme="light"] .filter-btn:hover {
     background: #e5e7eb;
+}
+
+/* Кнопки действий в светлой теме */
+[data-theme="light"] .event-edit-btn,
+[data-theme="light"] .event-delete-btn {
+    color: #6b7280;
+}
+
+[data-theme="light"] .event-edit-btn:hover {
+    background: rgba(34, 211, 238, 0.1);
+    color: #06b6d4;
+}
+
+[data-theme="light"] .event-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
 }
 
 /* Мобильные оптимизации */

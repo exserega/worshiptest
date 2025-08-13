@@ -260,12 +260,18 @@ export async function getBranchUsers(branchId) {
         const userIds = [];
         snapshot.forEach(doc => {
             const data = doc.data();
+            console.log('📄 Документ branch_users:', doc.id, data);
             if (data.userId) {
                 userIds.push(data.userId);
             }
         });
         
         console.log('👤 IDs пользователей:', userIds);
+        
+        if (userIds.length === 0) {
+            console.warn('⚠️ Не найдено пользователей в branch_users для филиала:', branchId);
+            return [];
+        }
         
         // Получаем данные пользователей
         const users = [];
