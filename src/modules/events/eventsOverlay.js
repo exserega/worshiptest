@@ -118,7 +118,6 @@ class EventsOverlay {
             console.log('📊 События загружены:', events); // Временный лог
             
             // Добавляем права на редактирование для каждого события
-            const currentUser = getCurrentUser();
             this.events = events.map(event => ({
                 ...event,
                 canEdit: event.createdBy === currentUser.uid || currentUser.role === 'admin'
