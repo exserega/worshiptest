@@ -181,7 +181,7 @@ export class ParticipantsSelector {
             dropdown.style.left = `${rect.left}px`;
             dropdown.style.width = '250px';
             dropdown.style.maxWidth = '90vw';
-            dropdown.style.zIndex = '10000';
+            dropdown.style.zIndex = '999999'; // Очень высокий z-index
             
             console.log('🎯 Стили dropdown установлены:', {
                 position: dropdown.style.position,
