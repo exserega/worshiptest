@@ -243,7 +243,8 @@
     opacity: 1;
 }
 
-.add-participant-btn {
+.add-participant-btn,
+.add-instrument-btn {
     padding: 6px 12px;
     background: transparent;
     border: 1px dashed var(--border-color);
@@ -254,9 +255,36 @@
     transition: all 0.2s ease;
 }
 
-.add-participant-btn:hover {
+.add-participant-btn:hover,
+.add-instrument-btn:hover {
     background: var(--bg-hover);
     color: var(--text-primary);
+}
+
+/* Темная тема - кнопки добавления */
+[data-theme="dark"] .add-participant-btn,
+[data-theme="dark"] .add-instrument-btn {
+    color: #9ca3af !important;
+    border-color: #4b5563;
+}
+
+[data-theme="dark"] .add-participant-btn:hover,
+[data-theme="dark"] .add-instrument-btn:hover {
+    background: #374151;
+    color: #e5e7eb !important;
+}
+
+/* Светлая тема - кнопки добавления */
+[data-theme="light"] .add-participant-btn,
+[data-theme="light"] .add-instrument-btn {
+    color: #6b7280 !important;
+    border-color: #d1d5db;
+}
+
+[data-theme="light"] .add-participant-btn:hover,
+[data-theme="light"] .add-instrument-btn:hover {
+    background: #f3f4f6;
+    color: #374151 !important;
 }
 
 /* Dropdown для выбора пользователей */
@@ -316,6 +344,44 @@
     color: var(--text-primary);
     cursor: pointer;
     font-size: 14px;
+}
+
+/* Темная тема - dropdown */
+[data-theme="dark"] .user-selector-dropdown {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+[data-theme="dark"] .user-selector-item {
+    color: #e5e7eb;
+}
+
+[data-theme="dark"] .user-selector-item:hover:not(.disabled) {
+    background: #374151;
+}
+
+[data-theme="dark"] .close-dropdown {
+    background: #374151;
+    color: #e5e7eb;
+}
+
+/* Светлая тема - dropdown */
+[data-theme="light"] .user-selector-dropdown {
+    background: #ffffff;
+    border-color: #e5e7eb;
+}
+
+[data-theme="light"] .user-selector-item {
+    color: #374151;
+}
+
+[data-theme="light"] .user-selector-item:hover:not(.disabled) {
+    background: #f3f4f6;
+}
+
+[data-theme="light"] .close-dropdown {
+    background: #f3f4f6;
+    color: #374151;
 }
 
 /* Мобильная адаптация */

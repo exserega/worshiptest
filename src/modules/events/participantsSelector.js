@@ -91,12 +91,19 @@ export class ParticipantsSelector {
      * Привязка обработчиков событий
      */
     attachEventHandlers() {
+        console.log('🎸 ParticipantsSelector: привязка обработчиков');
+        
         // Добавление участника
         const addButtons = this.container.querySelectorAll('.add-participant-btn');
+        console.log('🔘 Найдено кнопок добавления участников:', addButtons.length);
+        
         addButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('➕ Клик по кнопке добавления участника');
                 const instrumentId = btn.dataset.instrument;
+                console.log('🎸 Инструмент:', instrumentId);
                 this.showUserSelector(instrumentId);
             });
         });
@@ -117,7 +124,10 @@ export class ParticipantsSelector {
      * Показать селектор пользователей
      */
     showUserSelector(instrumentId) {
+        console.log('📋 showUserSelector вызван для:', instrumentId);
         const instrument = INSTRUMENTS.find(i => i.id === instrumentId);
+        console.log('🎸 Найден инструмент:', instrument);
+        console.log('👥 Доступные пользователи:', this.users);
         
         // Создаем простой dropdown
         const dropdown = document.createElement('div');

@@ -179,8 +179,12 @@ export class EventModal {
                 select.appendChild(option);
             });
             
-            // Инициализируем селектор участников
-            this.initParticipantsSelector();
+            // Инициализируем селектор участников после загрузки пользователей
+            if (this.branchUsers.length > 0) {
+                this.initParticipantsSelector();
+            } else {
+                console.warn('⚠️ Нет пользователей для селектора участников');
+            }
             
         } catch (error) {
             console.error('Ошибка загрузки пользователей филиала:', error);
