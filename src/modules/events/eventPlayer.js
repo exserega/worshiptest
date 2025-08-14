@@ -271,7 +271,7 @@ class EventPlayer {
         // Добавляем обработчик клавиатуры
         document.addEventListener('keydown', this.handleKeyboard);
         
-        // Загружаем первую песню
+        // Загружаем песню
         await this.loadCurrentSong();
         
         // Автоматически включаем полноэкранный режим
@@ -364,8 +364,14 @@ class EventPlayer {
             // Сохраняем оригинальную тональность
             this.originalKey = originalKey;
             
-            // При первой загрузке песни устанавливаем тональность из сетлиста
-            if (!this.currentKey || this.currentIndex === 0) {
+            // При загрузке новой песни устанавливаем тональность из сетлиста
+            // Сохраняем начальную тональность песни для этого события
+            if (!song._eventStartKey) {
+                song._eventStartKey = preferredKey;
+            }
+            
+            // Если текущая тональность не установлена, берем из сетлиста
+            if (!this.currentKey) {
                 this.currentKey = preferredKey;
             }
             
@@ -384,6 +390,10 @@ class EventPlayer {
             });
             
             // Используем ту же функцию что и на главной странице
+            console.log('🎸 Вызываем getRenderedSongText:', { 
+                from: originalKey, 
+                to: this.currentKey 
+            });
             let finalLyrics = getRenderedSongText(originalLyrics, originalKey, this.currentKey);
             
             // Распределяем по колонкам если включен режим
@@ -444,13 +454,8 @@ class EventPlayer {
     previousSong() {
         if (this.currentIndex > 0) {
             this.currentIndex--;
-            // При переключении песни берем ее тональность из сетлиста
-            const song = this.songs[this.currentIndex];
-            if (song) {
-                const originalKey = song['Оригинальная тональность'] || song.originalKey || song.defaultKey || 'C';
-                const preferredKey = song.preferredKey || originalKey;
-                this.currentKey = preferredKey;
-            }
+            // Сбрасываем текущую тональность, чтобы взять из сетлиста
+            this.currentKey = null;
             this.loadCurrentSong();
         }
     }
@@ -458,18 +463,14 @@ class EventPlayer {
     nextSong() {
         if (this.currentIndex < this.songs.length - 1) {
             this.currentIndex++;
-            // При переключении песни берем ее тональность из сетлиста
-            const song = this.songs[this.currentIndex];
-            if (song) {
-                const originalKey = song['Оригинальная тональность'] || song.originalKey || song.defaultKey || 'C';
-                const preferredKey = song.preferredKey || originalKey;
-                this.currentKey = preferredKey;
-            }
+            // Сбрасываем текущую тональность, чтобы взять из сетлиста
+            this.currentKey = null;
             this.loadCurrentSong();
         }
     }
     
     setKey(newKey) {
+        console.log('🎹 Установка новой тональности:', newKey);
         this.currentKey = newKey;
         
         // Обновляем отображение (заменяем b на ♭ для красоты)
