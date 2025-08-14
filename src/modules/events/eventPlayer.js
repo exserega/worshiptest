@@ -421,7 +421,7 @@ class EventPlayer {
             
             // Отображаем
             display.innerHTML = `
-                <div class="${contentClasses}" style="font-size: ${this.currentFontSize}px">
+                <div class="${contentClasses}" style="font-size: ${this.currentFontSize}px; --current-font-size: ${this.currentFontSize}px">
                     <pre style="font-size: ${this.currentFontSize}px">${finalLyrics}</pre>
                 </div>
             `;
@@ -501,6 +501,7 @@ class EventPlayer {
         const songContent = this.overlay.querySelector('.song-content');
         if (songContent) {
             songContent.style.setProperty('font-size', `${this.currentFontSize}px`, 'important');
+            songContent.style.setProperty('--current-font-size', `${this.currentFontSize}px`);
             
             // Применяем к pre и всем вложенным элементам
             const preElement = songContent.querySelector('pre');

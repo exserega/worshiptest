@@ -476,9 +476,9 @@
     font-size: inherit !important; /* Названия блоков остаются видимыми */
 }
 
-/* В режиме "только аккорды" размер аккордов наследуется от контейнера */
+/* В режиме "только аккорды" аккорды остаются видимыми */
 .song-content.chords-only-mode .chord {
-    font-size: inherit !important;
+    font-size: var(--current-font-size, 16px) !important;
     display: inline-block;
     margin: 0 5px;
 }
