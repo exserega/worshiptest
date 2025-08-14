@@ -16,6 +16,7 @@
     transition: opacity 0.3s ease, visibility 0.3s ease;
     /* Убеждаемся, что фон непрозрачный */
     background-color: var(--bg-primary, #ffffff) !important;
+    overflow: hidden; /* Предотвращаем двойной скролл */
 }
 
 .event-player-overlay.show {
@@ -113,24 +114,23 @@
 .event-player-content {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+    overflow-x: hidden; /* Убираем горизонтальный скролл */
+    padding: 20px 10px; /* Меньше боковые отступы */
 }
 
 .player-song-display {
-    max-width: 1200px; /* Как на главной странице */
+    max-width: 100%; /* Используем ВСЮ ширину */
     width: 100%;
-    padding: 0 20px; /* Отступы от краев */
+    padding: 0; /* Убираем дополнительные отступы */
 }
 
 @media (max-width: 768px) {
     .event-player-content {
-        padding: 16px 8px; /* Меньше отступы на мобильных */
+        padding: 10px 5px; /* Минимальные отступы на мобильных */
     }
     
     .player-song-display {
-        padding: 0 12px; /* Меньше отступы на мобильных */
+        padding: 0; /* Без отступов - максимум экрана */
     }
 }
 
@@ -155,13 +155,22 @@
     line-height: 1.8;
     color: var(--text-primary);
     width: 100%;
+    font-size: 16px; /* Базовый размер для десктопа */
+}
+
+/* Размер шрифта для мобильных */
+@media (max-width: 768px) {
+    .song-content {
+        font-size: 10px !important; /* Мелкий шрифт для смартфонов */
+        line-height: 1.6; /* Чуть меньше межстрочный интервал */
+    }
 }
 
 /* Две колонки как на главной странице - используем CSS Grid */
 .song-content.split-columns pre {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px; /* Как на главной странице */
+    gap: 8px; /* Меньше gap для экономии места */
     column-count: unset; /* Отключаем старый column-count */
     position: relative;
     align-items: start;
@@ -170,6 +179,8 @@
     padding: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
+    width: 100%; /* Используем всю ширину */
+    box-sizing: border-box;
 }
 
 /* Стили для колонок */
@@ -277,6 +288,8 @@
     margin: 0;
     padding: 0;
     overflow: visible;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Стили для аккордов - как на главной */
@@ -423,16 +436,21 @@ body[data-theme="light"] .song-content .song-block-legend {
         font-size: 20px;
     }
     
-    .font-size-small {
-        font-size: 12px;
+    /* Переопределяем размеры для мобильных с учетом базового 10px */
+    .song-content.font-size-small {
+        font-size: 8px !important;
     }
     
-    .font-size-medium {
-        font-size: 16px;
+    .song-content.font-size-medium {
+        font-size: 10px !important; /* По умолчанию */
     }
     
-    .font-size-large {
-        font-size: 20px;
+    .song-content.font-size-large {
+        font-size: 12px !important;
+    }
+    
+    .song-content.font-size-xlarge {
+        font-size: 14px !important;
     }
     
     /* Скрываем текст на маленьких экранах */
