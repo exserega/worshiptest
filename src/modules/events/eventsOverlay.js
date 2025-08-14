@@ -283,11 +283,18 @@ class EventsOverlay {
             eventModal.onSave = async () => {
                 // Перезагружаем события для обновления всех данных
                 await this.loadEvents();
+                // Открываем overlay только если он был закрыт
+                if (!this.isOpen) {
+                    this.open();
+                }
             };
             
             // При закрытии модалки открываем обратно overlay
             eventModal.onClose = () => {
-                this.open();
+                // Открываем overlay только если он был закрыт
+                if (!this.isOpen) {
+                    this.open();
+                }
             };
             
         } catch (error) {
