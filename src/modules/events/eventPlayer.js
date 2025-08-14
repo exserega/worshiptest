@@ -466,7 +466,7 @@ class EventPlayer {
         const newSize = this.currentFontSize + (direction * 2);
         
         // Ограничиваем диапазон
-        const minSize = 10;
+        const minSize = 6;  // Уменьшаем минимальный размер до 6px
         const maxSize = 24;
         this.currentFontSize = Math.max(minSize, Math.min(maxSize, newSize));
         console.log('📐 Новый размер:', this.currentFontSize);

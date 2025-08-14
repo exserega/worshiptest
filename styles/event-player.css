@@ -476,27 +476,11 @@
     font-size: inherit !important; /* Названия блоков остаются видимыми */
 }
 
+/* В режиме "только аккорды" размер аккордов наследуется от контейнера */
 .song-content.chords-only-mode .chord {
-    font-size: 16px !important;
+    font-size: inherit !important;
     display: inline-block;
     margin: 0 5px;
-}
-
-/* Адаптация размера аккордов для разных размеров шрифта */
-.song-content.font-size-small.chords-only-mode .chord {
-    font-size: 14px !important;
-}
-
-.song-content.font-size-medium.chords-only-mode .chord {
-    font-size: 16px !important;
-}
-
-.song-content.font-size-large.chords-only-mode .chord {
-    font-size: 18px !important;
-}
-
-.song-content.font-size-xlarge.chords-only-mode .chord {
-    font-size: 20px !important;
 }
 
 /* Размеры шрифта */

@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v228'; // v228, исправлено применение размера шрифта с important и setTimeout
+const CACHE_NAME = 'agape-worship-cache-v229'; // v229, уменьшен минимальный размер шрифта до 6px
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
