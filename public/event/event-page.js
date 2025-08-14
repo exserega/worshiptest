@@ -228,34 +228,30 @@ async function loadSongs() {
         const songsWithDetails = await Promise.all(
             setlistSongs.map(async (setlistSong) => {
                 try {
-                    // Пытаемся найти песню в коллекции songs по названию
-                    const songQuery = await db.collection('songs')
-                        .where('name', '==', setlistSong.songId)
-                        .limit(1)
-                        .get();
+                    // songId в сетлисте - это ID документа песни, а не название
+                    const songDoc = await db.collection('songs').doc(setlistSong.songId).get();
                     
-                    if (!songQuery.empty) {
-                        const songData = songQuery.docs[0].data();
-                        console.log('🎵 Данные песни:', songData.name, 'BPM:', songData.bpm || songData.BPM);
+                    if (songDoc.exists) {
+                        const songData = songDoc.data();
+                        console.log('🎵 Данные песни:', songData.name, 'BPM:', songData.BPM);
                         return {
                             ...songData,
+                            id: songDoc.id,
                             preferredKey: setlistSong.preferredKey || songData.defaultKey,
-                            order: setlistSong.order,
-                            // Убедимся что BPM попадает в результат
-                            BPM: songData.BPM || songData.bpm || songData.tempo
+                            order: setlistSong.order
                         };
                     }
                 } catch (err) {
                     console.warn('⚠️ Не удалось загрузить детали песни:', setlistSong.songId);
                 }
                 
-                // Если не нашли в БД, возвращаем как есть
-                console.log('⚠️ Песня не найдена в БД, возвращаем минимальные данные');
+                // Если не нашли в БД, возвращаем минимальные данные
+                console.log('⚠️ Песня не найдена в БД, ID:', setlistSong.songId);
                 return {
-                    name: setlistSong.songId,
-                    preferredKey: setlistSong.preferredKey,
+                    name: 'Песня не найдена',
+                    preferredKey: setlistSong.preferredKey || 'C',
                     order: setlistSong.order,
-                    bpm: null
+                    BPM: null
                 };
             })
         );
