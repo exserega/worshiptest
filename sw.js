@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v219'; // v219, отрицательный margin для убирания нижнего отступа
+const CACHE_NAME = 'agape-worship-cache-v220'; // v220, увеличен отрицательный margin и убрана min-height
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

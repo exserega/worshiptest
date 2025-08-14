@@ -255,6 +255,7 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     overflow: hidden;
+    min-height: auto !important; /* Убираем минимальную высоту */
 }
 
 .song-content .song-block-legend {
@@ -291,7 +292,7 @@
 
 .song-content .song-block-content {
     /* Копируем из components.css */
-    margin: -14px 0 -5px 0 !important; /* Добавлен отрицательный margin снизу */
+    margin: -14px 0 -10px 0 !important; /* Увеличен отрицательный margin снизу */
     padding: 0px 3px 0px 3px !important; /* Убран нижний padding */
     white-space: pre-wrap;
     line-height: inherit;
@@ -300,6 +301,12 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     overflow: hidden;
+}
+
+/* Убираем отступ после последней строки в блоке */
+.song-content .song-block-content > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 /* Стили для pre */
@@ -428,7 +435,7 @@ body[data-theme="light"] .song-content .song-block-legend {
     }
     
     .song-content .song-block-content {
-        margin: -8px 0 -3px 0 !important; /* Отрицательный margin снизу */
+        margin: -8px 0 -8px 0 !important; /* Увеличен отрицательный margin снизу */
         padding: 0px 2px 0px 2px !important; /* Без нижнего padding */
     }
     .event-player-header {
@@ -533,7 +540,7 @@ body[data-theme="light"] .song-content .song-block-legend {
     }
     
     .song-content .song-block-content {
-        margin: -20px 0 -5px 0 !important; /* Отрицательный margin снизу */
+        margin: -20px 0 -10px 0 !important; /* Увеличен отрицательный margin снизу */
         padding: 0px 3px 0px 3px !important;
     }
 }
