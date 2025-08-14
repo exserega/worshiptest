@@ -118,10 +118,20 @@ class EventsOverlay {
             console.log('📊 События загружены:', events); // Временный лог
             
             // Добавляем права на редактирование для каждого события
-            this.events = events.map(event => ({
-                ...event,
-                canEdit: event.createdBy === currentUser.uid || currentUser.role === 'admin'
-            }));
+            this.events = events.map(event => {
+                const canEdit = event.createdBy === currentUser.uid || currentUser.role === 'admin';
+                console.log('🔐 Проверка прав:', {
+                    eventId: event.id,
+                    eventCreatedBy: event.createdBy,
+                    currentUserId: currentUser.uid,
+                    currentUserRole: currentUser.role,
+                    canEdit
+                });
+                return {
+                    ...event,
+                    canEdit
+                };
+            });
             
             // Создаем компонент списка если еще не создан
             if (!this.eventsList) {
