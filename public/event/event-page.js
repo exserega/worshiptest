@@ -242,7 +242,7 @@ async function loadSongs() {
                             preferredKey: setlistSong.preferredKey || songData.defaultKey,
                             order: setlistSong.order,
                             // Убедимся что BPM попадает в результат
-                            bpm: songData.bpm || songData.BPM || songData.tempo
+                            BPM: songData.BPM || songData.bpm || songData.tempo
                         };
                     }
                 } catch (err) {
@@ -250,10 +250,12 @@ async function loadSongs() {
                 }
                 
                 // Если не нашли в БД, возвращаем как есть
+                console.log('⚠️ Песня не найдена в БД, возвращаем минимальные данные');
                 return {
                     name: setlistSong.songId,
                     preferredKey: setlistSong.preferredKey,
-                    order: setlistSong.order
+                    order: setlistSong.order,
+                    bpm: null
                 };
             })
         );
@@ -291,7 +293,7 @@ function displaySongs(songs) {
         // Теперь у нас есть полные данные песни
         const songName = song.name || 'Без названия';
         const songKey = song.preferredKey || song.defaultKey || 'C';
-        const songBpm = song.bpm || song.BPM || '';
+        const songBpm = song.BPM || song.bpm || song.tempo || '';
         
         return `
             <div class="song-item">

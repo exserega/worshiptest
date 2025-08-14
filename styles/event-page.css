@@ -530,17 +530,42 @@
 
 /* Адаптивность для карточек песен */
 @media (max-width: 600px) {
+    .songs-list {
+        padding: 4px;
+    }
+    
     .song-item {
-        padding: 10px 12px;
-        min-height: 50px;
+        padding: 12px 8px;
+        min-height: auto;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .song-number {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        font-size: 10px;
+        min-width: auto;
+        margin: 0;
+    }
+    
+    .song-info {
+        width: 100%;
+        padding: 0 20px;
     }
     
     .song-name {
         font-size: 14px;
+        word-wrap: break-word;
+        hyphens: auto;
+        max-width: 100%;
     }
     
     .song-meta {
         gap: 6px;
+        justify-content: center;
+        flex-wrap: wrap;
     }
     
     .song-key,
