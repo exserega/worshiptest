@@ -117,7 +117,7 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden; /* Убираем горизонтальный скролл */
-    padding: 20px 10px; /* Меньше боковые отступы */
+    padding: 20px 0; /* БЕЗ боковых отступов */
 }
 
 .player-song-display {
@@ -128,7 +128,7 @@
 
 @media (max-width: 768px) {
     .event-player-content {
-        padding: 10px 2px; /* Почти без боковых отступов */
+        padding: 10px 0; /* БЕЗ боковых отступов вообще */
         width: 100%;
         box-sizing: border-box;
     }
@@ -183,7 +183,7 @@
 .song-content.split-columns pre {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4px; /* Минимальный gap между колонками */
+    gap: 12px; /* Нормальный gap между колонками как на главной */
     column-count: unset; /* Отключаем старый column-count */
     position: relative;
     align-items: start;
@@ -230,18 +230,18 @@
     overflow: hidden !important;
 }
 
-/* Стили для блоков песни - МАКСИМАЛЬНАЯ ШИРИНА */
+/* Стили для блоков песни - ТОЧНО КАК НА ГЛАВНОЙ */
 .song-content .song-block {
     /* Копируем из components.css */
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    margin: 2px -2px !important; /* Отрицательный margin чтобы выйти за границы */
+    margin: 2px 0 !important; /* Нормальные отступы */
     padding: 0 !important;
     background-color: var(--container-background-color);
     transition: border-color 0.3s ease, background-color 0.3s ease;
     min-width: 0;
-    width: calc(100% + 4px); /* Компенсируем отрицательные margin */
-    max-width: calc(100% + 4px);
+    width: 100%; /* Используем всю доступную ширину */
+    max-width: 100%;
     box-sizing: border-box;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -391,13 +391,13 @@ body[data-theme="light"] .song-content .song-block-legend {
     /* ДВЕ КОЛОНКИ НА МОБИЛЬНЫХ - как на главной странице! */
     .song-content.split-columns pre {
         /* Остается grid-template-columns: 1fr 1fr из основных стилей */
-        gap: 3px; /* Минимальный отступ между колонками */
+        gap: 8px; /* Нормальный отступ между колонками */
     }
     
     /* Меньше отступы между блоками */
     .song-content.split-columns .column-1,
     .song-content.split-columns .column-2 {
-        gap: 3px; /* Минимальные отступы на мобильных */
+        gap: 6px; /* Нормальные отступы на мобильных */
     }
     
     /* МОБИЛЬНЫЕ блоки песни - ЭКСТРА компактные (как в responsive.css) */
