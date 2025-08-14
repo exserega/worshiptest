@@ -158,6 +158,15 @@
     font-size: 13px;
 }
 
+/* Стили для символов транспонирования */
+#player-transpose-down,
+#player-transpose-up {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+    font-family: var(--font-primary);
+}
+
 .player-control-btn:hover {
     background: var(--bg-hover);
     border-color: var(--accent-color);
@@ -395,14 +404,31 @@
 }
 
 /* Режим "только аккорды" */
-.song-content.chords-only-mode {
-    font-size: 0;
+.song-content.chords-only-mode pre {
+    font-size: 0 !important;
 }
 
 .song-content.chords-only-mode .chord {
-    font-size: var(--lyrics-font-size, 16px);
+    font-size: 16px !important;
     display: inline-block;
     margin: 0 5px;
+}
+
+/* Адаптация размера аккордов для разных размеров шрифта */
+.song-content.font-size-small.chords-only-mode .chord {
+    font-size: 14px !important;
+}
+
+.song-content.font-size-medium.chords-only-mode .chord {
+    font-size: 16px !important;
+}
+
+.song-content.font-size-large.chords-only-mode .chord {
+    font-size: 18px !important;
+}
+
+.song-content.font-size-xlarge.chords-only-mode .chord {
+    font-size: 20px !important;
 }
 
 /* Размеры шрифта */

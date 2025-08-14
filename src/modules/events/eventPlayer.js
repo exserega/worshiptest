@@ -70,21 +70,21 @@ class EventPlayer {
                     <button class="player-control-btn" id="player-split-text" aria-label="Разделить текст">
                         <i class="fas fa-columns"></i>
                     </button>
-                    <button class="player-control-btn" id="player-transpose-down" aria-label="Транспонировать вниз">
+                    <button class="player-control-btn" id="player-font-decrease" aria-label="Уменьшить текст">
                         <i class="fas fa-minus"></i>
+                    </button>
+                    <button class="player-control-btn" id="player-font-increase" aria-label="Увеличить текст">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="player-control-btn" id="player-transpose-down" aria-label="Транспонировать вниз">
+                        ♭
                     </button>
                     <span class="transpose-value">0</span>
                     <button class="player-control-btn" id="player-transpose-up" aria-label="Транспонировать вверх">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <button class="player-control-btn" id="player-font-size" aria-label="Размер текста">
-                        <i class="fas fa-font"></i>
+                        ♯
                     </button>
                     <button class="player-control-btn" id="player-copy-text" aria-label="Копировать текст">
                         <i class="fas fa-copy"></i>
-                    </button>
-                    <button class="player-control-btn" id="player-fullscreen" aria-label="Полноэкранный режим">
-                        <i class="fas fa-expand"></i>
                     </button>
                 </div>
             </div>
@@ -110,19 +110,19 @@ class EventPlayer {
         prevBtn.addEventListener('click', () => this.previousSong());
         nextBtn.addEventListener('click', () => this.nextSong());
         
+        // Размер шрифта
+        const fontDecreaseBtn = this.overlay.querySelector('#player-font-decrease');
+        const fontIncreaseBtn = this.overlay.querySelector('#player-font-increase');
+        fontDecreaseBtn.addEventListener('click', () => this.changeFontSize(-1));
+        fontIncreaseBtn.addEventListener('click', () => this.changeFontSize(1));
+        
         // Транспонирование
         const transposeDown = this.overlay.querySelector('#player-transpose-down');
         const transposeUp = this.overlay.querySelector('#player-transpose-up');
         transposeDown.addEventListener('click', () => this.transpose(-1));
         transposeUp.addEventListener('click', () => this.transpose(1));
         
-        // Размер шрифта
-        const fontSizeBtn = this.overlay.querySelector('#player-font-size');
-        fontSizeBtn.addEventListener('click', () => this.toggleFontSize());
-        
-        // Полноэкранный режим
-        const fullscreenBtn = this.overlay.querySelector('#player-fullscreen');
-        fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
+        // Полноэкранный режим убран - запускается автоматически
         
         // Новые кнопки
         const toggleChordsBtn = this.overlay.querySelector('#player-toggle-chords');
@@ -220,6 +220,9 @@ class EventPlayer {
         
         // Загружаем первую песню
         await this.loadCurrentSong();
+        
+        // Автоматически включаем полноэкранный режим
+        this.enterFullscreen();
         
         // Добавляем в историю браузера
         history.pushState({ eventPlayer: true }, '', `#player`);
@@ -393,15 +396,30 @@ class EventPlayer {
         transposeValue.textContent = this.transposition > 0 ? `+${this.transposition}` : this.transposition;
     }
     
-    toggleFontSize() {
-        const sizes = ['small', 'medium', 'large'];
+    changeFontSize(direction) {
+        const sizes = ['small', 'medium', 'large', 'xlarge'];
         const currentIndex = sizes.indexOf(this.fontSize);
-        this.fontSize = sizes[(currentIndex + 1) % sizes.length];
+        let nextIndex = currentIndex + direction;
+        
+        // Ограничиваем диапазон
+        if (nextIndex < 0) nextIndex = 0;
+        if (nextIndex >= sizes.length) nextIndex = sizes.length - 1;
+        
+        this.fontSize = sizes[nextIndex];
         
         // Обновляем класс
-        const content = this.overlay.querySelector('.song-content');
-        if (content) {
-            content.className = `song-content font-size-${this.fontSize}`;
+        const songContent = this.overlay.querySelector('.song-content');
+        if (songContent) {
+            sizes.forEach(size => songContent.classList.remove(`font-size-${size}`));
+            songContent.classList.add(`font-size-${this.fontSize}`);
+        }
+    }
+    
+    enterFullscreen() {
+        if (!document.fullscreenElement) {
+            this.overlay.requestFullscreen().catch(err => {
+                console.error('Ошибка входа в полноэкранный режим:', err);
+            });
         }
     }
     
