@@ -4,7 +4,7 @@
  */
 
 import logger from '../../utils/logger.js';
-import { db, collection, getDocs, getDoc, doc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from '../../utils/firebase-v8-adapter.js';
+import { db } from '../../utils/firebase-v8-adapter.js';
 import { auth } from '../../../firebase-init.js';
 
 // Firebase v8 Timestamp
@@ -161,10 +161,10 @@ export async function createEvent(eventData) {
  */
 export async function updateEvent(eventId, updates) {
     try {
-        const eventRef = doc(db, 'events', eventId);
-        await updateDoc(eventRef, {
+        const eventRef = db.collection('events').doc(eventId);
+        await eventRef.update({
             ...updates,
-            updatedAt: Timestamp.now()
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         
         logger.log(`✅ Событие ${eventId} обновлено`);
@@ -180,7 +180,8 @@ export async function updateEvent(eventId, updates) {
  */
 export async function deleteEvent(eventId) {
     try {
-        await deleteDoc(doc(db, 'events', eventId));
+        const eventRef = db.collection('events').doc(eventId);
+        await eventRef.delete();
         logger.log(`✅ Событие ${eventId} удалено`);
     } catch (error) {
         logger.error('❌ Ошибка удаления события:', error);
@@ -203,25 +204,7 @@ export async function getEvent(eventId) {
     }
 }
 
-/**
- * Обновить событие
- * @param {string} eventId - ID события
- * @param {Object} eventData - Новые данные события
- * @returns {Promise<void>}
- */
-export async function updateEvent(eventId, eventData) {
-    try {
-        const eventRef = db.collection('events').doc(eventId);
-        await eventRef.update({
-            ...eventData,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        logger.log(`✅ Событие ${eventId} обновлено`);
-    } catch (error) {
-        logger.error('❌ Ошибка обновления события:', error);
-        throw error;
-    }
-}
+
 
 /**
  * Получить сетлист события
