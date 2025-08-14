@@ -179,6 +179,12 @@ export class EventModal {
                 select.appendChild(option);
             });
             
+            // Устанавливаем сохраненное значение если есть
+            if (this._pendingLeaderId) {
+                select.value = this._pendingLeaderId;
+                this._pendingLeaderId = null;
+            }
+            
             // Инициализируем селектор участников после загрузки пользователей
             if (this.branchUsers.length > 0) {
                 this.initParticipantsSelector();
@@ -215,6 +221,12 @@ export class EventModal {
                 select.appendChild(option);
             });
             
+            // Устанавливаем сохраненное значение если есть
+            if (this._pendingSetlistId) {
+                select.value = this._pendingSetlistId;
+                this._pendingSetlistId = null;
+            }
+            
         } catch (error) {
             logger.error('Ошибка загрузки сетлистов:', error);
         }
@@ -235,6 +247,12 @@ export class EventModal {
             this.participantsSelector.onChange = (participants) => {
                 console.log('📝 Участники изменены:', participants);
             };
+        }
+        
+        // Устанавливаем сохраненных участников если есть
+        if (this._pendingParticipants && this._pendingParticipants.length > 0) {
+            this.participantsSelector.setParticipants(this._pendingParticipants);
+            this._pendingParticipants = null;
         }
     }
     
@@ -321,8 +339,32 @@ export class EventModal {
     
     /**
      * Открыть модальное окно
+     * @param {Object} eventData - Данные события для редактирования (опционально)
      */
-    open() {
+    open(eventData = null) {
+        if (eventData) {
+            // Режим редактирования
+            this.mode = 'edit';
+            this.currentEventId = eventData.id;
+            this.fillFormWithEventData(eventData);
+            
+            // Меняем заголовок
+            const title = this.modal.querySelector('.modal-title');
+            if (title) title.textContent = 'Редактировать событие';
+            
+            // Меняем текст кнопки
+            const saveBtn = this.modal.querySelector('.btn-primary');
+            if (saveBtn) saveBtn.textContent = 'Сохранить изменения';
+        } else {
+            // Режим создания
+            this.openForCreate();
+            return;
+        }
+        
+        // Загружаем сетлисты и пользователей
+        this.loadSetlists();
+        this.loadBranchUsers();
+        
         this.modal.classList.add('visible');
         this.isOpen = true;
         
@@ -338,6 +380,42 @@ export class EventModal {
     close() {
         this.modal.classList.remove('visible');
         this.isOpen = false;
+        
+        // Вызываем callback при закрытии
+        if (this.onClose) {
+            this.onClose();
+            this.onClose = null;
+        }
+    }
+    
+    /**
+     * Заполнить форму данными события
+     * @param {Object} eventData - Данные события
+     */
+    fillFormWithEventData(eventData) {
+        // Название
+        const nameInput = this.modal.querySelector('#event-name');
+        if (nameInput) nameInput.value = eventData.name || '';
+        
+        // Дата и время
+        const dateInput = this.modal.querySelector('#event-date');
+        if (dateInput && eventData.date) {
+            const date = eventData.date.toDate ? eventData.date.toDate() : new Date(eventData.date);
+            dateInput.value = date.toISOString().slice(0, 16);
+        }
+        
+        // Комментарий
+        const commentInput = this.modal.querySelector('#event-comment');
+        if (commentInput) commentInput.value = eventData.comment || '';
+        
+        // Сетлист будет установлен после загрузки списка
+        this._pendingSetlistId = eventData.setlistId;
+        
+        // Лидер будет установлен после загрузки пользователей
+        this._pendingLeaderId = eventData.leaderId;
+        
+        // Участники будут установлены после инициализации селектора
+        this._pendingParticipants = eventData.participants || [];
     }
 }
 

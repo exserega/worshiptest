@@ -189,6 +189,41 @@ export async function deleteEvent(eventId) {
 }
 
 /**
+ * Получить событие по ID
+ * @param {string} eventId - ID события
+ * @returns {Promise<DocumentSnapshot>}
+ */
+export async function getEvent(eventId) {
+    try {
+        const eventRef = db.collection('events').doc(eventId);
+        return await eventRef.get();
+    } catch (error) {
+        logger.error('❌ Ошибка получения события:', error);
+        throw error;
+    }
+}
+
+/**
+ * Обновить событие
+ * @param {string} eventId - ID события
+ * @param {Object} eventData - Новые данные события
+ * @returns {Promise<void>}
+ */
+export async function updateEvent(eventId, eventData) {
+    try {
+        const eventRef = db.collection('events').doc(eventId);
+        await eventRef.update({
+            ...eventData,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        logger.log(`✅ Событие ${eventId} обновлено`);
+    } catch (error) {
+        logger.error('❌ Ошибка обновления события:', error);
+        throw error;
+    }
+}
+
+/**
  * Получить сетлист события
  * @param {string} setlistId - ID сетлиста
  * @returns {Promise<Object|null>} Данные сетлиста

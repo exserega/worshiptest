@@ -249,10 +249,35 @@ class EventsOverlay {
      * Обработчик редактирования события
      * @param {string} eventId - ID события
      */
-    handleEventEdit(eventId) {
+    async handleEventEdit(eventId) {
         logger.log(`Редактирование события: ${eventId}`);
-        // TODO: Открыть редактор события
-        alert('Редактирование событий будет реализовано в следующей фазе');
+        
+        try {
+            // Загружаем данные события
+            const eventDoc = await this.eventsApi.getEvent(eventId);
+            if (!eventDoc.exists) {
+                console.error('Событие не найдено');
+                return;
+            }
+            
+            const eventData = { id: eventDoc.id, ...eventDoc.data() };
+            
+            // Закрываем overlay событий
+            this.close();
+            
+            // Открываем модальное окно в режиме редактирования
+            const { eventModal } = await import('./eventModal.js');
+            eventModal.open(eventData);
+            
+            // При закрытии модалки открываем обратно overlay
+            eventModal.onClose = () => {
+                this.open();
+            };
+            
+        } catch (error) {
+            console.error('Ошибка при редактировании события:', error);
+            alert('Не удалось загрузить данные события');
+        }
     }
     
     /**
