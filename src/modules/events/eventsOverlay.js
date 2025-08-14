@@ -279,6 +279,12 @@ class EventsOverlay {
             const { eventModal } = await import('./eventModal.js');
             eventModal.open(eventData);
             
+            // Устанавливаем callback для обновления данных после сохранения
+            eventModal.onSave = async () => {
+                // Перезагружаем события для обновления всех данных
+                await this.loadEvents();
+            };
+            
             // При закрытии модалки открываем обратно overlay
             eventModal.onClose = () => {
                 this.open();
