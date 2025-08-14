@@ -20,16 +20,15 @@ export async function getEventsByBranch(branchId) {
     try {
         logger.log(`📅 Загрузка событий для филиала: ${branchId}`);
         
-        const eventsRef = collection(db, 'events');
+        const eventsRef = db.collection('events');
         
         try {
             // Пробуем с составным индексом
-            const q = query(eventsRef, 
-                where('branchId', '==', branchId),
-                orderBy('date', 'desc')
-            );
+            const query = eventsRef
+                .where('branchId', '==', branchId)
+                .orderBy('date', 'desc');
             
-            const snapshot = await getDocs(q);
+            const snapshot = await query.get();
             const events = [];
         
             snapshot.forEach(doc => {
@@ -45,8 +44,8 @@ export async function getEventsByBranch(branchId) {
             // Если индекс не создан, делаем запрос без сортировки и сортируем в JS
             logger.warn('⚠️ Индекс не создан, используем альтернативный метод');
             
-            const q = query(eventsRef, where('branchId', '==', branchId));
-            const snapshot = await getDocs(q);
+            const query = eventsRef.where('branchId', '==', branchId);
+            const snapshot = await query.get();
             const events = [];
             
             snapshot.forEach(doc => {
@@ -144,7 +143,7 @@ export async function createEvent(eventData) {
             isArchived: false
         };
         
-        const docRef = await addDoc(collection(db, 'events'), newEvent);
+        const docRef = await db.collection('events').add(newEvent);
         logger.log(`✅ Событие создано с ID: ${docRef.id}`);
         
         return docRef.id;

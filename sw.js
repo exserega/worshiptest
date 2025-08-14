@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v236'; // v236, исправлен дубликат updateEvent и синтаксис Firebase v8
+const CACHE_NAME = 'agape-worship-cache-v237'; // v237, исправлены все Firebase v8 API вызовы в eventsApi
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
