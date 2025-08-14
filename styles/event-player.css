@@ -117,7 +117,9 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden; /* Убираем горизонтальный скролл */
-    padding: 20px 2px; /* Минимальные боковые отступы 2px */
+    padding: 20px 2px 20px 2px; /* Одинаковые отступы слева и справа */
+    padding-right: 10px; /* Больше справа для полосы прокрутки */
+    scrollbar-gutter: stable; /* Резервируем место под полосу прокрутки */
 }
 
 .player-song-display {
@@ -129,7 +131,8 @@
 
 @media (max-width: 768px) {
     .event-player-content {
-        padding: 10px 2px; /* Минимальные боковые отступы 2px */
+        padding: 10px 2px 10px 2px; /* Базовые отступы */
+        padding-right: 8px; /* Больше справа для полосы прокрутки */
         width: 100%;
         box-sizing: border-box;
     }
@@ -442,7 +445,8 @@ body[data-theme="light"] .song-content .song-block-legend {
     }
     
     .event-player-content {
-        padding: 10px 2px; /* Минимальные боковые отступы 2px */
+        padding: 10px 2px 10px 2px; /* Базовые отступы */
+        padding-right: 8px; /* Больше справа для полосы прокрутки */
     }
     
     .player-nav-btn {
