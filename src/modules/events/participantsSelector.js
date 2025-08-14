@@ -245,6 +245,7 @@ export class ParticipantsSelector {
             e.stopPropagation(); // Предотвращаем всплытие
             
             if (e.target.classList.contains('user-selector-item') && !e.target.classList.contains('disabled')) {
+                console.log('👤 Выбран участник');
                 const userId = e.target.dataset.userId;
                 const user = this.users.find(u => u.id === userId);
                 
@@ -255,13 +256,35 @@ export class ParticipantsSelector {
                     instrumentName: instrument.name
                 });
                 
-                // Удаляем dropdown из его родителя
-                dropdown.remove();
+                try {
+                    // Удаляем dropdown из его родителя
+                    if (dropdown && dropdown.parentNode) {
+                        dropdown.parentNode.removeChild(dropdown);
+                    }
+                } catch (error) {
+                    console.error('❌ Ошибка при удалении dropdown после выбора:', error);
+                    dropdown.style.display = 'none';
+                }
             }
             
             if (e.target.classList.contains('close-dropdown')) {
-                // Удаляем dropdown из его родителя
-                dropdown.remove();
+                console.log('🚫 Закрытие dropdown по кнопке');
+                e.preventDefault();
+                e.stopPropagation();
+                
+                try {
+                    // Удаляем dropdown из его родителя
+                    if (dropdown && dropdown.parentNode) {
+                        console.log('📍 Родитель dropdown:', dropdown.parentNode);
+                        dropdown.parentNode.removeChild(dropdown);
+                    } else {
+                        console.log('⚠️ Dropdown уже удален или не имеет родителя');
+                    }
+                } catch (error) {
+                    console.error('❌ Ошибка при удалении dropdown:', error);
+                    // Fallback - попробуем просто скрыть
+                    dropdown.style.display = 'none';
+                }
             }
         });
         
@@ -269,7 +292,14 @@ export class ParticipantsSelector {
         setTimeout(() => {
             const closeOnOutsideClick = (e) => {
                 if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
-                    dropdown.remove();
+                    try {
+                        if (dropdown && dropdown.parentNode) {
+                            dropdown.parentNode.removeChild(dropdown);
+                        }
+                    } catch (error) {
+                        console.error('❌ Ошибка при закрытии по клику вне:', error);
+                        dropdown.style.display = 'none';
+                    }
                     document.removeEventListener('click', closeOnOutsideClick);
                 }
             };
