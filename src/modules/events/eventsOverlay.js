@@ -4,7 +4,7 @@
  */
 
 import logger from '../../utils/logger.js';
-import { getEventsByBranch, deleteEvent } from './eventsApi.js';
+import { getEventsByBranch, deleteEvent, getEvent } from './eventsApi.js';
 import { EventsList } from './eventsList.js';
 import { getCurrentUser } from '../auth/authCheck.js';
 
@@ -264,7 +264,7 @@ class EventsOverlay {
         
         try {
             // Загружаем данные события
-            const eventDoc = await this.eventsApi.getEvent(eventId);
+            const eventDoc = await getEvent(eventId);
             if (!eventDoc.exists) {
                 console.error('Событие не найдено');
                 return;
