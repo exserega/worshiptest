@@ -257,18 +257,36 @@ class EventPlayer {
             // Применяем транспонирование если нужно
             if (this.transposition !== 0) {
                 const fromKey = song.preferredKey || song.defaultKey || 'C';
-                processedLyrics = transposeLyrics(processedLyrics, fromKey, this.transposition);
+                // transposeLyrics принимает (lyrics, transposition, targetKey)
+                // Вычисляем целевую тональность
+                const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                const fromIndex = keys.indexOf(fromKey.replace('♭', 'b').replace('m', ''));
+                let targetIndex = (fromIndex + this.transposition) % 12;
+                if (targetIndex < 0) targetIndex += 12;
+                const targetKey = keys[targetIndex];
+                
+                processedLyrics = transposeLyrics(processedLyrics, this.transposition, targetKey);
             }
             
             // Оборачиваем блоки песни и подсвечиваем аккорды
             const wrappedLyrics = wrapSongBlocks(processedLyrics);
             const finalLyrics = highlightChords(wrappedLyrics);
             
+            // Определяем текущую тональность
+            let currentKey = song.preferredKey || song.defaultKey || 'C';
+            if (this.transposition !== 0) {
+                const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                const fromIndex = keys.indexOf(currentKey.replace('♭', 'b').replace('m', ''));
+                let targetIndex = (fromIndex + this.transposition) % 12;
+                if (targetIndex < 0) targetIndex += 12;
+                currentKey = keys[targetIndex];
+            }
+            
             // Отображаем
             display.innerHTML = `
                 <div class="song-content font-size-${this.fontSize}">
                     <div class="song-key-info">
-                        ${song.preferredKey || song.defaultKey || 'C'}
+                        ${currentKey}
                         ${song.BPM ? `<span class="song-bpm-info">${song.BPM} BPM</span>` : ''}
                     </div>
                     ${finalLyrics}
