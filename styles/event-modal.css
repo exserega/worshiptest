@@ -135,12 +135,12 @@
 
 [data-theme="dark"] .btn-secondary {
     background: #1f2937;
-    color: #9ca3af;
+    color: #e5e7eb !important;
 }
 
 [data-theme="dark"] .btn-secondary:hover {
     background: #374151;
-    color: #e5e7eb;
+    color: #ffffff !important;
 }
 
 /* Светлая тема */
@@ -160,12 +160,12 @@
 
 [data-theme="light"] .btn-secondary {
     background: #f3f4f6;
-    color: #6b7280;
+    color: #374151 !important;
 }
 
 [data-theme="light"] .btn-secondary:hover {
     background: #e5e7eb;
-    color: #374151;
+    color: #1f2937 !important;
 }
 
 /* Селектор участников */

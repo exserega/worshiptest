@@ -48,9 +48,12 @@ export class ParticipantsSelector {
                 <div class="instruments-list">
                     ${INSTRUMENTS.map(instrument => this.renderInstrument(instrument)).join('')}
                 </div>
+                <!-- Кнопка добавления инструмента (функционал будет добавлен позже) -->
+                <!--
                 <button type="button" class="add-instrument-btn">
                     <i class="fas fa-plus"></i> Добавить инструмент
                 </button>
+                -->
             </div>
         `;
         
