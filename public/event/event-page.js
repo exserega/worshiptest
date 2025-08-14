@@ -528,6 +528,9 @@ async function launchPlayer() {
     }
     
     try {
+        // Скрываем скролл на основной странице
+        document.body.style.overflow = 'hidden';
+        
         // Динамически импортируем модуль плеера
         const { openEventPlayer } = await import('/src/modules/events/eventPlayer.js');
         

@@ -166,6 +166,9 @@ class EventPlayer {
             return;
         }
         
+        // Скрываем скролл на основной странице
+        document.body.style.overflow = 'hidden';
+        
         // Показываем оверлей
         console.log('🎬 Показываем оверлей плеера');
         this.overlay.classList.add('show');
@@ -197,6 +200,9 @@ class EventPlayer {
         
         this.overlay.classList.remove('show');
         this.isOpen = false;
+        
+        // Восстанавливаем скролл на основной странице
+        document.body.style.overflow = '';
         
         // Удаляем обработчики
         document.removeEventListener('keydown', this.handleKeyboard);
