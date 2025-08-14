@@ -354,14 +354,19 @@ class EventPlayer {
             
             // Получаем текст песни
             const originalLyrics = song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден';
-            const originalKey = song.preferredKey || song.defaultKey || 'C';
+            
+            // Оригинальная тональность из Firebase (та, в которой записаны аккорды)
+            const originalKey = song['Оригинальная тональность'] || song.originalKey || song.defaultKey || 'C';
+            
+            // Предпочитаемая тональность из сетлиста
+            const preferredKey = song.preferredKey || originalKey;
             
             // Сохраняем оригинальную тональность
             this.originalKey = originalKey;
             
-            // При первой загрузке устанавливаем текущую тональность
-            if (!this.currentKey || this.currentKey === 'C') {
-                this.currentKey = originalKey;
+            // При первой загрузке песни устанавливаем тональность из сетлиста
+            if (!this.currentKey || this.currentIndex === 0) {
+                this.currentKey = preferredKey;
             }
             
             // Обновляем кнопку тональности
@@ -371,7 +376,12 @@ class EventPlayer {
                 keyBtn.textContent = displayKey;
             }
             
-            // Целевая тональность уже установлена в this.currentKey
+            // Логируем для отладки
+            console.log('🎵 Транспонирование:', {
+                originalKey,
+                currentKey: this.currentKey,
+                preferredKey
+            });
             
             // Используем ту же функцию что и на главной странице
             let finalLyrics = getRenderedSongText(originalLyrics, originalKey, this.currentKey);
@@ -434,6 +444,13 @@ class EventPlayer {
     previousSong() {
         if (this.currentIndex > 0) {
             this.currentIndex--;
+            // При переключении песни берем ее тональность из сетлиста
+            const song = this.songs[this.currentIndex];
+            if (song) {
+                const originalKey = song['Оригинальная тональность'] || song.originalKey || song.defaultKey || 'C';
+                const preferredKey = song.preferredKey || originalKey;
+                this.currentKey = preferredKey;
+            }
             this.loadCurrentSong();
         }
     }
@@ -441,6 +458,13 @@ class EventPlayer {
     nextSong() {
         if (this.currentIndex < this.songs.length - 1) {
             this.currentIndex++;
+            // При переключении песни берем ее тональность из сетлиста
+            const song = this.songs[this.currentIndex];
+            if (song) {
+                const originalKey = song['Оригинальная тональность'] || song.originalKey || song.defaultKey || 'C';
+                const preferredKey = song.preferredKey || originalKey;
+                this.currentKey = preferredKey;
+            }
             this.loadCurrentSong();
         }
     }
