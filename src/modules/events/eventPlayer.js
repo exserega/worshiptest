@@ -13,7 +13,7 @@ class EventPlayer {
         this.isOpen = false;
         this.eventId = null;
         this.transposition = 0;
-        this.fontSize = 'medium'; // small, medium, large
+        this.currentFontSize = 16; // Базовый размер шрифта в px
         this.areChordsVisible = true;
         this.isChordsOnlyMode = false;
         this.isSplitMode = true; // По умолчанию 2 колонки
@@ -85,15 +85,21 @@ class EventPlayer {
                         <div class="player-key-dropdown" id="player-key-dropdown">
                             <button data-key="C">C</button>
                             <button data-key="C#">C#</button>
+                            <button data-key="Db">D♭</button>
                             <button data-key="D">D</button>
                             <button data-key="D#">D#</button>
+                            <button data-key="Eb">E♭</button>
                             <button data-key="E">E</button>
                             <button data-key="F">F</button>
                             <button data-key="F#">F#</button>
+                            <button data-key="Gb">G♭</button>
                             <button data-key="G">G</button>
                             <button data-key="G#">G#</button>
+                            <button data-key="Ab">A♭</button>
                             <button data-key="A">A</button>
                             <button data-key="A#">A#</button>
+                            <button data-key="Bb">B♭</button>
+                            <button data-key="H">H</button>
                             <button data-key="B">B</button>
                         </div>
                     </div>
@@ -232,6 +238,9 @@ class EventPlayer {
         this.currentIndex = startIndex;
         this.transposition = 0;
         
+        // Устанавливаем базовый размер шрифта в зависимости от устройства
+        this.currentFontSize = window.innerWidth <= 768 ? 10 : 16;
+        
         if (!this.songs || this.songs.length === 0) {
             console.error('❌ Нет песен для отображения');
             return;
@@ -364,7 +373,6 @@ class EventPlayer {
             // Формируем классы для контента
             const contentClasses = [
                 'song-content',
-                `font-size-${this.fontSize}`,
                 this.isSplitMode ? 'split-columns' : '',
                 !this.areChordsVisible ? 'chords-hidden' : '',
                 this.isChordsOnlyMode ? 'chords-only-mode' : ''
@@ -372,7 +380,7 @@ class EventPlayer {
             
             // Отображаем
             display.innerHTML = `
-                <div class="${contentClasses}">
+                <div class="${contentClasses}" style="font-size: ${this.currentFontSize}px">
                     <pre>${finalLyrics}</pre>
                 </div>
             `;
@@ -421,31 +429,38 @@ class EventPlayer {
         if (this.transposition > 6) this.transposition -= 12;
         if (this.transposition < -6) this.transposition += 12;
         
-        // Обновляем отображение
+        // Обновляем отображение (заменяем b на ♭ для красоты)
         const keyBtn = this.overlay.querySelector('.player-current-key');
-        if (keyBtn) keyBtn.textContent = newKey;
+        if (keyBtn) {
+            const displayKey = newKey.replace('b', '♭');
+            keyBtn.textContent = displayKey;
+        }
         
         // Перезагружаем песню
         this.loadCurrentSong();
     }
     
     changeFontSize(direction) {
-        const sizes = ['small', 'medium', 'large', 'xlarge'];
-        const currentIndex = sizes.indexOf(this.fontSize);
-        let nextIndex = currentIndex + direction;
+        // Получаем текущий элемент с песней
+        const songContent = this.overlay.querySelector('.song-content');
+        if (!songContent) return;
+        
+        // Получаем текущий размер шрифта
+        const currentSize = parseInt(window.getComputedStyle(songContent).fontSize);
+        
+        // Изменяем на 2px
+        const newSize = currentSize + (direction * 2);
         
         // Ограничиваем диапазон
-        if (nextIndex < 0) nextIndex = 0;
-        if (nextIndex >= sizes.length) nextIndex = sizes.length - 1;
+        const minSize = 10;
+        const maxSize = 24;
+        const finalSize = Math.max(minSize, Math.min(maxSize, newSize));
         
-        this.fontSize = sizes[nextIndex];
+        // Применяем новый размер
+        songContent.style.fontSize = `${finalSize}px`;
         
-        // Обновляем класс
-        const songContent = this.overlay.querySelector('.song-content');
-        if (songContent) {
-            sizes.forEach(size => songContent.classList.remove(`font-size-${size}`));
-            songContent.classList.add(`font-size-${this.fontSize}`);
-        }
+        // Сохраняем для последующего использования
+        this.currentFontSize = finalSize;
     }
     
     enterFullscreen() {

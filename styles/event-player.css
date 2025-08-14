@@ -206,40 +206,57 @@
 
 .player-key-dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%);
-    margin-top: 4px;
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 8px;
+    padding: 4px;
     display: none;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
+    flex-direction: column;
+    gap: 2px;
     z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    max-height: 300px;
+    overflow-y: auto;
+    min-width: 80px;
 }
 
 .player-key-dropdown.show {
-    display: grid;
+    display: flex;
 }
 
 .player-key-dropdown button {
     background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    border: 1px solid transparent;
     color: var(--text-primary);
-    padding: 8px;
+    padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .player-key-dropdown button:hover {
     background: var(--accent-color);
     color: white;
-    border-color: var(--accent-color);
+}
+
+/* Темная тема для выпадающего списка */
+[data-theme="dark"] .player-key-dropdown {
+    background: var(--bg-elevated, #2a2a2a);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .player-key-dropdown button {
+    background: transparent;
+}
+
+[data-theme="dark"] .player-key-dropdown button:hover {
+    background: var(--accent-color);
 }
 
 /* Контент плеера */
@@ -451,8 +468,12 @@
 }
 
 /* Режим "только аккорды" */
-.song-content.chords-only-mode pre {
+.song-content.chords-only-mode .song-block-content {
     font-size: 0 !important;
+}
+
+.song-content.chords-only-mode .song-block-legend {
+    font-size: inherit !important; /* Названия блоков остаются видимыми */
 }
 
 .song-content.chords-only-mode .chord {
