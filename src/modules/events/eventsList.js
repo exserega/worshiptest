@@ -152,8 +152,6 @@ export class EventsList {
                 <div class="events-filters">
                     <button class="filter-btn ${this.currentFilter === 'upcoming' ? 'active' : ''}" 
                             data-filter="upcoming">Предстоящие</button>
-                    <button class="filter-btn ${this.currentFilter === 'all' ? 'active' : ''}" 
-                            data-filter="all">Все</button>
                     <button class="filter-btn ${this.currentFilter === 'archive' ? 'active' : ''}" 
                             data-filter="archive">Архив</button>
                 </div>

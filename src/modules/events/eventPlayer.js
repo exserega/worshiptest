@@ -63,21 +63,6 @@ class EventPlayer {
                 
                 <!-- Ряд контролов -->
                 <div class="player-controls-row">
-                    <button class="player-control-btn" id="player-toggle-chords" aria-label="Скрыть аккорды">
-                        <i class="fas fa-music"></i>
-                    </button>
-                    <button class="player-control-btn" id="player-chords-only" aria-label="Только аккорды">
-                        <span class="text-icon">T</span>
-                    </button>
-                    <button class="player-control-btn" id="player-split-text" aria-label="Разделить текст">
-                        <i class="fas fa-columns"></i>
-                    </button>
-                    <button class="player-control-btn" id="player-font-decrease" aria-label="Уменьшить текст">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button class="player-control-btn" id="player-font-increase" aria-label="Увеличить текст">
-                        <i class="fas fa-plus"></i>
-                    </button>
                     <div class="player-key-selector">
                         <button class="player-control-btn player-key-btn" id="player-key-button" aria-label="Выбрать тональность">
                             <span class="player-current-key">C</span>
@@ -103,6 +88,21 @@ class EventPlayer {
                             <button data-key="B">B</button>
                         </div>
                     </div>
+                    <button class="player-control-btn" id="player-toggle-chords" aria-label="Скрыть аккорды">
+                        <i class="fas fa-music"></i>
+                    </button>
+                    <button class="player-control-btn" id="player-chords-only" aria-label="Только аккорды">
+                        <span class="text-icon">T</span>
+                    </button>
+                    <button class="player-control-btn" id="player-split-text" aria-label="Разделить текст">
+                        <i class="fas fa-columns"></i>
+                    </button>
+                    <button class="player-control-btn" id="player-font-decrease" aria-label="Уменьшить текст">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button class="player-control-btn" id="player-font-increase" aria-label="Увеличить текст">
+                        <i class="fas fa-plus"></i>
+                    </button>
                     <button class="player-control-btn" id="player-copy-text" aria-label="Копировать текст">
                         <i class="fas fa-copy"></i>
                     </button>
