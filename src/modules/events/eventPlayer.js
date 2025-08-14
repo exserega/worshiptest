@@ -17,6 +17,8 @@ class EventPlayer {
         this.areChordsVisible = true;
         this.isChordsOnlyMode = false;
         this.isSplitMode = true; // По умолчанию 2 колонки
+        this.currentKey = 'C';
+        this.originalKey = 'C';
         
         this.init();
     }
@@ -76,13 +78,25 @@ class EventPlayer {
                     <button class="player-control-btn" id="player-font-increase" aria-label="Увеличить текст">
                         <i class="fas fa-plus"></i>
                     </button>
-                    <button class="player-control-btn" id="player-transpose-down" aria-label="Транспонировать вниз">
-                        ♭
-                    </button>
-                    <span class="transpose-value">0</span>
-                    <button class="player-control-btn" id="player-transpose-up" aria-label="Транспонировать вверх">
-                        ♯
-                    </button>
+                    <div class="player-key-selector">
+                        <button class="player-control-btn player-key-btn" id="player-key-button" aria-label="Выбрать тональность">
+                            <span class="player-current-key">C</span>
+                        </button>
+                        <div class="player-key-dropdown" id="player-key-dropdown">
+                            <button data-key="C">C</button>
+                            <button data-key="C#">C#</button>
+                            <button data-key="D">D</button>
+                            <button data-key="D#">D#</button>
+                            <button data-key="E">E</button>
+                            <button data-key="F">F</button>
+                            <button data-key="F#">F#</button>
+                            <button data-key="G">G</button>
+                            <button data-key="G#">G#</button>
+                            <button data-key="A">A</button>
+                            <button data-key="A#">A#</button>
+                            <button data-key="B">B</button>
+                        </div>
+                    </div>
                     <button class="player-control-btn" id="player-copy-text" aria-label="Копировать текст">
                         <i class="fas fa-copy"></i>
                     </button>
@@ -116,11 +130,29 @@ class EventPlayer {
         fontDecreaseBtn.addEventListener('click', () => this.changeFontSize(-1));
         fontIncreaseBtn.addEventListener('click', () => this.changeFontSize(1));
         
-        // Транспонирование
-        const transposeDown = this.overlay.querySelector('#player-transpose-down');
-        const transposeUp = this.overlay.querySelector('#player-transpose-up');
-        transposeDown.addEventListener('click', () => this.transpose(-1));
-        transposeUp.addEventListener('click', () => this.transpose(1));
+        // Выбор тональности
+        const keyButton = this.overlay.querySelector('#player-key-button');
+        const keyDropdown = this.overlay.querySelector('#player-key-dropdown');
+        
+        keyButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            keyDropdown.classList.toggle('show');
+        });
+        
+        keyDropdown.addEventListener('click', (e) => {
+            if (e.target.hasAttribute('data-key')) {
+                const newKey = e.target.getAttribute('data-key');
+                this.setKey(newKey);
+                keyDropdown.classList.remove('show');
+            }
+        });
+        
+        // Закрытие при клике вне
+        document.addEventListener('click', (e) => {
+            if (!keyButton.contains(e.target) && !keyDropdown.contains(e.target)) {
+                keyDropdown.classList.remove('show');
+            }
+        });
         
         // Полноэкранный режим убран - запускается автоматически
         
@@ -303,38 +335,30 @@ class EventPlayer {
             const originalLyrics = song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден';
             const originalKey = song.preferredKey || song.defaultKey || 'C';
             
-            // Вычисляем целевую тональность с учетом транспонирования
-            let targetKey = originalKey;
-            if (this.transposition !== 0) {
-                const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-                const fromIndex = keys.indexOf(originalKey.replace('♭', 'b').replace('m', ''));
-                let targetIndex = (fromIndex + this.transposition) % 12;
-                if (targetIndex < 0) targetIndex += 12;
-                targetKey = keys[targetIndex];
+            // Сохраняем оригинальную тональность при первой загрузке
+            if (this.currentIndex === 0 || !this.originalKey) {
+                this.originalKey = originalKey;
+                this.currentKey = originalKey;
+                
+                // Обновляем кнопку тональности
+                const keyBtn = this.overlay.querySelector('.player-current-key');
+                if (keyBtn) keyBtn.textContent = this.currentKey;
             }
             
+            // Целевая тональность уже установлена в this.currentKey
+            
             // Используем ту же функцию что и на главной странице
-            let finalLyrics = getRenderedSongText(originalLyrics, originalKey, targetKey);
+            let finalLyrics = getRenderedSongText(originalLyrics, originalKey, this.currentKey);
             
             // Распределяем по колонкам если включен режим
             if (this.isSplitMode) {
                 finalLyrics = distributeSongBlocksToColumns(finalLyrics);
             }
             
-            // Определяем текущую тональность
-            let currentKey = song.preferredKey || song.defaultKey || 'C';
-            if (this.transposition !== 0) {
-                const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-                const fromIndex = keys.indexOf(currentKey.replace('♭', 'b').replace('m', ''));
-                let targetIndex = (fromIndex + this.transposition) % 12;
-                if (targetIndex < 0) targetIndex += 12;
-                currentKey = keys[targetIndex];
-            }
-            
             // Обновляем тональность и BPM в шапке
             const keyEl = this.overlay.querySelector('.player-key');
             const bpmEl = this.overlay.querySelector('.player-bpm');
-            if (keyEl) keyEl.textContent = currentKey;
+            if (keyEl) keyEl.textContent = this.currentKey;
             if (bpmEl) bpmEl.textContent = song.BPM ? `${song.BPM} BPM` : '';
             
             // Формируем классы для контента
@@ -385,15 +409,24 @@ class EventPlayer {
         }
     }
     
-    transpose(direction) {
-        this.transposition += direction;
-        this.updateTransposeDisplay();
+    setKey(newKey) {
+        this.currentKey = newKey;
+        
+        // Вычисляем транспонирование относительно оригинальной тональности
+        const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        const originalIndex = keys.indexOf(this.originalKey.replace('♭', 'b').replace('m', ''));
+        const newIndex = keys.indexOf(newKey);
+        
+        this.transposition = newIndex - originalIndex;
+        if (this.transposition > 6) this.transposition -= 12;
+        if (this.transposition < -6) this.transposition += 12;
+        
+        // Обновляем отображение
+        const keyBtn = this.overlay.querySelector('.player-current-key');
+        if (keyBtn) keyBtn.textContent = newKey;
+        
+        // Перезагружаем песню
         this.loadCurrentSong();
-    }
-    
-    updateTransposeDisplay() {
-        const transposeValue = this.overlay.querySelector('.transpose-value');
-        transposeValue.textContent = this.transposition > 0 ? `+${this.transposition}` : this.transposition;
     }
     
     changeFontSize(direction) {

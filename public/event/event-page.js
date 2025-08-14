@@ -246,7 +246,7 @@ async function loadSongs() {
                         return {
                             ...songData,
                             id: songDoc.id,
-                            name: songDoc.id, // Название песни = ID документа в Firebase
+                            name: songData.name || songData.Name || songData.title || songDoc.id, // Используем реальное название
                             preferredKey: setlistSong.preferredKey || songData.defaultKey,
                             order: setlistSong.order
                         };

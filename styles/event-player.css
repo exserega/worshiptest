@@ -129,8 +129,8 @@
 /* Ряд контролов */
 .player-controls-row {
     display: flex;
-    gap: 4px;
-    padding: 8px 12px;
+    gap: 10px;
+    padding: 12px 16px;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -139,17 +139,17 @@
     background: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    padding: 4px 8px;
-    height: 30px;
-    border-radius: 4px;
+    padding: 8px 12px;
+    height: 40px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
     transition: all 0.2s ease;
-    min-width: 30px;
+    min-width: 40px;
 }
 
 /* Иконка T для "только аккорды" */
@@ -190,9 +190,56 @@
     border-color: var(--success-color, #4caf50);
 }
 
-.transpose-value {
-    font-size: 12px;
-    color: var(--text-secondary);
+/* Селектор тональности */
+.player-key-selector {
+    position: relative;
+}
+
+.player-key-btn {
+    font-weight: 600;
+    min-width: 60px;
+}
+
+.player-current-key {
+    font-size: 16px;
+}
+
+.player-key-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 4px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px;
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.player-key-dropdown.show {
+    display: grid;
+}
+
+.player-key-dropdown button {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.player-key-dropdown button:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
 }
 
 /* Контент плеера */
@@ -585,9 +632,17 @@ body[data-theme="light"] .song-content .song-block-legend {
         font-size: 14px !important;
     }
     
-    /* Скрываем текст на маленьких экранах */
-    .transpose-value {
-        display: none;
+    /* Мобильные кнопки контролов */
+    .player-control-btn {
+        padding: 6px 10px;
+        font-size: 13px;
+        height: 36px;
+        min-width: 36px;
+    }
+    
+    .player-controls-row {
+        gap: 8px;
+        padding: 8px 12px;
     }
 }
 
