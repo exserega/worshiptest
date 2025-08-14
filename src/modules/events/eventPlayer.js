@@ -241,17 +241,15 @@ class EventPlayer {
         try {
             // Загружаем модули для отображения песни
             const [
-                { processLyrics },
-                { transposeLyrics },
-                { getDefaultTransposition }
+                { processLyrics, transposeLyrics, highlightChords },
+                { wrapSongBlocks }
             ] = await Promise.all([
-                import('../../js/core/songParser.js'),
                 import('../../js/core/transposition.js'),
-                import('../../js/core/transposition.js')
+                import('../../js/core/songParser.js')
             ]);
             
             // Получаем текст песни
-            const lyrics = song.lyrics || song.text || 'Текст песни не найден';
+            const lyrics = song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден';
             
             // Обрабатываем текст
             let processedLyrics = processLyrics(lyrics);
@@ -262,6 +260,10 @@ class EventPlayer {
                 processedLyrics = transposeLyrics(processedLyrics, fromKey, this.transposition);
             }
             
+            // Оборачиваем блоки песни и подсвечиваем аккорды
+            const wrappedLyrics = wrapSongBlocks(processedLyrics);
+            const finalLyrics = highlightChords(wrappedLyrics);
+            
             // Отображаем
             display.innerHTML = `
                 <div class="song-content font-size-${this.fontSize}">
@@ -269,7 +271,7 @@ class EventPlayer {
                         ${song.preferredKey || song.defaultKey || 'C'}
                         ${song.BPM ? `<span class="song-bpm-info">${song.BPM} BPM</span>` : ''}
                     </div>
-                    ${processedLyrics}
+                    ${finalLyrics}
                 </div>
             `;
             
