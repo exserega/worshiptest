@@ -124,6 +124,7 @@
     max-width: 100%; /* Используем ВСЮ ширину */
     width: 100%;
     padding: 0; /* Убираем дополнительные отступы */
+    margin: 0; /* Убираем любые margin */
 }
 
 @media (max-width: 768px) {
@@ -176,6 +177,8 @@
     .song-content {
         font-size: 10px !important; /* Мелкий шрифт для смартфонов */
         line-height: 1.6; /* Чуть меньше межстрочный интервал */
+        margin: 0 -5px; /* Отрицательные margin для использования всей ширины */
+        width: calc(100% + 10px); /* Компенсируем отрицательные margin */
     }
 }
 
@@ -441,7 +444,7 @@ body[data-theme="light"] .song-content .song-block-legend {
     }
     
     .event-player-content {
-        padding: 16px;
+        padding: 10px 0; /* Без боковых отступов */
     }
     
     .player-nav-btn {
