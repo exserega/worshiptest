@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v176'; // v176, исправлены z-index и закрытие оверлея
+const CACHE_NAME = 'agape-worship-cache-v177'; // v177, добавлена диагностика dropdown
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

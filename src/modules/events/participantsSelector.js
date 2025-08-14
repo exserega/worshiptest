@@ -166,6 +166,13 @@ export class ParticipantsSelector {
         // Добавляем в DOM
         document.body.appendChild(dropdown);
         console.log('✅ Dropdown добавлен в body');
+        console.log('📊 Dropdown элемент:', dropdown);
+        console.log('📏 Размеры dropdown:', {
+            offsetWidth: dropdown.offsetWidth,
+            offsetHeight: dropdown.offsetHeight,
+            clientWidth: dropdown.clientWidth,
+            clientHeight: dropdown.clientHeight
+        });
         
         // Позиционируем рядом с кнопкой
         const btn = this.container.querySelector(`[data-instrument="${instrumentId}"].add-participant-btn`);
@@ -182,6 +189,9 @@ export class ParticipantsSelector {
             dropdown.style.width = '250px';
             dropdown.style.maxWidth = '90vw';
             dropdown.style.zIndex = '999999'; // Очень высокий z-index
+            dropdown.style.display = 'flex'; // Явно показываем
+            dropdown.style.visibility = 'visible'; // Явно делаем видимым
+            dropdown.style.opacity = '1'; // Полная непрозрачность
             
             console.log('🎯 Стили dropdown установлены:', {
                 position: dropdown.style.position,
@@ -190,6 +200,29 @@ export class ParticipantsSelector {
                 width: dropdown.style.width,
                 zIndex: dropdown.style.zIndex
             });
+            
+            // Проверка видимости после установки стилей
+            setTimeout(() => {
+                const computedStyle = window.getComputedStyle(dropdown);
+                console.log('🎨 Computed стили dropdown:', {
+                    display: computedStyle.display,
+                    visibility: computedStyle.visibility,
+                    opacity: computedStyle.opacity,
+                    position: computedStyle.position,
+                    zIndex: computedStyle.zIndex,
+                    width: computedStyle.width,
+                    height: computedStyle.height
+                });
+                
+                const rect = dropdown.getBoundingClientRect();
+                console.log('📍 Позиция dropdown на экране:', rect);
+                console.log('👁️ Dropdown в viewport?', 
+                    rect.top >= 0 && 
+                    rect.left >= 0 && 
+                    rect.bottom <= window.innerHeight && 
+                    rect.right <= window.innerWidth
+                );
+            }, 100);
         } else {
             console.error('❌ Кнопка не найдена!')
         }
