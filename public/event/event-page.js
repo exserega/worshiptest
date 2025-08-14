@@ -283,24 +283,26 @@ function displaySongs(songs) {
         console.log('🎵 Структура песни:', songs[0]);
     }
     
-    // Создаем элементы песен с унифицированным дизайном
+    // Создаем элементы песен с дизайном как в панели сетлистов
     elements.songsList.innerHTML = songs.map((song, index) => {
         // Теперь у нас есть полные данные песни
         const songName = song.name || 'Без названия';
-        const songKey = song.preferredKey || song.defaultKey || '';
-        const songBpm = song.bpm || '';
+        const songKey = song.preferredKey || song.defaultKey || 'C';
+        const songBpm = song.bpm || song.BPM || '';
         
         return `
             <div class="song-item">
                 <span class="song-number">${index + 1}</span>
                 <div class="song-info">
                     <div class="song-name">${songName}</div>
-                    ${(songKey || songBpm) ? `
-                        <div class="song-meta">
-                            ${songKey ? `<span class="song-key"><i class="fas fa-music"></i> ${songKey}</span>` : ''}
-                            ${songBpm ? `<span class="song-bpm"><i class="fas fa-drum"></i> ${songBpm} BPM</span>` : ''}
-                        </div>
-                    ` : ''}
+                    <div class="song-meta">
+                        <span class="song-key">${songKey}</span>
+                        ${songBpm && songBpm !== 'NA' ? `
+                            <span class="song-bpm">
+                                <i class="fas fa-tachometer-alt"></i>${songBpm}
+                            </span>
+                        ` : ''}
+                    </div>
                 </div>
             </div>
         `;
