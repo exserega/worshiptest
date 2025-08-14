@@ -3,7 +3,22 @@
  * @module EventPage
  */
 
-// Получаем Firebase из глобального объекта
+// Конфигурация Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyDTqPgrfZ6ACzHkL3EWqTWU0m_VCM0q2vg",
+    authDomain: "song-archive-389a6.firebaseapp.com",
+    projectId: "song-archive-389a6",
+    storageBucket: "song-archive-389a6.appspot.com",
+    messagingSenderId: "1072269559435",
+    appId: "1:1072269559435:web:bf93c5a8b76a7dab1f9c07"
+};
+
+// Инициализация Firebase
+if (!window.firebase.apps.length) {
+    window.firebase.initializeApp(firebaseConfig);
+}
+
+// Получаем сервисы
 const db = window.firebase.firestore();
 const auth = window.firebase.auth();
 

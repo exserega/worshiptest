@@ -51,4 +51,5 @@ try {
     console.warn('⚠️ Firestore persistence setup failed:', e);
 }
 
-// Глобальные переменные уже доступны через window.firebase, window.auth и т.д.
+// Экспорт для модулей
+export { firebase, auth, db, storage, firebaseConfig };
