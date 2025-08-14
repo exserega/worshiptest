@@ -344,14 +344,19 @@ class EventPlayer {
             const originalLyrics = song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден';
             const originalKey = song.preferredKey || song.defaultKey || 'C';
             
-            // Сохраняем оригинальную тональность при первой загрузке
-            if (this.currentIndex === 0 || !this.originalKey) {
-                this.originalKey = originalKey;
+            // Сохраняем оригинальную тональность
+            this.originalKey = originalKey;
+            
+            // При первой загрузке устанавливаем текущую тональность
+            if (!this.currentKey || this.currentKey === 'C') {
                 this.currentKey = originalKey;
-                
-                // Обновляем кнопку тональности
-                const keyBtn = this.overlay.querySelector('.player-current-key');
-                if (keyBtn) keyBtn.textContent = this.currentKey;
+            }
+            
+            // Обновляем кнопку тональности
+            const keyBtn = this.overlay.querySelector('.player-current-key');
+            if (keyBtn) {
+                const displayKey = this.currentKey.replace('b', '♭');
+                keyBtn.textContent = displayKey;
             }
             
             // Целевая тональность уже установлена в this.currentKey
@@ -367,7 +372,10 @@ class EventPlayer {
             // Обновляем тональность и BPM в шапке
             const keyEl = this.overlay.querySelector('.player-key');
             const bpmEl = this.overlay.querySelector('.player-bpm');
-            if (keyEl) keyEl.textContent = this.currentKey;
+            if (keyEl) {
+                const displayKey = this.currentKey.replace('b', '♭');
+                keyEl.textContent = displayKey;
+            }
             if (bpmEl) bpmEl.textContent = song.BPM ? `${song.BPM} BPM` : '';
             
             // Формируем классы для контента
@@ -402,8 +410,6 @@ class EventPlayer {
     previousSong() {
         if (this.currentIndex > 0) {
             this.currentIndex--;
-            this.transposition = 0; // Сбрасываем транспонирование
-            this.updateTransposeDisplay();
             this.loadCurrentSong();
         }
     }
@@ -411,23 +417,12 @@ class EventPlayer {
     nextSong() {
         if (this.currentIndex < this.songs.length - 1) {
             this.currentIndex++;
-            this.transposition = 0; // Сбрасываем транспонирование
-            this.updateTransposeDisplay();
             this.loadCurrentSong();
         }
     }
     
     setKey(newKey) {
         this.currentKey = newKey;
-        
-        // Вычисляем транспонирование относительно оригинальной тональности
-        const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-        const originalIndex = keys.indexOf(this.originalKey.replace('♭', 'b').replace('m', ''));
-        const newIndex = keys.indexOf(newKey);
-        
-        this.transposition = newIndex - originalIndex;
-        if (this.transposition > 6) this.transposition -= 12;
-        if (this.transposition < -6) this.transposition += 12;
         
         // Обновляем отображение (заменяем b на ♭ для красоты)
         const keyBtn = this.overlay.querySelector('.player-current-key');
@@ -436,7 +431,7 @@ class EventPlayer {
             keyBtn.textContent = displayKey;
         }
         
-        // Перезагружаем песню
+        // Перезагружаем песню с новой тональностью
         this.loadCurrentSong();
     }
     

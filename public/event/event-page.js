@@ -242,11 +242,11 @@ async function loadSongs() {
                     if (songDoc.exists) {
                         const songData = songDoc.data();
                         console.log('🎵 Данные песни:', songData);
-                        console.log('🎵 Название:', songData.name || songData.Name || songData.title || 'Нет названия');
+                        console.log('🎵 Название:', songDoc.id);
                         return {
                             ...songData,
                             id: songDoc.id,
-                            name: songData.name || songData.Name || songData.title || songDoc.id, // Используем реальное название
+                            name: songDoc.id, // В Firebase название = ID документа
                             preferredKey: setlistSong.preferredKey || songData.defaultKey,
                             order: setlistSong.order
                         };
