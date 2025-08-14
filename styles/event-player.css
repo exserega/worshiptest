@@ -117,7 +117,7 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden; /* Убираем горизонтальный скролл */
-    padding: 20px 0; /* БЕЗ боковых отступов */
+    padding: 20px 2px; /* Минимальные боковые отступы 2px */
 }
 
 .player-song-display {
@@ -129,7 +129,7 @@
 
 @media (max-width: 768px) {
     .event-player-content {
-        padding: 10px 0; /* БЕЗ боковых отступов вообще */
+        padding: 10px 2px; /* Минимальные боковые отступы 2px */
         width: 100%;
         box-sizing: border-box;
     }
@@ -177,8 +177,6 @@
     .song-content {
         font-size: 10px !important; /* Мелкий шрифт для смартфонов */
         line-height: 1.6; /* Чуть меньше межстрочный интервал */
-        margin: 0 -5px; /* Отрицательные margin для использования всей ширины */
-        width: calc(100% + 10px); /* Компенсируем отрицательные margin */
     }
 }
 
@@ -444,7 +442,7 @@ body[data-theme="light"] .song-content .song-block-legend {
     }
     
     .event-player-content {
-        padding: 10px 0; /* Без боковых отступов */
+        padding: 10px 2px; /* Минимальные боковые отступы 2px */
     }
     
     .player-nav-btn {
