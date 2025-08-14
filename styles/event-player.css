@@ -206,17 +206,66 @@
     overflow: hidden !important;
 }
 
-/* Стили для блоков песни */
-.song-content .block-type,
+/* Стили для блоков песни - ТОЧНО КАК НА ГЛАВНОЙ */
+.song-content .song-block {
+    /* Копируем из components.css */
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin: 2px 0 !important;
+    padding: 0 !important;
+    background-color: var(--container-background-color);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+}
+
 .song-content .song-block-legend {
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 5px;
-    font-size: 0.9em;
-    background-color: var(--bg-secondary);
-    padding: 4px 8px;
-    border-radius: 4px;
-    display: inline-block;
+    /* Копируем из components.css */
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: calc(var(--lyrics-font-size, 1rem) * 1.0);
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    
+    /* Фон как у аккордов */
+    background-color: color-mix(in srgb, var(--accent-color) 2%, transparent);
+    border-radius: 3px;
+    
+    /* Компактные отступы */
+    padding: 4px 8px !important;
+    margin: 0 0 -16px 12px !important;
+    border: none !important;
+    line-height: 1.3 !important;
+    
+    /* Защита от переполнения */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 24px);
+    
+    /* Позиционирование и центрирование */
+    float: none !important;
+    width: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.song-content .song-block-content {
+    /* Копируем из components.css */
+    margin: -14px 0 0 0 !important;
+    padding: 0px 6px 1px 6px !important;
+    white-space: pre-wrap;
+    line-height: inherit;
+    box-sizing: border-box;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
 }
 
 /* Стили для pre */
@@ -291,21 +340,15 @@
     cursor: not-allowed;
 }
 
-/* Стили для аккордов */
-.song-content .chord {
-    color: var(--accent-color);
-    font-weight: 600;
-    font-family: 'Courier New', monospace;
+/* Светлая тема для блоков */
+body[data-theme="light"] .song-content .song-block {
+    border-color: var(--border-color);
+    background-color: var(--container-background-color);
 }
 
-.song-content .song-block {
-    margin-bottom: 20px;
-}
-
-.song-content .block-type {
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
+body[data-theme="light"] .song-content .song-block-legend {
+    color: var(--secondary-color);
+    background-color: color-mix(in srgb, var(--accent-color) 5%, transparent);
 }
 
 /* Ошибки */
@@ -318,27 +361,39 @@
 
 /* Мобильная адаптация */
 @media (max-width: 768px) {
-    /* ОДНА КОЛОНКА на мобильных - по умолчанию! */
+    /* ДВЕ КОЛОНКИ НА МОБИЛЬНЫХ - как на главной странице! */
     .song-content.split-columns pre {
-        grid-template-columns: 1fr !important; /* Одна колонка */
-        gap: 8px; /* Меньше отступ между блоками */
+        /* Остается grid-template-columns: 1fr 1fr из основных стилей */
+        gap: 8px; /* Меньше отступ между колонками на мобильных */
     }
     
-    /* Все блоки в одну колонку */
+    /* Меньше отступы между блоками */
     .song-content.split-columns .column-1,
     .song-content.split-columns .column-2 {
-        gap: 6px; /* Еще меньше отступы на мобильных */
+        gap: 6px; /* Меньше отступы на мобильных */
     }
     
-    /* Компактные блоки на мобильных */
+    /* МОБИЛЬНЫЕ блоки песни - ЭКСТРА компактные (как в responsive.css) */
     .song-content .song-block {
-        margin-bottom: 4px;
+        margin: 1px 0 !important; /* Минимальный отступ между блоками */
     }
     
-    .song-content .block-type,
     .song-content .song-block-legend {
-        font-size: 0.85em;
-        padding: 3px 6px;
+        font-size: calc(var(--lyrics-font-size, 1rem) * 0.95) !important;
+        font-weight: 700 !important;
+        padding: 4px 6px !important;
+        margin: 0 0 -12px 8px !important;
+        letter-spacing: 0.1px !important;
+        line-height: 1.3 !important;
+        
+        /* Фон как у аккордов */
+        background-color: color-mix(in srgb, var(--accent-color) 2%, transparent) !important;
+        border-radius: 3px !important;
+    }
+    
+    .song-content .song-block-content {
+        margin: -10px 0 0 0 !important;
+        padding: 0px 4px 0px 4px !important;
     }
     .event-player-header {
         padding: 8px 12px;
@@ -413,4 +468,31 @@
 [data-theme="light"] .player-nav-btn {
     background: var(--accent-color);
     color: white;
+}
+
+/* Адаптивность для очень маленьких экранов (как в responsive.css) */
+@media (max-width: 380px) {
+    /* УЛЬТРА-КОМПАКТНЫЕ блоки песни для очень маленьких экранов */
+    .song-content .song-block {
+        margin: 0px 0 !important;
+        border-radius: 2px !important;
+    }
+    
+    .song-content .song-block-legend {
+        font-size: 0.7rem !important;
+        font-weight: 700 !important;
+        padding: 3px 4px !important;
+        margin: 0 0 -25px 6px !important;
+        letter-spacing: 0px !important;
+        line-height: 1.2 !important;
+        
+        /* Центрирование для мини-экранов */
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    
+    .song-content .song-block-content {
+        margin: -20px 0 0 0 !important;
+        padding: 0px 3px 0px 3px !important;
+    }
 }
