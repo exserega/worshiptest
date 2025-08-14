@@ -334,7 +334,13 @@ export class EventModal {
         this.loadBranchUsers();
         
         // Открываем модальное окно
-        this.open();
+        this.modal.classList.add('visible');
+        this.isOpen = true;
+        
+        // Фокус на первое поле
+        setTimeout(() => {
+            this.modal.querySelector('#event-name').focus();
+        }, 100);
     }
     
     /**
