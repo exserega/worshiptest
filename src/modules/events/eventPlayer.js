@@ -3,7 +3,7 @@
  * Отображает песни события в полноэкранном режиме с навигацией
  */
 
-import { logger } from '../../utils/logger.js';
+import logger from '../../utils/logger.js';
 
 class EventPlayer {
     constructor() {
