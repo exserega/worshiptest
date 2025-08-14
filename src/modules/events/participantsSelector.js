@@ -15,6 +15,7 @@ const INSTRUMENTS = [
     { id: 'bass', name: 'Бас-гитара', icon: '🎸' },
     { id: 'keys', name: 'Клавиши', icon: '🎹' },
     { id: 'drums', name: 'Барабаны', icon: '🥁' },
+    { id: 'sound', name: 'Звукооператор', icon: '🎚️' },
     { id: 'other', name: 'Другое', icon: '🎵' }
 ];
 
