@@ -247,8 +247,8 @@ class EventPlayer {
                 { getRenderedSongText, distributeSongBlocksToColumns },
                 { getTransposition }
             ] = await Promise.all([
-                import('../../js/core.js'),
-                import('../../js/core/transposition.js')
+                import('/js/core.js'),
+                import('/src/js/core/transposition.js')
             ]);
             
             // Получаем текст песни
