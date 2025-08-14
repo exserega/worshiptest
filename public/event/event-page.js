@@ -236,10 +236,13 @@ async function loadSongs() {
                     
                     if (!songQuery.empty) {
                         const songData = songQuery.docs[0].data();
+                        console.log('🎵 Данные песни:', songData.name, 'BPM:', songData.bpm || songData.BPM);
                         return {
                             ...songData,
                             preferredKey: setlistSong.preferredKey || songData.defaultKey,
-                            order: setlistSong.order
+                            order: setlistSong.order,
+                            // Убедимся что BPM попадает в результат
+                            bpm: songData.bpm || songData.BPM || songData.tempo
                         };
                     }
                 } catch (err) {
