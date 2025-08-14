@@ -117,7 +117,7 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden; /* Убираем горизонтальный скролл */
-    padding: 20px 3px; /* Отступы 3px слева и справа */
+    padding: 20px 5px; /* Отступы 5px слева и справа */
     /* Скрываем полосу прокрутки, но оставляем скроллинг */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE и Edge */
@@ -137,7 +137,7 @@
 
 @media (max-width: 768px) {
     .event-player-content {
-        padding: 10px 3px; /* Отступы 3px слева и справа */
+        padding: 10px 5px; /* Отступы 5px слева и справа */
         width: 100%;
         box-sizing: border-box;
     }
@@ -450,7 +450,7 @@ body[data-theme="light"] .song-content .song-block-legend {
     }
     
     .event-player-content {
-        padding: 10px 3px; /* Отступы 3px слева и справа */
+        padding: 10px 5px; /* Отступы 5px слева и справа */
     }
     
     .player-nav-btn {
