@@ -176,8 +176,8 @@ class EventsOverlay {
      */
     handleEventClick(eventId) {
         logger.log(`Открытие события: ${eventId}`);
-        // TODO: Открыть детали события
-        alert('Детали события будут реализованы в следующей фазе');
+        // Переход на страницу события
+        window.location.href = `/public/event/?id=${eventId}`;
     }
     
     /**

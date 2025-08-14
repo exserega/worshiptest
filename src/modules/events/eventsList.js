@@ -214,17 +214,7 @@ export class EventsList {
             });
         });
         
-        // Клик по событию
-        const eventItems = this.container.querySelectorAll('.event-item');
-        eventItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                // Игнорируем клик по кнопке редактирования
-                if (e.target.closest('.event-edit-btn')) return;
-                
-                const eventId = item.dataset.eventId;
-                this.onEventClick(eventId);
-            });
-        });
+
         
         // Кнопки редактирования
         const editButtons = this.container.querySelectorAll('.event-edit-btn');
