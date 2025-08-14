@@ -17,8 +17,8 @@ class EventPlayer {
         this.areChordsVisible = true;
         this.isChordsOnlyMode = false;
         this.isSplitMode = true; // По умолчанию 2 колонки
-        this.currentKey = 'C';
-        this.originalKey = 'C';
+        this.currentKey = null;  // Будет установлена из сетлиста
+        this.originalKey = null;
         
         this.init();
     }
@@ -249,6 +249,7 @@ class EventPlayer {
         this.songs = songs;
         this.currentIndex = startIndex;
         this.transposition = 0;
+        this.currentKey = null;  // Сбрасываем тональность для загрузки из сетлиста
         
         // Устанавливаем базовый размер шрифта в зависимости от устройства
         this.currentFontSize = window.innerWidth <= 768 ? 10 : 16;
