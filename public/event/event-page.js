@@ -73,6 +73,7 @@ const elements = {
 // Данные события
 let eventData = null;
 let currentUser = null;
+let eventSongs = []; // Массив песен события для плеера
 
 /**
  * Инициализация страницы
@@ -152,6 +153,13 @@ async function loadEvent() {
         
         // Настраиваем обработчики
         setupEventHandlers();
+        
+        // Проверяем, нужно ли сразу открыть плеер
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('play') === 'true' && eventSongs.length > 0) {
+            console.log('🎬 Автозапуск плеера');
+            setTimeout(() => launchPlayer(), 500); // Небольшая задержка для полной загрузки
+        }
         
         // Скрываем загрузку
         elements.loading.style.display = 'none';
@@ -260,6 +268,9 @@ async function loadSongs() {
         
         // Сортируем по order
         songsWithDetails.sort((a, b) => (a.order || 0) - (b.order || 0));
+        
+        // Сохраняем песни для плеера
+        eventSongs = songsWithDetails;
         
         // Отображаем песни
         displaySongs(songsWithDetails);
@@ -508,9 +519,26 @@ async function copyLink() {
 /**
  * Запуск плеера
  */
-function launchPlayer() {
-    // TODO: Интеграция с плеером
-    alert('Плеер будет реализован в следующей версии');
+async function launchPlayer() {
+    console.log('🎬 Запуск плеера события');
+    
+    if (!eventSongs || eventSongs.length === 0) {
+        alert('Нет песен для отображения');
+        return;
+    }
+    
+    try {
+        // Динамически импортируем модуль плеера
+        const { openEventPlayer } = await import('/src/modules/events/eventPlayer.js');
+        
+        // Открываем плеер с песнями события
+        await openEventPlayer(eventData.id, eventSongs, 0);
+        
+        console.log('✅ Плеер открыт');
+    } catch (error) {
+        console.error('❌ Ошибка открытия плеера:', error);
+        alert('Ошибка при открытии плеера');
+    }
 }
 
 /**
