@@ -118,7 +118,14 @@
     overflow-y: auto;
     overflow-x: hidden; /* Убираем горизонтальный скролл */
     padding: 20px 3px; /* Отступы 3px слева и справа */
-    scrollbar-gutter: stable; /* Резервируем место под полосу прокрутки */
+    /* Скрываем полосу прокрутки, но оставляем скроллинг */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE и Edge */
+}
+
+/* Скрываем полосу прокрутки для Chrome, Safari и Opera */
+.event-player-content::-webkit-scrollbar {
+    display: none;
 }
 
 .player-song-display {
