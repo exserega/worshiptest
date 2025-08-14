@@ -224,7 +224,7 @@
     border-radius: 4px;
     font-size: 12px;
     font-weight: 500;
-    text-transform: uppercase;
+    /* Убираем uppercase чтобы сохранить правильное написание тональностей */
     border: 1px solid var(--border-color);
 }
 
