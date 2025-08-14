@@ -220,12 +220,46 @@ async function loadSongs() {
         }
         
         const setlistData = setlistDoc.data();
-        const songs = setlistData.songs || [];
+        const setlistSongs = setlistData.songs || [];
         
-        console.log(`✅ Загружено ${songs.length} песен`);
+        console.log(`✅ Загружено ${setlistSongs.length} песен из сетлиста`);
+        
+        // Загружаем полную информацию о песнях
+        const songsWithDetails = await Promise.all(
+            setlistSongs.map(async (setlistSong) => {
+                try {
+                    // Пытаемся найти песню в коллекции songs по названию
+                    const songQuery = await db.collection('songs')
+                        .where('name', '==', setlistSong.songId)
+                        .limit(1)
+                        .get();
+                    
+                    if (!songQuery.empty) {
+                        const songData = songQuery.docs[0].data();
+                        return {
+                            ...songData,
+                            preferredKey: setlistSong.preferredKey || songData.defaultKey,
+                            order: setlistSong.order
+                        };
+                    }
+                } catch (err) {
+                    console.warn('⚠️ Не удалось загрузить детали песни:', setlistSong.songId);
+                }
+                
+                // Если не нашли в БД, возвращаем как есть
+                return {
+                    name: setlistSong.songId,
+                    preferredKey: setlistSong.preferredKey,
+                    order: setlistSong.order
+                };
+            })
+        );
+        
+        // Сортируем по order
+        songsWithDetails.sort((a, b) => (a.order || 0) - (b.order || 0));
         
         // Отображаем песни
-        displaySongs(songs);
+        displaySongs(songsWithDetails);
         
     } catch (error) {
         console.error('❌ Ошибка загрузки песен:', error);
@@ -251,10 +285,10 @@ function displaySongs(songs) {
     
     // Создаем элементы песен
     elements.songsList.innerHTML = songs.map((song, index) => {
-        // Проверяем разные варианты полей
-        const songName = song.name || song.title || song.songName || 'Без названия';
-        const songKey = song.key || song.tonality || song.songKey || '';
-        const songBpm = song.bpm || song.tempo || '';
+        // Теперь у нас есть полные данные песни
+        const songName = song.name || 'Без названия';
+        const songKey = song.preferredKey || song.defaultKey || '';
+        const songBpm = song.bpm || '';
         
         return `
             <div class="song-item">
