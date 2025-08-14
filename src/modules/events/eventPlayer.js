@@ -14,6 +14,9 @@ class EventPlayer {
         this.eventId = null;
         this.transposition = 0;
         this.fontSize = 'medium'; // small, medium, large
+        this.areChordsVisible = true;
+        this.isChordsOnlyMode = false;
+        this.isSplitMode = true; // По умолчанию 2 колонки
         
         this.init();
     }
@@ -31,22 +34,54 @@ class EventPlayer {
         this.overlay.className = 'event-player-overlay';
         this.overlay.innerHTML = `
             <div class="event-player-header">
-                <button class="player-close-btn" aria-label="Закрыть плеер">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="player-song-info">
-                    <span class="player-song-number">1 / 1</span>
-                    <span class="player-song-name">Название песни</span>
-                </div>
-                <div class="player-controls">
-                    <button class="player-control-btn" id="player-transpose-down" aria-label="Транспонировать вниз">
-                        <i class="fas fa-minus"></i> <span class="transpose-value">0</span>
+                <!-- Верхняя часть шапки -->
+                <div class="player-header-top">
+                    <button class="player-close-btn" aria-label="Закрыть плеер">
+                        <i class="fas fa-times"></i>
                     </button>
+                    
+                    <div class="player-song-title-wrapper">
+                        <span class="player-song-number">1 / 1</span>
+                        <span class="player-song-name">Название песни</span>
+                        <div class="player-song-key-bpm">
+                            <span class="player-key">C</span>
+                            <span class="player-bpm">120 BPM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="player-nav-compact">
+                        <button class="player-nav-btn-small" id="player-prev" aria-label="Предыдущая">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="player-nav-btn-small" id="player-next" aria-label="Следующая">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Ряд контролов -->
+                <div class="player-controls-row">
+                    <button class="player-control-btn" id="player-toggle-chords" aria-label="Скрыть аккорды">
+                        <i class="fas fa-music"></i>
+                    </button>
+                    <button class="player-control-btn" id="player-chords-only" aria-label="Только аккорды">
+                        <span class="text-icon">T</span>
+                    </button>
+                    <button class="player-control-btn" id="player-split-text" aria-label="Разделить текст">
+                        <i class="fas fa-columns"></i>
+                    </button>
+                    <button class="player-control-btn" id="player-transpose-down" aria-label="Транспонировать вниз">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <span class="transpose-value">0</span>
                     <button class="player-control-btn" id="player-transpose-up" aria-label="Транспонировать вверх">
                         <i class="fas fa-plus"></i>
                     </button>
                     <button class="player-control-btn" id="player-font-size" aria-label="Размер текста">
                         <i class="fas fa-font"></i>
+                    </button>
+                    <button class="player-control-btn" id="player-copy-text" aria-label="Копировать текст">
+                        <i class="fas fa-copy"></i>
                     </button>
                     <button class="player-control-btn" id="player-fullscreen" aria-label="Полноэкранный режим">
                         <i class="fas fa-expand"></i>
@@ -58,15 +93,6 @@ class EventPlayer {
                 <div class="player-song-display" id="player-song-display">
                     <!-- Здесь будет отображаться песня -->
                 </div>
-            </div>
-            
-            <div class="event-player-navigation">
-                <button class="player-nav-btn player-prev" id="player-prev" aria-label="Предыдущая песня">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="player-nav-btn player-next" id="player-next" aria-label="Следующая песня">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
             </div>
         `;
         
@@ -97,6 +123,19 @@ class EventPlayer {
         // Полноэкранный режим
         const fullscreenBtn = this.overlay.querySelector('#player-fullscreen');
         fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
+        
+        // Новые кнопки
+        const toggleChordsBtn = this.overlay.querySelector('#player-toggle-chords');
+        toggleChordsBtn.addEventListener('click', () => this.toggleChords());
+        
+        const chordsOnlyBtn = this.overlay.querySelector('#player-chords-only');
+        chordsOnlyBtn.addEventListener('click', () => this.toggleChordsOnly());
+        
+        const splitTextBtn = this.overlay.querySelector('#player-split-text');
+        splitTextBtn.addEventListener('click', () => this.toggleSplitMode());
+        
+        const copyTextBtn = this.overlay.querySelector('#player-copy-text');
+        copyTextBtn.addEventListener('click', () => this.copyText());
         
         // Клавиатурная навигация
         this.handleKeyboard = (e) => {
@@ -274,8 +313,10 @@ class EventPlayer {
             // Используем ту же функцию что и на главной странице
             let finalLyrics = getRenderedSongText(originalLyrics, originalKey, targetKey);
             
-            // Распределяем по колонкам
-            finalLyrics = distributeSongBlocksToColumns(finalLyrics);
+            // Распределяем по колонкам если включен режим
+            if (this.isSplitMode) {
+                finalLyrics = distributeSongBlocksToColumns(finalLyrics);
+            }
             
             // Определяем текущую тональность
             let currentKey = song.preferredKey || song.defaultKey || 'C';
@@ -287,13 +328,24 @@ class EventPlayer {
                 currentKey = keys[targetIndex];
             }
             
+            // Обновляем тональность и BPM в шапке
+            const keyEl = this.overlay.querySelector('.player-key');
+            const bpmEl = this.overlay.querySelector('.player-bpm');
+            if (keyEl) keyEl.textContent = currentKey;
+            if (bpmEl) bpmEl.textContent = song.BPM ? `${song.BPM} BPM` : '';
+            
+            // Формируем классы для контента
+            const contentClasses = [
+                'song-content',
+                `font-size-${this.fontSize}`,
+                this.isSplitMode ? 'split-columns' : '',
+                !this.areChordsVisible ? 'chords-hidden' : '',
+                this.isChordsOnlyMode ? 'chords-only-mode' : ''
+            ].filter(c => c).join(' ');
+            
             // Отображаем
             display.innerHTML = `
-                <div class="song-content font-size-${this.fontSize} split-columns">
-                    <div class="song-key-info">
-                        ${currentKey}
-                        ${song.BPM ? `<span class="song-bpm-info">${song.BPM} BPM</span>` : ''}
-                    </div>
+                <div class="${contentClasses}">
                     <pre>${finalLyrics}</pre>
                 </div>
             `;
