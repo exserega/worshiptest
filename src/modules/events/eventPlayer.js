@@ -167,8 +167,11 @@ class EventPlayer {
         }
         
         // Показываем оверлей
+        console.log('🎬 Показываем оверлей плеера');
         this.overlay.classList.add('show');
         this.isOpen = true;
+        console.log('📍 Оверлей элемент:', this.overlay);
+        console.log('📍 Классы оверлея:', this.overlay.className);
         
         // Добавляем обработчик клавиатуры
         document.addEventListener('keydown', this.handleKeyboard);
