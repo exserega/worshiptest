@@ -170,10 +170,16 @@ requestAnimationFrame(() => {
 Песни → /src/modules/songs/
 ├── songsOverlay.js - оверлей "Все песни"
 └── repertoireOverlay.js - оверлей "Репертуар"
+События → /src/modules/events/ (NEW!)
+├── eventsOverlay.js - оверлей событий
+├── eventModal.js - создание/редактирование
+├── eventPlayer.js - плеер для события
+└── /public/event/ - страница события
 Сетлисты → /src/api/ и ui.js
 Стили → styles.css и /styles/
 ├── overlays.css - стили оверлеев
 ├── buttons.css - стили кнопок
+├── event-*.css - стили событий
 └── responsive.css - мобильная адаптация
 Логирование → /src/utils/logger.js
 Firebase адаптер → /src/utils/firebase-v8-adapter.js
@@ -229,6 +235,14 @@ Firebase адаптер → /src/utils/firebase-v8-adapter.js
 - Полная интеграция
 - Работает на всех устройствах
 
+### События/Служения (NEW!)
+- Создание событий с привязкой к сетлистам
+- Управление участниками по инструментам
+- Отдельная страница события
+- Плеер с транспонированием
+- Публичные ссылки для шаринга
+- См. EVENTS_FEATURE_GUIDE.md
+
 ### Улучшения UI
 - Защита от мигания при загрузке
 - Двухуровневые фильтры
@@ -280,5 +294,6 @@ document.getElementById('protected-action').addEventListener('click', async () =
 
 ---
 **Следующий шаг**: Начни с простой задачи в /src/modules/
-**Последнее обновление**: 5 августа 2025
-**Service Worker**: v146
+**Последнее обновление**: Январь 2025
+**Service Worker**: v243
+**Новое**: События - см. EVENTS_FEATURE_GUIDE.md
