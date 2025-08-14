@@ -244,36 +244,32 @@ class EventPlayer {
         try {
             // Загружаем модули для отображения песни
             const [
-                { processLyrics, transposeLyrics, highlightChords },
-                { wrapSongBlocks }
+                { getRenderedSongText, distributeSongBlocksToColumns },
+                { getTransposition }
             ] = await Promise.all([
-                import('../../js/core/transposition.js'),
-                import('../../js/core/songParser.js')
+                import('../../js/core.js'),
+                import('../../js/core/transposition.js')
             ]);
             
             // Получаем текст песни
-            const lyrics = song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден';
+            const originalLyrics = song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден';
+            const originalKey = song.preferredKey || song.defaultKey || 'C';
             
-            // Обрабатываем текст
-            let processedLyrics = processLyrics(lyrics);
-            
-            // Применяем транспонирование если нужно
+            // Вычисляем целевую тональность с учетом транспонирования
+            let targetKey = originalKey;
             if (this.transposition !== 0) {
-                const fromKey = song.preferredKey || song.defaultKey || 'C';
-                // transposeLyrics принимает (lyrics, transposition, targetKey)
-                // Вычисляем целевую тональность
                 const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-                const fromIndex = keys.indexOf(fromKey.replace('♭', 'b').replace('m', ''));
+                const fromIndex = keys.indexOf(originalKey.replace('♭', 'b').replace('m', ''));
                 let targetIndex = (fromIndex + this.transposition) % 12;
                 if (targetIndex < 0) targetIndex += 12;
-                const targetKey = keys[targetIndex];
-                
-                processedLyrics = transposeLyrics(processedLyrics, this.transposition, targetKey);
+                targetKey = keys[targetIndex];
             }
             
-            // Оборачиваем блоки песни и подсвечиваем аккорды
-            const wrappedLyrics = wrapSongBlocks(processedLyrics);
-            const finalLyrics = highlightChords(wrappedLyrics);
+            // Используем ту же функцию что и на главной странице
+            let finalLyrics = getRenderedSongText(originalLyrics, originalKey, targetKey);
+            
+            // Распределяем по колонкам
+            finalLyrics = distributeSongBlocksToColumns(finalLyrics);
             
             // Определяем текущую тональность
             let currentKey = song.preferredKey || song.defaultKey || 'C';
@@ -287,12 +283,12 @@ class EventPlayer {
             
             // Отображаем
             display.innerHTML = `
-                <div class="song-content font-size-${this.fontSize}">
+                <div class="song-content font-size-${this.fontSize} split-columns">
                     <div class="song-key-info">
                         ${currentKey}
                         ${song.BPM ? `<span class="song-bpm-info">${song.BPM} BPM</span>` : ''}
                     </div>
-                    ${finalLyrics}
+                    <pre>${finalLyrics}</pre>
                 </div>
             `;
             

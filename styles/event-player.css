@@ -143,6 +143,44 @@
 .song-content {
     line-height: 1.8;
     color: var(--text-primary);
+    width: 100%;
+}
+
+/* Две колонки как на главной странице */
+.song-content.split-columns pre {
+    column-count: 2;
+    column-gap: 30px;
+    column-rule: 1px solid var(--border-color);
+    margin: 0;
+    padding: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Предотвращаем разрыв блоков между колонками */
+.song-content .song-block {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+}
+
+/* Стили для блоков песни */
+.song-content .block-type {
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+/* Стили для pre */
+.song-content pre {
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
 }
 
 /* Размеры шрифта */
@@ -226,6 +264,12 @@
 
 /* Мобильная адаптация */
 @media (max-width: 768px) {
+    /* Одна колонка на мобильных */
+    .song-content.split-columns pre {
+        column-count: 1;
+        column-gap: 0;
+        column-rule: none;
+    }
     .event-player-header {
         padding: 8px 12px;
         gap: 8px;
