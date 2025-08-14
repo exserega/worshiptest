@@ -401,9 +401,21 @@ class EventPlayer {
             // Отображаем
             display.innerHTML = `
                 <div class="${contentClasses}" style="font-size: ${this.currentFontSize}px">
-                    <pre>${finalLyrics}</pre>
+                    <pre style="font-size: ${this.currentFontSize}px">${finalLyrics}</pre>
                 </div>
             `;
+            
+            // Применяем размер шрифта после рендеринга
+            setTimeout(() => {
+                const songContent = display.querySelector('.song-content');
+                if (songContent) {
+                    songContent.style.setProperty('font-size', `${this.currentFontSize}px`, 'important');
+                    const pre = songContent.querySelector('pre');
+                    if (pre) {
+                        pre.style.setProperty('font-size', `${this.currentFontSize}px`, 'important');
+                    }
+                }
+            }, 0);
             
         } catch (error) {
             console.error('❌ Ошибка отображения песни:', error);
@@ -450,32 +462,32 @@ class EventPlayer {
     changeFontSize(direction) {
         console.log('🔤 Изменяем размер шрифта:', direction);
         
-        // Получаем текущий элемент с песней
-        const songContent = this.overlay.querySelector('.song-content');
-        if (!songContent) {
-            console.error('❌ Не найден элемент .song-content');
-            return;
-        }
-        
-        // Получаем текущий размер шрифта
-        const computedStyle = window.getComputedStyle(songContent);
-        const currentSize = parseInt(computedStyle.fontSize) || this.currentFontSize || 16;
-        console.log('📏 Текущий размер:', currentSize);
-        
-        // Изменяем на 2px
-        const newSize = currentSize + (direction * 2);
+        // Изменяем сохраненный размер
+        const newSize = this.currentFontSize + (direction * 2);
         
         // Ограничиваем диапазон
         const minSize = 10;
         const maxSize = 24;
-        const finalSize = Math.max(minSize, Math.min(maxSize, newSize));
-        console.log('📐 Новый размер:', finalSize);
+        this.currentFontSize = Math.max(minSize, Math.min(maxSize, newSize));
+        console.log('📐 Новый размер:', this.currentFontSize);
         
-        // Применяем новый размер
-        songContent.style.fontSize = `${finalSize}px`;
-        
-        // Сохраняем для последующего использования
-        this.currentFontSize = finalSize;
+        // Применяем размер ко всем элементам песни
+        const songContent = this.overlay.querySelector('.song-content');
+        if (songContent) {
+            songContent.style.setProperty('font-size', `${this.currentFontSize}px`, 'important');
+            
+            // Применяем к pre и всем вложенным элементам
+            const preElement = songContent.querySelector('pre');
+            if (preElement) {
+                preElement.style.setProperty('font-size', `${this.currentFontSize}px`, 'important');
+            }
+            
+            // Применяем к блокам песни
+            const songBlocks = songContent.querySelectorAll('.song-block-content');
+            songBlocks.forEach(block => {
+                block.style.setProperty('font-size', `${this.currentFontSize}px`, 'important');
+            });
+        }
     }
     
     enterFullscreen() {
