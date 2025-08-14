@@ -299,7 +299,7 @@ function displaySongs(songs) {
                         <span class="song-key">${songKey}</span>
                         ${songBpm && songBpm !== 'NA' ? `
                             <span class="song-bpm">
-                                <i class="fas fa-tachometer-alt"></i>${songBpm}
+                                <i class="fas fa-tachometer-alt"></i> ${songBpm} BPM
                             </span>
                         ` : ''}
                     </div>
