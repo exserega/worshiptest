@@ -95,7 +95,7 @@ export class EventsList {
         const leaderName = event.leaderName || 'не указан';
         
         return `
-            <div class="event-item" data-event-id="${event.id}">
+            <div class="event-item" data-event-id="${event.id}" style="cursor: pointer;">
                 <div class="event-header">
                     <div class="event-date">📅 ${date}</div>
                     <div class="event-actions">
@@ -244,6 +244,18 @@ export class EventsList {
                 const eventId = btn.closest('.event-item').dataset.eventId;
                 const eventName = btn.closest('.event-item').querySelector('.event-name').textContent;
                 this.onEventDelete(eventId, eventName);
+            });
+        });
+        
+        // Клик по событию для перехода на страницу
+        const eventItems = this.container.querySelectorAll('.event-item');
+        eventItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Проверяем, что клик не по кнопкам
+                if (!e.target.closest('.event-edit-btn') && !e.target.closest('.event-delete-btn')) {
+                    const eventId = item.dataset.eventId;
+                    window.location.href = `/public/event/?id=${eventId}`;
+                }
             });
         });
         
