@@ -242,6 +242,8 @@ export class ParticipantsSelector {
         
         // Обработчики
         dropdown.addEventListener('click', (e) => {
+            e.stopPropagation(); // Предотвращаем всплытие
+            
             if (e.target.classList.contains('user-selector-item') && !e.target.classList.contains('disabled')) {
                 const userId = e.target.dataset.userId;
                 const user = this.users.find(u => u.id === userId);
@@ -253,13 +255,26 @@ export class ParticipantsSelector {
                     instrumentName: instrument.name
                 });
                 
-                document.body.removeChild(dropdown);
+                // Удаляем dropdown из его родителя
+                dropdown.remove();
             }
             
             if (e.target.classList.contains('close-dropdown')) {
-                document.body.removeChild(dropdown);
+                // Удаляем dropdown из его родителя
+                dropdown.remove();
             }
         });
+        
+        // Закрытие по клику вне dropdown
+        setTimeout(() => {
+            const closeOnOutsideClick = (e) => {
+                if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                    dropdown.remove();
+                    document.removeEventListener('click', closeOnOutsideClick);
+                }
+            };
+            document.addEventListener('click', closeOnOutsideClick);
+        }, 100);
     }
     
     /**

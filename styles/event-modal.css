@@ -356,6 +356,13 @@
     color: var(--text-primary);
     cursor: pointer;
     font-size: 14px;
+    width: 100%;
+    text-align: center;
+    transition: background 0.2s ease;
+}
+
+.close-dropdown:hover {
+    background: var(--bg-hover);
 }
 
 /* Темная тема - dropdown */
@@ -374,7 +381,11 @@
 
 [data-theme="dark"] .close-dropdown {
     background: #374151;
-    color: #e5e7eb;
+    color: #e5e7eb !important;
+}
+
+[data-theme="dark"] .close-dropdown:hover {
+    background: #4b5563;
 }
 
 /* Светлая тема - dropdown */
@@ -393,7 +404,11 @@
 
 [data-theme="light"] .close-dropdown {
     background: #f3f4f6;
-    color: #374151;
+    color: #374151 !important;
+}
+
+[data-theme="light"] .close-dropdown:hover {
+    background: #e5e7eb;
 }
 
 /* Мобильная адаптация */
