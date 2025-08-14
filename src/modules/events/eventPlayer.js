@@ -362,6 +362,56 @@ class EventPlayer {
             document.exitFullscreen();
         }
     }
+    
+    toggleChords() {
+        this.areChordsVisible = !this.areChordsVisible;
+        const songContent = this.overlay.querySelector('.song-content');
+        if (songContent) {
+            songContent.classList.toggle('chords-hidden', !this.areChordsVisible);
+        }
+        
+        // Обновляем состояние кнопки
+        const btn = this.overlay.querySelector('#player-toggle-chords');
+        btn.classList.toggle('active', !this.areChordsVisible);
+    }
+    
+    toggleChordsOnly() {
+        this.isChordsOnlyMode = !this.isChordsOnlyMode;
+        const songContent = this.overlay.querySelector('.song-content');
+        if (songContent) {
+            songContent.classList.toggle('chords-only-mode', this.isChordsOnlyMode);
+        }
+        
+        // Обновляем состояние кнопки
+        const btn = this.overlay.querySelector('#player-chords-only');
+        btn.classList.toggle('active', this.isChordsOnlyMode);
+    }
+    
+    toggleSplitMode() {
+        this.isSplitMode = !this.isSplitMode;
+        this.loadCurrentSong(); // Перезагружаем песню с новым режимом
+        
+        // Обновляем состояние кнопки
+        const btn = this.overlay.querySelector('#player-split-text');
+        btn.classList.toggle('active', this.isSplitMode);
+    }
+    
+    async copyText() {
+        try {
+            const songContent = this.overlay.querySelector('.song-content pre');
+            if (songContent) {
+                const text = songContent.textContent;
+                await navigator.clipboard.writeText(text);
+                
+                // Визуальная обратная связь
+                const btn = this.overlay.querySelector('#player-copy-text');
+                btn.classList.add('success');
+                setTimeout(() => btn.classList.remove('success'), 2000);
+            }
+        } catch (error) {
+            console.error('Ошибка при копировании:', error);
+        }
+    }
 }
 
 // Создаем единственный экземпляр

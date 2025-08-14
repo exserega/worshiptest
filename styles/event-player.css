@@ -28,14 +28,18 @@
 
 /* Заголовок плеера */
 .event-player-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
-    gap: 16px;
+}
+
+/* Верхняя часть шапки */
+.player-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    gap: 10px;
 }
 
 .player-close-btn {
@@ -53,23 +57,24 @@
     background: var(--bg-hover);
 }
 
-/* Информация о песне */
-.player-song-info {
+/* Обертка для названия песни */
+.player-song-title-wrapper {
     flex: 1;
     text-align: center;
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     min-width: 0;
 }
 
 .player-song-number {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-secondary);
 }
 
 .player-song-name {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--text-primary);
     overflow: hidden;
@@ -77,25 +82,80 @@
     white-space: nowrap;
 }
 
-/* Контролы плеера */
-.player-controls {
+/* Тональность и BPM в шапке */
+.player-song-key-bpm {
     display: flex;
-    gap: 8px;
-    flex-shrink: 0;
+    gap: 6px;
+    align-items: center;
+    font-size: 12px;
+}
+
+.player-key {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.player-bpm {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+/* Компактная навигация в шапке */
+.player-nav-compact {
+    display: flex;
+    gap: 4px;
+}
+
+.player-nav-btn-small {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 12px;
+}
+
+.player-nav-btn-small:hover {
+    background: var(--accent-color);
+    color: var(--bg-primary);
+}
+
+/* Ряд контролов */
+.player-controls-row {
+    display: flex;
+    gap: 4px;
+    padding: 8px 12px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .player-control-btn {
     background: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    padding: 6px 12px;
+    padding: 4px 8px;
+    height: 30px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
     transition: all 0.2s ease;
+    min-width: 30px;
+}
+
+/* Иконка T для "только аккорды" */
+.player-control-btn .text-icon {
+    font-weight: 700;
+    font-size: 13px;
 }
 
 .player-control-btn:hover {
@@ -105,6 +165,20 @@
 
 .player-control-btn:active {
     transform: scale(0.95);
+}
+
+/* Активное состояние кнопок */
+.player-control-btn.active {
+    background: var(--accent-color);
+    color: var(--bg-primary);
+    border-color: var(--accent-color);
+}
+
+/* Успешное состояние (для копирования) */
+.player-control-btn.success {
+    background: var(--success-color, #4caf50);
+    color: white;
+    border-color: var(--success-color, #4caf50);
 }
 
 .transpose-value {
@@ -156,21 +230,7 @@
     }
 }
 
-/* Информация о тональности и BPM */
-.song-key-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--text-primary);
-}
 
-.song-bpm-info {
-    font-size: 14px;
-    color: var(--text-secondary);
-}
 
 /* Содержимое песни */
 .song-content {
@@ -327,6 +387,22 @@
     color: var(--accent-color);
     font-weight: 600;
     font-family: 'Courier New', monospace;
+}
+
+/* Режим скрытых аккордов */
+.song-content.chords-hidden .chord {
+    display: none;
+}
+
+/* Режим "только аккорды" */
+.song-content.chords-only-mode {
+    font-size: 0;
+}
+
+.song-content.chords-only-mode .chord {
+    font-size: var(--lyrics-font-size, 16px);
+    display: inline-block;
+    margin: 0 5px;
 }
 
 /* Размеры шрифта */
