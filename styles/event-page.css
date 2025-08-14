@@ -148,56 +148,71 @@
     font-size: 14px;
 }
 
-/* Список песен */
+/* Список песен - унифицированный стиль с панелью сетлистов */
 .songs-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     margin-bottom: 20px;
+    padding: 8px 12px;
 }
 
 .song-item {
-    background: var(--bg-primary);
-    border-radius: 8px;
-    padding: 12px 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.song-item:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-color);
 }
 
 .song-number {
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: 12px;
+    min-width: 20px;
     margin-right: 12px;
 }
 
 .song-info {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .song-name {
-    font-weight: 500;
-    margin-bottom: 4px;
-}
-
-.song-details {
-    display: flex;
-    gap: 16px;
-    margin-top: 4px;
-}
-
-.song-key,
-.song-bpm {
-    color: var(--text-secondary);
     font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
 }
 
-.song-key::before {
-    content: '🎵 ';
+.song-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    align-items: center;
 }
 
-.song-bpm::before {
-    content: '⏱️ ';
+.song-key {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.song-bpm {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 /* Кнопка запуска плеера */
@@ -434,7 +449,16 @@
     background: #1e293b;
 }
 
-[data-theme="dark"] .song-item,
+[data-theme="dark"] .song-item {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .song-item:hover {
+    background: #1e293b;
+    border-color: var(--accent-color);
+}
+
 [data-theme="dark"] .participant-chip,
 [data-theme="dark"] .comment-item {
     background: #0f172a;

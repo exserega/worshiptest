@@ -283,7 +283,7 @@ function displaySongs(songs) {
         console.log('🎵 Структура песни:', songs[0]);
     }
     
-    // Создаем элементы песен
+    // Создаем элементы песен с унифицированным дизайном
     elements.songsList.innerHTML = songs.map((song, index) => {
         // Теперь у нас есть полные данные песни
         const songName = song.name || 'Без названия';
@@ -295,10 +295,12 @@ function displaySongs(songs) {
                 <span class="song-number">${index + 1}</span>
                 <div class="song-info">
                     <div class="song-name">${songName}</div>
-                    <div class="song-details">
-                        ${songKey ? `<span class="song-key">${songKey}</span>` : ''}
-                        ${songBpm ? `<span class="song-bpm">${songBpm} BPM</span>` : ''}
-                    </div>
+                    ${(songKey || songBpm) ? `
+                        <div class="song-meta">
+                            ${songKey ? `<span class="song-key"><i class="fas fa-music"></i> ${songKey}</span>` : ''}
+                            ${songBpm ? `<span class="song-bpm"><i class="fas fa-drum"></i> ${songBpm} BPM</span>` : ''}
+                        </div>
+                    ` : ''}
                 </div>
             </div>
         `;
