@@ -233,10 +233,12 @@ async function loadSongs() {
                     
                     if (songDoc.exists) {
                         const songData = songDoc.data();
-                        console.log('🎵 Данные песни:', songData.name, 'BPM:', songData.BPM);
+                        console.log('🎵 Данные песни:', songData);
+                        console.log('🎵 Название:', songData.name || songData.Name || songData.title || 'Нет названия');
                         return {
                             ...songData,
                             id: songDoc.id,
+                            name: songDoc.id, // Название песни = ID документа в Firebase
                             preferredKey: setlistSong.preferredKey || songData.defaultKey,
                             order: setlistSong.order
                         };
