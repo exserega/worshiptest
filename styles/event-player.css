@@ -119,8 +119,19 @@
 }
 
 .player-song-display {
-    max-width: 800px;
+    max-width: 1200px; /* Как на главной странице */
     width: 100%;
+    padding: 0 20px; /* Отступы от краев */
+}
+
+@media (max-width: 768px) {
+    .event-player-content {
+        padding: 16px 8px; /* Меньше отступы на мобильных */
+    }
+    
+    .player-song-display {
+        padding: 0 12px; /* Меньше отступы на мобильных */
+    }
 }
 
 /* Информация о тональности и BPM */
@@ -146,30 +157,66 @@
     width: 100%;
 }
 
-/* Две колонки как на главной странице */
+/* Две колонки как на главной странице - используем CSS Grid */
 .song-content.split-columns pre {
-    column-count: 2;
-    column-gap: 30px;
-    column-rule: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px; /* Как на главной странице */
+    column-count: unset; /* Отключаем старый column-count */
+    position: relative;
+    align-items: start;
+    overflow: hidden;
     margin: 0;
     padding: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
 }
 
-/* Предотвращаем разрыв блоков между колонками */
-.song-content .song-block {
+/* Стили для колонок */
+.song-content.split-columns .column-1,
+.song-content.split-columns .column-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Отступы между блоками внутри колонки */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Каждый блок занимает всю ширину своей колонки */
+.song-content.split-columns .song-block {
     break-inside: avoid;
     page-break-inside: avoid;
-    margin-bottom: 20px;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    margin-bottom: 0; /* Используем gap вместо margin */
+}
+
+/* Содержимое блока с переносом */
+.song-content.split-columns .song-block-content {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 /* Стили для блоков песни */
-.song-content .block-type {
+.song-content .block-type,
+.song-content .song-block-legend {
     font-weight: 600;
     color: var(--text-secondary);
     margin-bottom: 5px;
     font-size: 0.9em;
+    background-color: var(--bg-secondary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
 }
 
 /* Стили для pre */
@@ -181,6 +228,13 @@
     margin: 0;
     padding: 0;
     overflow: visible;
+}
+
+/* Стили для аккордов - как на главной */
+.song-content .chord {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
 }
 
 /* Размеры шрифта */
@@ -264,11 +318,27 @@
 
 /* Мобильная адаптация */
 @media (max-width: 768px) {
-    /* Одна колонка на мобильных */
+    /* ОДНА КОЛОНКА на мобильных - по умолчанию! */
     .song-content.split-columns pre {
-        column-count: 1;
-        column-gap: 0;
-        column-rule: none;
+        grid-template-columns: 1fr !important; /* Одна колонка */
+        gap: 8px; /* Меньше отступ между блоками */
+    }
+    
+    /* Все блоки в одну колонку */
+    .song-content.split-columns .column-1,
+    .song-content.split-columns .column-2 {
+        gap: 6px; /* Еще меньше отступы на мобильных */
+    }
+    
+    /* Компактные блоки на мобильных */
+    .song-content .song-block {
+        margin-bottom: 4px;
+    }
+    
+    .song-content .block-type,
+    .song-content .song-block-legend {
+        font-size: 0.85em;
+        padding: 3px 6px;
     }
     .event-player-header {
         padding: 8px 12px;
