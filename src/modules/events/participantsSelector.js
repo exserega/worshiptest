@@ -163,16 +163,16 @@ export class ParticipantsSelector {
             <button type="button" class="close-dropdown">Закрыть</button>
         `;
         
-        // Добавляем в DOM
-        document.body.appendChild(dropdown);
-        console.log('✅ Dropdown добавлен в body');
-        console.log('📊 Dropdown элемент:', dropdown);
-        console.log('📏 Размеры dropdown:', {
-            offsetWidth: dropdown.offsetWidth,
-            offsetHeight: dropdown.offsetHeight,
-            clientWidth: dropdown.clientWidth,
-            clientHeight: dropdown.clientHeight
-        });
+        // Найдем модальное окно и добавим dropdown внутрь него
+        const modal = document.querySelector('.event-modal');
+        if (modal) {
+            modal.appendChild(dropdown);
+            console.log('✅ Dropdown добавлен в модальное окно');
+        } else {
+            // Если модальное окно не найдено, добавляем в body
+            document.body.appendChild(dropdown);
+            console.log('✅ Dropdown добавлен в body');
+        }
         
         // Позиционируем рядом с кнопкой
         const btn = this.container.querySelector(`[data-instrument="${instrumentId}"].add-participant-btn`);
@@ -180,18 +180,31 @@ export class ParticipantsSelector {
         console.log('🔘 Найденная кнопка:', btn);
         
         if (btn) {
-            const rect = btn.getBoundingClientRect();
-            console.log('📐 Позиция кнопки:', rect);
+            const btnRect = btn.getBoundingClientRect();
+            console.log('📐 Позиция кнопки:', btnRect);
             
-            dropdown.style.position = 'fixed';
-            dropdown.style.top = `${rect.bottom + 5}px`;
-            dropdown.style.left = `${rect.left}px`;
+            // Используем абсолютное позиционирование относительно инструмента
+            const instrumentBlock = btn.closest('.instrument-block');
+            if (instrumentBlock) {
+                instrumentBlock.style.position = 'relative';
+                dropdown.style.position = 'absolute';
+                dropdown.style.top = '100%';
+                dropdown.style.left = '0';
+                dropdown.style.marginTop = '5px';
+                instrumentBlock.appendChild(dropdown);
+            } else {
+                // Fallback на fixed позиционирование
+                dropdown.style.position = 'fixed';
+                dropdown.style.top = `${btnRect.bottom + 5}px`;
+                dropdown.style.left = `${Math.max(10, btnRect.left)}px`; // Минимум 10px от края
+            }
+            
             dropdown.style.width = '250px';
-            dropdown.style.maxWidth = '90vw';
-            dropdown.style.zIndex = '999999'; // Очень высокий z-index
-            dropdown.style.display = 'flex'; // Явно показываем
-            dropdown.style.visibility = 'visible'; // Явно делаем видимым
-            dropdown.style.opacity = '1'; // Полная непрозрачность
+            dropdown.style.maxWidth = 'calc(100vw - 20px)'; // Отступы от краев
+            dropdown.style.zIndex = '999999';
+            dropdown.style.display = 'flex';
+            dropdown.style.visibility = 'visible';
+            dropdown.style.opacity = '1';
             
             console.log('🎯 Стили dropdown установлены:', {
                 position: dropdown.style.position,
