@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v239'; // v239, исправлена ошибка с getEvent при редактировании
+const CACHE_NAME = 'agape-worship-cache-v240'; // v240, исправлен экспорт eventModal
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

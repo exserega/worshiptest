@@ -428,3 +428,6 @@ export function getEventModal() {
     }
     return eventModalInstance;
 }
+
+// Экспортируем готовый экземпляр
+export const eventModal = getEventModal();
