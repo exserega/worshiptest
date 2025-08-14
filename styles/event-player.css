@@ -291,7 +291,7 @@
 
 .song-content .song-block-content {
     /* Копируем из components.css */
-    margin: -14px 0 0 0 !important;
+    margin: -14px 0 -5px 0 !important; /* Добавлен отрицательный margin снизу */
     padding: 0px 3px 0px 3px !important; /* Убран нижний padding */
     white-space: pre-wrap;
     line-height: inherit;
@@ -428,7 +428,7 @@ body[data-theme="light"] .song-content .song-block-legend {
     }
     
     .song-content .song-block-content {
-        margin: -8px 0 0 0 !important;
+        margin: -8px 0 -3px 0 !important; /* Отрицательный margin снизу */
         padding: 0px 2px 0px 2px !important; /* Без нижнего padding */
     }
     .event-player-header {
@@ -533,7 +533,7 @@ body[data-theme="light"] .song-content .song-block-legend {
     }
     
     .song-content .song-block-content {
-        margin: -20px 0 0 0 !important;
+        margin: -20px 0 -5px 0 !important; /* Отрицательный margin снизу */
         padding: 0px 3px 0px 3px !important;
     }
 }
