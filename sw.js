@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v187'; // v187, восстановлен export в firebase-init.js
+const CACHE_NAME = 'agape-worship-cache-v188'; // v188, исправлено отображение песен и шеринг
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

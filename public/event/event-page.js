@@ -244,16 +244,31 @@ function displaySongs(songs) {
     // Обновляем счетчик
     elements.songsCount.textContent = `${songs.length} ${getSongWord(songs.length)}`;
     
+    // Логируем структуру первой песни для отладки
+    if (songs.length > 0) {
+        console.log('🎵 Структура песни:', songs[0]);
+    }
+    
     // Создаем элементы песен
-    elements.songsList.innerHTML = songs.map((song, index) => `
-        <div class="song-item">
-            <span class="song-number">${index + 1}</span>
-            <div class="song-info">
-                <div class="song-name">${song.name || 'Без названия'}</div>
-                ${song.key ? `<div class="song-key">${song.key}</div>` : ''}
+    elements.songsList.innerHTML = songs.map((song, index) => {
+        // Проверяем разные варианты полей
+        const songName = song.name || song.title || song.songName || 'Без названия';
+        const songKey = song.key || song.tonality || song.songKey || '';
+        const songBpm = song.bpm || song.tempo || '';
+        
+        return `
+            <div class="song-item">
+                <span class="song-number">${index + 1}</span>
+                <div class="song-info">
+                    <div class="song-name">${songName}</div>
+                    <div class="song-details">
+                        ${songKey ? `<span class="song-key">${songKey}</span>` : ''}
+                        ${songBpm ? `<span class="song-bpm">${songBpm} BPM</span>` : ''}
+                    </div>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     // Показываем секцию
     elements.songsSection.style.display = 'block';
@@ -398,7 +413,9 @@ function shareEvent(platform) {
     if (platform === 'whatsapp') {
         shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
     } else if (platform === 'telegram') {
-        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        // Для Telegram не дублируем ссылку, так как она уже в тексте
+        const textWithoutLink = text.replace(`\n🔗 ${url}`, '');
+        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(textWithoutLink)}`;
     }
     
     if (shareUrl) {

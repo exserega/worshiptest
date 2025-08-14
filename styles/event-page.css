@@ -180,9 +180,24 @@
     margin-bottom: 4px;
 }
 
-.song-key {
+.song-details {
+    display: flex;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.song-key,
+.song-bpm {
     color: var(--text-secondary);
     font-size: 14px;
+}
+
+.song-key::before {
+    content: '🎵 ';
+}
+
+.song-bpm::before {
+    content: '⏱️ ';
 }
 
 /* Кнопка запуска плеера */
