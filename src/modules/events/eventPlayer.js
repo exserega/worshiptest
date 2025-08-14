@@ -133,8 +133,20 @@ class EventPlayer {
         // Размер шрифта
         const fontDecreaseBtn = this.overlay.querySelector('#player-font-decrease');
         const fontIncreaseBtn = this.overlay.querySelector('#player-font-increase');
-        fontDecreaseBtn.addEventListener('click', () => this.changeFontSize(-1));
-        fontIncreaseBtn.addEventListener('click', () => this.changeFontSize(1));
+        if (fontDecreaseBtn) {
+            fontDecreaseBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.changeFontSize(-1);
+            });
+        }
+        if (fontIncreaseBtn) {
+            fontIncreaseBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.changeFontSize(1);
+            });
+        }
         
         // Выбор тональности
         const keyButton = this.overlay.querySelector('#player-key-button');
@@ -436,12 +448,19 @@ class EventPlayer {
     }
     
     changeFontSize(direction) {
+        console.log('🔤 Изменяем размер шрифта:', direction);
+        
         // Получаем текущий элемент с песней
         const songContent = this.overlay.querySelector('.song-content');
-        if (!songContent) return;
+        if (!songContent) {
+            console.error('❌ Не найден элемент .song-content');
+            return;
+        }
         
         // Получаем текущий размер шрифта
-        const currentSize = parseInt(window.getComputedStyle(songContent).fontSize);
+        const computedStyle = window.getComputedStyle(songContent);
+        const currentSize = parseInt(computedStyle.fontSize) || this.currentFontSize || 16;
+        console.log('📏 Текущий размер:', currentSize);
         
         // Изменяем на 2px
         const newSize = currentSize + (direction * 2);
@@ -450,6 +469,7 @@ class EventPlayer {
         const minSize = 10;
         const maxSize = 24;
         const finalSize = Math.max(minSize, Math.min(maxSize, newSize));
+        console.log('📐 Новый размер:', finalSize);
         
         // Применяем новый размер
         songContent.style.fontSize = `${finalSize}px`;
@@ -501,12 +521,15 @@ class EventPlayer {
     }
     
     toggleSplitMode() {
+        console.log('🔀 Переключаем режим колонок');
         this.isSplitMode = !this.isSplitMode;
         this.loadCurrentSong(); // Перезагружаем песню с новым режимом
         
         // Обновляем состояние кнопки
         const btn = this.overlay.querySelector('#player-split-text');
-        btn.classList.toggle('active', this.isSplitMode);
+        if (btn) {
+            btn.classList.toggle('active', this.isSplitMode);
+        }
     }
     
     async copyText() {
