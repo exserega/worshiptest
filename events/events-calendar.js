@@ -4,8 +4,9 @@
  */
 
 import logger from '../src/utils/logger.js';
-import { getEventsByBranch } from '../src/modules/events/eventsApi.js';
-import { getCurrentUser, canManageEvents } from '../src/modules/auth/authCheck.js';
+import { getCurrentUser } from '../src/modules/auth/authCheck.js';
+import { getEventsByBranch, deleteEvent } from '../src/modules/events/eventsApi.js';
+import { canManageEvents } from '../src/modules/permissions/permissions.js';
 
 export class EventsCalendar {
     constructor() {
@@ -314,6 +315,15 @@ export class EventsCalendar {
     }
     
     /**
+     * Навигация по месяцам
+     * @param {number} direction - направление (-1 для предыдущего, 1 для следующего)
+     */
+    navigateMonth(direction) {
+        this.currentDate.setMonth(this.currentDate.getMonth() + direction);
+        this.render();
+    }
+    
+    /**
      * Переход к предыдущему месяцу
      */
     handlePrevMonth() {
@@ -456,16 +466,42 @@ export class EventsCalendar {
                 const leaderHTML = event.leader ? `<div class="event-leader">👤 Ведущий: ${event.leader}</div>` : '';
                 console.log(`  👤 Ведущий: ${event.leader || 'не указан'}`); // Отладка
                 
+                // Кнопки управления для модераторов и администраторов
+                let actionButtons = '';
+                if (canManageEvents()) {
+                    actionButtons = `
+                        <div class="event-actions">
+                            <button class="action-btn edit-btn" onclick="window.eventsCalendar.handleEditEvent('${event.id}'); event.stopPropagation();" title="Редактировать">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}', '${event.name.replace(/'/g, "\\'")}'); event.stopPropagation();" title="Удалить">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    <line x1="10" y1="11" x2="10" y2="17"/>
+                                    <line x1="14" y1="11" x2="14" y2="17"/>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                }
+                
                 return `
                     <div class="event-card" onclick="window.location.href='/public/event/?id=${event.id}'">
-                        <div class="event-header">
-                            <div class="event-time">${this.formatTime(event.date)}</div>
-                            <div class="event-name">${event.name}</div>
-                        </div>
-                        ${leaderHTML}
-                        ${participantsHTML}
                         <div class="event-info">
-                            <span class="event-count">${event.participantCount || 0} участников</span>
+                            <div class="event-header">
+                                <span class="event-time">${this.formatTime(event.date)}</span>
+                                <span class="event-name">${event.name}</span>
+                            </div>
+                            ${leaderHTML}
+                            ${participantsHTML}
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-count">${event.songCount || 0} песен</span>
+                            ${actionButtons}
                         </div>
                     </div>
                 `;
@@ -560,6 +596,74 @@ export class EventsCalendar {
         } catch (error) {
             logger.error('Ошибка создания события:', error);
             alert('Ошибка при открытии окна создания события');
+        }
+    }
+    
+    /**
+     * Обработчик редактирования события
+     */
+    async handleEditEvent(eventId) {
+        logger.log('🖊️ Редактирование события:', eventId);
+        try {
+            const event = this.events.find(e => e.id === eventId);
+            if (!event) {
+                logger.warn('Событие не найдено для редактирования:', eventId);
+                return;
+            }
+
+            const { openEventCreationModal } = await import('../src/modules/events/eventCreationModal.js');
+            openEventCreationModal(new Date(event.date), async (updatedEventId) => {
+                if (updatedEventId === eventId) {
+                    logger.log('✅ Событие обновлено:', eventId);
+                    await this.loadEvents();
+                    this.render();
+                    this.handleDayClick({ target: this.calendarDays.querySelector(`.calendar-day[data-date="${event.date.toISOString()}"]`) });
+                } else {
+                    logger.warn('Событие с другим ID было создано:', updatedEventId);
+                }
+            });
+        } catch (error) {
+            logger.error('Ошибка редактирования события:', error);
+            alert('Ошибка при открытии окна редактирования события');
+        }
+    }
+
+    /**
+     * Обработчик удаления события
+     */
+    async handleDeleteEvent(eventId, eventName) {
+        if (!confirm(`Вы уверены, что хотите удалить событие "${eventName}"?`)) {
+            return;
+        }
+        
+        logger.log('🗑️ Удаление события:', eventId);
+        
+        try {
+            await deleteEvent(eventId);
+            logger.log('✅ Событие удалено:', eventId);
+            
+            // Перезагружаем события
+            await this.loadEvents();
+            this.render();
+            
+            // Если есть выбранная дата, обновляем отображение
+            if (this.selectedDate) {
+                const selectedDateStr = this.selectedDate.toDateString();
+                const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
+                
+                for (const dayEl of dayElements) {
+                    if (dayEl.dataset.date) {
+                        const dayDate = new Date(dayEl.dataset.date);
+                        if (dayDate.toDateString() === selectedDateStr) {
+                            this.handleDayClick({ target: dayEl });
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            logger.error('Ошибка удаления события:', error);
+            alert('Ошибка при удалении события: ' + error.message);
         }
     }
     
