@@ -221,7 +221,7 @@ class SetlistSelector {
             // Обрабатываем результат
             if (result.status === 'duplicate') {
                 // Песня уже есть в той же тональности
-                this.showNotification(`⚠️ Песня "${this.currentSong.name}" уже есть в этом сет-листе в тональности ${result.existingKey}`, 'warning');
+                alert(`Песня "${this.currentSong.name}" уже есть в этом сет-листе в тональности ${result.existingKey}`);
                 return;
             } else if (result.status === 'duplicate_key') {
                 // Песня есть в другой тональности - спрашиваем о замене
@@ -233,14 +233,14 @@ class SetlistSelector {
                 if (confirmReplace) {
                     // Заменяем тональность
                     await this.replaceSongKey(setlistId, this.currentSong.id, this.currentSong.selectedKey);
-                    this.showNotification(`✅ Тональность песни изменена на ${this.currentSong.selectedKey}`, 'success');
+                    alert(`Тональность песни изменена на ${this.currentSong.selectedKey}`);
                 } else {
                     // Пользователь отказался от замены
                     return;
                 }
             } else {
                 // Песня успешно добавлена
-                this.showNotification('✅ Песня успешно добавлена в сет-лист!', 'success');
+                alert('Песня успешно добавлена в сет-лист!');
             }
             
             // Если текущий сет-лист совпадает с тем, куда добавляем - обновляем сразу
@@ -280,7 +280,7 @@ class SetlistSelector {
             
         } catch (error) {
             console.error('Error adding song to setlist:', error);
-            this.showNotification('❌ Ошибка при добавлении песни', 'error');
+            alert('Ошибка при добавлении песни');
         }
     }
     
@@ -323,7 +323,7 @@ class SetlistSelector {
             
         } catch (error) {
             console.error('Error creating setlist:', error);
-            this.showNotification('❌ Ошибка при создании сет-листа', 'error');
+            alert('Ошибка при создании сет-листа');
         } finally {
             // Восстанавливаем кнопку
             if (this.createButton) {
@@ -333,18 +333,7 @@ class SetlistSelector {
         }
     }
     
-    /**
-     * Показывает уведомление
-     */
-    showNotification(message, type = 'info') {
-        // Используем глобальную функцию если она доступна
-        if (window.showNotification) {
-            window.showNotification(message, type);
-        } else {
-            // Fallback на alert
-            alert(message);
-        }
-    }
+
 }
 
 // Создаем экземпляр
