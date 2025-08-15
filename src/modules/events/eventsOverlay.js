@@ -5,7 +5,7 @@
 
 import logger from '../../utils/logger.js';
 import { EventsList } from './eventsList.js';
-import { getEventsByBranch, deleteEvent, getEventById } from '../../api/eventsApi.js';
+import { getEventsByBranch, deleteEvent, getEventById } from './eventsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
 // Убираем импорт CalendarView - будем загружать лениво
 
