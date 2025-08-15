@@ -227,9 +227,22 @@ export class EventsCalendar {
             dayEl.appendChild(eventsEl);
         }
         
-        // Сохраняем дату в элементе
+        // Сохраняем дату и полные данные событий в элементе
         dayEl.dataset.date = date.toISOString();
-        dayEl.dataset.events = JSON.stringify(dayEvents);
+        
+        // Сохраняем полные данные событий, а не только отфильтрованные
+        const fullEventsData = dayEvents.map(event => ({
+            id: event.id,
+            name: event.name,
+            date: event.date,
+            participants: event.participants || [],
+            participantCount: event.participantCount || 0,
+            leader: event.leader || '',
+            branchId: event.branchId
+        }));
+        
+        dayEl.dataset.events = JSON.stringify(fullEventsData);
+        console.log(`💾 Сохранено событий для ${date.toDateString()}:`, fullEventsData); // Отладка
         
         // Добавляем в календарь
         this.calendarDays.appendChild(dayEl);
@@ -362,10 +375,16 @@ export class EventsCalendar {
             `;
         } else {
             // Есть события
+            console.log('📅 Отображение событий:', events); // Отладка
+            
             const eventsHTML = events.map(event => {
+                console.log(`🎯 Обработка события ${event.id}:`, event); // Отладка
+                
                 // Формируем компактный список участников
                 let participantsHTML = '';
                 if (event.participants && Array.isArray(event.participants)) {
+                    console.log(`  👥 Участники события:`, event.participants); // Отладка
+                    
                     const participantsList = event.participants
                         .filter(p => p.name) // Только участники с именами
                         .map(p => {
@@ -374,13 +393,18 @@ export class EventsCalendar {
                         })
                         .join(', ');
                     
+                    console.log(`  📝 Список участников: "${participantsList}"`); // Отладка
+                    
                     if (participantsList) {
                         participantsHTML = `<div class="event-participants-list">${participantsList}</div>`;
                     }
+                } else {
+                    console.log(`  ⚠️ Нет массива participants`); // Отладка
                 }
                 
                 // Лидер
                 const leaderHTML = event.leader ? `<div class="event-leader">🎤 ${event.leader}</div>` : '';
+                console.log(`  🎤 Лидер: ${event.leader || 'не указан'}`); // Отладка
                 
                 return `
                     <div class="event-card" onclick="window.location.href='/public/event/?id=${event.id}'">

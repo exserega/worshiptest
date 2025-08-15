@@ -33,6 +33,7 @@ export async function getEventsByBranch(branchId) {
         
             snapshot.forEach(doc => {
                 const eventData = doc.data();
+                console.log(`📋 Обработка события ${doc.id}:`, eventData); // Отладка
                 
                 // Формируем объект события с участниками
                 const event = {
@@ -44,10 +45,12 @@ export async function getEventsByBranch(branchId) {
                 
                 // Обрабатываем участников
                 if (eventData.participants && typeof eventData.participants === 'object') {
+                    console.log(`👥 Найдены участники для события ${doc.id}:`, eventData.participants); // Отладка
                     const participantsArray = [];
                     
                     // Преобразуем объект участников в массив
                     Object.entries(eventData.participants).forEach(([key, participant]) => {
+                        console.log(`  - Обработка участника ${key}:`, participant); // Отладка
                         if (participant && participant.name) {
                             participantsArray.push({
                                 id: key,
@@ -60,12 +63,16 @@ export async function getEventsByBranch(branchId) {
                     
                     event.participants = participantsArray;
                     event.participantCount = participantsArray.length;
+                    console.log(`✅ Обработано участников: ${event.participantCount}`, participantsArray); // Отладка
                     
                     // Найдем лидера
                     const leader = participantsArray.find(p => p.role === 'leader');
                     if (leader) {
                         event.leader = leader.name;
+                        console.log(`🎤 Лидер: ${event.leader}`); // Отладка
                     }
+                } else {
+                    console.log(`⚠️ Нет участников для события ${doc.id}`); // Отладка
                 }
                 
                 events.push(event);
@@ -83,6 +90,7 @@ export async function getEventsByBranch(branchId) {
             
             snapshot.forEach(doc => {
                 const eventData = doc.data();
+                console.log(`📋 [Альт] Обработка события ${doc.id}:`, eventData); // Отладка
                 
                 // Формируем объект события с участниками
                 const event = {
@@ -94,10 +102,12 @@ export async function getEventsByBranch(branchId) {
                 
                 // Обрабатываем участников
                 if (eventData.participants && typeof eventData.participants === 'object') {
+                    console.log(`👥 [Альт] Найдены участники для события ${doc.id}:`, eventData.participants); // Отладка
                     const participantsArray = [];
                     
                     // Преобразуем объект участников в массив
                     Object.entries(eventData.participants).forEach(([key, participant]) => {
+                        console.log(`  - [Альт] Обработка участника ${key}:`, participant); // Отладка
                         if (participant && participant.name) {
                             participantsArray.push({
                                 id: key,
@@ -110,12 +120,16 @@ export async function getEventsByBranch(branchId) {
                     
                     event.participants = participantsArray;
                     event.participantCount = participantsArray.length;
+                    console.log(`✅ [Альт] Обработано участников: ${event.participantCount}`, participantsArray); // Отладка
                     
                     // Найдем лидера
                     const leader = participantsArray.find(p => p.role === 'leader');
                     if (leader) {
                         event.leader = leader.name;
+                        console.log(`🎤 [Альт] Лидер: ${event.leader}`); // Отладка
                     }
+                } else {
+                    console.log(`⚠️ [Альт] Нет участников для события ${doc.id}`); // Отладка
                 }
                 
                 events.push(event);
