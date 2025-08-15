@@ -1,0 +1,739 @@
+/* Стили плеера события */
+
+/* Принудительная темная тема для плеера */
+.event-player-overlay {
+    --bg-primary: #111827 !important;
+    --bg-secondary: #1f2937 !important;
+    --text-primary: #f3f4f6 !important;
+    --text-secondary: #9ca3af !important;
+    --border-color: #374151 !important;
+    --primary-color: #67e8f9 !important;
+    --secondary-color: #fb923c !important;
+    --accent-color: #67e8f9 !important;
+    --success-color: #34d399 !important;
+    --danger-color: #f87171 !important;
+    --warning-color: #fbbf24 !important;
+    --input-bg-color: #1f2937 !important;
+    --label-color: #9ca3af !important;
+    --button-text-color: #1f2937 !important;
+}
+
+/* Основной оверлей */
+.event-player-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    /* Убеждаемся, что фон непрозрачный и темный */
+    background-color: #111827 !important;
+    overflow: hidden; /* Предотвращаем двойной скролл */
+    width: 100vw; /* Точно 100% viewport */
+    max-width: 100vw; /* Не больше viewport */
+}
+
+.event-player-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Заголовок плеера */
+.event-player-header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+/* Верхняя часть шапки */
+.player-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    gap: 10px;
+}
+
+.player-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.player-close-btn:hover {
+    background: var(--bg-hover);
+}
+
+/* Обертка для названия песни */
+.player-song-title-wrapper {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.player-song-number {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.player-song-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Тональность и BPM в шапке */
+.player-song-key-bpm {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 12px;
+}
+
+.player-key {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.player-bpm {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+/* Компактная навигация в шапке */
+.player-nav-compact {
+    display: flex;
+    gap: 4px;
+}
+
+.player-nav-btn-small {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 12px;
+}
+
+.player-nav-btn-small:hover {
+    background: var(--accent-color);
+    color: var(--bg-primary);
+}
+
+/* Ряд контролов */
+.player-controls-row {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.player-control-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    height: 40px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    min-width: 40px;
+}
+
+/* Иконка T для "только аккорды" */
+.player-control-btn .text-icon {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+/* Стили для символов транспонирования */
+#player-transpose-down,
+#player-transpose-up {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+    font-family: var(--font-primary);
+}
+
+.player-control-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-color);
+}
+
+.player-control-btn:active {
+    transform: scale(0.95);
+}
+
+/* Активное состояние кнопок */
+.player-control-btn.active {
+    background: var(--accent-color);
+    color: var(--bg-primary);
+    border-color: var(--accent-color);
+}
+
+/* Успешное состояние (для копирования) */
+.player-control-btn.success {
+    background: var(--success-color, #4caf50);
+    color: white;
+    border-color: var(--success-color, #4caf50);
+}
+
+/* Селектор тональности */
+.player-key-selector {
+    position: relative;
+}
+
+.player-key-btn {
+    font-weight: 600;
+    min-width: 60px;
+}
+
+.player-current-key {
+    font-size: 16px;
+}
+
+.player-key-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 4px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    max-height: 300px;
+    overflow-y: auto;
+    min-width: 80px;
+}
+
+.player-key-dropdown.show {
+    display: flex;
+}
+
+.player-key-dropdown button {
+    background: var(--bg-secondary);
+    border: 1px solid transparent;
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.player-key-dropdown button:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+/* Темная тема для выпадающего списка */
+[data-theme="dark"] .player-key-dropdown {
+    background: var(--bg-elevated, #2a2a2a);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .player-key-dropdown button {
+    background: transparent;
+}
+
+[data-theme="dark"] .player-key-dropdown button:hover {
+    background: var(--accent-color);
+}
+
+/* Контент плеера */
+.event-player-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden; /* Убираем горизонтальный скролл */
+    padding: 20px 5px; /* Отступы 5px слева и справа */
+    /* Скрываем полосу прокрутки, но оставляем скроллинг */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE и Edge */
+}
+
+/* Скрываем полосу прокрутки для Chrome, Safari и Opera */
+.event-player-content::-webkit-scrollbar {
+    display: none;
+}
+
+.player-song-display {
+    max-width: 100%; /* Используем ВСЮ ширину */
+    width: 100%;
+    padding: 0; /* Убираем дополнительные отступы */
+    margin: 0; /* Убираем любые margin */
+}
+
+@media (max-width: 768px) {
+    .event-player-content {
+        padding: 10px 5px; /* Отступы 5px слева и справа */
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .player-song-display {
+        padding: 0; /* Без отступов - максимум экрана */
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Убираем любые возможные горизонтальные переполнения */
+    .song-content,
+    .song-content * {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+}
+
+
+
+/* Содержимое песни */
+.song-content {
+    line-height: 1.6; /* Более компактный межстрочный интервал */
+    color: var(--text-primary);
+    width: 100%;
+    font-size: 16px; /* Базовый размер для десктопа */
+}
+
+/* Размер шрифта для мобильных */
+@media (max-width: 768px) {
+    .song-content {
+        font-size: 10px !important; /* Мелкий шрифт для смартфонов */
+        line-height: 1.4; /* Компактный межстрочный интервал */
+    }
+}
+
+/* Две колонки как на главной странице - используем CSS Grid */
+.song-content.split-columns pre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px; /* Нормальный gap между колонками как на главной */
+    column-count: unset; /* Отключаем старый column-count */
+    position: relative;
+    align-items: start;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    width: 100%; /* Используем всю ширину */
+    box-sizing: border-box;
+}
+
+/* Стили для колонок */
+.song-content.split-columns .column-1,
+.song-content.split-columns .column-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Отступы между блоками внутри колонки */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Каждый блок занимает всю ширину своей колонки */
+.song-content.split-columns .song-block {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    margin-bottom: 0; /* Используем gap вместо margin */
+}
+
+/* Содержимое блока с переносом */
+.song-content.split-columns .song-block-content {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Стили для блоков песни - ТОЧНО КАК НА ГЛАВНОЙ */
+.song-content .song-block {
+    /* Копируем из components.css */
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin: 2px 0 !important; /* Нормальные отступы */
+    padding: 0 !important;
+    background-color: var(--container-background-color);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    min-width: 0;
+    width: 100%; /* Используем всю доступную ширину */
+    max-width: 100%;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    min-height: auto !important; /* Убираем минимальную высоту */
+}
+
+.song-content .song-block-legend {
+    /* Копируем из components.css */
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: inherit; /* Наследуем размер от родителя */
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    
+    /* Фон как у аккордов */
+    background-color: color-mix(in srgb, var(--accent-color) 2%, transparent);
+    border-radius: 3px;
+    
+    /* Компактные отступы */
+    padding: 4px 8px !important;
+    margin: 0 0 -16px 12px !important;
+    border: none !important;
+    line-height: 1.3 !important;
+    
+    /* Защита от переполнения */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 24px);
+    
+    /* Позиционирование и центрирование */
+    float: none !important;
+    width: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.song-content .song-block-content {
+    /* Копируем из components.css */
+    margin: -14px 0 -10px 0 !important; /* Увеличен отрицательный margin снизу */
+    padding: 0px 3px 0px 3px !important; /* Убран нижний padding */
+    white-space: pre-wrap;
+    line-height: inherit;
+    box-sizing: border-box;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+}
+
+/* Убираем отступ после последней строки в блоке */
+.song-content .song-block-content > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Стили для pre */
+.song-content pre {
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Стили для аккордов - как на главной */
+.song-content .chord {
+    color: var(--primary-color);
+    font-weight: 700 !important;
+    font-family: 'Courier New', monospace;
+    display: inline;
+    background-color: color-mix(in srgb, var(--accent-color) 2%, transparent); /* Еле заметный фон */
+    padding: 1px 2px; /* Минимальный padding для фона */
+    border-radius: 2px; /* Легкое скругление */
+    transition: background-color 0.3s ease;
+}
+
+/* Стили аккордов всегда темные */
+.song-content .chord {
+    color: var(--primary-color) !important;
+    background-color: color-mix(in srgb, var(--accent-color) 2%, transparent) !important;
+}
+
+/* Режим скрытых аккордов */
+.song-content.chords-hidden .chord {
+    display: none;
+}
+
+/* Режим "только аккорды" */
+.song-content.chords-only-mode .song-block-content {
+    font-size: 0 !important;
+}
+
+.song-content.chords-only-mode .song-block-legend {
+    font-size: inherit !important; /* Названия блоков остаются видимыми */
+}
+
+/* В режиме "только аккорды" аккорды остаются видимыми */
+.song-content.chords-only-mode .chord {
+    font-size: var(--current-font-size, 16px) !important;
+    display: inline-block;
+    margin: 0 5px;
+    background-color: color-mix(in srgb, var(--accent-color) 2%, transparent) !important; /* Сохраняем фон */
+    padding: 1px 2px !important; /* Сохраняем padding */
+}
+
+/* Размеры шрифта */
+.font-size-small {
+    font-size: 14px;
+}
+
+.font-size-medium {
+    font-size: 18px;
+}
+
+.font-size-large {
+    font-size: 22px;
+}
+
+/* Навигация */
+.event-player-navigation {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 10;
+}
+
+.player-nav-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+}
+
+.player-nav-btn:hover:not(:disabled) {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.4);
+}
+
+.player-nav-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.player-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Светлая тема для блоков */
+body[data-theme="light"] .song-content .song-block {
+    border-color: var(--border-color);
+    background-color: var(--container-background-color);
+}
+
+body[data-theme="light"] .song-content .song-block-legend {
+    color: var(--secondary-color);
+    background-color: color-mix(in srgb, var(--accent-color) 5%, transparent);
+}
+
+/* Ошибки */
+.error-message {
+    text-align: center;
+    color: var(--danger-color);
+    padding: 40px;
+    font-size: 16px;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    /* ДВЕ КОЛОНКИ НА МОБИЛЬНЫХ - как на главной странице! */
+    .song-content.split-columns pre {
+        /* Остается grid-template-columns: 1fr 1fr из основных стилей */
+        gap: 8px; /* Нормальный отступ между колонками */
+    }
+    
+    /* Меньше отступы между блоками */
+    .song-content.split-columns .column-1,
+    .song-content.split-columns .column-2 {
+        gap: 6px; /* Нормальные отступы на мобильных */
+    }
+    
+    /* МОБИЛЬНЫЕ блоки песни - ЭКСТРА компактные (как в responsive.css) */
+    .song-content .song-block {
+        margin: 1px 0 !important; /* Минимальный отступ между блоками */
+    }
+    
+    .song-content .song-block-legend {
+        font-size: inherit !important; /* Наследуем размер от song-content */
+        font-weight: 700 !important;
+        padding: 2px 4px !important; /* Меньше padding */
+        margin: 0 0 -10px 4px !important; /* Меньше отступы */
+        letter-spacing: 0.1px !important;
+        line-height: 1.2 !important;
+        
+        /* Фон как у аккордов */
+        background-color: color-mix(in srgb, var(--accent-color) 2%, transparent) !important;
+        border-radius: 3px !important;
+    }
+    
+    .song-content .song-block-content {
+        margin: -8px 0 -8px 0 !important; /* Увеличен отрицательный margin снизу */
+        padding: 0px 2px 0px 2px !important; /* Без нижнего padding */
+    }
+    .event-player-header {
+        padding: 8px 12px;
+        gap: 8px;
+    }
+    
+    .player-song-name {
+        font-size: 14px;
+    }
+    
+    .player-controls {
+        gap: 4px;
+    }
+    
+    .player-control-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    
+    .event-player-content {
+        padding: 10px 5px; /* Отступы 5px слева и справа */
+    }
+    
+    .player-nav-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    /* Переопределяем размеры для мобильных с учетом базового 10px */
+    .song-content.font-size-small {
+        font-size: 8px !important;
+    }
+    
+    .song-content.font-size-medium {
+        font-size: 10px !important; /* По умолчанию */
+    }
+    
+    .song-content.font-size-large {
+        font-size: 12px !important;
+    }
+    
+    .song-content.font-size-xlarge {
+        font-size: 14px !important;
+    }
+    
+    /* Мобильные кнопки контролов */
+    .player-control-btn {
+        padding: 6px 10px;
+        font-size: 13px;
+        height: 36px;
+        min-width: 36px;
+    }
+    
+    .player-controls-row {
+        gap: 8px;
+        padding: 8px 12px;
+    }
+}
+
+/* Полноэкранный режим */
+.event-player-overlay:fullscreen {
+    background: var(--bg-primary);
+}
+
+.event-player-overlay:fullscreen .event-player-header {
+    padding-top: env(safe-area-inset-top);
+}
+
+.event-player-overlay:fullscreen .event-player-navigation {
+    bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+/* Темная тема */
+[data-theme="dark"] .event-player-overlay {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .player-nav-btn {
+    background: var(--accent-color);
+    color: var(--bg-primary);
+}
+
+/* Светлая тема */
+[data-theme="light"] .player-nav-btn {
+    background: var(--accent-color);
+    color: white;
+}
+
+/* Адаптивность для очень маленьких экранов (как в responsive.css) */
+@media (max-width: 380px) {
+    /* УЛЬТРА-КОМПАКТНЫЕ блоки песни для очень маленьких экранов */
+    .song-content .song-block {
+        margin: 0px 0 !important;
+        border-radius: 2px !important;
+    }
+    
+    .song-content .song-block-legend {
+        font-size: inherit !important; /* Наследуем размер */
+        font-weight: 700 !important;
+        padding: 2px 3px !important;
+        margin: 0 0 -20px 2px !important;
+        letter-spacing: 0px !important;
+        line-height: 1.1 !important;
+        
+        /* Центрирование для мини-экранов */
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    
+    .song-content .song-block-content {
+        margin: -20px 0 -10px 0 !important; /* Увеличен отрицательный margin снизу */
+        padding: 0px 3px 0px 3px !important;
+    }
+}

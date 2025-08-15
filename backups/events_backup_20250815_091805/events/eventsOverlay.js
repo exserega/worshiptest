@@ -6,7 +6,6 @@
 import logger from '../../utils/logger.js';
 import { getEventsByBranch, deleteEvent, getEvent } from './eventsApi.js';
 import { EventsList } from './eventsList.js';
-import { CalendarView } from './calendarView.js';
 import { getCurrentUser } from '../auth/authCheck.js';
 
 /**
@@ -18,9 +17,7 @@ class EventsOverlay {
         this.isOpen = false;
         this.events = [];
         this.eventsList = null;
-        this.calendarView = null;
         this.currentBranchId = null;
-        this.viewMode = 'calendar'; // 'calendar' или 'list'
         this.init();
     }
     
@@ -54,21 +51,7 @@ class EventsOverlay {
                     
                     <!-- Контент событий -->
                     <div class="events-content">
-                        <!-- Переключатель вида (временный) -->
-                        <div class="view-switcher" style="margin-bottom: 1rem; text-align: center; display: none;">
-                            <button class="view-btn calendar-view-btn active">Календарь</button>
-                            <button class="view-btn list-view-btn">Список</button>
-                        </div>
-                        
-                        <!-- Контейнер календаря -->
-                        <div class="events-calendar-container" style="display: block;">
-                            <!-- Календарь будет здесь -->
-                        </div>
-                        
-                        <!-- Контейнер списка -->
-                        <div class="events-list-container" style="display: none;">
-                            <!-- Список событий будет здесь -->
-                        </div>
+                        <!-- Здесь будет список событий -->
                     </div>
                 </div>
             </div>
@@ -153,12 +136,32 @@ class EventsOverlay {
                 };
             });
             
-            // Отображаем события в зависимости от режима
-            if (this.viewMode === 'calendar') {
-                this.showCalendarView();
-            } else {
-                this.showListView();
+            // Создаем компонент списка если еще не создан
+            if (!this.eventsList) {
+                this.eventsList = new EventsList(contentEl);
+                
+                // Устанавливаем обработчики
+                this.eventsList.onEventClick = (eventId) => {
+                    this.handleEventClick(eventId);
+                };
+                
+                this.eventsList.onEventEdit = (eventId) => {
+                    this.handleEventEdit(eventId);
+                };
+                
+                this.eventsList.onCreateEvent = () => {
+                    console.log('🔔 EventsList.onCreateEvent переопределен в eventsOverlay');
+                    this.handleCreateEvent();
+                };
+                
+                this.eventsList.onEventDelete = (eventId, eventName) => {
+                    console.log('🗑️ EventsList.onEventDelete переопределен в eventsOverlay');
+                    this.handleEventDelete(eventId, eventName);
+                };
             }
+            
+            // Отображаем события
+            this.eventsList.setEvents(this.events);
             
         } catch (error) {
             console.error('❌ Ошибка загрузки событий:', error); // Временный лог
@@ -336,69 +339,6 @@ class EventsOverlay {
         this.isOpen = false;
         document.removeEventListener('keydown', this.escapeHandler);
         logger.log('EventsOverlay закрыт');
-    }
-    
-    /**
-     * Показать календарный вид
-     */
-    showCalendarView() {
-        const calendarContainer = this.overlay.querySelector('.events-calendar-container');
-        const listContainer = this.overlay.querySelector('.events-list-container');
-        
-        // Показываем календарь, скрываем список
-        calendarContainer.style.display = 'block';
-        listContainer.style.display = 'none';
-        
-        // Создаем календарь если еще не создан
-        if (!this.calendarView) {
-            this.calendarView = new CalendarView(calendarContainer);
-            
-            // Обработчик клика по дню
-            this.calendarView.onDayClick = (date, events) => {
-                logger.log(`📅 Клик по дню: ${date.toLocaleDateString()}, событий: ${events.length}`);
-                // В следующих этапах здесь будет логика создания/просмотра событий
-            };
-        }
-        
-        // Передаем события в календарь
-        this.calendarView.setEvents(this.events);
-    }
-    
-    /**
-     * Показать вид списка  
-     */
-    showListView() {
-        const calendarContainer = this.overlay.querySelector('.events-calendar-container');
-        const listContainer = this.overlay.querySelector('.events-list-container');
-        
-        // Показываем список, скрываем календарь
-        calendarContainer.style.display = 'none';
-        listContainer.style.display = 'block';
-        
-        // Создаем компонент списка если еще не создан
-        if (!this.eventsList) {
-            this.eventsList = new EventsList(listContainer);
-            
-            // Устанавливаем обработчики
-            this.eventsList.onEventClick = (eventId) => {
-                this.handleEventClick(eventId);
-            };
-            
-            this.eventsList.onEventEdit = (eventId) => {
-                this.handleEventEdit(eventId);
-            };
-            
-            this.eventsList.onEventCreate = () => {
-                this.handleEventCreate();
-            };
-            
-            this.eventsList.onEventDelete = (eventId, eventName) => {
-                this.handleEventDelete(eventId, eventName);
-            };
-        }
-        
-        // Отображаем события
-        this.eventsList.setEvents(this.events);
     }
 }
 
