@@ -622,7 +622,17 @@ body[data-theme="light"] #copy-text-button.copied {
 
 /* Добавляем отступ после последнего элемента для гарантии видимости границы */
 .setlist-item:last-child {
-    margin-bottom: 10px;
+    /* Уменьшаем margin и добавим псевдоэлемент для пространства */
+    margin-bottom: 5px;
+}
+
+/* Псевдоэлемент после всех элементов для гарантированного пространства */
+.setlists-grid::after {
+    content: '';
+    display: block;
+    height: 10px;
+    min-height: 10px;
+    flex-shrink: 0;
 }
 
 .setlist-item:hover {

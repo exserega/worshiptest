@@ -241,6 +241,17 @@
     padding: 4px;
 }
 
+/* Исправление обрезания последнего элемента в dropdown */
+.dropdown-content {
+    /* Добавляем больше padding снизу для всех dropdown */
+    padding-bottom: 8px !important;
+}
+
+.dropdown-list:last-child {
+    /* Дополнительный отступ для последнего элемента */
+    padding-bottom: 12px !important;
+}
+
 /* СЕКЦИЯ 3: Управление списком - Компактный дизайн */
 .active-section {
     margin: 0;
