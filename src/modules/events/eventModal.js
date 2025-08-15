@@ -1,116 +1,103 @@
 /**
- * @fileoverview Модальное окно для создания/редактирования событий
+ * @fileoverview Модальное окно создания/редактирования события
  * @module EventModal
  */
 
 import logger from '../../utils/logger.js';
 import { createEvent, updateEvent } from './eventsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
-import { ParticipantsSelector } from './participantsSelector.js';
+import { searchUsers } from '../branches/branchTransfer.js';
+
+let modalInstance = null;
 
 /**
- * Класс для управления модальным окном событий
+ * Открыть модальное окно события
+ * @param {Object} options - Опции модального окна
+ * @param {Date} options.date - Предустановленная дата
+ * @param {Object} options.event - Существующее событие для редактирования
+ * @param {Function} options.onSave - Коллбек после сохранения
  */
-export class EventModal {
+export function openEventModal(options = {}) {
+    const { date = new Date(), event = null, onSave } = options;
+    
+    logger.log('📝 Открытие модального окна события:', { date, event });
+    
+    // Создаем модальное окно
+    if (!modalInstance) {
+        modalInstance = new EventModal();
+    }
+    
+    modalInstance.open({ date, event, onSave });
+}
+
+class EventModal {
     constructor() {
         this.modal = null;
-        this.isOpen = false;
-        this.mode = 'create'; // create или edit
-        this.currentEventId = null;
-        this.onSave = null; // Callback после сохранения
-        this.participantsSelector = null;
-        this.branchUsers = [];
-        this.init();
+        this.form = null;
+        this.participantsList = [];
+        this.selectedParticipants = [];
+        this.onSave = null;
     }
     
-    /**
-     * Инициализация модального окна
-     */
-    init() {
-        this.createModalHTML();
+    open({ date, event, onSave }) {
+        this.onSave = onSave;
+        this.createModal();
+        this.populateForm(date, event);
         this.attachEventListeners();
+        this.showModal();
     }
     
-    /**
-     * Создание HTML структуры модального окна
-     */
-    createModalHTML() {
+    createModal() {
         const modalHTML = `
-            <div id="event-modal" class="modal-overlay event-modal">
+            <div class="modal" id="eventModal">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2 class="modal-title">Новое событие</h2>
-                        <button class="modal-close" aria-label="Закрыть">
+                        <h2>${this.event ? 'Редактировать событие' : 'Создать событие'}</h2>
+                        <button class="close-modal" onclick="window.eventModal.close()">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
-                    <form id="event-form" class="event-form">
+                    <form id="eventForm" class="modal-body">
                         <div class="form-group">
-                            <label for="event-name">Название события *</label>
-                            <input 
-                                type="text" 
-                                id="event-name" 
-                                name="name" 
-                                required 
-                                placeholder="Например: Воскресное служение"
-                                class="form-input"
-                            >
+                            <label for="eventName">Название события</label>
+                            <input type="text" id="eventName" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventDate">Дата</label>
+                                <input type="date" id="eventDate" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="eventTime">Время</label>
+                                <input type="time" id="eventTime" class="form-control" required>
+                            </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="event-date">Дата и время *</label>
-                            <input 
-                                type="datetime-local" 
-                                id="event-date" 
-                                name="date" 
-                                required 
-                                class="form-input"
-                            >
+                            <label for="eventComment">Комментарий</label>
+                            <textarea id="eventComment" class="form-control" rows="3"></textarea>
                         </div>
                         
                         <div class="form-group">
-                            <label for="event-setlist">Список песен *</label>
-                            <select 
-                                id="event-setlist" 
-                                name="setlistId" 
-                                required 
-                                class="form-select"
-                            >
-                                <option value="">Выберите сетлист</option>
-                            </select>
+                            <label>Участники</label>
+                            <div class="participants-section">
+                                <div class="participant-search">
+                                    <input type="text" id="participantSearch" class="form-control" 
+                                           placeholder="Поиск участников...">
+                                </div>
+                                <div id="participantsList" class="participants-list"></div>
+                            </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="event-leader">Основной лидер</label>
-                            <select 
-                                id="event-leader" 
-                                name="leaderId" 
-                                class="form-select"
-                            >
-                                <option value="">Не указан</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="event-comment">Комментарий</label>
-                            <textarea 
-                                id="event-comment" 
-                                name="comment" 
-                                rows="3" 
-                                placeholder="Дополнительная информация о событии"
-                                class="form-textarea"
-                            ></textarea>
-                        </div>
-                        
-                        <div id="participants-container"></div>
                         
                         <div class="form-actions">
-                            <button type="submit" class="btn-primary">
-                                Создать событие
-                            </button>
-                            <button type="button" class="btn-secondary cancel-btn">
+                            <button type="button" class="btn btn-secondary" onclick="window.eventModal.close()">
                                 Отмена
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                ${this.event ? 'Сохранить' : 'Создать'}
                             </button>
                         </div>
                     </form>
@@ -118,322 +105,219 @@ export class EventModal {
             </div>
         `;
         
+        // Добавляем в DOM
         document.body.insertAdjacentHTML('beforeend', modalHTML);
-        this.modal = document.getElementById('event-modal');
-        this.form = document.getElementById('event-form');
+        this.modal = document.getElementById('eventModal');
+        this.form = document.getElementById('eventForm');
+        
+        // Делаем доступным глобально для onclick
+        window.eventModal = this;
     }
     
-    /**
-     * Привязка обработчиков событий
-     */
-    attachEventListeners() {
-        // Закрытие модального окна
-        const closeBtn = this.modal.querySelector('.modal-close');
-        const cancelBtn = this.modal.querySelector('.cancel-btn');
+    populateForm(date, event) {
+        const user = getCurrentUser();
         
-        closeBtn.addEventListener('click', () => this.close());
-        cancelBtn.addEventListener('click', () => this.close());
-        
-        // Закрытие по клику на фон
-        this.modal.addEventListener('click', (e) => {
-            if (e.target === this.modal) {
-                this.close();
+        if (event) {
+            // Редактирование
+            document.getElementById('eventName').value = event.name || '';
+            document.getElementById('eventComment').value = event.comment || '';
+            
+            if (event.date) {
+                const eventDate = event.date.toDate ? event.date.toDate() : new Date(event.date);
+                document.getElementById('eventDate').value = eventDate.toISOString().split('T')[0];
+                document.getElementById('eventTime').value = eventDate.toTimeString().slice(0, 5);
             }
+            
+            this.selectedParticipants = event.participants || [];
+        } else {
+            // Новое событие
+            document.getElementById('eventDate').value = date.toISOString().split('T')[0];
+            document.getElementById('eventTime').value = '19:00'; // Время по умолчанию
+            
+            // Добавляем текущего пользователя как участника по умолчанию
+            this.selectedParticipants = [{
+                userId: user.uid,
+                userName: user.displayName || user.email,
+                instrument: '',
+                instrumentName: ''
+            }];
+        }
+        
+        this.renderParticipants();
+    }
+    
+    attachEventListeners() {
+        // Отправка формы
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleSave();
         });
         
-        // Отправка формы
-        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        // Поиск участников
+        const searchInput = document.getElementById('participantSearch');
+        let searchTimeout;
+        
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.searchParticipants(e.target.value);
+            }, 300);
+        });
     }
     
-    /**
-     * Загрузить пользователей филиала для выбора лидера
-     */
-    async loadBranchUsers() {
-        try {
-            const currentUser = getCurrentUser();
-            console.log('👤 Загрузка пользователей для филиала:', currentUser?.branchId);
-            if (!currentUser?.branchId) return;
-            
-            // Получаем пользователей филиала
-            const { getBranchUsers } = await import('../../api/index.js');
-            const users = await getBranchUsers(currentUser.branchId);
-            console.log('👥 Загружено пользователей:', users);
-            
-            // Фильтруем активных пользователей
-            const activeUsers = users.filter(user => user.status === 'active');
-            console.log('✅ Активных пользователей:', activeUsers.length);
-            
-            // Сохраняем для селектора участников
-            this.branchUsers = activeUsers;
-            
-            // Заполняем select
-            const select = this.modal.querySelector('#event-leader');
-            select.innerHTML = '<option value="">Не указан</option>';
-            
-            activeUsers.forEach(user => {
-                const option = document.createElement('option');
-                option.value = user.id;
-                // Приоритет: name -> displayName -> email
-                const userName = user.name || user.displayName || user.email || 'Пользователь';
-                option.textContent = userName;
-                select.appendChild(option);
-            });
-            
-            // Устанавливаем сохраненное значение если есть
-            if (this._pendingLeaderId) {
-                select.value = this._pendingLeaderId;
-                this._pendingLeaderId = null;
-            }
-            
-            // Инициализируем селектор участников после загрузки пользователей
-            if (this.branchUsers.length > 0) {
-                this.initParticipantsSelector();
-            } else {
-                console.warn('⚠️ Нет пользователей для селектора участников');
-            }
-            
-        } catch (error) {
-            console.error('Ошибка загрузки пользователей филиала:', error);
-            logger.error('Ошибка загрузки пользователей филиала:', error);
-        }
-    }
-    
-    /**
-     * Загрузить сетлисты для выбора
-     */
-    async loadSetlists() {
-        try {
-            const currentUser = getCurrentUser();
-            if (!currentUser?.branchId) return;
-            
-            // Получаем сетлисты филиала
-            const { getSetlistsByBranch } = await import('../../api/index.js');
-            const setlists = await getSetlistsByBranch(currentUser.branchId);
-            
-            // Заполняем select
-            const select = this.modal.querySelector('#event-setlist');
-            select.innerHTML = '<option value="">Выберите сетлист</option>';
-            
-            setlists.forEach(setlist => {
-                const option = document.createElement('option');
-                option.value = setlist.id;
-                option.textContent = setlist.name;
-                select.appendChild(option);
-            });
-            
-            // Устанавливаем сохраненное значение если есть
-            if (this._pendingSetlistId) {
-                select.value = this._pendingSetlistId;
-                this._pendingSetlistId = null;
-            }
-            
-        } catch (error) {
-            logger.error('Ошибка загрузки сетлистов:', error);
-        }
-    }
-    
-    /**
-     * Инициализировать селектор участников
-     */
-    initParticipantsSelector() {
-        const container = this.modal.querySelector('#participants-container');
-        if (!container) return;
-        
-        // Создаем селектор если еще не создан
-        if (!this.participantsSelector) {
-            this.participantsSelector = new ParticipantsSelector(container, this.branchUsers);
-            
-            // Callback при изменении
-            this.participantsSelector.onChange = (participants) => {
-                console.log('📝 Участники изменены:', participants);
-            };
-        }
-        
-        // Устанавливаем сохраненных участников если есть
-        if (this._pendingParticipants && this._pendingParticipants.length > 0) {
-            this.participantsSelector.setParticipants(this._pendingParticipants);
-            this._pendingParticipants = null;
-        }
-    }
-    
-    /**
-     * Обработка отправки формы
-     */
-    async handleSubmit(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this.form);
-        const eventData = {
-            name: formData.get('name'),
-            date: new Date(formData.get('date')),
-            setlistId: formData.get('setlistId'),
-            leaderId: formData.get('leaderId') || null,
-            comment: formData.get('comment') || '',
-            branchId: getCurrentUser().branchId,
-            participants: this.participantsSelector ? this.participantsSelector.getParticipants() : []
-        };
-        
-        try {
-            // Показываем индикатор загрузки
-            const submitBtn = this.form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Сохранение...';
-            
-            let eventId;
-            if (this.mode === 'create') {
-                eventId = await createEvent(eventData);
-                console.log('✅ Событие создано:', eventId);
-            } else {
-                await updateEvent(this.currentEventId, eventData);
-                eventId = this.currentEventId;
-                console.log('✅ Событие обновлено:', eventId);
-            }
-            
-            // Вызываем callback
-            if (this.onSave) {
-                this.onSave(eventId);
-            }
-            
-            // Закрываем модальное окно
-            this.close();
-            
-        } catch (error) {
-            console.error('Ошибка сохранения события:', error);
-            alert('Не удалось сохранить событие: ' + error.message);
-        } finally {
-            // Восстанавливаем кнопку
-            const submitBtn = this.form.querySelector('button[type="submit"]');
-            submitBtn.disabled = false;
-            submitBtn.textContent = this.mode === 'create' ? 'Создать событие' : 'Сохранить';
-        }
-    }
-    
-    /**
-     * Открыть модальное окно для создания
-     */
-    openForCreate(callback) {
-        this.mode = 'create';
-        this.currentEventId = null;
-        this.onSave = callback;
-        
-        // Очищаем форму
-        this.form.reset();
-        
-        // Устанавливаем текущую дату и время
-        const now = new Date();
-        const dateInput = this.modal.querySelector('#event-date');
-        dateInput.value = now.toISOString().slice(0, 16);
-        
-        // Обновляем заголовок и кнопку
-        this.modal.querySelector('.modal-title').textContent = 'Новое событие';
-        this.form.querySelector('button[type="submit"]').textContent = 'Создать событие';
-        
-        // Загружаем сетлисты и пользователей
-        this.loadSetlists();
-        this.loadBranchUsers();
-        
-        // Открываем модальное окно
-        this.modal.classList.add('visible');
-        this.isOpen = true;
-        
-        // Фокус на первое поле
-        setTimeout(() => {
-            this.modal.querySelector('#event-name').focus();
-        }, 100);
-    }
-    
-    /**
-     * Открыть модальное окно
-     * @param {Object} eventData - Данные события для редактирования (опционально)
-     */
-    open(eventData = null) {
-        if (eventData) {
-            // Режим редактирования
-            this.mode = 'edit';
-            this.currentEventId = eventData.id;
-            this.fillFormWithEventData(eventData);
-            
-            // Меняем заголовок
-            const title = this.modal.querySelector('.modal-title');
-            if (title) title.textContent = 'Редактировать событие';
-            
-            // Меняем текст кнопки
-            const saveBtn = this.modal.querySelector('.btn-primary');
-            if (saveBtn) saveBtn.textContent = 'Сохранить изменения';
-        } else {
-            // Режим создания
-            this.openForCreate();
+    async searchParticipants(query) {
+        if (query.length < 2) {
+            this.participantsList = [];
             return;
         }
         
-        // Загружаем сетлисты и пользователей
-        this.loadSetlists();
-        this.loadBranchUsers();
-        
-        this.modal.classList.add('visible');
-        this.isOpen = true;
-        
-        // Фокус на первое поле
-        setTimeout(() => {
-            this.modal.querySelector('#event-name').focus();
-        }, 100);
+        try {
+            const users = await searchUsers(query);
+            this.participantsList = users;
+            this.renderSearchResults();
+        } catch (error) {
+            logger.error('Ошибка поиска участников:', error);
+        }
     }
     
-    /**
-     * Закрыть модальное окно
-     */
+    renderSearchResults() {
+        const container = document.getElementById('participantsList');
+        
+        if (this.participantsList.length === 0) {
+            container.innerHTML = '<div class="no-results">Участники не найдены</div>';
+            return;
+        }
+        
+        container.innerHTML = this.participantsList.map(user => `
+            <div class="participant-item" onclick="window.eventModal.addParticipant('${user.id}')">
+                <span>${user.name || user.email}</span>
+                <button type="button" class="btn-add">+</button>
+            </div>
+        `).join('');
+    }
+    
+    addParticipant(userId) {
+        const user = this.participantsList.find(u => u.id === userId);
+        if (!user) return;
+        
+        // Проверяем что участник еще не добавлен
+        if (this.selectedParticipants.find(p => p.userId === userId)) {
+            alert('Участник уже добавлен');
+            return;
+        }
+        
+        this.selectedParticipants.push({
+            userId: user.id,
+            userName: user.name || user.email,
+            instrument: '',
+            instrumentName: ''
+        });
+        
+        this.renderParticipants();
+        document.getElementById('participantSearch').value = '';
+        document.getElementById('participantsList').innerHTML = '';
+    }
+    
+    renderParticipants() {
+        const container = document.createElement('div');
+        container.className = 'selected-participants';
+        
+        container.innerHTML = `
+            <h4>Выбранные участники:</h4>
+            ${this.selectedParticipants.map((p, index) => `
+                <div class="selected-participant">
+                    <span>${p.userName}</span>
+                    <select onchange="window.eventModal.updateInstrument(${index}, this.value)">
+                        <option value="">Выберите инструмент</option>
+                        <option value="vocals" ${p.instrument === 'vocals' ? 'selected' : ''}>Вокал</option>
+                        <option value="guitar" ${p.instrument === 'guitar' ? 'selected' : ''}>Гитара</option>
+                        <option value="bass" ${p.instrument === 'bass' ? 'selected' : ''}>Бас-гитара</option>
+                        <option value="keys" ${p.instrument === 'keys' ? 'selected' : ''}>Клавиши</option>
+                        <option value="drums" ${p.instrument === 'drums' ? 'selected' : ''}>Барабаны</option>
+                        <option value="sound" ${p.instrument === 'sound' ? 'selected' : ''}>Звукооператор</option>
+                    </select>
+                    <button type="button" onclick="window.eventModal.removeParticipant(${index})">×</button>
+                </div>
+            `).join('')}
+        `;
+        
+        // Вставляем перед поиском
+        const searchSection = document.querySelector('.participant-search');
+        searchSection.parentNode.insertBefore(container, searchSection);
+        
+        // Удаляем старый список если есть
+        const oldList = document.querySelector('.selected-participants');
+        if (oldList && oldList !== container) {
+            oldList.remove();
+        }
+    }
+    
+    updateInstrument(index, instrument) {
+        const instrumentNames = {
+            'vocals': 'Вокал',
+            'guitar': 'Гитара',
+            'bass': 'Бас-гитара',
+            'keys': 'Клавиши',
+            'drums': 'Барабаны',
+            'sound': 'Звукооператор'
+        };
+        
+        this.selectedParticipants[index].instrument = instrument;
+        this.selectedParticipants[index].instrumentName = instrumentNames[instrument] || '';
+    }
+    
+    removeParticipant(index) {
+        this.selectedParticipants.splice(index, 1);
+        this.renderParticipants();
+    }
+    
+    async handleSave() {
+        const user = getCurrentUser();
+        
+        const eventData = {
+            name: document.getElementById('eventName').value,
+            date: new Date(`${document.getElementById('eventDate').value}T${document.getElementById('eventTime').value}`),
+            comment: document.getElementById('eventComment').value,
+            participants: this.selectedParticipants,
+            participantCount: this.selectedParticipants.length,
+            branchId: user.branchId,
+            leaderId: user.uid,
+            leaderName: user.displayName || user.email
+        };
+        
+        try {
+            if (this.event) {
+                await updateEvent(this.event.id, eventData);
+                logger.log('✅ Событие обновлено');
+            } else {
+                await createEvent(eventData);
+                logger.log('✅ Событие создано');
+            }
+            
+            this.close();
+            
+            if (this.onSave) {
+                this.onSave(eventData);
+            }
+        } catch (error) {
+            logger.error('Ошибка сохранения события:', error);
+            alert('Ошибка сохранения события: ' + error.message);
+        }
+    }
+    
+    showModal() {
+        this.modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
     close() {
-        this.modal.classList.remove('visible');
-        this.isOpen = false;
-        
-        // Вызываем callback при закрытии
-        if (this.onClose) {
-            this.onClose();
-            this.onClose = null;
+        if (this.modal) {
+            this.modal.remove();
+            this.modal = null;
         }
-    }
-    
-    /**
-     * Заполнить форму данными события
-     * @param {Object} eventData - Данные события
-     */
-    fillFormWithEventData(eventData) {
-        // Название
-        const nameInput = this.modal.querySelector('#event-name');
-        if (nameInput) nameInput.value = eventData.name || '';
-        
-        // Дата и время
-        const dateInput = this.modal.querySelector('#event-date');
-        if (dateInput && eventData.date) {
-            const date = eventData.date.toDate ? eventData.date.toDate() : new Date(eventData.date);
-            dateInput.value = date.toISOString().slice(0, 16);
-        }
-        
-        // Комментарий
-        const commentInput = this.modal.querySelector('#event-comment');
-        if (commentInput) commentInput.value = eventData.comment || '';
-        
-        // Сетлист будет установлен после загрузки списка
-        this._pendingSetlistId = eventData.setlistId;
-        
-        // Лидер будет установлен после загрузки пользователей
-        this._pendingLeaderId = eventData.leaderId;
-        
-        // Участники будут установлены после инициализации селектора
-        this._pendingParticipants = eventData.participants || [];
+        document.body.style.overflow = '';
+        window.eventModal = null;
     }
 }
 
-// Создаем и экспортируем экземпляр
-let eventModalInstance = null;
-
-export function getEventModal() {
-    if (!eventModalInstance) {
-        eventModalInstance = new EventModal();
-    }
-    return eventModalInstance;
-}
-
-// Экспортируем готовый экземпляр
-export const eventModal = getEventModal();
+export default EventModal;

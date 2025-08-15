@@ -295,16 +295,22 @@ export class EventsCalendar {
      */
     attachEventHandlers() {
         // Навигация по месяцам
-        this.prevMonthBtn.addEventListener('click', this.handlePrevMonth);
-        this.nextMonthBtn.addEventListener('click', this.handleNextMonth);
+        this.prevMonthBtn.addEventListener('click', () => this.navigateMonth(-1));
+        this.nextMonthBtn.addEventListener('click', () => this.navigateMonth(1));
         
-        // Создание события
-        if (this.createEventBtn) {
-            this.createEventBtn.addEventListener('click', this.handleCreateEvent);
+        // Кнопка создания события
+        const createEventBtn = document.getElementById('createEventBtn');
+        if (createEventBtn) {
+            createEventBtn.addEventListener('click', () => this.handleCreateEvent());
         }
         
-        // Клики по дням
-        this.calendarDays.addEventListener('click', this.handleDayClick);
+        // Обработчик клика по дням календаря
+        this.calendarDays.addEventListener('click', (e) => {
+            const dayEl = e.target.closest('.calendar-day');
+            if (dayEl && !dayEl.classList.contains('other-month')) {
+                this.selectDay(dayEl);
+            }
+        });
     }
     
     /**
@@ -517,14 +523,31 @@ export class EventsCalendar {
     /**
      * Обработчик создания события
      */
-    async handleCreateEvent(preselectedDate) {
+    async handleCreateEvent(preselectedDate = null) {
         logger.log('🆕 Создание нового события', preselectedDate);
         
         try {
-            // TODO: Импортировать и открыть модальное окно создания события
-            alert(`Функционал создания события на ${preselectedDate ? this.formatDate(preselectedDate) : 'выбранную дату'} будет реализован далее`);
+            // Если дата не передана, используем выбранную или текущую
+            const date = preselectedDate || this.selectedDate || new Date();
+            
+            // Убедимся что date это объект Date
+            const eventDate = date instanceof Date ? date : new Date(date);
+            
+            // Открываем модальное окно создания события
+            const { openEventModal } = await import('../src/modules/events/eventModal.js');
+            openEventModal({
+                date: eventDate,
+                onSave: async (eventData) => {
+                    logger.log('💾 Сохранение события:', eventData);
+                    // После сохранения перезагружаем события
+                    await this.loadEvents();
+                    this.render();
+                }
+            });
         } catch (error) {
             logger.error('Ошибка создания события:', error);
+            // Временное решение пока модальное окно не реализовано
+            alert('Модальное окно создания события будет реализовано далее');
         }
     }
     
