@@ -4,24 +4,28 @@
  */
 
 import logger from '../../utils/logger.js';
-import { getEventsByBranch, deleteEvent, getEvent } from './eventsApi.js';
 import { EventsList } from './eventsList.js';
-import { CalendarView } from './calendarView.js';
+import { getEventsByBranch, deleteEvent, getEventById } from '../../api/eventsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
+// Убираем импорт CalendarView - будем загружать лениво
 
 /**
- * Класс для управления оверлеем событий
+ * Класс для управления оверлеем событий с календарем
  */
 class EventsOverlay {
     constructor() {
+        logger.log('🎯 EventsOverlay: начало инициализации');
         this.overlay = null;
         this.isOpen = false;
         this.events = [];
         this.eventsList = null;
         this.calendarView = null;
+        this.viewMode = 'calendar'; // Начинаем с календаря
         this.currentBranchId = null;
-        this.viewMode = 'calendar'; // 'calendar' или 'list'
-        this.init();
+        this.CalendarView = null; // Класс будет загружен лениво
+        
+        console.log('✅ EventsOverlay инициализирован'); // Временный лог
+        logger.log('✅ EventsOverlay инициализирован');
     }
     
     /**
@@ -155,7 +159,7 @@ class EventsOverlay {
             
             // Отображаем события в зависимости от режима
             if (this.viewMode === 'calendar') {
-                this.showCalendarView();
+                await this.showCalendarView();
             } else {
                 this.showListView();
             }
@@ -264,13 +268,11 @@ class EventsOverlay {
         
         try {
             // Загружаем данные события
-            const eventDoc = await getEvent(eventId);
-            if (!eventDoc.exists) {
+            const eventData = await getEventById(eventId);
+            if (!eventData) {
                 console.error('Событие не найдено');
                 return;
             }
-            
-            const eventData = { id: eventDoc.id, ...eventDoc.data() };
             
             // Закрываем overlay событий
             this.close();
@@ -341,17 +343,44 @@ class EventsOverlay {
     /**
      * Показать календарный вид
      */
-    showCalendarView() {
+    async showCalendarView() {
+        // Проверяем наличие overlay
+        if (!this.overlay) {
+            logger.error('❌ Overlay не найден при попытке показать календарь');
+            return;
+        }
+        
         const calendarContainer = this.overlay.querySelector('.events-calendar-container');
         const listContainer = this.overlay.querySelector('.events-list-container');
+        
+        if (!calendarContainer || !listContainer) {
+            logger.error('❌ Контейнеры календаря/списка не найдены');
+            return;
+        }
         
         // Показываем календарь, скрываем список
         calendarContainer.style.display = 'block';
         listContainer.style.display = 'none';
         
+        // Ленивая загрузка модуля календаря
+        if (!this.CalendarView) {
+            try {
+                logger.log('📥 Загружаем модуль календаря...');
+                const module = await import('./calendarView.js');
+                this.CalendarView = module.CalendarView;
+                logger.log('✅ Модуль календаря загружен');
+            } catch (error) {
+                logger.error('❌ Ошибка загрузки модуля календаря:', error);
+                // Показываем список как fallback
+                this.viewMode = 'list';
+                this.showListView();
+                return;
+            }
+        }
+        
         // Создаем календарь если еще не создан
-        if (!this.calendarView) {
-            this.calendarView = new CalendarView(calendarContainer);
+        if (!this.calendarView && this.CalendarView) {
+            this.calendarView = new this.CalendarView(calendarContainer);
             
             // Обработчик клика по дню
             this.calendarView.onDayClick = (date, events) => {
@@ -361,7 +390,9 @@ class EventsOverlay {
         }
         
         // Передаем события в календарь
-        this.calendarView.setEvents(this.events);
+        if (this.calendarView) {
+            this.calendarView.setEvents(this.events);
+        }
     }
     
     /**

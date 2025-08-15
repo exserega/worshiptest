@@ -1,8 +1,6 @@
-// Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v269'; // v269, добавлен календарный вид событий
-
-// Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
-const URLS_TO_CACHE = [
+// Service Worker для Agape Worship с поддержкой PWA
+const CACHE_NAME = 'agape-worship-cache-v270';
+const urlsToCache = [
   './', // Главная страница
   './index.html',
   './script.js',
@@ -40,7 +38,7 @@ self.addEventListener('install', (event) => {
         console.log('Service Worker: Кэшируем основные файлы приложения');
         
         // Кэшируем файлы по одному, пропуская те, которые не удается загрузить
-        const cachePromises = URLS_TO_CACHE.map(async (url) => {
+        const cachePromises = urlsToCache.map(async (url) => {
           try {
             await cache.add(url);
             console.log(`Service Worker: Успешно кэширован ${url}`);
