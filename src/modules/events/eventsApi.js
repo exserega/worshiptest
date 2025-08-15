@@ -32,10 +32,43 @@ export async function getEventsByBranch(branchId) {
             const events = [];
         
             snapshot.forEach(doc => {
-                events.push({
+                const eventData = doc.data();
+                
+                // Формируем объект события с участниками
+                const event = {
                     id: doc.id,
-                    ...doc.data()
-                });
+                    ...eventData,
+                    participantCount: 0,
+                    participants: []
+                };
+                
+                // Обрабатываем участников
+                if (eventData.participants && typeof eventData.participants === 'object') {
+                    const participantsArray = [];
+                    
+                    // Преобразуем объект участников в массив
+                    Object.entries(eventData.participants).forEach(([key, participant]) => {
+                        if (participant && participant.name) {
+                            participantsArray.push({
+                                id: key,
+                                name: participant.name,
+                                instrument: participant.instrument || '',
+                                role: participant.role || ''
+                            });
+                        }
+                    });
+                    
+                    event.participants = participantsArray;
+                    event.participantCount = participantsArray.length;
+                    
+                    // Найдем лидера
+                    const leader = participantsArray.find(p => p.role === 'leader');
+                    if (leader) {
+                        event.leader = leader.name;
+                    }
+                }
+                
+                events.push(event);
             });
             
             logger.log(`✅ Загружено ${events.length} событий`);
@@ -49,10 +82,43 @@ export async function getEventsByBranch(branchId) {
             const events = [];
             
             snapshot.forEach(doc => {
-                events.push({
+                const eventData = doc.data();
+                
+                // Формируем объект события с участниками
+                const event = {
                     id: doc.id,
-                    ...doc.data()
-                });
+                    ...eventData,
+                    participantCount: 0,
+                    participants: []
+                };
+                
+                // Обрабатываем участников
+                if (eventData.participants && typeof eventData.participants === 'object') {
+                    const participantsArray = [];
+                    
+                    // Преобразуем объект участников в массив
+                    Object.entries(eventData.participants).forEach(([key, participant]) => {
+                        if (participant && participant.name) {
+                            participantsArray.push({
+                                id: key,
+                                name: participant.name,
+                                instrument: participant.instrument || '',
+                                role: participant.role || ''
+                            });
+                        }
+                    });
+                    
+                    event.participants = participantsArray;
+                    event.participantCount = participantsArray.length;
+                    
+                    // Найдем лидера
+                    const leader = participantsArray.find(p => p.role === 'leader');
+                    if (leader) {
+                        event.leader = leader.name;
+                    }
+                }
+                
+                events.push(event);
             });
             
             // Сортируем в JavaScript
