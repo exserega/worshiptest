@@ -463,6 +463,10 @@ body[data-theme="light"] #copy-text-button.copied {
     max-width: 420px;
     width: 90%;
     padding: 0;
+    /* Гарантируем видимость всего содержимого */
+    overflow: visible;
+    /* Минимальная высота для предотвращения обрезания */
+    min-height: auto;
 }
 
 .modal-header.compact {
@@ -559,13 +563,16 @@ body[data-theme="light"] #copy-text-button.copied {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: 220px; /* Увеличиваем высоту для лучшей видимости */
+    /* Временно убираем ограничение высоты для отладки */
+    /* max-height: 220px; */
+    min-height: 100px; /* Минимальная высота */
+    max-height: 250px; /* Увеличиваем максимальную высоту */
     overflow-y: auto; /* Скролл при большом количестве сет-листов */
     overflow-x: hidden; /* Скрываем горизонтальный скролл */
     /* Правильная организация отступов */
     padding: 0.75rem;
-    /* Восстанавливаем padding-bottom для простоты */
-    padding-bottom: 0.75rem;
+    /* Важно: большой padding-bottom для видимости последнего элемента */
+    padding-bottom: 1.5rem;
     /* Добавляем закругления и стильную границу */
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md, 12px);
@@ -574,9 +581,9 @@ body[data-theme="light"] #copy-text-button.copied {
     margin-bottom: 0;
     /* Для корректного отображения границ */
     box-sizing: border-box;
-    /* Позиционирование для видимости поверх других элементов */
-    position: relative;
-    z-index: 2;
+    /* Убираем позиционирование для простоты */
+    /* position: relative; */
+    /* z-index: 2; */
 }
 
 
@@ -613,9 +620,9 @@ body[data-theme="light"] #copy-text-button.copied {
     align-items: center;
 }
 
-/* Убираем margin у последнего элемента - используем псевдоэлемент grid */
+/* Добавляем отступ после последнего элемента для гарантии видимости границы */
 .setlist-item:last-child {
-    margin-bottom: 0;
+    margin-bottom: 10px;
 }
 
 .setlist-item:hover {
