@@ -533,21 +533,45 @@ export class EventsCalendar {
             // Убедимся что date это объект Date
             const eventDate = date instanceof Date ? date : new Date(date);
             
-            // Открываем модальное окно создания события
-            const { openEventModal } = await import('../src/modules/events/eventModal.js');
-            openEventModal({
-                date: eventDate,
-                onSave: async (eventData) => {
-                    logger.log('💾 Сохранение события:', eventData);
-                    // После сохранения перезагружаем события
-                    await this.loadEvents();
-                    this.render();
-                }
-            });
+            // Формируем URL с параметрами
+            const params = new URLSearchParams();
+            params.set('mode', 'create');
+            params.set('date', eventDate.toISOString());
+            params.set('returnUrl', window.location.pathname);
+            
+            // Переходим на страницу создания события
+            window.location.href = `/event-editor?${params.toString()}`;
+            
         } catch (error) {
             logger.error('Ошибка создания события:', error);
-            // Временное решение пока модальное окно не реализовано
-            alert('Модальное окно создания события будет реализовано далее');
+            // Временное решение - используем простой prompt
+            const eventName = prompt('Введите название события:');
+            if (eventName) {
+                const { createEvent } = await import('../src/modules/events/eventsApi.js');
+                const user = getCurrentUser();
+                const eventDate = preselectedDate || this.selectedDate || new Date();
+                
+                await createEvent({
+                    name: eventName,
+                    date: eventDate instanceof Date ? eventDate : new Date(eventDate),
+                    participants: [{
+                        userId: user.uid,
+                        userName: user.displayName || user.email,
+                        instrument: '',
+                        instrumentName: ''
+                    }],
+                    participantCount: 1,
+                    branchId: user.branchId,
+                    leaderId: user.uid,
+                    leaderName: user.displayName || user.email,
+                    comment: ''
+                });
+                
+                // Перезагружаем события
+                await this.loadEvents();
+                this.render();
+                alert('Событие создано!');
+            }
         }
     }
     
