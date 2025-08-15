@@ -365,10 +365,28 @@
 }
 
 .event-participants-list {
-    font-size: 0.8125rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin: 0.5rem 0;
+}
+
+.participant-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
     color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
+    padding: 0.25rem 0;
+}
+
+.participant-item:first-child {
+    padding-top: 0;
+}
+
+.participant-name {
+    color: var(--text-primary);
+    font-weight: 500;
 }
 
 .event-info {

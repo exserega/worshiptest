@@ -66,11 +66,16 @@ export async function getEventsByBranch(branchId) {
                     event.participantCount = participantsArray.length;
                     console.log(`✅ Обработано участников: ${event.participantCount}`, participantsArray); // Отладка
                     
-                    // Найдем лидера
-                    const leader = participantsArray.find(p => p.role === 'leader');
-                    if (leader) {
-                        event.leader = leader.name;
-                        console.log(`🎤 Лидер: ${event.leader}`); // Отладка
+                    // Найдем лидера по leaderId
+                    if (eventData.leaderId) {
+                        const leader = participantsArray.find(p => p.id === eventData.leaderId);
+                        if (leader) {
+                            event.leader = leader.name;
+                            console.log(`🎤 Лидер: ${event.leader}`); // Отладка
+                        } else if (eventData.leaderName) {
+                            event.leader = eventData.leaderName;
+                            console.log(`🎤 Лидер (из leaderName): ${event.leader}`); // Отладка
+                        }
                     }
                 } else {
                     console.log(`⚠️ Нет участников для события ${doc.id}`); // Отладка
@@ -124,11 +129,16 @@ export async function getEventsByBranch(branchId) {
                     event.participantCount = participantsArray.length;
                     console.log(`✅ [Альт] Обработано участников: ${event.participantCount}`, participantsArray); // Отладка
                     
-                    // Найдем лидера
-                    const leader = participantsArray.find(p => p.role === 'leader');
-                    if (leader) {
-                        event.leader = leader.name;
-                        console.log(`🎤 [Альт] Лидер: ${event.leader}`); // Отладка
+                    // Найдем лидера по leaderId
+                    if (eventData.leaderId) {
+                        const leader = participantsArray.find(p => p.id === eventData.leaderId);
+                        if (leader) {
+                            event.leader = leader.name;
+                            console.log(`🎤 [Альт] Лидер: ${event.leader}`); // Отладка
+                        } else if (eventData.leaderName) {
+                            event.leader = eventData.leaderName;
+                            console.log(`🎤 [Альт] Лидер (из leaderName): ${event.leader}`); // Отладка
+                        }
                     }
                 } else {
                     console.log(`⚠️ [Альт] Нет участников для события ${doc.id}`); // Отладка

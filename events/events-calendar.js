@@ -385,19 +385,46 @@ export class EventsCalendar {
                 if (event.participants && Array.isArray(event.participants)) {
                     console.log(`  👥 Участники события:`, event.participants); // Отладка
                     
-                    const participantsList = event.participants
-                        .filter(p => p.name) // Только участники с именами
+                    // Маппинг инструментов на эмодзи
+                    const instrumentIcons = {
+                        'vocals': '🎤',
+                        'vocal': '🎤',
+                        'вокал': '🎤',
+                        'electric_guitar': '🎸',
+                        'guitar': '🎸',
+                        'гитара': '🎸',
+                        'электрогитара': '🎸',
+                        'bass': '🎸',
+                        'бас': '🎸',
+                        'бас-гитара': '🎸',
+                        'keys': '🎹',
+                        'keyboard': '🎹',
+                        'piano': '🎹',
+                        'клавиши': '🎹',
+                        'drums': '🥁',
+                        'барабаны': '🥁',
+                        'sound': '🎚️',
+                        'звукооператор': '🎚️',
+                        'звук': '🎚️'
+                    };
+                    
+                    const participantsItems = event.participants
+                        .filter(p => p.name)
                         .map(p => {
-                            const instrument = p.instrumentName || p.instrument || '';
-                            return `${p.name}${instrument ? ` (${instrument})` : ''}`;
-                        })
-                        .join(', ');
+                            const instrumentKey = (p.instrument || '').toLowerCase();
+                            const instrumentNameKey = (p.instrumentName || '').toLowerCase();
+                            const icon = instrumentIcons[instrumentKey] || 
+                                       instrumentIcons[instrumentNameKey] || 
+                                       '🎵';
+                            const instrument = p.instrumentName || p.instrument || 'Участник';
+                            return `<div class="participant-item">${icon} <span class="participant-name">${p.name}</span></div>`;
+                        });
                     
-                    console.log(`  📝 Список участников: "${participantsList}"`); // Отладка
-                    
-                    if (participantsList) {
-                        participantsHTML = `<div class="event-participants-list">${participantsList}</div>`;
+                    if (participantsItems.length > 0) {
+                        participantsHTML = `<div class="event-participants-list">${participantsItems.join('')}</div>`;
                     }
+                    
+                    console.log(`  📝 Участники обработаны`); // Отладка
                 } else {
                     console.log(`  ⚠️ Нет массива participants`); // Отладка
                 }
