@@ -6,22 +6,21 @@
     <title>События - Agape Worship</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../images/icon-512x512.png">
+    <link rel="icon" type="image/x-icon" href="../icon-192x192.png">
     
     <!-- PWA -->
     <link rel="manifest" href="../manifest.json">
     <meta name="theme-color" content="#1a1a1a">
+    <meta name="mobile-web-app-capable" content="yes">
     
     <!-- Apple -->
-    <link rel="apple-touch-icon" href="../images/icon-192x192.png">
+    <link rel="apple-touch-icon" href="../icon-192x192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Общие стили -->
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../styles/buttons.css">
-    <link rel="stylesheet" href="../styles/inputs.css">
-    <link rel="stylesheet" href="../css/theme.css">
     
     <!-- Стили страницы событий -->
     <link rel="stylesheet" href="./events-page.css">
@@ -84,22 +83,43 @@
         </div>
     </main>
     
+    <!-- Firebase init -->
+    <script src="../firebase-init.js"></script>
+    
     <!-- Скрипты -->
     <script type="module">
-        // Инициализация Firebase
-        import { initializeFirebase } from '../src/modules/firebase/firebase-init.js';
-        import { getCurrentUser, canManageEvents } from '../src/modules/auth/authCheck.js';
-        import logger from '../src/utils/logger.js';
-        
         // Инициализация страницы
         async function initEventsPage() {
             try {
-                // Инициализируем Firebase
-                await initializeFirebase();
+                // Ждем инициализации Firebase
+                await new Promise((resolve) => {
+                    if (window.firebase && window.firebase.auth()) {
+                        resolve();
+                    } else {
+                        window.addEventListener('firebase-initialized', resolve);
+                    }
+                });
                 
                 // Проверяем авторизацию
-                const user = getCurrentUser();
+                const auth = firebase.auth();
+                const user = auth.currentUser;
+                
                 if (!user) {
+                    // Ждем авторизации
+                    await new Promise((resolve) => {
+                        auth.onAuthStateChanged((user) => {
+                            if (user) resolve();
+                        });
+                    });
+                }
+                
+                // Импортируем модули
+                const { getCurrentUser, canManageEvents } = await import('../src/modules/auth/authCheck.js');
+                const logger = (await import('../src/utils/logger.js')).default;
+                
+                // Проверяем пользователя
+                const currentUser = getCurrentUser();
+                if (!currentUser) {
                     window.location.href = '/';
                     return;
                 }
@@ -115,13 +135,17 @@
                 await calendar.init();
                 
             } catch (error) {
-                logger.error('Ошибка инициализации страницы событий:', error);
+                console.error('Ошибка инициализации страницы событий:', error);
                 alert('Ошибка загрузки страницы. Попробуйте обновить.');
             }
         }
         
-        // Запускаем инициализацию
-        initEventsPage();
+        // Запускаем инициализацию после загрузки DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEventsPage);
+        } else {
+            initEventsPage();
+        }
     </script>
 </body>
 </html>
