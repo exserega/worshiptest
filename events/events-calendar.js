@@ -347,7 +347,7 @@ export class EventsCalendar {
                     ${canManageEvents() ? `
                         <button class="icon-button" onclick="window.eventsCalendar.handleCreateEvent(new Date('${date.toISOString()}'))" title="Создать событие">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M10 5V15M5 10H15" stroke-width="2" stroke-linecap="round"/>
                             </svg>
                         </button>
                     ` : ''}
@@ -375,7 +375,7 @@ export class EventsCalendar {
                     ${canManageEvents() ? `
                         <button class="icon-button" onclick="window.eventsCalendar.handleCreateEvent(new Date('${date.toISOString()}'))" title="Создать событие">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M10 5V15M5 10H15" stroke-width="2" stroke-linecap="round"/>
                             </svg>
                         </button>
                     ` : ''}

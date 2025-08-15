@@ -28,7 +28,7 @@
     height: 40px;
     border: none;
     background: var(--bg-tertiary);
-    color: var(--text-primary);
+    color: #b0b0b0; /* Светло-серый для темной темы */
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -47,12 +47,26 @@
 .icon-button svg {
     width: 20px;
     height: 20px;
+}
+
+.icon-button svg path {
     stroke: currentColor;
     fill: none;
 }
 
-.icon-button:hover svg {
+.icon-button:hover svg path {
     stroke: white;
+}
+
+/* Специфичные стили для темной темы */
+.dark-theme .icon-button,
+body:not([data-theme="light"]) .icon-button {
+    color: #b0b0b0;
+}
+
+.dark-theme .icon-button:hover,
+body:not([data-theme="light"]) .icon-button:hover {
+    color: white;
 }
 
 .month-title {
@@ -95,7 +109,7 @@
     height: 36px;
     border: none;
     background: var(--bg-tertiary);
-    color: var(--text-primary);
+    color: #b0b0b0; /* Светло-серый для темной темы */
     cursor: pointer;
     transition: all 0.2s ease;
     border-radius: 50%;
@@ -113,12 +127,26 @@
 .month-nav-btn svg {
     width: 18px;
     height: 18px;
+}
+
+.month-nav-btn svg path {
     stroke: currentColor;
     fill: none;
 }
 
-.month-nav-btn:hover svg {
+.month-nav-btn:hover svg path {
     stroke: white;
+}
+
+/* Специфичные стили для темной темы */
+.dark-theme .month-nav-btn,
+body:not([data-theme="light"]) .month-nav-btn {
+    color: #b0b0b0;
+}
+
+.dark-theme .month-nav-btn:hover,
+body:not([data-theme="light"]) .month-nav-btn:hover {
+    color: white;
 }
 
 /* Сетка календаря */
