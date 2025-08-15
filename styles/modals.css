@@ -557,12 +557,15 @@ body[data-theme="light"] #copy-text-button.copied {
     overflow-y: auto; /* Скролл при большом количестве сет-листов */
     padding-right: 0.5rem;
     /* Добавляем нижний отступ чтобы последний элемент не обрезался */
-    padding-bottom: 0.75rem; /* Увеличиваем отступ */
+    padding-bottom: 1rem; /* Увеличиваем отступ еще больше */
     /* Добавляем закругления и стильную границу */
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md, 12px);
     padding: 0.75rem;
+    padding-bottom: 1rem; /* Явно задаем больший нижний отступ */
     background: var(--bg-primary);
+    /* Добавляем отступ от нижнего края для гарантии */
+    margin-bottom: 0.25rem;
 }
 
 /* Стилизация скроллбара */
