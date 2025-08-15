@@ -262,17 +262,58 @@ export function isUserPending() {
  * @returns {boolean}
  */
 export function isUserGuest() {
-    return currentUser?.isAnonymous === true || currentUser?.status === 'guest';
+    return currentUser?.status === 'guest' || currentUser?.isAnonymous === true;
 }
 
 /**
- * Проверить имеет ли пользователь ограниченный доступ (pending или guest)
+ * Проверяет есть ли у пользователя ограниченный доступ (pending или guest)
  * @returns {boolean}
  */
 export function hasLimitedAccess() {
-    return currentUser?.status === 'pending' || currentUser?.status === 'guest';
+    return isUserPending() || isUserGuest();
 }
 
+// ====================================
+// ПРОВЕРКА РОЛЕЙ ДЛЯ МОДЕРАТОРОВ
+// ====================================
+
+/**
+ * Проверяет является ли пользователь модератором
+ * @returns {boolean}
+ */
+export function isModerator() {
+    return currentUser?.role === 'moderator';
+}
+
+/**
+ * Проверяет является ли пользователь модератором или администратором
+ * @returns {boolean}
+ */
+export function isModeratorOrAdmin() {
+    return currentUser?.role === 'moderator' || currentUser?.role === 'admin';
+}
+
+/**
+ * Проверяет может ли пользователь редактировать песни
+ * Доступно только для модераторов и администраторов со статусом active
+ * @returns {boolean}
+ */
+export function canEditSongs() {
+    return isModeratorOrAdmin() && currentUser?.status === 'active';
+}
+
+/**
+ * Проверяет может ли пользователь управлять событиями (создавать/редактировать)
+ * Доступно только для модераторов и администраторов со статусом active
+ * @returns {boolean}
+ */
+export function canManageEvents() {
+    return isModeratorOrAdmin() && currentUser?.status === 'active';
+}
+
+// ====================================
+// USER GETTERS
+// ====================================
 
 /**
  * Получить статус текущего пользователя
