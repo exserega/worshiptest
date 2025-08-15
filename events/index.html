@@ -25,11 +25,12 @@
     <!-- Стили страницы событий -->
     <link rel="stylesheet" href="./events-page.css">
     
-    <!-- Firebase -->
+    <!-- Firebase (v8) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script type="module" src="../firebase-init.js"></script>
 </head>
 <body class="dark-theme">
     <!-- Шапка страницы -->
@@ -52,7 +53,7 @@
     <!-- Основной контент -->
     <main class="events-main">
         <!-- Календарь -->
-        <div class="calendar-container" id="calendarContainer">
+        <div class="calendar-container" id="calendarContainer" style="display: none;">
             <!-- Заголовок календаря с навигацией -->
             <div class="calendar-header">
                 <button class="calendar-nav-btn" id="prevMonthBtn">
@@ -84,98 +85,65 @@
         </div>
     </main>
     
-    <!-- Firebase init inline -->
-    <script>
-        // Firebase конфигурация
-        const firebaseConfig = {
-            apiKey: "AIzaSyAVZxPD3OVWYYj7HbhOEiJvBLMBhdMJQDE",
-            authDomain: "agapeworkship.firebaseapp.com",
-            projectId: "agapeworkship",
-            storageBucket: "agapeworkship.appspot.com",
-            messagingSenderId: "221186365918",
-            appId: "1:221186365918:web:9f6c89b39db17cccc1b96f",
-            measurementId: "G-CPCLVDSVT3"
-        };
+    <!-- Скрипты - по аналогии с settings.html -->
+    <script type="module">
+        import '../firebase-init.js';
         
-        // Инициализация Firebase
-        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
         
-        // Настройка персистентности
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-        
-        try {
-            db.enablePersistence({ synchronizeTabs: true });
-        } catch (e) {
-            console.warn('⚠️ Firestore persistence setup failed:', e);
-        }
-    </script>
-    
-    <!-- Скрипты -->
-    <script type="module">
-        // Инициализация страницы
-        async function initEventsPage() {
-            try {
-                // Ждем загрузки состояния авторизации
-                let authResolved = false;
-                const user = await new Promise((resolve, reject) => {
-                    const unsubscribe = auth.onAuthStateChanged((user) => {
-                        if (!authResolved) {
-                            authResolved = true;
-                            unsubscribe(); // Отписываемся после первого срабатывания
-                            
-                            if (user) {
-                                console.log('Пользователь авторизован:', user.email);
-                                resolve(user);
-                            } else {
-                                console.log('Пользователь не авторизован, перенаправление на главную');
-                                reject(new Error('Не авторизован'));
-                            }
-                        }
-                    });
+        // Ждем загрузки DOM
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('📅 Events page loading...');
+            
+            // Применяем тему
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+            
+            // Проверка авторизации (как в settings.js)
+            auth.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    console.log('❌ Not authenticated, redirecting...');
+                    window.location.href = '/public/login.html';
+                    return;
+                }
+                
+                console.log('✅ User authenticated:', user.email);
+                
+                try {
+                    // Импортируем модули
+                    const { getCurrentUser, canManageEvents } = await import('../src/modules/auth/authCheck.js');
+                    const logger = (await import('../src/utils/logger.js')).default;
                     
-                    // Таймаут на случай проблем с Firebase
-                    setTimeout(() => {
-                        if (!authResolved) {
-                            authResolved = true;
-                            unsubscribe();
-                            reject(new Error('Таймаут проверки авторизации'));
+                    // Проверяем пользователя
+                    const currentUser = getCurrentUser();
+                    logger.log('Текущий пользователь:', currentUser);
+                    
+                    if (!currentUser) {
+                        // Ждем немного на случай загрузки данных
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        const userRetry = getCurrentUser();
+                        if (!userRetry) {
+                            throw new Error('Пользователь не найден в системе');
                         }
-                    }, 5000);
-                });
-                
-                // Импортируем модули
-                const { getCurrentUser, canManageEvents } = await import('../src/modules/auth/authCheck.js');
-                const logger = (await import('../src/utils/logger.js')).default;
-                
-                // Проверяем пользователя
-                const currentUser = getCurrentUser();
-                logger.log('Текущий пользователь:', currentUser);
-                
-                if (!currentUser) {
-                    throw new Error('Пользователь не найден в системе');
-                }
-                
-                // Показываем кнопку создания события для модераторов и админов
-                if (canManageEvents()) {
-                    document.getElementById('createEventBtn').style.display = 'flex';
-                }
-                
-                // Импортируем и инициализируем календарь
-                const { EventsCalendar } = await import('./events-calendar.js');
-                const calendar = new EventsCalendar();
-                await calendar.init();
-                
-            } catch (error) {
-                console.error('Ошибка инициализации страницы событий:', error);
-                
-                if (error.message === 'Не авторизован' || error.message === 'Таймаут проверки авторизации') {
-                    // Перенаправляем на главную
-                    window.location.href = '/';
-                } else {
-                    // Показываем ошибку
+                    }
+                    
+                    // Показываем кнопку создания события для модераторов и админов
+                    if (canManageEvents()) {
+                        document.getElementById('createEventBtn').style.display = 'flex';
+                    }
+                    
+                    // Импортируем и инициализируем календарь
+                    const { EventsCalendar } = await import('./events-calendar.js');
+                    const calendar = new EventsCalendar();
+                    await calendar.init();
+                    
+                    // Скрываем индикатор загрузки и показываем календарь
+                    document.getElementById('loadingIndicator').classList.remove('active');
+                    document.getElementById('calendarContainer').style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('Ошибка инициализации страницы событий:', error);
                     document.getElementById('loadingIndicator').innerHTML = `
                         <div style="text-align: center; padding: 2rem;">
                             <p style="color: var(--text-secondary); margin-bottom: 1rem;">
@@ -185,15 +153,8 @@
                         </div>
                     `;
                 }
-            }
-        }
-        
-        // Запускаем инициализацию после загрузки DOM
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initEventsPage);
-        } else {
-            initEventsPage();
-        }
+            });
+        });
     </script>
 </body>
 </html>
