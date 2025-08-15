@@ -243,12 +243,16 @@ async function loadSongs() {
                         const songData = songDoc.data();
                         console.log('🎵 Данные песни:', songData);
                         console.log('🎵 Название:', songDoc.id);
+                        console.log('📝 hasWebEdits:', songData.hasWebEdits);
+                        console.log('📝 Есть отредактированный текст:', !!songData['Текст и аккорды (edited)']);
                         return {
                             ...songData,
                             id: songDoc.id,
                             name: songDoc.id, // В Firebase название = ID документа
                             preferredKey: setlistSong.preferredKey || songData.defaultKey,
-                            order: setlistSong.order
+                            order: setlistSong.order,
+                            hasWebEdits: songData.hasWebEdits || false,
+                            'Текст и аккорды (edited)': songData['Текст и аккорды (edited)'] || null
                         };
                     }
                 } catch (err) {
