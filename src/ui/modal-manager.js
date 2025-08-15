@@ -25,10 +25,18 @@
 export function showNotification(message, type = 'info', duration = 3000) {
     console.log('📢 [ModalManager] showNotification:', message, type);
     
+    // Проверяем что document.body существует
+    if (!document.body) {
+        console.error('❌ [ModalManager] document.body not found!');
+        return;
+    }
+    
     // Создаем элемент уведомления
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
+    
+    console.log('📢 [ModalManager] Notification element created:', notification);
     
     // Стили для уведомления
     notification.style.cssText = `
@@ -78,10 +86,13 @@ export function showNotification(message, type = 'info', duration = 3000) {
     
     // Добавляем в DOM
     document.body.appendChild(notification);
+    console.log('📢 [ModalManager] Notification added to DOM, parent:', notification.parentNode);
+    console.log('📢 [ModalManager] Notification computed styles:', window.getComputedStyle(notification).transform);
     
     // Показываем с анимацией
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
+        console.log('📢 [ModalManager] Transform set to translateX(0)');
     }, 100);
     
     // Скрываем через заданное время

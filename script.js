@@ -769,12 +769,17 @@ export const metadata = {
 // ФУНКЦИЯ УВЕДОМЛЕНИЙ - ИЗ РАБОЧЕГО КОДА
 window.showNotification = function(message, type = 'info') {
     console.log('📢 [EntryPoint] showNotification:', message, type);
+    console.log('📢 [EntryPoint] showNotificationModule type:', typeof showNotificationModule);
+    console.log('📢 [EntryPoint] showNotificationModule:', showNotificationModule);
     
     // Используем импортированную модульную функцию - ИСПРАВЛЕНО!
     if (typeof showNotificationModule === 'function') {
+        console.log('📢 [EntryPoint] Calling showNotificationModule...');
         showNotificationModule(message, type);
         return;
     }
+    
+    console.log('📢 [EntryPoint] Using fallback notification...');
     
     // Fallback - простое уведомление
     const notification = document.createElement('div');
@@ -783,26 +788,55 @@ window.showNotification = function(message, type = 'info') {
     
     notification.style.cssText = `
         position: fixed;
-        top: 20px;
+        top: 80px;
         right: 20px;
-        background: var(--container-background-color);
-        color: var(--text-color);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 12px 20px;
-        font-size: 0.9rem;
-        z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transform: translateX(100%);
+        background: var(--bg-secondary, #1f2937);
+        color: var(--text-primary, #e5e7eb);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 16px 24px;
+        font-size: 0.95rem;
+        z-index: 99999;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        transform: translateX(calc(100% + 40px));
         transition: transform 0.3s ease;
-        max-width: 300px;
+        max-width: 350px;
         word-wrap: break-word;
+        min-width: 250px;
     `;
     
     document.body.appendChild(notification);
     
+    // Добавляем цвета в зависимости от типа
+    switch (type) {
+        case 'success':
+            notification.style.borderColor = '#10b981';
+            notification.style.backgroundColor = '#065f46';
+            notification.style.color = '#d1fae5';
+            break;
+        case 'error':
+            notification.style.borderColor = '#ef4444';
+            notification.style.backgroundColor = '#7f1d1d';
+            notification.style.color = '#fee2e2';
+            break;
+        case 'warning':
+            notification.style.borderColor = '#f59e0b';
+            notification.style.backgroundColor = '#78350f';
+            notification.style.color = '#fef3c7';
+            break;
+        case 'info':
+        default:
+            notification.style.borderColor = '#3b82f6';
+            notification.style.backgroundColor = '#1e3a8a';
+            notification.style.color = '#dbeafe';
+            break;
+    }
+    
+    console.log('📢 [EntryPoint] Fallback notification added to DOM');
+    
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
+        console.log('📢 [EntryPoint] Fallback transform set to translateX(0)');
     }, 100);
     
     setTimeout(() => {
