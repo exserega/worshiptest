@@ -268,7 +268,7 @@ body {
     width: 100%;
     padding: 16px;
     background: var(--accent-color);
-    color: white;
+    color: #1f2937; /* Темный цвет текста */
     border: none;
     border-radius: 8px;
     font-size: 16px;
@@ -278,11 +278,18 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .launch-player-btn:hover {
-    background: var(--accent-hover);
+    background: var(--accent-hover, #5dd4e8); /* Чуть темнее при наведении */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(103, 232, 249, 0.3);
+}
+
+/* Иконка в кнопке */
+.launch-player-btn i {
+    color: #1f2937; /* Темный цвет иконки */
 }
 
 /* Участники */
