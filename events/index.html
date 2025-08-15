@@ -6,7 +6,7 @@
     <title>События - Agape Worship</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../icon-192x192.png">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
     
     <!-- PWA -->
     <link rel="manifest" href="../manifest.json">
@@ -14,7 +14,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     
     <!-- Apple -->
-    <link rel="apple-touch-icon" href="../icon-192x192.png">
+    <link rel="apple-touch-icon" href="../assets/images/Icon-192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
@@ -29,6 +29,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 </head>
 <body class="dark-theme">
     <!-- Шапка страницы -->
@@ -83,35 +84,51 @@
         </div>
     </main>
     
-    <!-- Firebase init -->
-    <script src="../firebase-init.js"></script>
+    <!-- Firebase init inline -->
+    <script>
+        // Firebase конфигурация
+        const firebaseConfig = {
+            apiKey: "AIzaSyAVZxPD3OVWYYj7HbhOEiJvBLMBhdMJQDE",
+            authDomain: "agapeworkship.firebaseapp.com",
+            projectId: "agapeworkship",
+            storageBucket: "agapeworkship.appspot.com",
+            messagingSenderId: "221186365918",
+            appId: "1:221186365918:web:9f6c89b39db17cccc1b96f",
+            measurementId: "G-CPCLVDSVT3"
+        };
+        
+        // Инициализация Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        
+        // Настройка персистентности
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        
+        try {
+            db.enablePersistence({ synchronizeTabs: true });
+        } catch (e) {
+            console.warn('⚠️ Firestore persistence setup failed:', e);
+        }
+    </script>
     
     <!-- Скрипты -->
     <script type="module">
         // Инициализация страницы
         async function initEventsPage() {
             try {
-                // Ждем инициализации Firebase
-                await new Promise((resolve) => {
-                    if (window.firebase && window.firebase.auth()) {
-                        resolve();
-                    } else {
-                        window.addEventListener('firebase-initialized', resolve);
-                    }
-                });
-                
-                // Проверяем авторизацию
-                const auth = firebase.auth();
-                const user = auth.currentUser;
-                
-                if (!user) {
-                    // Ждем авторизации
-                    await new Promise((resolve) => {
-                        auth.onAuthStateChanged((user) => {
-                            if (user) resolve();
-                        });
+                // Ждем авторизации
+                const user = await new Promise((resolve) => {
+                    auth.onAuthStateChanged((user) => {
+                        if (user) {
+                            resolve(user);
+                        } else {
+                            // Перенаправляем на главную если не авторизован
+                            window.location.href = '/';
+                        }
                     });
-                }
+                });
                 
                 // Импортируем модули
                 const { getCurrentUser, canManageEvents } = await import('../src/modules/auth/authCheck.js');
@@ -119,10 +136,7 @@
                 
                 // Проверяем пользователя
                 const currentUser = getCurrentUser();
-                if (!currentUser) {
-                    window.location.href = '/';
-                    return;
-                }
+                logger.log('Текущий пользователь:', currentUser);
                 
                 // Показываем кнопку создания события для модераторов и админов
                 if (canManageEvents()) {
