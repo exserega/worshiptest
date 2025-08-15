@@ -72,6 +72,11 @@ export class EventsCalendar {
         logger.log(`📊 Загрузка событий для филиала: ${user.branchId}`);
         this.events = await getEventsByBranch(user.branchId);
         logger.log(`✅ Загружено событий: ${this.events.length}`);
+        
+        // Логируем события для отладки
+        if (this.events.length > 0) {
+            logger.log('Примеры загруженных событий:', this.events.slice(0, 3));
+        }
     }
     
     /**
@@ -143,12 +148,19 @@ export class EventsCalendar {
             this.createDayElement(new Date(year, month, day), false);
         }
         
-        // Добавляем дни следующего месяца
+        // Добавляем дни следующего месяца только если последний день не воскресенье
         const totalDays = this.calendarDays.children.length;
-        const daysToAdd = totalDays < 35 ? 35 - totalDays : 42 - totalDays;
+        const lastDayOfWeek = lastDay.getDay();
         
-        for (let day = 1; day <= daysToAdd; day++) {
-            this.createDayElement(new Date(year, month + 1, day), true);
+        // Если последний день месяца - воскресенье (0), не добавляем следующий месяц
+        if (lastDayOfWeek !== 0) {
+            // Добавляем дни до конца недели
+            const daysToAdd = 7 - (totalDays % 7);
+            if (daysToAdd < 7) {
+                for (let day = 1; day <= daysToAdd; day++) {
+                    this.createDayElement(new Date(year, month + 1, day), true);
+                }
+            }
         }
     }
     

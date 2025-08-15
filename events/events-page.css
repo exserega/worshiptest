@@ -27,7 +27,7 @@
     width: 40px;
     height: 40px;
     border: none;
-    background: transparent;
+    background: var(--bg-tertiary);
     color: var(--text-primary);
     border-radius: 10px;
     cursor: pointer;
@@ -35,11 +35,18 @@
 }
 
 .icon-button:hover {
-    background: var(--bg-tertiary);
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
 }
 
 .icon-button:active {
     transform: scale(0.95);
+}
+
+.icon-button svg {
+    width: 20px;
+    height: 20px;
 }
 
 .month-title {
@@ -61,18 +68,18 @@
     flex-shrink: 0;
     background: var(--bg-secondary);
     position: relative;
+    padding-top: 2.5rem; /* Место для навигации */
 }
 
 .month-navigation {
     position: absolute;
-    top: 0;
+    top: 0.5rem;
     left: 0;
     right: 0;
     display: flex;
     justify-content: space-between;
     padding: 0 1rem;
     z-index: 10;
-    pointer-events: none;
 }
 
 .month-nav-btn {
@@ -82,22 +89,30 @@
     width: 36px;
     height: 36px;
     border: none;
-    background: transparent;
-    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
     cursor: pointer;
     transition: all 0.2s ease;
-    pointer-events: all;
     border-radius: 50%;
 }
 
 .month-nav-btn:hover {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
+    background: var(--primary-color);
+    color: white;
+}
+
+.month-nav-btn:active {
+    transform: scale(0.95);
+}
+
+.month-nav-btn svg {
+    width: 18px;
+    height: 18px;
 }
 
 /* Сетка календаря */
 .calendar-grid {
-    padding: 1rem;
+    padding: 0 1rem 1rem;
 }
 
 /* Дни недели */
@@ -221,6 +236,11 @@
     border-radius: 12px;
 }
 
+.selected-date-header .icon-button {
+    width: 32px;
+    height: 32px;
+}
+
 .selected-date-title {
     font-size: 1.125rem;
     font-weight: 600;
@@ -310,8 +330,12 @@
         font-size: 1.125rem;
     }
     
+    .calendar-section {
+        padding-top: 2rem;
+    }
+    
     .calendar-grid {
-        padding: 0.75rem;
+        padding: 0 0.75rem 0.75rem;
     }
     
     .calendar-day {
@@ -328,6 +352,11 @@
     .icon-button {
         width: 36px;
         height: 36px;
+    }
+    
+    .month-nav-btn {
+        width: 32px;
+        height: 32px;
     }
     
     .calendar-weekday {
