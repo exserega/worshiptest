@@ -37,7 +37,8 @@ import {
     isUserGuest, 
     hasLimitedAccess, 
     showPendingUserMessage, 
-    showGuestMessage 
+    showGuestMessage,
+    canEditSongs
 } from './src/modules/auth/authCheck.js';
 
 // Проверка может ли пользователь редактировать
@@ -375,8 +376,23 @@ export function displaySongDetails(songData, keyToSelect) {
     if (songPre) songPre.innerHTML = finalHighlightedLyrics;
             // Кнопка копирования теперь управляется через CSS
     if (editBtn) {
-        editBtn.style.display = 'block';
-        console.log('📝 [UI] Edit button shown for song:', cleanTitle);
+        // Проверяем права доступа для кнопки редактирования
+        import('./src/modules/auth/authCheck.js').then(({ canEditSongs }) => {
+            // Показываем кнопку только если у пользователя есть права на редактирование песен
+            const hasEditRights = canEditSongs();
+            editBtn.style.display = hasEditRights ? 'block' : 'none';
+            
+            // Логируем результат проверки для отладки
+            console.log('📝 [UI Legacy] Edit button visibility check:', {
+                hasEditRights,
+                display: editBtn.style.display,
+                songTitle: cleanTitle
+            });
+        }).catch(err => {
+            // В случае ошибки импорта скрываем кнопку
+            console.error('❌ [UI Legacy] Error checking edit rights:', err);
+            editBtn.style.display = 'none';
+        });
     } else {
         console.warn('⚠️ [UI] Edit button not found in song content');
     }
