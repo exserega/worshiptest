@@ -5,17 +5,19 @@
 
 import logger from '../src/utils/logger.js';
 import { getEventsByBranch } from '../src/modules/events/eventsApi.js';
-import { getCurrentUser } from '../src/modules/auth/authCheck.js';
+import { getCurrentUser, canManageEvents } from '../src/modules/auth/authCheck.js';
 
 export class EventsCalendar {
     constructor() {
         this.currentDate = new Date();
+        this.selectedDate = null;
         this.events = [];
         this.container = document.getElementById('calendarContainer');
         this.loadingIndicator = document.getElementById('loadingIndicator');
         this.monthTitle = document.getElementById('monthTitle');
         this.calendarDays = document.getElementById('calendarDays');
         this.weekdays = document.getElementById('weekdays');
+        this.selectedDateEvents = document.getElementById('selectedDateEvents');
         
         // Кнопки навигации
         this.prevMonthBtn = document.getElementById('prevMonthBtn');
@@ -167,6 +169,11 @@ export class EventsCalendar {
             dayEl.classList.add('today');
         }
         
+        // Проверяем, выбран ли день
+        if (this.selectedDate && date.toDateString() === this.selectedDate.toDateString()) {
+            dayEl.classList.add('selected');
+        }
+        
         // Номер дня
         const dayNumber = document.createElement('div');
         dayNumber.className = 'calendar-day-number';
@@ -187,21 +194,12 @@ export class EventsCalendar {
                 eventsEl.appendChild(dot);
             }
             
-            // Если событий больше 3, показываем +N
-            if (dayEvents.length > 3) {
-                const more = document.createElement('span');
-                more.textContent = `+${dayEvents.length - 3}`;
-                more.style.fontSize = '0.7rem';
-                more.style.color = 'var(--text-secondary)';
-                eventsEl.appendChild(more);
-            }
-            
             dayEl.appendChild(eventsEl);
         }
         
         // Сохраняем дату в элементе
         dayEl.dataset.date = date.toISOString();
-        dayEl.dataset.events = JSON.stringify(dayEvents.map(e => e.id));
+        dayEl.dataset.events = JSON.stringify(dayEvents);
         
         // Добавляем в календарь
         this.calendarDays.appendChild(dayEl);
@@ -257,23 +255,94 @@ export class EventsCalendar {
         const dayEl = event.target.closest('.calendar-day');
         if (!dayEl || dayEl.classList.contains('other-month')) return;
         
-        const date = new Date(dayEl.dataset.date);
-        const eventIds = JSON.parse(dayEl.dataset.events || '[]');
-        
-        logger.log(`📅 Клик по дню: ${date.toLocaleDateString()}, событий: ${eventIds.length}`);
-        
-        // TODO: Реализовать расширение блока с событиями
-        // Пока просто логируем
-        if (eventIds.length > 0) {
-            alert(`События дня ${date.toLocaleDateString()}:\n${eventIds.join('\n')}`);
-        } else {
-            // Если нет событий и есть права - предлагаем создать
-            if (this.createEventBtn && this.createEventBtn.style.display !== 'none') {
-                if (confirm(`Создать событие на ${date.toLocaleDateString()}?`)) {
-                    this.handleCreateEvent(date);
-                }
-            }
+        // Убираем выделение с предыдущего дня
+        const prevSelected = this.calendarDays.querySelector('.calendar-day.selected');
+        if (prevSelected) {
+            prevSelected.classList.remove('selected');
         }
+        
+        // Выделяем новый день
+        dayEl.classList.add('selected');
+        
+        const date = new Date(dayEl.dataset.date);
+        const events = JSON.parse(dayEl.dataset.events || '[]');
+        
+        this.selectedDate = date;
+        
+        logger.log(`📅 Выбран день: ${date.toLocaleDateString()}, событий: ${events.length}`);
+        
+        // Показываем события в нижнем блоке
+        this.showSelectedDateEvents(date, events);
+    }
+    
+    /**
+     * Показать события выбранной даты
+     */
+    showSelectedDateEvents(date, events) {
+        const container = this.selectedDateEvents;
+        
+        if (events.length === 0) {
+            // Нет событий
+            container.innerHTML = `
+                <div class="selected-date-header">
+                    <h3 class="selected-date-title">${this.formatDate(date)}</h3>
+                    ${canManageEvents() ? `
+                        <button class="icon-button" onclick="window.eventsCalendar.handleCreateEvent(new Date('${date.toISOString()}'))" title="Создать событие">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    ` : ''}
+                </div>
+                <div class="no-date-selected">
+                    <p>На эту дату нет запланированных событий</p>
+                </div>
+            `;
+        } else {
+            // Есть события
+            const eventsHTML = events.map(event => `
+                <div class="event-card" onclick="window.location.href='/public/event/?id=${event.id}'">
+                    <div class="event-time">${this.formatTime(event.date)}</div>
+                    <div class="event-name">${event.name}</div>
+                    <div class="event-participants">
+                        ${event.participantCount || 0} участников
+                        ${event.leader ? `• ${event.leader}` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = `
+                <div class="selected-date-header">
+                    <h3 class="selected-date-title">${this.formatDate(date)}</h3>
+                    ${canManageEvents() ? `
+                        <button class="icon-button" onclick="window.eventsCalendar.handleCreateEvent(new Date('${date.toISOString()}'))" title="Создать событие">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    ` : ''}
+                </div>
+                <div class="events-list">
+                    ${eventsHTML}
+                </div>
+            `;
+        }
+    }
+    
+    /**
+     * Форматирование даты
+     */
+    formatDate(date) {
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        return date.toLocaleDateString('ru-RU', options);
+    }
+    
+    /**
+     * Форматирование времени
+     */
+    formatTime(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     }
     
     /**
@@ -284,7 +353,7 @@ export class EventsCalendar {
         
         try {
             // TODO: Импортировать и открыть модальное окно создания события
-            alert('Функционал создания события будет реализован далее');
+            alert(`Функционал создания события на ${preselectedDate ? this.formatDate(preselectedDate) : 'выбранную дату'} будет реализован далее`);
         } catch (error) {
             logger.error('Ошибка создания события:', error);
         }
@@ -315,3 +384,6 @@ export class EventsCalendar {
         `;
     }
 }
+
+// Делаем календарь доступным глобально для обработчиков onclick
+window.eventsCalendar = null;

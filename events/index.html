@@ -33,36 +33,41 @@
     <script type="module" src="../firebase-init.js"></script>
 </head>
 <body class="dark-theme">
-    <!-- Шапка страницы -->
-    <header class="events-header">
-        <div class="header-content">
-            <button class="back-button" onclick="window.location.href='/'">
+    <div class="events-page-container">
+        <!-- Блок 1: Верхняя панель с кнопками -->
+        <header class="events-top-bar">
+            <button class="icon-button" onclick="window.location.href='/'">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
-            <h1 class="page-title">События филиала</h1>
-            <button class="create-event-button" id="createEventBtn" style="display: none;">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-        </div>
-    </header>
-    
-    <!-- Основной контент -->
-    <main class="events-main">
-        <!-- Календарь -->
-        <div class="calendar-container" id="calendarContainer" style="display: none;">
-            <!-- Заголовок календаря с навигацией -->
-            <div class="calendar-header">
-                <button class="calendar-nav-btn" id="prevMonthBtn">
+            
+            <h1 class="month-title" id="monthTitle">Загрузка...</h1>
+            
+            <div class="top-bar-actions">
+                <button class="icon-button" id="listViewBtn" title="Список событий" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button class="icon-button" id="createEventBtn" title="Создать событие" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Блок 2: Календарь -->
+        <div class="calendar-section" id="calendarContainer" style="display: none;">
+            <!-- Навигация по месяцам -->
+            <div class="month-navigation">
+                <button class="month-nav-btn" id="prevMonthBtn">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M12 5L7 10L12 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
-                <h2 class="calendar-month-title" id="monthTitle">Загрузка...</h2>
-                <button class="calendar-nav-btn" id="nextMonthBtn">
+                <button class="month-nav-btn" id="nextMonthBtn">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M8 5L13 10L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -70,11 +75,18 @@
             </div>
             
             <!-- Сетка календаря -->
-            <div class="calendar-grid" id="calendarGrid">
+            <div class="calendar-grid">
                 <!-- Дни недели -->
                 <div class="calendar-weekdays" id="weekdays"></div>
                 <!-- Дни месяца -->
                 <div class="calendar-days" id="calendarDays"></div>
+            </div>
+        </div>
+        
+        <!-- Блок 3: События выбранной даты -->
+        <div class="selected-date-events" id="selectedDateEvents">
+            <div class="no-date-selected">
+                <p>Выберите дату для просмотра событий</p>
             </div>
         </div>
         
@@ -83,7 +95,7 @@
             <div class="spinner"></div>
             <p>Загрузка событий...</p>
         </div>
-    </main>
+    </div>
     
     <!-- Скрипты - по аналогии с settings.html -->
     <script type="module">
@@ -128,14 +140,17 @@
                         throw new Error('Пользователь не найден в системе или не выбран филиал');
                     }
                     
-                    // Показываем кнопку создания события для модераторов и админов
+                    // Показываем кнопки для модераторов и админов
                     if (canManageEvents()) {
                         document.getElementById('createEventBtn').style.display = 'flex';
                     }
+                    // Кнопка списка будет доступна всем (временно скрыта)
+                    // document.getElementById('listViewBtn').style.display = 'flex';
                     
                     // Импортируем и инициализируем календарь
                     const { EventsCalendar } = await import('./events-calendar.js');
                     const calendar = new EventsCalendar();
+                    window.eventsCalendar = calendar; // Сохраняем глобально
                     await calendar.init();
                     
                     // Скрываем индикатор загрузки и показываем календарь
