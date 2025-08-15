@@ -28,7 +28,7 @@
     height: 40px;
     border: none;
     background: var(--bg-tertiary);
-    color: #b0b0b0; /* Светло-серый для темной темы */
+    color: var(--text-secondary);
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -36,7 +36,7 @@
 
 .icon-button:hover {
     background: var(--primary-color);
-    color: white;
+    color: white !important;
     transform: translateY(-1px);
 }
 
@@ -50,23 +50,42 @@
 }
 
 .icon-button svg path {
-    stroke: currentColor;
-    fill: none;
+    stroke: currentColor !important;
+    fill: none !important;
 }
 
-.icon-button:hover svg path {
-    stroke: white;
+/* Dark theme specific for icon buttons */
+:root .icon-button {
+    color: #b0b0b0 !important;
 }
 
-/* Специфичные стили для темной темы */
-.dark-theme .icon-button,
-body:not([data-theme="light"]) .icon-button {
-    color: #b0b0b0;
+:root .icon-button svg path {
+    stroke: #b0b0b0 !important;
 }
 
-.dark-theme .icon-button:hover,
-body:not([data-theme="light"]) .icon-button:hover {
-    color: white;
+:root .icon-button:hover {
+    color: white !important;
+}
+
+:root .icon-button:hover svg path {
+    stroke: white !important;
+}
+
+/* Light theme specific for icon buttons */
+[data-theme="light"] .icon-button {
+    color: #666666 !important;
+}
+
+[data-theme="light"] .icon-button svg path {
+    stroke: #666666 !important;
+}
+
+[data-theme="light"] .icon-button:hover {
+    color: white !important;
+}
+
+[data-theme="light"] .icon-button:hover svg path {
+    stroke: white !important;
 }
 
 .month-title {
@@ -109,7 +128,7 @@ body:not([data-theme="light"]) .icon-button:hover {
     height: 36px;
     border: none;
     background: var(--bg-tertiary);
-    color: #b0b0b0; /* Светло-серый для темной темы */
+    color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
     border-radius: 50%;
@@ -117,7 +136,7 @@ body:not([data-theme="light"]) .icon-button:hover {
 
 .month-nav-btn:hover {
     background: var(--primary-color);
-    color: white;
+    color: white !important;
 }
 
 .month-nav-btn:active {
@@ -130,23 +149,42 @@ body:not([data-theme="light"]) .icon-button:hover {
 }
 
 .month-nav-btn svg path {
-    stroke: currentColor;
-    fill: none;
+    stroke: currentColor !important;
+    fill: none !important;
 }
 
-.month-nav-btn:hover svg path {
-    stroke: white;
+/* Dark theme specific for month nav buttons */
+:root .month-nav-btn {
+    color: #b0b0b0 !important;
 }
 
-/* Специфичные стили для темной темы */
-.dark-theme .month-nav-btn,
-body:not([data-theme="light"]) .month-nav-btn {
-    color: #b0b0b0;
+:root .month-nav-btn svg path {
+    stroke: #b0b0b0 !important;
 }
 
-.dark-theme .month-nav-btn:hover,
-body:not([data-theme="light"]) .month-nav-btn:hover {
-    color: white;
+:root .month-nav-btn:hover {
+    color: white !important;
+}
+
+:root .month-nav-btn:hover svg path {
+    stroke: white !important;
+}
+
+/* Light theme specific for month nav buttons */
+[data-theme="light"] .month-nav-btn {
+    color: #666666 !important;
+}
+
+[data-theme="light"] .month-nav-btn svg path {
+    stroke: #666666 !important;
+}
+
+[data-theme="light"] .month-nav-btn:hover {
+    color: white !important;
+}
+
+[data-theme="light"] .month-nav-btn:hover svg path {
+    stroke: white !important;
 }
 
 /* Сетка календаря */
