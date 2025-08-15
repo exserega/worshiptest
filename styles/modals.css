@@ -540,9 +540,11 @@ body[data-theme="light"] #copy-text-button.copied {
 
 /* Секция существующих сет-листов */
 .existing-setlists-section {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem; /* Увеличиваем отступ снизу */
     /* Убедимся что секция не обрезается */
     overflow: visible;
+    /* Добавляем padding для гарантии видимости содержимого */
+    padding-bottom: 0.5rem;
 }
 
 .section-title {
@@ -557,32 +559,27 @@ body[data-theme="light"] #copy-text-button.copied {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: 200px; /* Ограничиваем высоту для компактности */
+    max-height: 220px; /* Увеличиваем высоту для лучшей видимости */
     overflow-y: auto; /* Скролл при большом количестве сет-листов */
     overflow-x: hidden; /* Скрываем горизонтальный скролл */
     /* Правильная организация отступов */
     padding: 0.75rem;
-    /* ВАЖНО: убираем padding-bottom, будем использовать псевдоэлемент */
+    /* Восстанавливаем padding-bottom для простоты */
+    padding-bottom: 0.75rem;
     /* Добавляем закругления и стильную границу */
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md, 12px);
     background: var(--bg-primary);
-    /* Внешний отступ снизу */
-    margin-bottom: 0.5rem;
+    /* Убираем внешний отступ снизу - используем padding секции */
+    margin-bottom: 0;
     /* Для корректного отображения границ */
     box-sizing: border-box;
-    /* Позиционирование для псевдоэлемента */
+    /* Позиционирование для видимости поверх других элементов */
     position: relative;
+    z-index: 2;
 }
 
-/* Псевдоэлемент для гарантированного отступа после контента */
-.setlists-grid::after {
-    content: '';
-    display: block;
-    height: 20px; /* Фиксированный отступ после последнего элемента */
-    min-height: 20px; /* Гарантируем минимальную высоту */
-    flex-shrink: 0; /* Не сжимается */
-}
+
 
 /* Стилизация скроллбара */
 .setlists-grid::-webkit-scrollbar {
@@ -672,14 +669,17 @@ body[data-theme="light"] #copy-text-button.copied {
 
 /* Компактное создание нового сет-листа */
 .create-new-compact {
-    border-top: 1px solid var(--border-color);
+    /* Убираем border-top чтобы не было наложения */
     padding-top: 0.75rem;
-    margin-top: 0.75rem;
+    margin-top: 0; /* Убираем верхний отступ */
     /* Добавляем закругленный фон для секции */
     background: var(--bg-secondary);
     border-radius: var(--radius-md, 10px);
     padding: 1rem;
     border: 1px solid var(--border-color);
+    /* Гарантируем что блок не перекрывает предыдущий */
+    position: relative;
+    z-index: 1;
 }
 
 .or-text {
