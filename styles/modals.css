@@ -477,6 +477,8 @@ body[data-theme="light"] #copy-text-button.copied {
 
 .modal-body.compact {
     padding: 1rem;
+    /* Важно: добавляем overflow для корректного отображения содержимого */
+    overflow: visible;
 }
 
 /* Компактная информация о песне */
@@ -539,6 +541,8 @@ body[data-theme="light"] #copy-text-button.copied {
 /* Секция существующих сет-листов */
 .existing-setlists-section {
     margin-bottom: 1rem;
+    /* Убедимся что секция не обрезается */
+    overflow: visible;
 }
 
 .section-title {
@@ -555,17 +559,18 @@ body[data-theme="light"] #copy-text-button.copied {
     gap: 0.5rem;
     max-height: 200px; /* Ограничиваем высоту для компактности */
     overflow-y: auto; /* Скролл при большом количестве сет-листов */
-    padding-right: 0.5rem;
-    /* Добавляем нижний отступ чтобы последний элемент не обрезался */
-    padding-bottom: 1rem; /* Увеличиваем отступ еще больше */
+    overflow-x: hidden; /* Скрываем горизонтальный скролл */
+    /* Правильная организация отступов */
+    padding: 0.75rem;
+    padding-bottom: 1.5rem; /* Большой нижний отступ внутри контейнера */
     /* Добавляем закругления и стильную границу */
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md, 12px);
-    padding: 0.75rem;
-    padding-bottom: 1rem; /* Явно задаем больший нижний отступ */
     background: var(--bg-primary);
-    /* Добавляем отступ от нижнего края для гарантии */
-    margin-bottom: 0.25rem;
+    /* Внешний отступ снизу */
+    margin-bottom: 0.5rem;
+    /* Для корректного отображения границ */
+    box-sizing: border-box;
 }
 
 /* Стилизация скроллбара */
@@ -598,6 +603,11 @@ body[data-theme="light"] #copy-text-button.copied {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* Добавляем отступ после последнего элемента */
+.setlist-item:last-child {
+    margin-bottom: 0.5rem;
 }
 
 .setlist-item:hover {
