@@ -91,6 +91,20 @@ export class EventsCalendar {
         
         // Рендерим дни месяца
         this.renderDays();
+        
+        // Логируем структуру первого события для отладки
+        if (this.events.length > 0) {
+            const firstEvent = this.events[0];
+            logger.log('Структура первого события:', {
+                id: firstEvent.id,
+                name: firstEvent.name,
+                date: firstEvent.date,
+                dateType: typeof firstEvent.date,
+                hasToDate: !!(firstEvent.date && firstEvent.date.toDate),
+                hasSeconds: !!(firstEvent.date && firstEvent.date.seconds),
+                fullEvent: firstEvent
+            });
+        }
     }
     
     /**
@@ -221,10 +235,42 @@ export class EventsCalendar {
      * Получение событий для конкретного дня
      */
     getEventsForDay(date) {
-        return this.events.filter(event => {
-            const eventDate = new Date(event.date);
+        const events = this.events.filter(event => {
+            // Преобразуем различные форматы даты
+            let eventDate;
+            
+            if (event.date) {
+                // Если date - строка
+                if (typeof event.date === 'string') {
+                    eventDate = new Date(event.date);
+                } 
+                // Если date - Firebase Timestamp
+                else if (event.date.toDate) {
+                    eventDate = event.date.toDate();
+                }
+                // Если date - объект Date
+                else if (event.date instanceof Date) {
+                    eventDate = event.date;
+                }
+                // Если date - объект с seconds (Firestore timestamp)
+                else if (event.date.seconds) {
+                    eventDate = new Date(event.date.seconds * 1000);
+                }
+            }
+            
+            if (!eventDate || isNaN(eventDate.getTime())) {
+                logger.warn('Некорректная дата события:', event);
+                return false;
+            }
+            
             return eventDate.toDateString() === date.toDateString();
         });
+        
+        if (events.length > 0) {
+            logger.log(`События для ${date.toDateString()}:`, events);
+        }
+        
+        return events;
     }
     
     /**
@@ -352,8 +398,26 @@ export class EventsCalendar {
     /**
      * Форматирование времени
      */
-    formatTime(dateString) {
-        const date = new Date(dateString);
+    formatTime(dateData) {
+        let date;
+        
+        // Обработка различных форматов
+        if (typeof dateData === 'string') {
+            date = new Date(dateData);
+        } else if (dateData && dateData.toDate) {
+            date = dateData.toDate();
+        } else if (dateData instanceof Date) {
+            date = dateData;
+        } else if (dateData && dateData.seconds) {
+            date = new Date(dateData.seconds * 1000);
+        } else {
+            return 'Время не указано';
+        }
+        
+        if (isNaN(date.getTime())) {
+            return 'Время не указано';
+        }
+        
         return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     }
     
