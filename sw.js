@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v267'; // v267, использован box-shadow вместо border
+const CACHE_NAME = 'agape-worship-cache-v268'; // v268, оптимизированы отступы после исправления границ
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [

@@ -241,15 +241,9 @@
     padding: 4px;
 }
 
-/* Исправление обрезания последнего элемента в dropdown */
+/* Нормальные отступы для dropdown */
 .dropdown-content {
-    /* Добавляем больше padding снизу для всех dropdown */
-    padding-bottom: 8px !important;
-}
-
-.dropdown-list:last-child {
-    /* Дополнительный отступ для последнего элемента */
-    padding-bottom: 12px !important;
+    padding: 4px;
 }
 
 /* Используем box-shadow вместо border для предотвращения обрезания */
