@@ -394,6 +394,8 @@ export class EventsCalendar {
                         'guitar': '🎸',
                         'гитара': '🎸',
                         'электрогитара': '🎸',
+                        'acoustic_guitar': '🎸',
+                        'акустическая гитара': '🎸',
                         'bass': '🎸',
                         'бас': '🎸',
                         'бас-гитара': '🎸',
@@ -403,25 +405,37 @@ export class EventsCalendar {
                         'клавиши': '🎹',
                         'drums': '🥁',
                         'барабаны': '🥁',
-                        'sound': '🎚️',
-                        'звукооператор': '🎚️',
-                        'звук': '🎚️'
+                        'sound': '🎛️',
+                        'звукооператор': '🎛️',
+                        'звук': '🎛️'
                     };
                     
-                    const participantsItems = event.participants
+                    // Группируем участников по инструментам
+                    const instrumentGroups = {};
+                    
+                    event.participants
                         .filter(p => p.name)
-                        .map(p => {
-                            const instrumentKey = (p.instrument || '').toLowerCase();
-                            const instrumentNameKey = (p.instrumentName || '').toLowerCase();
-                            const icon = instrumentIcons[instrumentKey] || 
-                                       instrumentIcons[instrumentNameKey] || 
-                                       '🎵';
-                            const instrument = p.instrumentName || p.instrument || 'Участник';
-                            return `<div class="participant-item">${icon} <span class="participant-name">${p.name}</span></div>`;
+                        .forEach(p => {
+                            const instrumentName = p.instrumentName || p.instrument || 'Участник';
+                            if (!instrumentGroups[instrumentName]) {
+                                instrumentGroups[instrumentName] = {
+                                    names: [],
+                                    icon: instrumentIcons[(p.instrument || '').toLowerCase()] || 
+                                          instrumentIcons[(p.instrumentName || '').toLowerCase()] || 
+                                          '🎵'
+                                };
+                            }
+                            instrumentGroups[instrumentName].names.push(p.name);
                         });
                     
-                    if (participantsItems.length > 0) {
-                        participantsHTML = `<div class="event-participants-list">${participantsItems.join('')}</div>`;
+                    // Формируем HTML
+                    const instrumentLines = Object.entries(instrumentGroups).map(([instrument, data]) => {
+                        const names = data.names.join(', ');
+                        return `<div class="instrument-line">${data.icon}${instrument} - ${names}</div>`;
+                    });
+                    
+                    if (instrumentLines.length > 0) {
+                        participantsHTML = `<div class="event-participants-compact">${instrumentLines.join('')}</div>`;
                     }
                     
                     console.log(`  📝 Участники обработаны`); // Отладка
@@ -429,9 +443,9 @@ export class EventsCalendar {
                     console.log(`  ⚠️ Нет массива participants`); // Отладка
                 }
                 
-                // Лидер
-                const leaderHTML = event.leader ? `<div class="event-leader">🎤 ${event.leader}</div>` : '';
-                console.log(`  🎤 Лидер: ${event.leader || 'не указан'}`); // Отладка
+                // Ведущий (ранее лидер)
+                const leaderHTML = event.leader ? `<div class="event-leader">👤 Ведущий: ${event.leader}</div>` : '';
+                console.log(`  👤 Ведущий: ${event.leader || 'не указан'}`); // Отладка
                 
                 return `
                     <div class="event-card" onclick="window.location.href='/public/event/?id=${event.id}'">
