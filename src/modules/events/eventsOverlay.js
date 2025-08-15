@@ -32,12 +32,8 @@ class EventsOverlay {
      * Инициализация оверлея
      */
     init() {
-        console.log('🎯 EventsOverlay: начало инициализации'); // Временный лог
-        logger.log('🎯 EventsOverlay: начало инициализации');
         this.createOverlayHTML();
         this.attachEventListeners();
-        console.log('✅ EventsOverlay инициализирован'); // Временный лог
-        logger.log('✅ EventsOverlay инициализирован');
     }
     
     /**
@@ -312,9 +308,14 @@ class EventsOverlay {
         console.log('📂 EventsOverlay: вызван метод open()'); // Временный лог
         logger.log('📂 EventsOverlay: вызван метод open()');
         
+        // Создаем overlay при первом открытии
         if (!this.overlay) {
-            console.error('❌ EventsOverlay: overlay элемент не найден!'); // Временный лог
-            logger.error('❌ EventsOverlay: overlay элемент не найден!');
+            this.init();
+        }
+        
+        if (!this.overlay) {
+            console.error('❌ EventsOverlay: не удалось создать overlay!');
+            logger.error('❌ EventsOverlay: не удалось создать overlay!');
             return;
         }
         
