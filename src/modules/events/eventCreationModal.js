@@ -337,14 +337,19 @@ class EventCreationModal {
             
             // Собираем всех участников в правильном формате для Firebase
             const participantsObject = {};
+            let participantIndex = 0;
+            
             Object.values(this.selectedParticipants).forEach(group => {
                 group.forEach(participant => {
-                    participantsObject[participant.userId] = {
+                    // Используем уникальный ключ для каждого участника
+                    const key = `${participant.userId}_${participant.instrument}_${participantIndex}`;
+                    participantsObject[key] = {
                         userId: participant.userId,
                         userName: participant.userName,
                         instrument: participant.instrument,
                         instrumentName: participant.instrumentName
                     };
+                    participantIndex++;
                 });
             });
             
@@ -358,11 +363,15 @@ class EventCreationModal {
                 };
             }
             
+            // Добавляем отладочную информацию
+            logger.log('📋 Выбранные участники:', this.selectedParticipants);
+            logger.log('👥 Участники для сохранения:', participantsObject);
+            
             const eventData = {
                 name: eventName,
                 date: new Date(`${eventDate}T${eventTime}`),
                 leaderId: leaderId || user.uid,
-                leaderName: leaderId ? this.availableUsers.find(u => u.id === leaderId)?.name : user.displayName,
+                leaderName: leaderId ? this.availableUsers.find(u => u.id === leaderId)?.name : user.displayName || user.email,
                 setlistId: setlistId || '',
                 participants: participantsObject, // Firebase хранит как объект
                 participantCount: Object.keys(participantsObject).length,

@@ -138,6 +138,11 @@ async function loadEvent() {
             ...eventDoc.data()
         };
         
+        // Преобразуем участников из объекта в массив если нужно
+        if (eventData.participants && typeof eventData.participants === 'object' && !Array.isArray(eventData.participants)) {
+            eventData.participants = Object.values(eventData.participants);
+        }
+        
         console.log('✅ Событие загружено:', eventData);
         
         // Отображаем данные

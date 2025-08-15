@@ -394,11 +394,10 @@ export class EventsCalendar {
                     // Маппинг инструментов на эмодзи
                     const instrumentIcons = {
                         'vocals': '🎤',
-                        'vocal': '🎤',
                         'вокал': '🎤',
-                        'electric_guitar': '🎸',
                         'guitar': '🎸',
                         'гитара': '🎸',
+                        'electric_guitar': '🎸',
                         'электрогитара': '🎸',
                         'acoustic_guitar': '🎸',
                         'акустическая гитара': '🎸',
@@ -411,16 +410,20 @@ export class EventsCalendar {
                         'клавиши': '🎹',
                         'drums': '🥁',
                         'барабаны': '🥁',
+                        'cajon': '🪘',
+                        'кахон': '🪘',
                         'sound': '🎛️',
                         'звукооператор': '🎛️',
-                        'звук': '🎛️'
+                        'звук': '🎛️',
+                        'other': '🎵',
+                        'другое': '🎵'
                     };
                     
                     // Группируем участников по инструментам
                     const instrumentGroups = {};
                     
                     event.participants
-                        .filter(p => p.name)
+                        .filter(p => p.userName || p.name)
                         .forEach(p => {
                             const instrumentName = p.instrumentName || p.instrument || 'Участник';
                             if (!instrumentGroups[instrumentName]) {
@@ -431,7 +434,7 @@ export class EventsCalendar {
                                           '🎵'
                                 };
                             }
-                            instrumentGroups[instrumentName].names.push(p.name);
+                            instrumentGroups[instrumentName].names.push(p.userName || p.name);
                         });
                     
                     // Формируем HTML
