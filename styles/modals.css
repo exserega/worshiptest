@@ -555,6 +555,8 @@ body[data-theme="light"] #copy-text-button.copied {
     max-height: 200px; /* Ограничиваем высоту для компактности */
     overflow-y: auto; /* Скролл при большом количестве сет-листов */
     padding-right: 0.5rem;
+    /* Добавляем нижний отступ чтобы последний элемент не обрезался */
+    padding-bottom: 0.5rem;
 }
 
 /* Стилизация скроллбара */

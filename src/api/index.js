@@ -699,6 +699,69 @@ export async function removeSongFromSetlist(setlistId, songId) {
     }
 }
 
+/**
+ * Обновляет тональность песни в сет-листе
+ * @param {string} setlistId - ID сет-листа
+ * @param {string} songId - ID песни
+ * @param {string} newKey - Новая тональность
+ * @returns {Promise<void>}
+ */
+export async function updateSongKeyInSetlist(setlistId, songId, newKey) {
+    // Проверяем права пользователя
+    try {
+        const { canEditInCurrentBranch, isUserMainBranch } = await import('../modules/branches/branchSelector.js');
+        if (!(await canEditInCurrentBranch())) {
+            if (!isUserMainBranch()) {
+                throw new Error('Изменение тональности доступно только в ваших филиалах.');
+            } else {
+                throw new Error('Изменение тональности недоступно. Ваша заявка находится на рассмотрении.');
+            }
+        }
+    } catch (e) {
+        // Если модуль не загружен, проверяем только статус
+        if (hasLimitedAccess()) {
+            if (isUserGuest()) {
+                throw new Error('Изменение тональности доступно только зарегистрированным пользователям.');
+            } else {
+                throw new Error('Изменение тональности недоступно. Ваша заявка находится на рассмотрении.');
+            }
+        }
+    }
+    
+    if (!setlistId || !songId || !newKey) {
+        throw new Error('setlistId, songId и newKey обязательны');
+    }
+    
+    const setlistRef = doc(setlistsCollection, setlistId);
+    
+    try {
+        const setlistDoc = await getDoc(setlistRef);
+        if (!setlistDoc.exists) {
+            throw new Error('Сет-лист не найден');
+        }
+        
+        const setlistData = setlistDoc.data();
+        const currentSongs = setlistData.songs || [];
+        
+        // Находим песню и обновляем её тональность
+        const updatedSongs = currentSongs.map(song => {
+            if (song.songId === songId) {
+                return { ...song, preferredKey: newKey };
+            }
+            return song;
+        });
+        
+        await updateDoc(setlistRef, {
+            songs: updatedSongs
+        });
+        
+        console.log(`✅ Тональность песни ${songId} в сет-листе ${setlistId} изменена на ${newKey}`);
+    } catch (error) {
+        console.error(`❌ Ошибка обновления тональности песни:`, error);
+        throw error;
+    }
+}
+
 // ====================================
 // VOCALISTS & REPERTOIRE API
 // ====================================

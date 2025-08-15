@@ -216,10 +216,32 @@ class SetlistSelector {
             // Добавляем песню с выбранной тональностью
             console.log('📋 [SetlistSelector] Adding song:', this.currentSong.id, 'to setlist:', setlistId, 'in key:', this.currentSong.selectedKey);
             
-            await addSongToSetlist(setlistId, this.currentSong.id, this.currentSong.selectedKey);
+            const result = await addSongToSetlist(setlistId, this.currentSong.id, this.currentSong.selectedKey);
             
-            // Показываем уведомление
-            this.showNotification('✅ Песня успешно добавлена в сет-лист!', 'success');
+            // Обрабатываем результат
+            if (result.status === 'duplicate') {
+                // Песня уже есть в той же тональности
+                this.showNotification(`⚠️ Песня "${this.currentSong.name}" уже есть в этом сет-листе в тональности ${result.existingKey}`, 'warning');
+                return;
+            } else if (result.status === 'duplicate_key') {
+                // Песня есть в другой тональности - спрашиваем о замене
+                const confirmReplace = confirm(
+                    `Песня "${this.currentSong.name}" уже есть в этом сет-листе в тональности ${result.existingKey}.\n\n` +
+                    `Хотите заменить тональность на ${this.currentSong.selectedKey}?`
+                );
+                
+                if (confirmReplace) {
+                    // Заменяем тональность
+                    await this.replaceSongKey(setlistId, this.currentSong.id, this.currentSong.selectedKey);
+                    this.showNotification(`✅ Тональность песни изменена на ${this.currentSong.selectedKey}`, 'success');
+                } else {
+                    // Пользователь отказался от замены
+                    return;
+                }
+            } else {
+                // Песня успешно добавлена
+                this.showNotification('✅ Песня успешно добавлена в сет-лист!', 'success');
+            }
             
             // Если текущий сет-лист совпадает с тем, куда добавляем - обновляем сразу
             if (window.state?.currentSetlistId === setlistId) {
@@ -259,6 +281,20 @@ class SetlistSelector {
         } catch (error) {
             console.error('Error adding song to setlist:', error);
             this.showNotification('❌ Ошибка при добавлении песни', 'error');
+        }
+    }
+    
+    /**
+     * Заменяет тональность песни в сет-листе
+     */
+    async replaceSongKey(setlistId, songId, newKey) {
+        try {
+            const { updateSongKeyInSetlist } = await import('../api/index.js');
+            await updateSongKeyInSetlist(setlistId, songId, newKey);
+            console.log('📋 [SetlistSelector] Song key replaced successfully');
+        } catch (error) {
+            console.error('Error replacing song key:', error);
+            throw error;
         }
     }
     
