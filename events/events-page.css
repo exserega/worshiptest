@@ -120,6 +120,30 @@
     z-index: 10;
 }
 
+/* Специальные стили для кнопок навигации */
+.month-navigation .icon-button {
+    width: 32px;
+    height: 32px;
+    opacity: 0.6;
+    background: rgba(255, 255, 255, 0.08); /* Полупрозрачный фон */
+}
+
+.month-navigation .icon-button:hover {
+    opacity: 1;
+    background: var(--bg-tertiary);
+    transform: translateY(-1px);
+}
+
+.month-navigation .icon-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Для светлой темы */
+[data-theme="light"] .month-navigation .icon-button {
+    background: rgba(0, 0, 0, 0.06);
+}
+
 /* Сетка календаря */
 .calendar-grid {
     padding: 0 1rem 1rem;
