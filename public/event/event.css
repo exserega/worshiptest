@@ -1,0 +1,126 @@
+/* Информация о событии */
+.event-info {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.event-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.event-date-time,
+.event-leader,
+.event-participants {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.event-date-time i,
+.event-leader i,
+.event-participants i {
+    color: var(--primary-color);
+    font-size: 1.125rem;
+}
+
+.event-leader {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.event-leader::before {
+    content: "Ведущий: ";
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* Секция участников */
+.participants-section {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.participants-section h2 {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.participants-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.participant-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.participant-group:last-child {
+    border-bottom: none;
+}
+
+.participant-instrument {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.participant-instrument::before {
+    font-size: 1.125rem;
+}
+
+/* Иконки инструментов */
+.participant-instrument[data-instrument="vocals"]::before,
+.participant-instrument[data-instrument="вокал"]::before { content: "🎤"; }
+
+.participant-instrument[data-instrument="guitar"]::before,
+.participant-instrument[data-instrument="гитара"]::before,
+.participant-instrument[data-instrument="acoustic_guitar"]::before,
+.participant-instrument[data-instrument="electric_guitar"]::before { content: "🎸"; }
+
+.participant-instrument[data-instrument="bass"]::before,
+.participant-instrument[data-instrument="бас"]::before { content: "🎸"; }
+
+.participant-instrument[data-instrument="keys"]::before,
+.participant-instrument[data-instrument="клавиши"]::before { content: "🎹"; }
+
+.participant-instrument[data-instrument="drums"]::before,
+.participant-instrument[data-instrument="барабаны"]::before { content: "🥁"; }
+
+.participant-instrument[data-instrument="cajon"]::before,
+.participant-instrument[data-instrument="кахон"]::before { content: "🪘"; }
+
+.participant-instrument[data-instrument="sound"]::before,
+.participant-instrument[data-instrument="звукооператор"]::before { content: "🎛️"; }
+
+.participant-names {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.participant-chip {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--text-primary);
+}

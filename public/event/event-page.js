@@ -378,14 +378,23 @@ function displayParticipants() {
     });
     
     // Создаем HTML
-    elements.participantsList.innerHTML = Object.entries(grouped).map(([instrument, names]) => `
-        <div class="participant-group">
-            <div class="participant-instrument">${instrument}:</div>
-            <div class="participant-names">
-                ${names.map(name => `<span class="participant-chip">${name}</span>`).join('')}
+    elements.participantsList.innerHTML = Object.entries(grouped).map(([instrument, names]) => {
+        // Определяем ключ инструмента для data-attribute
+        const instrumentKey = instrument.toLowerCase()
+            .replace('электрогитара', 'electric_guitar')
+            .replace('акустическая гитара', 'acoustic_guitar')
+            .replace('бас-гитара', 'bass')
+            .replace(/\s+/g, '_');
+        
+        return `
+            <div class="participant-group">
+                <div class="participant-instrument" data-instrument="${instrumentKey}">${instrument}:</div>
+                <div class="participant-names">
+                    ${names.map(name => `<span class="participant-chip">${name}</span>`).join('')}
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     // Показываем секцию
     elements.participantsSection.style.display = 'block';
