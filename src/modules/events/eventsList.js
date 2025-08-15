@@ -4,7 +4,12 @@
  */
 
 import logger from '../../utils/logger.js';
-import { hasLimitedAccess, canManageEvents } from '../auth/authCheck.js';
+import { createEvent, updateEvent, deleteEvent } from './eventsApi.js';
+import { db } from '../../utils/firebase-v8-adapter.js';
+import { getCurrentUser } from '../auth/authCheck.js';
+import { loadWorshipSetlists } from '../worship/worshipSetlists.js';
+import { formatDate } from '../../utils/dateUtils.js';
+import { hasLimitedAccess, canManageEvents } from '../permissions/permissions.js';
 
 /**
  * Класс для управления списком событий

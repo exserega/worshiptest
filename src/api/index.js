@@ -34,11 +34,17 @@ import {
 
 import logger from '../utils/logger.js';
 import * as state from '../../js/state.js';
+// Авторизация и безопасность
 import { 
-    isUserPending, 
-    isUserGuest, 
-    hasLimitedAccess 
+    checkAuth, 
+    signInWithGoogle, 
+    signOut,
+    getCurrentUser
 } from '../modules/auth/authCheck.js';
+
+import {
+    hasLimitedAccess
+} from '../modules/permissions/permissions.js';
 // Закомментированы отсутствующие импорты
 // import { getCurrentBranchId } from '../modules/branches/branchUtils.js';
 // import { searchWorkerManager } from '../utils/workerManager.js';

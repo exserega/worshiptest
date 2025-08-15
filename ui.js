@@ -377,8 +377,8 @@ export function displaySongDetails(songData, keyToSelect) {
             // Кнопка копирования теперь управляется через CSS
     if (editBtn) {
         // Проверяем права доступа для кнопки редактирования
-        import('./src/modules/auth/authCheck.js').then(({ canEditSongs }) => {
-            // Показываем кнопку только если у пользователя есть права на редактирование песен
+        import('./src/modules/permissions/permissions.js').then(({ canEditSongs }) => {
+            // Проверяем права
             const hasEditRights = canEditSongs();
             editBtn.style.display = hasEditRights ? 'block' : 'none';
             
@@ -1651,6 +1651,17 @@ export function getCurrentSongData() {
     const songId = songSelect.value;
     return state.allSongs.find(s => s.id === songId) || null;
 }
+
+// Функции авторизации импортируются динамически при необходимости
+let authFunctions = {
+    checkAuth: null,
+    getCurrentUser: null
+};
+
+// Функции проверки прав импортируются динамически при необходимости  
+let permissionsFunctions = {
+    canEditSongs: null
+};
 
 
 

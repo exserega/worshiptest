@@ -28,11 +28,14 @@ import * as state from '../../js/state.js';
 import { 
     isUserPending, 
     isUserGuest, 
-    hasLimitedAccess, 
     getUserStatus, 
     showPendingUserMessage, 
     showGuestMessage 
 } from '../modules/auth/authCheck.js';
+
+import {
+    hasLimitedAccess
+} from '../modules/permissions/permissions.js';
 import logger from '../utils/logger.js';
 
 // ====================================
