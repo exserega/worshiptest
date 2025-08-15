@@ -78,7 +78,7 @@
         </div>
         
         <!-- Индикатор загрузки -->
-        <div class="loading-indicator" id="loadingIndicator">
+        <div class="loading-indicator active" id="loadingIndicator">
             <div class="spinner"></div>
             <p>Загрузка событий...</p>
         </div>
@@ -118,16 +118,32 @@
         // Инициализация страницы
         async function initEventsPage() {
             try {
-                // Ждем авторизации
-                const user = await new Promise((resolve) => {
-                    auth.onAuthStateChanged((user) => {
-                        if (user) {
-                            resolve(user);
-                        } else {
-                            // Перенаправляем на главную если не авторизован
-                            window.location.href = '/';
+                // Ждем загрузки состояния авторизации
+                let authResolved = false;
+                const user = await new Promise((resolve, reject) => {
+                    const unsubscribe = auth.onAuthStateChanged((user) => {
+                        if (!authResolved) {
+                            authResolved = true;
+                            unsubscribe(); // Отписываемся после первого срабатывания
+                            
+                            if (user) {
+                                console.log('Пользователь авторизован:', user.email);
+                                resolve(user);
+                            } else {
+                                console.log('Пользователь не авторизован, перенаправление на главную');
+                                reject(new Error('Не авторизован'));
+                            }
                         }
                     });
+                    
+                    // Таймаут на случай проблем с Firebase
+                    setTimeout(() => {
+                        if (!authResolved) {
+                            authResolved = true;
+                            unsubscribe();
+                            reject(new Error('Таймаут проверки авторизации'));
+                        }
+                    }, 5000);
                 });
                 
                 // Импортируем модули
@@ -137,6 +153,10 @@
                 // Проверяем пользователя
                 const currentUser = getCurrentUser();
                 logger.log('Текущий пользователь:', currentUser);
+                
+                if (!currentUser) {
+                    throw new Error('Пользователь не найден в системе');
+                }
                 
                 // Показываем кнопку создания события для модераторов и админов
                 if (canManageEvents()) {
@@ -150,7 +170,21 @@
                 
             } catch (error) {
                 console.error('Ошибка инициализации страницы событий:', error);
-                alert('Ошибка загрузки страницы. Попробуйте обновить.');
+                
+                if (error.message === 'Не авторизован' || error.message === 'Таймаут проверки авторизации') {
+                    // Перенаправляем на главную
+                    window.location.href = '/';
+                } else {
+                    // Показываем ошибку
+                    document.getElementById('loadingIndicator').innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                                Ошибка загрузки страницы: ${error.message}
+                            </p>
+                            <button class="btn-primary" onclick="location.reload()">Обновить</button>
+                        </div>
+                    `;
+                }
             }
         }
         
