@@ -533,45 +533,51 @@ export class EventsCalendar {
             // Убедимся что date это объект Date
             const eventDate = date instanceof Date ? date : new Date(date);
             
-            // Формируем URL с параметрами
-            const params = new URLSearchParams();
-            params.set('mode', 'create');
-            params.set('date', eventDate.toISOString());
-            params.set('returnUrl', window.location.pathname);
+            // Временное решение через prompt
+            const eventName = prompt(`Введите название события на ${eventDate.toLocaleDateString('ru-RU')}:`);
+            if (!eventName) return;
             
-            // Переходим на страницу создания события
-            window.location.href = `/event-editor?${params.toString()}`;
+            const { createEvent } = await import('../src/modules/events/eventsApi.js');
+            const user = getCurrentUser();
+            
+            // Создаем событие с минимальными данными
+            const eventId = await createEvent({
+                name: eventName,
+                date: eventDate,
+                participants: [{
+                    userId: user.uid,
+                    userName: user.displayName || user.email,
+                    instrument: '',
+                    instrumentName: ''
+                }],
+                participantCount: 1,
+                branchId: user.branchId,
+                leaderId: user.uid,
+                leaderName: user.displayName || user.email,
+                comment: ''
+            });
+            
+            logger.log('✅ Событие создано:', eventId);
+            
+            // Перезагружаем события
+            await this.loadEvents();
+            this.render();
+            
+            // Выбираем дату с новым событием
+            const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
+            for (const dayEl of dayElements) {
+                const dayDate = new Date(dayEl.dataset.date);
+                if (dayDate.toDateString() === eventDate.toDateString()) {
+                    this.handleDayClick({ target: dayEl });
+                    break;
+                }
+            }
+            
+            alert('Событие успешно создано! Вы можете отредактировать его, нажав на карточку события.');
             
         } catch (error) {
             logger.error('Ошибка создания события:', error);
-            // Временное решение - используем простой prompt
-            const eventName = prompt('Введите название события:');
-            if (eventName) {
-                const { createEvent } = await import('../src/modules/events/eventsApi.js');
-                const user = getCurrentUser();
-                const eventDate = preselectedDate || this.selectedDate || new Date();
-                
-                await createEvent({
-                    name: eventName,
-                    date: eventDate instanceof Date ? eventDate : new Date(eventDate),
-                    participants: [{
-                        userId: user.uid,
-                        userName: user.displayName || user.email,
-                        instrument: '',
-                        instrumentName: ''
-                    }],
-                    participantCount: 1,
-                    branchId: user.branchId,
-                    leaderId: user.uid,
-                    leaderName: user.displayName || user.email,
-                    comment: ''
-                });
-                
-                // Перезагружаем события
-                await this.loadEvents();
-                this.render();
-                alert('Событие создано!');
-            }
+            alert('Ошибка при создании события: ' + error.message);
         }
     }
     
