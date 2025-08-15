@@ -562,7 +562,7 @@ body[data-theme="light"] #copy-text-button.copied {
     overflow-x: hidden; /* Скрываем горизонтальный скролл */
     /* Правильная организация отступов */
     padding: 0.75rem;
-    padding-bottom: 1.5rem; /* Большой нижний отступ внутри контейнера */
+    /* ВАЖНО: убираем padding-bottom, будем использовать псевдоэлемент */
     /* Добавляем закругления и стильную границу */
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md, 12px);
@@ -571,6 +571,17 @@ body[data-theme="light"] #copy-text-button.copied {
     margin-bottom: 0.5rem;
     /* Для корректного отображения границ */
     box-sizing: border-box;
+    /* Позиционирование для псевдоэлемента */
+    position: relative;
+}
+
+/* Псевдоэлемент для гарантированного отступа после контента */
+.setlists-grid::after {
+    content: '';
+    display: block;
+    height: 20px; /* Фиксированный отступ после последнего элемента */
+    min-height: 20px; /* Гарантируем минимальную высоту */
+    flex-shrink: 0; /* Не сжимается */
 }
 
 /* Стилизация скроллбара */
@@ -605,9 +616,9 @@ body[data-theme="light"] #copy-text-button.copied {
     align-items: center;
 }
 
-/* Добавляем отступ после последнего элемента */
+/* Убираем margin у последнего элемента - используем псевдоэлемент grid */
 .setlist-item:last-child {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
 }
 
 .setlist-item:hover {
