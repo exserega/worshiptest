@@ -533,51 +533,30 @@ export class EventsCalendar {
             // Убедимся что date это объект Date
             const eventDate = date instanceof Date ? date : new Date(date);
             
-            // Временное решение через prompt
-            const eventName = prompt(`Введите название события на ${eventDate.toLocaleDateString('ru-RU')}:`);
-            if (!eventName) return;
+            // Открываем модальное окно создания события
+            const { openEventCreationModal } = await import('../src/modules/events/eventCreationModal.js');
             
-            const { createEvent } = await import('../src/modules/events/eventsApi.js');
-            const user = getCurrentUser();
-            
-            // Создаем событие с минимальными данными
-            const eventId = await createEvent({
-                name: eventName,
-                date: eventDate,
-                participants: [{
-                    userId: user.uid,
-                    userName: user.displayName || user.email,
-                    instrument: '',
-                    instrumentName: ''
-                }],
-                participantCount: 1,
-                branchId: user.branchId,
-                leaderId: user.uid,
-                leaderName: user.displayName || user.email,
-                comment: ''
-            });
-            
-            logger.log('✅ Событие создано:', eventId);
-            
-            // Перезагружаем события
-            await this.loadEvents();
-            this.render();
-            
-            // Выбираем дату с новым событием
-            const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
-            for (const dayEl of dayElements) {
-                const dayDate = new Date(dayEl.dataset.date);
-                if (dayDate.toDateString() === eventDate.toDateString()) {
-                    this.handleDayClick({ target: dayEl });
-                    break;
+            openEventCreationModal(eventDate, async (eventId) => {
+                logger.log('✅ Событие создано:', eventId);
+                
+                // Перезагружаем события
+                await this.loadEvents();
+                this.render();
+                
+                // Выбираем дату с новым событием
+                const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
+                for (const dayEl of dayElements) {
+                    const dayDate = new Date(dayEl.dataset.date);
+                    if (dayDate.toDateString() === eventDate.toDateString()) {
+                        this.handleDayClick({ target: dayEl });
+                        break;
+                    }
                 }
-            }
-            
-            alert('Событие успешно создано! Вы можете отредактировать его, нажав на карточку события.');
+            });
             
         } catch (error) {
             logger.error('Ошибка создания события:', error);
-            alert('Ошибка при создании события: ' + error.message);
+            alert('Ошибка при открытии окна создания события');
         }
     }
     
