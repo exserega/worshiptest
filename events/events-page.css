@@ -147,38 +147,40 @@
 /* Сетка календаря */
 .calendar-grid {
     padding: 0 1rem 1rem;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px; /* Расстояние между ячейками */
-    background: var(--border-color); /* Цвет границ */
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
 }
 
+/* Дни недели */
 .calendar-weekdays {
-    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 1px; /* Такой же gap как у дней */
-    background: var(--border-color); /* Фон для границ */
-    margin-bottom: 1px; /* Отделяет заголовки от дат */
+    gap: 2px;
+    margin-bottom: 2px;
 }
 
 .calendar-weekday {
-    background: var(--bg-secondary); /* Фон для ячеек дней недели */
-    padding: 0.5rem 0;
+    background: var(--bg-secondary);
     text-align: center;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-secondary);
+    padding: 0.5rem 0;
     text-transform: uppercase;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+/* Дни месяца */
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
 }
 
 .calendar-day {
     aspect-ratio: 1;
-    background: var(--bg-secondary); /* Изменил с var(--bg-primary) */
-    /* border-radius убран для четких границ */
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     padding: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -191,12 +193,11 @@
 
 .calendar-day:hover:not(.other-month) {
     background: var(--bg-tertiary);
-    transform: scale(1.02); /* Уменьшил эффект масштабирования */
-    z-index: 1; /* Чтобы при hover ячейка была поверх других */
+    transform: scale(1.05);
 }
 
 .calendar-day:active:not(.other-month) {
-    transform: scale(0.98);
+    transform: scale(0.95);
 }
 
 .calendar-day.other-month {
@@ -205,23 +206,13 @@
 }
 
 .calendar-day.today {
-    background: var(--bg-secondary);
-    position: relative; /* Для псевдоэлемента */
-}
-
-.calendar-day.today::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+    background: rgba(59, 130, 246, 0.15);
     border: 2px solid var(--primary-color);
-    background: rgba(59, 130, 246, 0.1); /* Полупрозрачный синий фон */
-    pointer-events: none;
 }
 
 .calendar-day.selected {
     background: var(--primary-color);
     color: white;
-    z-index: 1;
 }
 
 .calendar-day.selected .calendar-day-number {
