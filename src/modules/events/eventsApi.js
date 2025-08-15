@@ -51,11 +51,12 @@ export async function getEventsByBranch(branchId) {
                     // Преобразуем объект участников в массив
                     Object.entries(eventData.participants).forEach(([key, participant]) => {
                         console.log(`  - Обработка участника ${key}:`, participant); // Отладка
-                        if (participant && participant.name) {
+                        if (participant && (participant.userName || participant.name)) {
                             participantsArray.push({
-                                id: key,
-                                name: participant.name,
+                                id: participant.userId || key,
+                                name: participant.userName || participant.name,
                                 instrument: participant.instrument || '',
+                                instrumentName: participant.instrumentName || '',
                                 role: participant.role || ''
                             });
                         }
@@ -108,11 +109,12 @@ export async function getEventsByBranch(branchId) {
                     // Преобразуем объект участников в массив
                     Object.entries(eventData.participants).forEach(([key, participant]) => {
                         console.log(`  - [Альт] Обработка участника ${key}:`, participant); // Отладка
-                        if (participant && participant.name) {
+                        if (participant && (participant.userName || participant.name)) {
                             participantsArray.push({
-                                id: key,
-                                name: participant.name,
+                                id: participant.userId || key,
+                                name: participant.userName || participant.name,
                                 instrument: participant.instrument || '',
+                                instrumentName: participant.instrumentName || '',
                                 role: participant.role || ''
                             });
                         }
@@ -224,135 +226,4 @@ export async function createEvent(eventData) {
         };
         
         const docRef = await db.collection('events').add(newEvent);
-        logger.log(`✅ Событие создано с ID: ${docRef.id}`);
-        
-        return docRef.id;
-    } catch (error) {
-        logger.error('❌ Ошибка создания события:', error);
-        throw error;
-    }
-}
-
-/**
- * Обновить событие
- * @param {string} eventId - ID события
- * @param {Object} updates - Обновляемые поля
- */
-export async function updateEvent(eventId, updates) {
-    try {
-        // Получаем количество песен в сетлисте
-        let songCount = 0;
-        if (updates.setlistId) {
-            const setlistDoc = await db.collection('worship_setlists').doc(updates.setlistId).get();
-            if (setlistDoc.exists) {
-                const setlistData = setlistDoc.data();
-                songCount = setlistData.songs ? setlistData.songs.length : 0;
-            }
-        }
-        
-        // Получаем имя лидера
-        let leaderName = null;
-        if (updates.leaderId) {
-            const userDoc = await db.collection('users').doc(updates.leaderId).get();
-            if (userDoc.exists) {
-                const userData = userDoc.data();
-                leaderName = userData.name || userData.displayName || userData.email;
-            }
-        }
-        
-        // Подготавливаем обновления с дополнительными полями
-        const finalUpdates = {
-            ...updates,
-            songCount,
-            leaderName,
-            participantCount: updates.participants ? updates.participants.length : 0,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        const eventRef = db.collection('events').doc(eventId);
-        await eventRef.update(finalUpdates);
-        
-        logger.log(`✅ Событие ${eventId} обновлено`);
-    } catch (error) {
-        logger.error('❌ Ошибка обновления события:', error);
-        throw error;
-    }
-}
-
-/**
- * Удалить событие
- * @param {string} eventId - ID события
- */
-export async function deleteEvent(eventId) {
-    try {
-        const eventRef = db.collection('events').doc(eventId);
-        await eventRef.delete();
-        logger.log(`✅ Событие ${eventId} удалено`);
-    } catch (error) {
-        logger.error('❌ Ошибка удаления события:', error);
-        throw error;
-    }
-}
-
-/**
- * Получить событие по ID
- * @param {string} eventId - ID события
- * @returns {Promise<DocumentSnapshot>}
- */
-export async function getEvent(eventId) {
-    try {
-        const eventRef = db.collection('events').doc(eventId);
-        return await eventRef.get();
-    } catch (error) {
-        logger.error('❌ Ошибка получения события:', error);
-        throw error;
-    }
-}
-
-
-
-/**
- * Получить сетлист события
- * @param {string} setlistId - ID сетлиста
- * @returns {Promise<Object|null>} Данные сетлиста
- */
-export async function getEventSetlist(setlistId) {
-    try {
-        const setlistRef = doc(db, 'worship_setlists', setlistId);
-        const setlistDoc = await getDoc(setlistRef);
-        
-        if (setlistDoc.exists) {
-            return {
-                id: setlistDoc.id,
-                ...setlistDoc.data()
-            };
-        }
-        
-        return null;
-    } catch (error) {
-        logger.error('❌ Ошибка получения сетлиста:', error);
-        throw error;
-    }
-}
-
-/**
- * Форматировать ссылку для шаринга
- * @param {string} eventId - ID события
- * @param {string} eventName - Название события
- * @param {string} platform - Платформа (whatsapp, telegram, copy)
- * @returns {string} URL для шаринга
- */
-export function getShareUrl(eventId, eventName, platform) {
-    const baseUrl = `${window.location.origin}/event/${eventId}`;
-    const message = `📅 Список песен на "${eventName}"\n🔗 ${baseUrl}`;
-    
-    switch (platform) {
-        case 'whatsapp':
-            return `https://wa.me/?text=${encodeURIComponent(message)}`;
-        case 'telegram':
-            return `https://t.me/share/url?url=${encodeURIComponent(baseUrl)}&text=${encodeURIComponent(`📅 Список песен на "${eventName}"`)}`;
-        case 'copy':
-        default:
-            return baseUrl;
-    }
-}
+        logger.log(`

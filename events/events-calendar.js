@@ -388,7 +388,7 @@ export class EventsCalendar {
                     const participantsList = event.participants
                         .filter(p => p.name) // Только участники с именами
                         .map(p => {
-                            const instrument = p.instrument || '';
+                            const instrument = p.instrumentName || p.instrument || '';
                             return `${p.name}${instrument ? ` (${instrument})` : ''}`;
                         })
                         .join(', ');
