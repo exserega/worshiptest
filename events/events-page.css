@@ -612,276 +612,21 @@
 
 .form-control {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    transition: all 0.2s;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.participants-section {
-    background: var(--bg-primary);
-    border-radius: 8px;
-    padding: 1rem;
-}
-
-.selected-participants {
-    margin-bottom: 1rem;
-}
-
-.selected-participants h4 {
-    font-size: 0.875rem;
-    margin: 0 0 0.75rem 0;
-    color: var(--text-secondary);
-}
-
-.selected-participant {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    background: var(--bg-secondary);
-    border-radius: 6px;
-}
-
-.selected-participant span {
-    flex: 1;
-    font-size: 0.875rem;
-}
-
-.selected-participant select {
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: 0.75rem;
-}
-
-.selected-participant button {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.25rem;
-    cursor: pointer;
-    padding: 0 0.5rem;
-}
-
-.participant-search {
-    margin-bottom: 0.75rem;
-}
-
-.participants-list {
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.participant-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.participant-item:hover {
-    background: var(--hover-bg);
-}
-
-.btn-add {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    cursor: pointer;
-}
-
-.form-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-    margin-top: 1.5rem;
-}
-
-.btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-primary {
-    background: var(--primary-color);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #2563eb;
-}
-
-.btn-secondary {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover {
-    background: var(--hover-bg);
-}
-
-/* Модальное окно создания события */
-.event-creation-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2000;
-    display: none;
-}
-
-.event-creation-modal[style*="display: block"] {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-}
-
-.event-creation-modal .modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-}
-
-.event-creation-modal .modal-content {
-    position: relative;
-    background: var(--bg-secondary, #1a1a1a);
-    margin: 0;
-    padding: 0;
-    border-radius: 12px;
-    max-width: 700px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-color, #333);
-    
-    /* Улучшенная прокрутка */
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-color) transparent;
-}
-
-/* Стили скроллбара для webkit браузеров */
-.event-creation-modal .modal-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.event-creation-modal .modal-content::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.event-creation-modal .modal-content::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);
-    border-radius: 4px;
-}
-
-.event-creation-modal .modal-content::-webkit-scrollbar-thumb:hover {
-    background-color: var(--text-secondary);
-}
-
-.event-creation-modal .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.event-creation-modal .modal-header h2 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: var(--text-primary);
-}
-
-.event-creation-modal .close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 8px;
-}
-
-.event-creation-modal .close-btn:hover {
-    background: var(--hover-bg);
-}
-
-.event-creation-modal .modal-body {
-    padding: 1.5rem;
-}
-
-.event-creation-modal .modal-footer {
-    padding: 1.5rem;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-}
-
-/* Элементы формы */
-.form-group {
-    margin-bottom: 1.25rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.form-control {
-    width: 100%;
-    padding: 0.875rem 1rem;
+    padding: 1rem 1rem;
     background: var(--bg-primary, #0a0a0a);
     border: 1px solid var(--border-color, #333);
     border-radius: 8px;
     color: var(--text-primary, #ffffff);
     font-size: 0.9375rem;
     transition: all 0.2s;
-    line-height: 1.5;
-    min-height: 46px;
+    line-height: 1.6;
+    min-height: 48px;
     font-family: inherit;
+    box-sizing: border-box;
 }
 
 select.form-control {
-    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    padding: 1rem 2.5rem 1rem 1rem;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -890,8 +635,8 @@ select.form-control {
     cursor: pointer;
     
     /* Исправление обрезания текста */
-    display: flex;
-    align-items: center;
+    display: block;
+    overflow: visible;
 }
 
 /* Для темной темы - светлая стрелка */
@@ -975,9 +720,10 @@ textarea.form-control {
 }
 
 .instrument-group {
-    background: var(--bg-primary);
-    border-radius: 8px;
-    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
 }
 
 .instrument-header {
@@ -990,25 +736,30 @@ textarea.form-control {
 .instrument-header span {
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--text-primary);
+    color: #ffffff;
 }
 
 .add-participant-btn {
-    background: var(--primary-color);
+    background: #3b82f6;
     color: white;
     border: none;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    font-size: 1rem;
+    font-size: 1.125rem;
+    font-weight: 400;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+    line-height: 1;
 }
 
 .add-participant-btn:hover {
     background: #2563eb;
+    transform: scale(1.1);
 }
 
 .instrument-participants {
@@ -1104,3 +855,146 @@ textarea.form-control {
 }
 
 /* Responsive */
+
+/* Модальное окно создания события */
+.event-creation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: none;
+}
+
+.event-creation-modal[style*="display: block"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-creation-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+}
+
+.event-creation-modal .modal-content {
+    position: relative;
+    background: #1a1a1a;
+    margin: 0;
+    padding: 0;
+    border-radius: 16px;
+    max-width: 700px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Стили скроллбара */
+.event-creation-modal .modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.event-creation-modal .modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.event-creation-modal .modal-content::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.event-creation-modal .modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.event-creation-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.event-creation-modal .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.event-creation-modal .close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+
+.event-creation-modal .close-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.event-creation-modal .modal-body {
+    padding: 1.5rem;
+}
+
+.event-creation-modal .modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+/* Элементы формы */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #9ca3af;
+}
+
+.form-control {
+    width: 100%;
+    padding: 1rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 0.9375rem;
+    transition: all 0.2s;
+    line-height: 1.6;
+    min-height: 48px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
