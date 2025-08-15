@@ -153,34 +153,37 @@
 .calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    margin-bottom: 2px;
+    border: 1px solid var(--border-color);
+    border-bottom: none;
 }
 
 .calendar-weekday {
-    background: transparent; /* Убрал фон */
+    background: transparent;
     text-align: center;
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-secondary);
     padding: 0.5rem 0;
     text-transform: uppercase;
-    /* border убран */
-    /* border-radius убран */
+    border-right: 1px solid var(--border-color);
+}
+
+.calendar-weekday:last-child {
+    border-right: none;
 }
 
 /* Дни месяца */
 .calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
+    border: 1px solid var(--border-color);
 }
 
 .calendar-day {
     aspect-ratio: 1;
     background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
     padding: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -189,6 +192,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+/* Убираем правую границу у последней ячейки в ряду */
+.calendar-day:nth-child(7n) {
+    border-right: none;
+}
+
+/* Убираем нижнюю границу у последнего ряда */
+.calendar-day:nth-last-child(-n+7) {
+    border-bottom: none;
 }
 
 /* Дата с событием - полупрозрачная подсветка */
