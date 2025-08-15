@@ -83,6 +83,7 @@ function updateUI() {
     
     // Role badge
     const isAdmin = currentUser.role === 'admin';
+    const isModerator = currentUser.role === 'moderator';
     
     if (isAdmin) {
         roleEl.textContent = 'Администратор';
@@ -91,6 +92,11 @@ function updateUI() {
         document.getElementById('admin-section').style.display = 'block';
         
         // Убираем старую логику с токеном - Firebase Auth сохраняет сессию автоматически
+    } else if (isModerator) {
+        roleEl.textContent = 'Модератор';
+        roleEl.className = 'badge moderator';
+        // Модераторы также могут видеть админ секцию для доступа к некоторым функциям
+        document.getElementById('admin-section').style.display = 'block';
     } else {
         roleEl.textContent = 'Пользователь';
         roleEl.className = 'badge';
