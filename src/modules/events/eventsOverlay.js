@@ -119,7 +119,10 @@ class EventsOverlay {
             
             // Добавляем права на редактирование для каждого события
             this.events = events.map(event => {
-                const canEdit = event.createdBy === currentUser.uid || currentUser.role === 'admin';
+                // Создатель события, администратор или модератор могут редактировать
+                const canEdit = event.createdBy === currentUser.uid || 
+                               currentUser.role === 'admin' || 
+                               currentUser.role === 'moderator';
                 console.log('🔐 Проверка прав:', {
                     eventId: event.id,
                     eventCreatedBy: event.createdBy,

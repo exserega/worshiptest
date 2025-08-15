@@ -144,6 +144,15 @@ export async function isUserInSelectedBranch() {
  * Проверить, может ли пользователь редактировать в текущем филиале
  */
 export async function canEditInCurrentBranch() {
+    // Импортируем функцию проверки администратора
+    const { isAdmin } = await import('../auth/authCheck.js');
+    
+    // Администраторы могут редактировать во всех филиалах
+    if (await isAdmin()) {
+        console.log('🔐 [BranchSelector] Admin detected - can edit in all branches');
+        return true;
+    }
+    
     // Проверяем статус пользователя
     const status = getUserStatus();
     if (status !== 'active') {
@@ -158,6 +167,14 @@ export async function canEditInCurrentBranch() {
  * Показать сообщение о просмотре чужого филиала
  */
 export async function showOtherBranchMessage(action) {
+    // Импортируем функцию проверки администратора
+    const { isAdmin } = await import('../auth/authCheck.js');
+    
+    // Администраторам не показываем сообщение - они могут работать во всех филиалах
+    if (await isAdmin()) {
+        return;
+    }
+    
     const selectedBranch = branches.find(b => b.id === selectedBranchId);
     const branchName = selectedBranch ? selectedBranch.name : 'другого филиала';
     

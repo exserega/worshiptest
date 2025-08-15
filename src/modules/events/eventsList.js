@@ -4,7 +4,7 @@
  */
 
 import logger from '../../utils/logger.js';
-import { hasLimitedAccess } from '../auth/authCheck.js';
+import { hasLimitedAccess, canManageEvents } from '../auth/authCheck.js';
 
 /**
  * Класс для управления списком событий
@@ -99,7 +99,7 @@ export class EventsList {
                 <div class="event-header">
                     <div class="event-date">📅 ${date}</div>
                     <div class="event-actions">
-                        ${!hasLimitedAccess() && event.canEdit ? 
+                        ${canManageEvents() && event.canEdit ? 
                             `<button class="event-edit-btn" title="Редактировать">
                                 <i class="fas fa-edit"></i>
                             </button>
@@ -133,7 +133,7 @@ export class EventsList {
             this.container.innerHTML = `
                 <div class="empty-events">
                     <p>Нет событий в вашем филиале</p>
-                    ${!hasLimitedAccess() ? 
+                    ${canManageEvents() ? 
                         '<button class="btn-create-event">Создать первое событие</button>' : ''
                     }
                 </div>
@@ -155,7 +155,7 @@ export class EventsList {
                     <button class="filter-btn ${this.currentFilter === 'archive' ? 'active' : ''}" 
                             data-filter="archive">Архив</button>
                 </div>
-                ${!hasLimitedAccess() ? 
+                ${canManageEvents() ? 
                     '<button class="btn-create-event"><i class="fas fa-plus"></i> Создать событие</button>' : ''
                 }
             </div>
