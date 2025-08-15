@@ -24,7 +24,6 @@ class EventsOverlay {
         this.currentBranchId = null;
         this.CalendarView = null; // Класс будет загружен лениво
         
-        console.log('✅ EventsOverlay инициализирован'); // Временный лог
         logger.log('✅ EventsOverlay инициализирован');
     }
     
@@ -101,38 +100,33 @@ class EventsOverlay {
      * Загрузить события текущего филиала
      */
     async loadEvents() {
-        console.log('🔄 loadEvents: начало загрузки событий'); // Временный лог
         try {
             // Получаем текущего пользователя
             const currentUser = getCurrentUser();
-            console.log('👤 Текущий пользователь:', currentUser); // Временный лог
             
             if (!currentUser) {
-                console.warn('⚠️ Пользователь не авторизован'); // Временный лог
+                console.warn('⚠️ Пользователь не авторизован');
                 logger.warn('Пользователь не авторизован');
                 this.showEmptyState('Необходима авторизация');
                 return;
             }
             
             if (!currentUser.branchId) {
-                console.warn('⚠️ У пользователя не установлен филиал'); // Временный лог
+                console.warn('⚠️ У пользователя не установлен филиал');
                 logger.warn('У пользователя не установлен филиал');
                 this.showEmptyState('Филиал не выбран');
                 return;
             }
             
             this.currentBranchId = currentUser.branchId;
-            console.log(`📅 Загрузка событий для филиала: ${this.currentBranchId}`); // Временный лог
             logger.log(`Загрузка событий для филиала: ${this.currentBranchId}`);
             
-            // Показываем индикатор загрузки
-            const contentEl = this.overlay.querySelector('.events-content');
-            contentEl.innerHTML = '<div class="loading-indicator">Загрузка событий...</div>';
+            // НЕ перезаписываем весь контент, сохраняем структуру
+            // Показываем индикатор загрузки только в активном контейнере
             
             // Загружаем события
-            console.log('🔍 Вызываем getEventsByBranch...'); // Временный лог
+            logger.log('Вызываем getEventsByBranch...');
             const events = await getEventsByBranch(this.currentBranchId);
-            console.log('📊 События загружены:', events); // Временный лог
             
             // Добавляем права на редактирование для каждого события
             this.events = events.map(event => {
@@ -140,7 +134,7 @@ class EventsOverlay {
                 const canEdit = event.createdBy === currentUser.uid || 
                                currentUser.role === 'admin' || 
                                currentUser.role === 'moderator';
-                console.log('🔐 Проверка прав:', {
+                logger.log('Проверка прав:', {
                     eventId: event.id,
                     eventCreatedBy: event.createdBy,
                     currentUserId: currentUser.uid,
@@ -153,6 +147,24 @@ class EventsOverlay {
                 };
             });
             
+            // Убеждаемся что контейнеры существуют
+            const eventsContent = this.overlay.querySelector('.events-content');
+            if (eventsContent && !eventsContent.querySelector('.events-calendar-container')) {
+                logger.log('📦 Восстанавливаем контейнеры');
+                eventsContent.innerHTML = `
+                    <div class="view-switcher" style="margin-bottom: 1rem; text-align: center; display: none;">
+                        <button class="view-btn calendar-view-btn active">Календарь</button>
+                        <button class="view-btn list-view-btn">Список</button>
+                    </div>
+                    <div class="events-calendar-container" style="display: block;">
+                        <!-- Календарь будет здесь -->
+                    </div>
+                    <div class="events-list-container" style="display: none;">
+                        <!-- Список событий будет здесь -->
+                    </div>
+                `;
+            }
+            
             // Отображаем события в зависимости от режима
             if (this.viewMode === 'calendar') {
                 await this.showCalendarView();
@@ -161,7 +173,7 @@ class EventsOverlay {
             }
             
         } catch (error) {
-            console.error('❌ Ошибка загрузки событий:', error); // Временный лог
+            console.error('❌ Ошибка загрузки событий:', error);
             logger.error('Ошибка загрузки событий:', error);
             this.showEmptyState('Ошибка загрузки событий');
         }
@@ -172,12 +184,26 @@ class EventsOverlay {
      * @param {string} message - Сообщение
      */
     showEmptyState(message) {
-        const contentEl = this.overlay.querySelector('.events-content');
-        contentEl.innerHTML = `
-            <div class="empty-events">
-                <p>${message}</p>
-            </div>
-        `;
+        // Не перезаписываем весь контент, а только показываем сообщение в нужном контейнере
+        if (this.viewMode === 'calendar') {
+            const calendarContainer = this.overlay.querySelector('.events-calendar-container');
+            if (calendarContainer) {
+                calendarContainer.innerHTML = `
+                    <div class="empty-events">
+                        <p>${message}</p>
+                    </div>
+                `;
+            }
+        } else {
+            const listContainer = this.overlay.querySelector('.events-list-container');
+            if (listContainer) {
+                listContainer.innerHTML = `
+                    <div class="empty-events">
+                        <p>${message}</p>
+                    </div>
+                `;
+            }
+        }
     }
     
     /**
@@ -194,7 +220,7 @@ class EventsOverlay {
      * Обработчик создания события
      */
     async handleCreateEvent() {
-        console.log('🆕 Открываем модальное окно создания события');
+        logger.log('Открываем модальное окно создания события');
         
         // Закрываем оверлей событий для лучшего UX
         this.close();
@@ -204,7 +230,7 @@ class EventsOverlay {
             const modal = getEventModal();
             
             modal.openForCreate(async (eventId) => {
-                console.log('✅ Событие создано, обновляем список');
+                logger.log('✅ Событие создано, обновляем список');
                 // Открываем оверлей обратно и перезагружаем события
                 this.open();
                 await this.loadEvents();
@@ -233,7 +259,7 @@ class EventsOverlay {
      * @param {string} eventName - Название события
      */
     async handleEventDelete(eventId, eventName) {
-        console.log('🗑️ Удаление события:', eventId, eventName);
+        logger.log('Удаление события:', eventId, eventName);
         
         // Подтверждение удаления
         const confirmMessage = `Вы уверены, что хотите удалить событие "${eventName}"?\n\nЭто действие нельзя отменить.`;
@@ -244,7 +270,7 @@ class EventsOverlay {
         try {
             // Удаляем событие
             await deleteEvent(eventId);
-            console.log('✅ Событие удалено');
+            logger.log('✅ Событие удалено');
             
             // Перезагружаем список событий
             await this.loadEvents();
@@ -305,7 +331,6 @@ class EventsOverlay {
      * Открытие оверлея
      */
     open() {
-        console.log('📂 EventsOverlay: вызван метод open()'); // Временный лог
         logger.log('📂 EventsOverlay: вызван метод open()');
         
         // Создаем overlay при первом открытии
@@ -322,7 +347,6 @@ class EventsOverlay {
         this.overlay.classList.add('visible');
         this.isOpen = true;
         document.addEventListener('keydown', this.escapeHandler);
-        console.log('✅ EventsOverlay открыт'); // Временный лог
         logger.log('✅ EventsOverlay открыт');
         
         // Загружаем события при открытии
@@ -487,16 +511,14 @@ export function initEventsOverlay() {
 }
 
 export function openEventsOverlay() {
-    console.log('🚀 openEventsOverlay вызвана'); // Временный лог для диагностики
     logger.log('🚀 openEventsOverlay вызвана');
     
     if (!eventsOverlayInstance) {
-        console.log('📦 Создаем новый экземпляр EventsOverlay'); // Временный лог
         logger.log('📦 Создаем новый экземпляр EventsOverlay');
         initEventsOverlay();
     }
     
-    console.log('📞 Вызываем open() на экземпляре:', eventsOverlayInstance); // Временный лог
+    logger.log('📞 Вызываем open() на экземпляре:', eventsOverlayInstance);
     eventsOverlayInstance.open();
 }
 
