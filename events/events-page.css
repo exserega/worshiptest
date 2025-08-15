@@ -107,12 +107,12 @@
     flex-shrink: 0;
     background: var(--bg-secondary);
     position: relative;
-    padding-top: 4rem; /* Увеличил отступ еще больше */
+    padding-top: 4.5rem; /* Увеличил отступ еще больше */
 }
 
 .month-navigation {
     position: absolute;
-    top: 0.25rem; /* Поднял еще выше (примерно на 5px) */
+    top: 0; /* Поднял до самого верха */
     left: 1rem;
     right: 1rem;
     display: flex;
@@ -154,10 +154,15 @@
 .month-nav-btn svg path {
     stroke: currentColor !important;
     fill: none !important;
+    stroke-width: 2.5 !important;
 }
 
 /* Dark theme specific for month nav buttons */
 :root .month-nav-btn {
+    color: #b0b0b0 !important;
+}
+
+:root .month-nav-btn svg {
     color: #b0b0b0 !important;
 }
 
@@ -166,6 +171,10 @@
 }
 
 :root .month-nav-btn:hover {
+    color: white !important;
+}
+
+:root .month-nav-btn:hover svg {
     color: white !important;
 }
 
