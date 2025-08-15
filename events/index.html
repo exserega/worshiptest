@@ -112,20 +112,20 @@
                 
                 try {
                     // Импортируем модули
-                    const { getCurrentUser, canManageEvents } = await import('../src/modules/auth/authCheck.js');
+                    const { checkAuth, getCurrentUser, canManageEvents } = await import('../src/modules/auth/authCheck.js');
                     const logger = (await import('../src/utils/logger.js')).default;
                     
-                    // Проверяем пользователя
-                    const currentUser = getCurrentUser();
-                    logger.log('Текущий пользователь:', currentUser);
+                    // Сначала вызываем checkAuth для загрузки данных пользователя
+                    logger.log('Вызываем checkAuth для загрузки данных пользователя...');
+                    const authResult = await checkAuth();
+                    logger.log('Результат checkAuth:', authResult);
                     
-                    if (!currentUser) {
-                        // Ждем немного на случай загрузки данных
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        const userRetry = getCurrentUser();
-                        if (!userRetry) {
-                            throw new Error('Пользователь не найден в системе');
-                        }
+                    // Теперь проверяем пользователя
+                    const currentUser = getCurrentUser();
+                    logger.log('Текущий пользователь после checkAuth:', currentUser);
+                    
+                    if (!currentUser || !currentUser.branchId) {
+                        throw new Error('Пользователь не найден в системе или не выбран филиал');
                     }
                     
                     // Показываем кнопку создания события для модераторов и админов
