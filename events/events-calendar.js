@@ -206,9 +206,13 @@ export class EventsCalendar {
         dayNumber.textContent = date.getDate();
         dayEl.appendChild(dayNumber);
         
-        // События дня
+        // Проверяем события для этой даты
         const dayEvents = this.getEventsForDay(date);
-        if (dayEvents.length > 0 && !isOtherMonth) {
+        if (dayEvents.length > 0) {
+            // Добавляем класс для подсветки
+            dayEl.classList.add('has-events');
+            
+            // Добавляем индикаторы событий
             const eventsEl = document.createElement('div');
             eventsEl.className = 'calendar-day-events';
             

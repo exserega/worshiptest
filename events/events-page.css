@@ -158,15 +158,15 @@
 }
 
 .calendar-weekday {
-    background: var(--bg-secondary);
+    background: transparent; /* Убрал фон */
     text-align: center;
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-secondary);
     padding: 0.5rem 0;
     text-transform: uppercase;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+    /* border убран */
+    /* border-radius убран */
 }
 
 /* Дни месяца */
@@ -191,9 +191,29 @@
     justify-content: center;
 }
 
+/* Дата с событием - полупрозрачная подсветка */
+.calendar-day.has-events {
+    background: rgba(59, 130, 246, 0.08); /* Очень легкий синий фон */
+}
+
+/* Для темной темы */
+:root .calendar-day.has-events {
+    background: rgba(59, 130, 246, 0.12);
+}
+
+/* Для светлой темы */
+[data-theme="light"] .calendar-day.has-events {
+    background: rgba(59, 130, 246, 0.06);
+}
+
 .calendar-day:hover:not(.other-month) {
     background: var(--bg-tertiary);
     transform: scale(1.05);
+}
+
+/* При hover на дату с событием */
+.calendar-day.has-events:hover:not(.other-month) {
+    background: var(--bg-tertiary);
 }
 
 .calendar-day:active:not(.other-month) {
@@ -210,9 +230,19 @@
     border: 2px solid var(--primary-color);
 }
 
+/* Если сегодня есть события */
+.calendar-day.today.has-events {
+    background: rgba(59, 130, 246, 0.25);
+}
+
 .calendar-day.selected {
     background: var(--primary-color);
     color: white;
+}
+
+/* Выбранная дата с событиями */
+.calendar-day.selected.has-events {
+    background: var(--primary-color);
 }
 
 .calendar-day.selected .calendar-day-number {

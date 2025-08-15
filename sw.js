@@ -1,5 +1,5 @@
 // Service Worker для Agape Worship с поддержкой PWA
-const CACHE_NAME = 'agape-worship-cache-v292';
+const CACHE_NAME = 'agape-worship-cache-v293';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
