@@ -362,16 +362,40 @@ export class EventsCalendar {
             `;
         } else {
             // Есть события
-            const eventsHTML = events.map(event => `
-                <div class="event-card" onclick="window.location.href='/public/event/?id=${event.id}'">
-                    <div class="event-time">${this.formatTime(event.date)}</div>
-                    <div class="event-name">${event.name}</div>
-                    <div class="event-participants">
-                        ${event.participantCount || 0} участников
-                        ${event.leader ? `• ${event.leader}` : ''}
+            const eventsHTML = events.map(event => {
+                // Формируем компактный список участников
+                let participantsHTML = '';
+                if (event.participants && Array.isArray(event.participants)) {
+                    const participantsList = event.participants
+                        .filter(p => p.name) // Только участники с именами
+                        .map(p => {
+                            const instrument = p.instrument || '';
+                            return `${p.name}${instrument ? ` (${instrument})` : ''}`;
+                        })
+                        .join(', ');
+                    
+                    if (participantsList) {
+                        participantsHTML = `<div class="event-participants-list">${participantsList}</div>`;
+                    }
+                }
+                
+                // Лидер
+                const leaderHTML = event.leader ? `<div class="event-leader">🎤 ${event.leader}</div>` : '';
+                
+                return `
+                    <div class="event-card" onclick="window.location.href='/public/event/?id=${event.id}'">
+                        <div class="event-header">
+                            <div class="event-time">${this.formatTime(event.date)}</div>
+                            <div class="event-name">${event.name}</div>
+                        </div>
+                        ${leaderHTML}
+                        ${participantsHTML}
+                        <div class="event-info">
+                            <span class="event-count">${event.participantCount || 0} участников</span>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             
             container.innerHTML = `
                 <div class="selected-date-header">
