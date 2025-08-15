@@ -463,7 +463,9 @@ window.handleFavoriteOrRepertoireSelect = function(song) {
         logger.log('🎵 [Legacy] Displaying song details for:', fullSongData.name);
         
         // Передаем также тональность, если она указана в песне из сет-листа
-        const keyToSelect = song.keyToSelect || song.defaultKey || fullSongData.defaultKey;
+        // Приоритет: preferredKey из сетлиста, затем defaultKey
+        const keyToSelect = song.preferredKey || song.keyToSelect || song.defaultKey || fullSongData.defaultKey;
+        logger.log('🎵 [Legacy] Key to select:', keyToSelect, 'preferredKey:', song.preferredKey);
         ui.displaySongDetails(fullSongData, keyToSelect);
     }
     
