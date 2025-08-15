@@ -88,18 +88,20 @@ function updateUI() {
     if (isAdmin) {
         roleEl.textContent = 'Администратор';
         roleEl.className = 'badge admin';
-        // Показываем админ секцию
+        // Показываем админ секцию только для администраторов
         document.getElementById('admin-section').style.display = 'block';
         
         // Убираем старую логику с токеном - Firebase Auth сохраняет сессию автоматически
     } else if (isModerator) {
         roleEl.textContent = 'Модератор';
         roleEl.className = 'badge moderator';
-        // Модераторы также могут видеть админ секцию для доступа к некоторым функциям
-        document.getElementById('admin-section').style.display = 'block';
+        // Модераторам НЕ показываем админ секцию
+        document.getElementById('admin-section').style.display = 'none';
     } else {
         roleEl.textContent = 'Пользователь';
         roleEl.className = 'badge';
+        // Обычным пользователям также скрываем админ секцию
+        document.getElementById('admin-section').style.display = 'none';
     }
     
     // Status badge
