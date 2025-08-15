@@ -6,7 +6,7 @@
 import logger from '../../utils/logger.js';
 import { createEvent, updateEvent } from './eventsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
-import { searchUsers } from '../branches/branchTransfer.js';
+import { db } from '../../utils/firebase-v8-adapter.js';
 
 let modalInstance = null;
 
@@ -40,6 +40,7 @@ class EventModal {
     }
     
     open({ date, event, onSave }) {
+        this.event = event;
         this.onSave = onSave;
         this.createModal();
         this.populateForm(date, event);
@@ -172,7 +173,34 @@ class EventModal {
         }
         
         try {
-            const users = await searchUsers(query);
+            const user = getCurrentUser();
+            if (!user || !user.branchId) {
+                logger.warn('Пользователь не авторизован или не выбран филиал');
+                return;
+            }
+            
+            // Ищем пользователей в том же филиале
+            const usersRef = db.collection('users');
+            const snapshot = await usersRef
+                .where('branchId', '==', user.branchId)
+                .where('status', '==', 'active')
+                .get();
+            
+            const users = [];
+            snapshot.forEach(doc => {
+                const userData = doc.data();
+                const name = userData.name || userData.displayName || userData.email || '';
+                
+                // Фильтруем по запросу
+                if (name.toLowerCase().includes(query.toLowerCase())) {
+                    users.push({
+                        id: doc.id,
+                        name: name,
+                        email: userData.email
+                    });
+                }
+            });
+            
             this.participantsList = users;
             this.renderSearchResults();
         } catch (error) {

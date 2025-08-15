@@ -308,7 +308,7 @@ export class EventsCalendar {
         this.calendarDays.addEventListener('click', (e) => {
             const dayEl = e.target.closest('.calendar-day');
             if (dayEl && !dayEl.classList.contains('other-month')) {
-                this.selectDay(dayEl);
+                this.handleDayClick({ target: dayEl });
             }
         });
     }
