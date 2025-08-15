@@ -351,14 +351,56 @@ class EventsOverlay {
             return;
         }
         
+        // Ищем контент контейнер сначала
+        const eventsContent = this.overlay.querySelector('.events-content');
+        logger.log('🔍 events-content найден:', !!eventsContent);
+        
         const calendarContainer = this.overlay.querySelector('.events-calendar-container');
         const listContainer = this.overlay.querySelector('.events-list-container');
         
+        logger.log('🔍 Поиск контейнеров:', {
+            overlay: !!this.overlay,
+            eventsContent: !!eventsContent,
+            calendarContainer: !!calendarContainer,
+            listContainer: !!listContainer
+        });
+        
         if (!calendarContainer || !listContainer) {
             logger.error('❌ Контейнеры календаря/списка не найдены');
+            // Попробуем создать их заново
+            if (eventsContent) {
+                eventsContent.innerHTML = `
+                    <div class="view-switcher" style="margin-bottom: 1rem; text-align: center; display: none;">
+                        <button class="view-btn calendar-view-btn active">Календарь</button>
+                        <button class="view-btn list-view-btn">Список</button>
+                    </div>
+                    <div class="events-calendar-container" style="display: block;">
+                        <!-- Календарь будет здесь -->
+                    </div>
+                    <div class="events-list-container" style="display: none;">
+                        <!-- Список событий будет здесь -->
+                    </div>
+                `;
+                
+                // Повторно ищем контейнеры
+                const newCalendarContainer = this.overlay.querySelector('.events-calendar-container');
+                const newListContainer = this.overlay.querySelector('.events-list-container');
+                
+                if (newCalendarContainer && newListContainer) {
+                    logger.log('✅ Контейнеры пересозданы успешно');
+                    await this.showCalendarViewInternal(newCalendarContainer, newListContainer);
+                }
+            }
             return;
         }
         
+        await this.showCalendarViewInternal(calendarContainer, listContainer);
+    }
+    
+    /**
+     * Внутренний метод показа календаря
+     */
+    async showCalendarViewInternal(calendarContainer, listContainer) {
         // Показываем календарь, скрываем список
         calendarContainer.style.display = 'block';
         listContainer.style.display = 'none';
