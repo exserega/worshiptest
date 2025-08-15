@@ -483,7 +483,8 @@ body[data-theme="light"] #copy-text-button.copied {
 .song-info-compact {
     background: var(--bg-secondary);
     padding: 0.75rem;
-    border-radius: var(--radius-sm);
+    /* Увеличиваем закругления */
+    border-radius: var(--radius-md, 10px);
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -556,7 +557,12 @@ body[data-theme="light"] #copy-text-button.copied {
     overflow-y: auto; /* Скролл при большом количестве сет-листов */
     padding-right: 0.5rem;
     /* Добавляем нижний отступ чтобы последний элемент не обрезался */
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.75rem; /* Увеличиваем отступ */
+    /* Добавляем закругления и стильную границу */
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md, 12px);
+    padding: 0.75rem;
+    background: var(--bg-primary);
 }
 
 /* Стилизация скроллбара */
@@ -581,7 +587,8 @@ body[data-theme="light"] #copy-text-button.copied {
 .setlist-item {
     background: var(--bg-secondary);
     padding: 0.75rem 1rem;
-    border-radius: var(--radius-sm);
+    /* Увеличиваем закругления для более современного вида */
+    border-radius: var(--radius-md, 10px);
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -593,12 +600,16 @@ body[data-theme="light"] #copy-text-button.copied {
 .setlist-item:hover {
     border-color: var(--primary-color);
     background: var(--bg-tertiary);
+    /* Добавляем тень при наведении */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
 }
 
 /* Визуальная индикация выбранного сет-листа при клике */
 .setlist-item.selected {
     border-color: var(--primary-color);
     background: rgba(var(--primary-rgb), 0.1);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
 }
 
 .setlist-name {
@@ -639,6 +650,12 @@ body[data-theme="light"] #copy-text-button.copied {
 .create-new-compact {
     border-top: 1px solid var(--border-color);
     padding-top: 0.75rem;
+    margin-top: 0.75rem;
+    /* Добавляем закругленный фон для секции */
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md, 10px);
+    padding: 1rem;
+    border: 1px solid var(--border-color);
 }
 
 .or-text {
@@ -646,6 +663,7 @@ body[data-theme="light"] #copy-text-button.copied {
     color: var(--text-tertiary);
     display: block;
     margin-bottom: 0.5rem;
+    text-align: center;
 }
 
 .new-setlist-row {

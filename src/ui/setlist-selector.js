@@ -337,14 +337,13 @@ class SetlistSelector {
      * Показывает уведомление
      */
     showNotification(message, type = 'info') {
-        // Используем глобальную функцию уведомлений если она есть
-        if (typeof window.showNotification === 'function') {
+        // Используем глобальную функцию если она доступна
+        if (window.showNotification) {
             window.showNotification(message, type);
-            return;
+        } else {
+            // Fallback на alert
+            alert(message);
         }
-        
-        // Иначе простой alert
-        alert(message);
     }
 }
 
