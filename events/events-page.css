@@ -118,85 +118,6 @@
     display: flex;
     justify-content: space-between;
     z-index: 10;
-    pointer-events: none; /* Чтобы не блокировать клики вне кнопок */
-}
-
-.month-nav-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-radius: 10px;
-    pointer-events: all; /* Восстанавливаем клики для самих кнопок */
-}
-
-.month-nav-btn:hover {
-    background: var(--primary-color);
-    color: white !important;
-    transform: translateY(-1px);
-}
-
-.month-nav-btn:active {
-    transform: scale(0.95);
-}
-
-.month-nav-btn svg {
-    width: 20px;
-    height: 20px;
-}
-
-.month-nav-btn svg path {
-    stroke: currentColor !important;
-    fill: none !important;
-    stroke-width: 2.5 !important;
-}
-
-/* Dark theme specific for month nav buttons */
-:root .month-nav-btn {
-    color: #b0b0b0 !important;
-}
-
-:root .month-nav-btn svg {
-    color: #b0b0b0 !important;
-}
-
-:root .month-nav-btn svg path {
-    stroke: #b0b0b0 !important;
-}
-
-:root .month-nav-btn:hover {
-    color: white !important;
-}
-
-:root .month-nav-btn:hover svg {
-    color: white !important;
-}
-
-:root .month-nav-btn:hover svg path {
-    stroke: white !important;
-}
-
-/* Light theme specific for month nav buttons */
-[data-theme="light"] .month-nav-btn {
-    color: #666666 !important;
-}
-
-[data-theme="light"] .month-nav-btn svg path {
-    stroke: #666666 !important;
-}
-
-[data-theme="light"] .month-nav-btn:hover {
-    color: white !important;
-}
-
-[data-theme="light"] .month-nav-btn:hover svg path {
-    stroke: white !important;
 }
 
 /* Сетка календаря */
@@ -441,11 +362,6 @@
     .icon-button {
         width: 36px;
         height: 36px;
-    }
-    
-    .month-nav-btn {
-        width: 32px;
-        height: 32px;
     }
     
     .calendar-weekday {
