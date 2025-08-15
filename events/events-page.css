@@ -107,17 +107,18 @@
     flex-shrink: 0;
     background: var(--bg-secondary);
     position: relative;
-    padding-top: 3rem; /* Увеличил отступ для навигации */
+    padding-top: 3.5rem; /* Увеличил отступ для навигации */
 }
 
 .month-navigation {
     position: absolute;
-    top: 0.75rem; /* Поднял выше */
+    top: 0.5rem; /* Поднял еще выше */
     left: 1rem;
     right: 1rem;
     display: flex;
     justify-content: space-between;
     z-index: 10;
+    pointer-events: none; /* Чтобы не блокировать клики вне кнопок */
 }
 
 .month-nav-btn {
@@ -132,6 +133,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     border-radius: 50%;
+    pointer-events: all; /* Восстанавливаем клики для самих кнопок */
 }
 
 .month-nav-btn:hover {
