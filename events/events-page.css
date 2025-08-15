@@ -789,6 +789,28 @@
     overflow-y: auto;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-color, #333);
+    
+    /* Улучшенная прокрутка */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+
+/* Стили скроллбара для webkit браузеров */
+.event-creation-modal .modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.event-creation-modal .modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.event-creation-modal .modal-content::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+}
+
+.event-creation-modal .modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-secondary);
 }
 
 .event-creation-modal .modal-header {
@@ -846,19 +868,64 @@
 
 .form-control {
     width: 100%;
-    padding: 0.75rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
+    padding: 0.875rem 1rem;
+    background: var(--bg-primary, #0a0a0a);
+    border: 1px solid var(--border-color, #333);
     border-radius: 8px;
-    color: var(--text-primary);
+    color: var(--text-primary, #ffffff);
     font-size: 0.9375rem;
     transition: all 0.2s;
+    line-height: 1.5;
+    min-height: 46px;
+    font-family: inherit;
+}
+
+select.form-control {
+    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px;
+    cursor: pointer;
+    
+    /* Исправление обрезания текста */
+    display: flex;
+    align-items: center;
+}
+
+/* Для темной темы - светлая стрелка */
+[data-theme="dark"] select.form-control {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ccc' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+}
+
+/* Светлая тема */
+[data-theme="light"] .form-control {
+    background: #ffffff;
+    border-color: #e5e5e5;
+    color: #1a1a1a;
+}
+
+[data-theme="light"] select.form-control {
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+}
+
+textarea.form-control {
+    min-height: 80px;
+    resize: vertical;
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Исправление для обрезанного текста в селектах */
+.form-control option {
+    padding: 0.5rem;
+    line-height: 1.5;
 }
 
 .form-row {
