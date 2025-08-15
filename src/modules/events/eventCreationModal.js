@@ -237,15 +237,14 @@ class EventCreationModal {
         selector.className = 'participant-selector';
         selector.innerHTML = `
             <div class="selector-content">
-                <h4>Выберите участника</h4>
+                <button class="selector-close-btn" onclick="this.closest('.participant-selector').remove()">×</button>
                 <div class="user-list">
                     ${this.availableUsers.map(u => `
-                        <div class="user-item" onclick="eventCreationModal.addParticipant('${instrumentId}', '${u.id}', '${u.name}')">
+                        <div class="user-item" onclick="eventCreationModal.addParticipant('${instrumentId}', '${u.id}', '${u.name.replace(/'/g, "\\'")}')">
                             ${u.name}
                         </div>
                     `).join('')}
                 </div>
-                <button class="close-selector" onclick="this.parentElement.parentElement.remove()">Закрыть</button>
             </div>
         `;
         
