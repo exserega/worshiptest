@@ -226,4 +226,87 @@ export async function createEvent(eventData) {
         };
         
         const docRef = await db.collection('events').add(newEvent);
-        logger.log(`
+        logger.log(`✅ Событие создано с ID: ${docRef.id}`);
+        
+        return docRef.id;
+    } catch (error) {
+        logger.error('❌ Ошибка создания события:', error);
+        throw error;
+    }
+}
+
+/**
+ * Обновить событие
+ * @param {string} eventId - ID события
+ * @param {Object} updates - Обновляемые поля
+ */
+export async function updateEvent(eventId, updates) {
+    try {
+        // Получаем количество песен в сетлисте
+        let songCount = 0;
+        if (updates.setlistId) {
+            const setlistDoc = await db.collection('worship_setlists').doc(updates.setlistId).get();
+            if (setlistDoc.exists) {
+                const setlistData = setlistDoc.data();
+                songCount = setlistData.songs ? setlistData.songs.length : 0;
+            }
+        }
+        
+        // Получаем имя лидера
+        let leaderName = null;
+        if (updates.leaderId) {
+            const userDoc = await db.collection('users').doc(updates.leaderId).get();
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                leaderName = userData.name || userData.displayName || userData.email;
+            }
+        }
+        
+        // Подготавливаем обновления с дополнительными полями
+        const finalUpdates = {
+            ...updates,
+            songCount,
+            leaderName,
+            participantCount: updates.participants ? updates.participants.length : 0,
+            updatedAt: Timestamp.now()
+        };
+        
+        const eventRef = db.collection('events').doc(eventId);
+        await eventRef.update(finalUpdates);
+        
+        logger.log(`✅ Событие ${eventId} обновлено`);
+    } catch (error) {
+        logger.error('❌ Ошибка обновления события:', error);
+        throw error;
+    }
+}
+
+/**
+ * Удалить событие
+ * @param {string} eventId - ID события
+ */
+export async function deleteEvent(eventId) {
+    try {
+        const eventRef = db.collection('events').doc(eventId);
+        await eventRef.delete();
+        logger.log(`✅ Событие ${eventId} удалено`);
+    } catch (error) {
+        logger.error('❌ Ошибка удаления события:', error);
+        throw error;
+    }
+}
+
+/**
+ * Получить событие по ID
+ * @param {string} eventId - ID события
+ * @returns {Promise<Object>} Документ события
+ */
+export async function getEvent(eventId) {
+    try {
+        const eventRef = db.collection('events').doc(eventId);
+        return await eventRef.get();
+    } catch (error) {
+        logger.error('❌ Ошибка получения события:', error);
+        throw error;
+    }
+}
