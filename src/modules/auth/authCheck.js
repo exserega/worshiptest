@@ -540,3 +540,35 @@ export async function logout() {
         console.error('Logout error:', error);
     }
 }
+
+/**
+ * Выход из системы (alias для logout)
+ */
+export async function signOut() {
+    return logout();
+}
+
+// ====================================
+// GOOGLE SIGN IN
+// ====================================
+
+/**
+ * Вход через Google
+ */
+export async function signInWithGoogle() {
+    try {
+        const provider = new window.firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({
+            prompt: 'select_account'
+        });
+        
+        const result = await auth.signInWithPopup(provider);
+        logger.log('✅ Google sign in successful:', result.user.email);
+        
+        // checkAuth обработает создание/обновление профиля
+        return result;
+    } catch (error) {
+        logger.error('❌ Google sign in error:', error);
+        throw error;
+    }
+}
