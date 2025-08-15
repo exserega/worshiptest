@@ -1,5 +1,5 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v252'; // v252, добавлена система проверки ролей для редактирования песен
+const CACHE_NAME = 'agape-worship-cache-v253'; // v253, добавлено логирование версии Service Worker
 
 // Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
@@ -92,4 +92,19 @@ self.addEventListener('fetch', (event) => {
         });
       })
   );
+});
+
+// Событие 'message' (сообщения): обрабатываем запросы версии
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'GET_VERSION') {
+    // Отправляем версию обратно всем клиентам
+    self.clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'VERSION',
+          version: CACHE_NAME
+        });
+      });
+    });
+  }
 });

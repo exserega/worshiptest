@@ -583,6 +583,18 @@
           navigator.serviceWorker.register('sw.js')
             .then(registration => {
               console.log('Service Worker зарегистрирован:', registration);
+              
+              // Получаем и логируем версию Service Worker
+              if (registration.active) {
+                registration.active.postMessage({ type: 'GET_VERSION' });
+              }
+              
+              // Слушаем ответ от Service Worker с версией
+              navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'VERSION') {
+                  console.log(`📦 Service Worker версия: ${event.data.version}`);
+                }
+              });
             })
             .catch(error => {
               console.log('Ошибка регистрации Service Worker:', error);
