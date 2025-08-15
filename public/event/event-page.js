@@ -110,11 +110,12 @@ async function init() {
 }
 
 /**
- * Применение темы
+ * Применение темы - всегда темная
  */
 function applyTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    // Игнорируем сохраненную тему и всегда применяем темную
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.body.setAttribute('data-theme', 'dark');
 }
 
 /**

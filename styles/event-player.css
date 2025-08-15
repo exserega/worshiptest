@@ -1,5 +1,23 @@
 /* Стили плеера события */
 
+/* Принудительная темная тема для плеера */
+.event-player-overlay {
+    --bg-primary: #111827 !important;
+    --bg-secondary: #1f2937 !important;
+    --text-primary: #f3f4f6 !important;
+    --text-secondary: #9ca3af !important;
+    --border-color: #374151 !important;
+    --primary-color: #67e8f9 !important;
+    --secondary-color: #fb923c !important;
+    --accent-color: #67e8f9 !important;
+    --success-color: #34d399 !important;
+    --danger-color: #f87171 !important;
+    --warning-color: #fbbf24 !important;
+    --input-bg-color: #1f2937 !important;
+    --label-color: #9ca3af !important;
+    --button-text-color: #1f2937 !important;
+}
+
 /* Основной оверлей */
 .event-player-overlay {
     position: fixed;
@@ -14,8 +32,8 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    /* Убеждаемся, что фон непрозрачный */
-    background-color: var(--bg-primary, #ffffff) !important;
+    /* Убеждаемся, что фон непрозрачный и темный */
+    background-color: #111827 !important;
     overflow: hidden; /* Предотвращаем двойной скролл */
     width: 100vw; /* Точно 100% viewport */
     max-width: 100vw; /* Не больше viewport */
@@ -467,10 +485,10 @@
     transition: background-color 0.3s ease;
 }
 
-/* Стили аккордов в светлой теме */
-body[data-theme="light"] .song-content .chord {
-    color: var(--secondary-color);
-    background-color: color-mix(in srgb, var(--accent-color) 5%, transparent);
+/* Стили аккордов всегда темные */
+.song-content .chord {
+    color: var(--primary-color) !important;
+    background-color: color-mix(in srgb, var(--accent-color) 2%, transparent) !important;
 }
 
 /* Режим скрытых аккордов */
