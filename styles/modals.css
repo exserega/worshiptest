@@ -612,7 +612,9 @@ body[data-theme="light"] #copy-text-button.copied {
     padding: 0.75rem 1rem;
     /* Увеличиваем закругления для более современного вида */
     border-radius: var(--radius-md, 10px);
-    border: 1px solid var(--border-color);
+    /* Используем box-shadow вместо border для предотвращения обрезания */
+    border: none;
+    box-shadow: 0 0 0 1px var(--border-color);
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -636,18 +638,16 @@ body[data-theme="light"] #copy-text-button.copied {
 }
 
 .setlist-item:hover {
-    border-color: var(--primary-color);
     background: var(--bg-tertiary);
-    /* Добавляем тень при наведении */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Обновляем box-shadow при наведении */
+    box-shadow: 0 0 0 1px var(--primary-color), 0 2px 8px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
 }
 
 /* Визуальная индикация выбранного сет-листа при клике */
 .setlist-item.selected {
-    border-color: var(--primary-color);
     background: rgba(var(--primary-rgb), 0.1);
-    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+    box-shadow: 0 0 0 1px var(--primary-color), 0 0 0 3px rgba(var(--primary-rgb), 0.2);
 }
 
 .setlist-name {

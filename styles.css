@@ -252,6 +252,19 @@
     padding-bottom: 12px !important;
 }
 
+/* Используем box-shadow вместо border для предотвращения обрезания */
+.dropdown-list .setlist-item,
+.setlists-grid .setlist-item {
+    /* Переопределяем border на box-shadow */
+    border: none !important;
+    box-shadow: 0 0 0 1px var(--border-color) !important;
+}
+
+.dropdown-list .setlist-item:hover,
+.setlists-grid .setlist-item:hover {
+    box-shadow: 0 0 0 1px var(--primary-color) !important;
+}
+
 /* СЕКЦИЯ 3: Управление списком - Компактный дизайн */
 .active-section {
     margin: 0;
