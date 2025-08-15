@@ -181,14 +181,25 @@ class EventCreationModal {
             // Загружаем сетлисты
             const setlistsSnapshot = await db.collection('worship_setlists')
                 .where('branchId', '==', user.branchId)
-                .orderBy('name')
                 .get();
             
             const setlistSelect = document.getElementById('eventSetlist');
+            const setlists = [];
             setlistsSnapshot.forEach(doc => {
                 const setlist = doc.data();
+                setlists.push({
+                    id: doc.id,
+                    name: setlist.name || 'Без названия'
+                });
+            });
+            
+            // Сортируем в памяти
+            setlists.sort((a, b) => a.name.localeCompare(b.name));
+            
+            // Добавляем в селект
+            setlists.forEach(setlist => {
                 const option = document.createElement('option');
-                option.value = doc.id;
+                option.value = setlist.id;
                 option.textContent = setlist.name;
                 setlistSelect.appendChild(option);
             });
@@ -321,10 +332,17 @@ class EventCreationModal {
                 return;
             }
             
-            // Собираем всех участников в один массив
-            const participants = [];
+            // Собираем всех участников в правильном формате для Firebase
+            const participantsObject = {};
             Object.values(this.selectedParticipants).forEach(group => {
-                participants.push(...group);
+                group.forEach(participant => {
+                    participantsObject[participant.userId] = {
+                        userId: participant.userId,
+                        userName: participant.userName,
+                        instrument: participant.instrument,
+                        instrumentName: participant.instrumentName
+                    };
+                });
             });
             
             const user = getCurrentUser();
@@ -334,11 +352,12 @@ class EventCreationModal {
                 leaderId: leaderId || user.uid,
                 leaderName: leaderId ? this.availableUsers.find(u => u.id === leaderId)?.name : user.displayName,
                 setlistId: setlistId || '',
-                participants: participants,
-                participantCount: participants.length,
+                participants: participantsObject, // Firebase хранит как объект
+                participantCount: Object.keys(participantsObject).length,
                 comment: comment,
                 branchId: user.branchId,
-                createdBy: user.uid
+                createdBy: user.uid,
+                isArchived: false
             };
             
             logger.log('💾 Создание события:', eventData);
