@@ -332,6 +332,9 @@ class EventCreationModal {
                 return;
             }
             
+            // Получаем текущего пользователя
+            const user = getCurrentUser();
+            
             // Собираем всех участников в правильном формате для Firebase
             const participantsObject = {};
             Object.values(this.selectedParticipants).forEach(group => {
@@ -345,7 +348,16 @@ class EventCreationModal {
                 });
             });
             
-            const user = getCurrentUser();
+            // Если нет участников, добавляем создателя как участника
+            if (Object.keys(participantsObject).length === 0) {
+                participantsObject[user.uid] = {
+                    userId: user.uid,
+                    userName: user.displayName || user.email,
+                    instrument: '',
+                    instrumentName: ''
+                };
+            }
+            
             const eventData = {
                 name: eventName,
                 date: new Date(`${eventDate}T${eventTime}`),
@@ -354,7 +366,7 @@ class EventCreationModal {
                 setlistId: setlistId || '',
                 participants: participantsObject, // Firebase хранит как объект
                 participantCount: Object.keys(participantsObject).length,
-                comment: comment,
+                comment: comment || '',
                 branchId: user.branchId,
                 createdBy: user.uid,
                 isArchived: false

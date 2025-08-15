@@ -228,8 +228,8 @@ export async function createEvent(eventData) {
             ...eventData,
             songCount,
             leaderName,
-            participants: eventData.participants || [],
-            participantCount: eventData.participants ? eventData.participants.length : 0,
+            participants: eventData.participants || {},
+            participantCount: eventData.participants ? Object.keys(eventData.participants).length : 0,
             createdBy: user.uid,
             createdAt: Timestamp.now(),
             isArchived: false
@@ -277,7 +277,7 @@ export async function updateEvent(eventId, updates) {
             ...updates,
             songCount,
             leaderName,
-            participantCount: updates.participants ? updates.participants.length : 0,
+            participantCount: updates.participants ? Object.keys(updates.participants).length : 0,
             updatedAt: Timestamp.now()
         };
         
