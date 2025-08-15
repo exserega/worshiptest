@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>События - Agape Worship</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../images/icon-512x512.png">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#1a1a1a">
+    
+    <!-- Apple -->
+    <link rel="apple-touch-icon" href="../images/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Общие стили -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../styles/buttons.css">
+    <link rel="stylesheet" href="../styles/inputs.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    
+    <!-- Стили страницы событий -->
+    <link rel="stylesheet" href="./events-page.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body class="dark-theme">
+    <!-- Шапка страницы -->
+    <header class="events-header">
+        <div class="header-content">
+            <button class="back-button" onclick="window.location.href='/'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <h1 class="page-title">События филиала</h1>
+            <button class="create-event-button" id="createEventBtn" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Основной контент -->
+    <main class="events-main">
+        <!-- Календарь -->
+        <div class="calendar-container" id="calendarContainer">
+            <!-- Заголовок календаря с навигацией -->
+            <div class="calendar-header">
+                <button class="calendar-nav-btn" id="prevMonthBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M12 5L7 10L12 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <h2 class="calendar-month-title" id="monthTitle">Загрузка...</h2>
+                <button class="calendar-nav-btn" id="nextMonthBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M8 5L13 10L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Сетка календаря -->
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Дни недели -->
+                <div class="calendar-weekdays" id="weekdays"></div>
+                <!-- Дни месяца -->
+                <div class="calendar-days" id="calendarDays"></div>
+            </div>
+        </div>
+        
+        <!-- Индикатор загрузки -->
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>Загрузка событий...</p>
+        </div>
+    </main>
+    
+    <!-- Скрипты -->
+    <script type="module">
+        // Инициализация Firebase
+        import { initializeFirebase } from '../src/modules/firebase/firebase-init.js';
+        import { getCurrentUser, canManageEvents } from '../src/modules/auth/authCheck.js';
+        import logger from '../src/utils/logger.js';
+        
+        // Инициализация страницы
+        async function initEventsPage() {
+            try {
+                // Инициализируем Firebase
+                await initializeFirebase();
+                
+                // Проверяем авторизацию
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '/';
+                    return;
+                }
+                
+                // Показываем кнопку создания события для модераторов и админов
+                if (canManageEvents()) {
+                    document.getElementById('createEventBtn').style.display = 'flex';
+                }
+                
+                // Импортируем и инициализируем календарь
+                const { EventsCalendar } = await import('./events-calendar.js');
+                const calendar = new EventsCalendar();
+                await calendar.init();
+                
+            } catch (error) {
+                logger.error('Ошибка инициализации страницы событий:', error);
+                alert('Ошибка загрузки страницы. Попробуйте обновить.');
+            }
+        }
+        
+        // Запускаем инициализацию
+        initEventsPage();
+    </script>
+</body>
+</html>

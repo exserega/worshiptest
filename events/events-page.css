@@ -1,0 +1,258 @@
+/* Стили страницы событий */
+
+/* Шапка страницы */
+.events-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.back-button,
+.create-event-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover,
+.create-event-button:hover {
+    background: var(--bg-tertiary);
+    transform: translateY(-1px);
+}
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Основной контент */
+.events-main {
+    min-height: calc(100vh - 72px);
+    background: var(--bg-primary);
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Контейнер календаря */
+.calendar-container {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок календаря */
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.calendar-nav-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.calendar-month-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Сетка календаря */
+.calendar-grid {
+    display: grid;
+    gap: 1px;
+    background: var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Дни недели */
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+}
+
+.calendar-weekday {
+    background: var(--bg-tertiary);
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* Дни месяца */
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+}
+
+.calendar-day {
+    background: var(--bg-secondary);
+    min-height: 100px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.calendar-day:hover:not(.other-month) {
+    background: var(--bg-tertiary);
+    z-index: 1;
+}
+
+.calendar-day.other-month {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.calendar-day.today {
+    background: rgba(var(--primary-rgb), 0.1);
+}
+
+.calendar-day.today .calendar-day-number {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.calendar-day-number {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.calendar-day-events {
+    font-size: 0.75rem;
+}
+
+.calendar-event-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+/* Индикатор загрузки */
+.loading-indicator {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.loading-indicator.active {
+    display: flex;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .header-content {
+        padding: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.125rem;
+    }
+    
+    .events-main {
+        padding: 1rem;
+    }
+    
+    .calendar-container {
+        padding: 1rem;
+    }
+    
+    .calendar-month-title {
+        font-size: 1.25rem;
+    }
+    
+    .calendar-day {
+        min-height: 80px;
+        padding: 0.5rem;
+    }
+    
+    .calendar-weekday {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.25rem;
+    }
+}
+
+/* Малые экраны */
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: 60px;
+        padding: 0.25rem;
+    }
+    
+    .calendar-day-number {
+        font-size: 0.75rem;
+    }
+    
+    .calendar-event-dot {
+        width: 4px;
+        height: 4px;
+    }
+}

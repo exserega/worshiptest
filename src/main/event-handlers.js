@@ -687,23 +687,15 @@ function setupSetlistEventHandlers() {
         console.log('📋 [EventHandlers] Setlists panel handler attached');
     }
     
-    // Кнопка "События" - новый функционал
+    // Кнопка "События" - переход на страницу календаря
     const toggleEventsButton = document.getElementById('toggle-events');
     if (toggleEventsButton) {
-        toggleEventsButton.addEventListener('click', async () => {
-            console.log('📅 [EventHandlers] Events button clicked');
+        toggleEventsButton.addEventListener('click', () => {
+            console.log('📅 [EventHandlers] Events button clicked - navigating to events page');
             ui.closeAllSidePanels(); // Закрываем все панели
             
-            try {
-                console.log('📥 Импортируем модуль eventsOverlay...');
-                const { openEventsOverlay } = await import('../modules/events/eventsOverlay.js');
-                console.log('✅ Модуль импортирован, вызываем openEventsOverlay');
-                openEventsOverlay();
-            } catch (error) {
-                console.error('❌ Ошибка открытия событий:', error);
-                console.error('Stack trace:', error.stack);
-                alert('Не удалось открыть события: ' + error.message);
-            }
+            // Переходим на страницу событий
+            window.location.href = '/events/';
         });
     }
     
