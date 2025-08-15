@@ -58,7 +58,7 @@ export function displaySongDetails(songData, keyToSelect) {
         const copyBtn = songContent.querySelector('#copy-text-button');
         const editBtn = songContent.querySelector('#edit-song-button');
         if (copyBtn) copyBtn.style.display = 'none';
-        if (editBtn) editBtn.style.display = 'none';
+        if (editBtn) editBtn.style.display = 'none'; // Скрываем кнопку когда нет песни
         return;
     }
 
@@ -119,8 +119,25 @@ export function displaySongDetails(songData, keyToSelect) {
         copyBtn.style.display = 'block';
         positionCopyButton(); // Позиционируем кнопку относительно #song-content
     }
+    
+    // Проверяем права доступа для кнопки редактирования
     if (editBtn) {
-        editBtn.style.display = 'block';
+        // Импортируем функцию проверки прав асинхронно
+        import('../../modules/auth/authCheck.js').then(({ canEditSongs }) => {
+            // Показываем кнопку только если у пользователя есть права на редактирование песен
+            const hasEditRights = canEditSongs();
+            editBtn.style.display = hasEditRights ? 'block' : 'none';
+            
+            // Логируем результат проверки для отладки
+            console.log('🔐 [SongDisplay] Edit button visibility:', {
+                hasEditRights,
+                display: editBtn.style.display
+            });
+        }).catch(err => {
+            // В случае ошибки импорта скрываем кнопку
+            console.error('❌ [SongDisplay] Error checking edit rights:', err);
+            editBtn.style.display = 'none';
+        });
     }
     
     // Обновляем статус редактирования
