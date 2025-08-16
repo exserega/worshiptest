@@ -612,29 +612,54 @@
 
 .form-control {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.875rem 1rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     color: #ffffff;
     font-size: 0.9375rem;
     transition: all 0.2s;
-    line-height: 1.2;
-    height: 44px;
+    line-height: 1.4;
+    min-height: 48px;
     font-family: inherit;
     box-sizing: border-box;
 }
 
 select.form-control {
-    padding: 0.625rem 2.5rem 0.625rem 1rem;
+    padding: 0 2.5rem 0 1rem;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 16px;
     cursor: pointer;
-    height: 44px;
-    line-height: 44px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    line-height: normal;
+}
+
+input[type="text"].form-control,
+input[type="date"].form-control,
+input[type="time"].form-control,
+textarea.form-control {
+    min-height: 48px;
+}
+
+/* Для Firefox */
+@-moz-document url-prefix() {
+    select.form-control {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+}
+
+/* Исправление для option элементов */
+select.form-control option {
+    padding: 0.5rem;
+    line-height: 1.5;
+    color: #ffffff;
+    background: #1a1a1a;
 }
 
 /* Для темной темы - светлая стрелка */
