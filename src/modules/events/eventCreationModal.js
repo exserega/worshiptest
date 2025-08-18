@@ -26,7 +26,32 @@ class EventCreationModal {
             this.editMode = true;
             this.editingEventId = dateOrEvent.id;
             this.editingEventData = dateOrEvent;
-            this.selectedDate = dateOrEvent.date instanceof Date ? dateOrEvent.date : new Date(dateOrEvent.date);
+            
+            // Обработка даты из Firestore
+            let eventDate;
+            if (dateOrEvent.date) {
+                if (dateOrEvent.date instanceof Date) {
+                    eventDate = dateOrEvent.date;
+                } else if (dateOrEvent.date.toDate && typeof dateOrEvent.date.toDate === 'function') {
+                    // Firestore Timestamp
+                    eventDate = dateOrEvent.date.toDate();
+                } else if (dateOrEvent.date.seconds) {
+                    // Firestore Timestamp as plain object
+                    eventDate = new Date(dateOrEvent.date.seconds * 1000);
+                } else {
+                    eventDate = new Date(dateOrEvent.date);
+                }
+            } else {
+                eventDate = new Date();
+            }
+            
+            // Проверяем валидность даты
+            if (isNaN(eventDate.getTime())) {
+                console.error('Invalid date:', dateOrEvent.date);
+                eventDate = new Date();
+            }
+            
+            this.selectedDate = eventDate;
         } else {
             // Режим создания
             this.editMode = false;
@@ -85,7 +110,7 @@ class EventCreationModal {
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Дата</label>
-                                <input type="date" id="eventDate" class="form-control" value="${this.selectedDate.toISOString().split('T')[0]}">
+                                <input type="date" id="eventDate" class="form-control" value="${this.selectedDate && !isNaN(this.selectedDate.getTime()) ? this.selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}">
                             </div>
                             <div class="form-group">
                                 <label>Время</label>
@@ -242,9 +267,24 @@ class EventCreationModal {
         
         // Заполняем дату
         const dateInput = document.getElementById('eventDate');
-        if (dateInput) {
-            const date = data.date instanceof Date ? data.date : new Date(data.date);
-            dateInput.value = date.toISOString().split('T')[0];
+        if (dateInput && data.date) {
+            let date;
+            if (data.date instanceof Date) {
+                date = data.date;
+            } else if (data.date.toDate && typeof data.date.toDate === 'function') {
+                // Firestore Timestamp
+                date = data.date.toDate();
+            } else if (data.date.seconds) {
+                // Firestore Timestamp as plain object
+                date = new Date(data.date.seconds * 1000);
+            } else {
+                date = new Date(data.date);
+            }
+            
+            // Проверяем валидность даты
+            if (!isNaN(date.getTime())) {
+                dateInput.value = date.toISOString().split('T')[0];
+            }
         }
         
         // Заполняем время
