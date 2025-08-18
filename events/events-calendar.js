@@ -777,18 +777,11 @@ export class EventsCalendar {
         let html = '<div class="events-list-view">';
         
         Object.values(eventsByMonth).forEach(monthData => {
-            html += `
-                <div class="month-section">
-                    <h3 class="month-section-title">${monthData.name}</h3>
-                    <div class="month-events">
-            `;
-            
+            html += `<div class="month-section">`;
+            html += `<h3 class="month-section-title">${monthData.name}</h3>`;
+            html += `<div class="month-events">`;
             html += monthData.events.map(event => this.createEventCard(event, true)).join('');
-            
-            html += `
-                    </div>
-                </div>
-            `;
+            html += `</div></div>`;
         });
         
         html += '</div>';
