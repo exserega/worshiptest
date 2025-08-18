@@ -538,7 +538,7 @@ export class EventsCalendar {
                 }
                 
                 return `
-                    <div class="event-card" onclick="window.location.href='/public/event/?id=${event.id}'">
+                    <div class="event-card ${isUserParticipant ? 'user-participant' : ''}" onclick="window.location.href='/public/event/?id=${event.id}'">
                         <div class="event-info">
                             <div class="event-header">
                                 <span class="event-time">${this.formatTime(event.date)}</span>
