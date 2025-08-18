@@ -330,6 +330,62 @@
     font-weight: bold;
 }
 
+/* ===== Стили кнопок действий в карточках ===== */
+
+.event-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.event-actions .icon-button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.event-actions .icon-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.event-actions .icon-button.delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #ef4444;
+}
+
+.event-actions .icon-button i {
+    font-size: 14px;
+}
+
+/* Убираем hover эффект от основной кнопки для кнопок в карточках */
+.event-actions .icon-button:hover {
+    color: var(--text-primary);
+}
+
+/* Для светлой темы */
+[data-theme="light"] .event-actions .icon-button {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .event-actions .icon-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .event-actions .icon-button.delete:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+}
+
 /* ===== Вид списка событий ===== */
 
 .events-list-view {

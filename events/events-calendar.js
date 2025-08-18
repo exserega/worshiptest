@@ -691,10 +691,10 @@ export class EventsCalendar {
                     <span class="event-count">${event.songCount || 0} песен</span>
                     ${canManageEvents() ? `
                         <div class="event-actions" onclick="event.stopPropagation();">
-                            <button class="icon-button small" onclick="window.eventsCalendar.handleEditEvent('${event.id}')" title="Редактировать">
+                            <button class="icon-button" onclick="window.eventsCalendar.handleEditEvent('${event.id}')" title="Редактировать">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="icon-button small delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
+                            <button class="icon-button delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -793,20 +793,23 @@ export class EventsCalendar {
         logger.log(`📅 Переключение вида на: ${this.viewMode}`);
         
         // Обновляем иконку кнопки
-        const icon = this.listViewBtn.querySelector('svg');
         if (this.viewMode === 'list') {
             // Иконка календаря для возврата к виду календаря
-            icon.innerHTML = `
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
+            this.listViewBtn.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"></line>
+                    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"></line>
+                    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"></line>
+                </svg>
             `;
             this.listViewBtn.title = 'Вид календаря';
         } else {
             // Иконка списка для переключения на вид списка
-            icon.innerHTML = `
-                <path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            this.listViewBtn.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             `;
             this.listViewBtn.title = 'Список событий';
         }
