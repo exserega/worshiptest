@@ -37,25 +37,18 @@ window.firebaseDb = db;
 window.firebaseStorage = storage;
 
 // Включаем офлайн-персистентность Firestore (чтение ранее загруженных данных офлайн)
-try {
-    if (firebase?.firestore) {
-        // Определяем, является ли это Safari на iOS
-        const isIOSSafari = /iPhone|iPad|iPod/.test(navigator.userAgent) && 
-                           /Safari/.test(navigator.userAgent) && 
-                           !/Chrome|CriOS|FxiOS/.test(navigator.userAgent);
-        
-        if (isIOSSafari) {
-            // Для Safari iOS используем упрощенную конфигурацию без synchronizeTabs
-            console.log('📱 Detected iOS Safari, using simplified persistence config');
-            firebase.firestore().enablePersistence()
-                .then(() => {
-                    console.log('✅ Firestore persistence enabled (iOS Safari mode)');
-                })
-                .catch((error) => {
-                    console.warn('⚠️ Firestore persistence not enabled:', error?.code || error?.message || error);
-                });
-        } else {
-            // Для остальных браузеров используем полную конфигурацию с synchronizeTabs
+// Определяем, является ли это Safari на iOS
+const isIOSSafari = /iPhone|iPad|iPod/.test(navigator.userAgent) && 
+                   /Safari/.test(navigator.userAgent) && 
+                   !/Chrome|CriOS|FxiOS/.test(navigator.userAgent);
+
+if (isIOSSafari) {
+    console.log('📱 iOS Safari detected - skipping Firestore persistence to prevent blocking');
+    // НЕ включаем persistence для iOS Safari из-за известных проблем
+} else {
+    // Для остальных браузеров включаем persistence
+    try {
+        if (firebase?.firestore) {
             firebase.firestore().enablePersistence({ synchronizeTabs: true })
                 .then(() => {
                     console.log('✅ Firestore persistence enabled with tab sync');
@@ -64,9 +57,9 @@ try {
                     console.warn('⚠️ Firestore persistence not enabled:', error?.code || error?.message || error);
                 });
         }
+    } catch (e) {
+        console.warn('⚠️ Firestore persistence setup failed:', e);
     }
-} catch (e) {
-    console.warn('⚠️ Firestore persistence setup failed:', e);
 }
 
 // Экспорт для модулей
