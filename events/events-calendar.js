@@ -89,6 +89,13 @@ export class EventsCalendar {
      * Рендеринг календаря
      */
     render() {
+        // Если режим списка, показываем список событий
+        if (this.viewMode === 'list') {
+            this.renderListView();
+            return;
+        }
+        
+        // Обычный вид календаря
         // Обновляем заголовок месяца
         this.updateMonthTitle();
         
@@ -618,6 +625,193 @@ export class EventsCalendar {
         return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     }
     
+    /**
+     * Создание карточки события
+     */
+    createEventCard(event, showDate = false) {
+        const currentUser = getCurrentUser();
+        
+        // Проверяем, участвует ли текущий пользователь
+        let isUserParticipant = false;
+        if (currentUser && currentUser.uid) {
+            if (event.leaderId === currentUser.uid) {
+                isUserParticipant = true;
+            }
+            if (!isUserParticipant && event.participants && Array.isArray(event.participants)) {
+                isUserParticipant = event.participants.some(p => p.id === currentUser.uid);
+            }
+        }
+        
+        // Форматируем дату события
+        const eventDate = event.date.toDate ? event.date.toDate() : new Date(event.date);
+        const dateStr = showDate ? eventDate.toLocaleDateString('ru-RU', { 
+            day: 'numeric', 
+            month: 'short',
+            weekday: 'short'
+        }) : '';
+        
+        // Формируем информацию о лидере
+        const leaderHTML = event.leader ? `
+            <div class="event-leader">
+                <i class="fas fa-user"></i>
+                <span>${event.leader}</span>
+            </div>
+        ` : '';
+        
+        // Формируем информацию об участниках
+        const participantsHTML = event.participants && event.participants.length > 0 ? `
+            <div class="event-participants">
+                <i class="fas fa-users"></i>
+                <span>${event.participants.length} участ.</span>
+            </div>
+        ` : '';
+        
+        return `
+            <div class="event-card ${isUserParticipant ? 'user-participant' : ''}" onclick="window.location.href='/public/event/?id=${event.id}'">
+                <div class="event-info">
+                    <div class="event-header">
+                        ${showDate ? `<span class="event-date">${dateStr}</span>` : ''}
+                        <span class="event-time">${this.formatTime(event.date)}</span>
+                        <span class="event-name">${event.name}</span>
+                    </div>
+                    ${leaderHTML}
+                    ${participantsHTML}
+                </div>
+                <div class="event-footer">
+                    <span class="event-count">${event.songCount || 0} песен</span>
+                    ${canManageEvents() ? `
+                        <div class="event-actions" onclick="event.stopPropagation();">
+                            <button class="icon-button small" onclick="window.eventsCalendar.handleEditEvent('${event.id}')" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-button small delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Рендеринг списка событий
+     */
+    renderListView() {
+        logger.log('📋 Рендеринг списка событий');
+        
+        // Скрываем календарь и показываем контейнер для списка
+        this.weekdays.style.display = 'none';
+        this.calendarDays.style.display = 'none';
+        
+        // Очищаем и используем selectedDateEvents для списка
+        this.selectedDateEvents.innerHTML = '';
+        this.selectedDateEvents.style.display = 'block';
+        
+        // Обновляем заголовок
+        this.monthTitle.textContent = 'Все события';
+        
+        // Получаем все события отсортированные по дате
+        const sortedEvents = [...this.events].sort((a, b) => {
+            const dateA = a.date.toDate ? a.date.toDate() : new Date(a.date);
+            const dateB = b.date.toDate ? b.date.toDate() : new Date(b.date);
+            return dateA - dateB;
+        });
+        
+        // Фильтруем будущие события (включая сегодня)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const futureEvents = sortedEvents.filter(event => {
+            const eventDate = event.date.toDate ? event.date.toDate() : new Date(event.date);
+            eventDate.setHours(0, 0, 0, 0);
+            return eventDate >= today;
+        });
+        
+        if (futureEvents.length === 0) {
+            this.selectedDateEvents.innerHTML = `
+                <div class="no-events-message">
+                    <p>Нет предстоящих событий</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Группируем события по месяцам
+        const eventsByMonth = {};
+        futureEvents.forEach(event => {
+            const eventDate = event.date.toDate ? event.date.toDate() : new Date(event.date);
+            const monthKey = `${eventDate.getFullYear()}-${eventDate.getMonth()}`;
+            const monthName = eventDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+            
+            if (!eventsByMonth[monthKey]) {
+                eventsByMonth[monthKey] = {
+                    name: monthName,
+                    events: []
+                };
+            }
+            eventsByMonth[monthKey].events.push(event);
+        });
+        
+        // Рендерим события по месяцам
+        let html = '<div class="events-list-view">';
+        
+        Object.values(eventsByMonth).forEach(monthData => {
+            html += `
+                <div class="month-section">
+                    <h3 class="month-section-title">${monthData.name}</h3>
+                    <div class="month-events">
+            `;
+            
+            html += monthData.events.map(event => this.createEventCard(event, true)).join('');
+            
+            html += `
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        this.selectedDateEvents.innerHTML = html;
+    }
+
+    /**
+     * Переключение вида календаря
+     */
+    handleViewToggle() {
+        this.viewMode = this.viewMode === 'calendar' ? 'list' : 'calendar';
+        logger.log(`📅 Переключение вида на: ${this.viewMode}`);
+        
+        // Обновляем иконку кнопки
+        const icon = this.listViewBtn.querySelector('svg');
+        if (this.viewMode === 'list') {
+            // Иконка календаря для возврата к виду календаря
+            icon.innerHTML = `
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            `;
+            this.listViewBtn.title = 'Вид календаря';
+        } else {
+            // Иконка списка для переключения на вид списка
+            icon.innerHTML = `
+                <path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            `;
+            this.listViewBtn.title = 'Список событий';
+        }
+        
+        // Если возвращаемся к календарю, показываем элементы
+        if (this.viewMode === 'calendar') {
+            this.weekdays.style.display = '';
+            this.calendarDays.style.display = '';
+            this.selectedDateEvents.style.display = 'none';
+        }
+        
+        // Перерисовываем интерфейс
+        this.render();
+    }
+
     /**
      * Обработчик создания события
      */
