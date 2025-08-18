@@ -389,14 +389,14 @@
 }
 
 .month-section {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .month-section-title {
     color: var(--text-primary);
     font-size: 1.2rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--border-color);
 }
@@ -432,12 +432,12 @@
     }
     
     .month-section {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
     }
     
     .month-section-title {
         font-size: 1.1rem;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
     }
     
     .event-date {
