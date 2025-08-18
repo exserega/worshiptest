@@ -371,9 +371,29 @@
     color: #fca5a5 !important;
 }
 
-.event-actions .icon-button i {
-    font-size: 14px;
-    color: inherit;
+.event-actions .icon-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.event-actions .icon-button svg path {
+    stroke: currentColor !important;
+    fill: none !important;
+}
+
+/* Стили для иконок в информации о событии */
+.event-leader svg,
+.event-participants svg {
+    width: 12px;
+    height: 12px;
+    margin-right: 0.25rem;
+    vertical-align: middle;
+}
+
+.event-leader svg path,
+.event-participants svg path {
+    stroke: currentColor;
+    fill: none;
 }
 
 

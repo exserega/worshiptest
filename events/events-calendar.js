@@ -548,10 +548,17 @@ export class EventsCalendar {
                     actionButtons = `
                         <div class="event-actions" onclick="event.stopPropagation();">
                             <button class="icon-button" onclick="window.eventsCalendar.handleEditEvent('${event.id}')" title="Редактировать">
-                                <i class="fas fa-edit"></i>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                             </button>
                             <button class="icon-button delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
-                                <i class="fas fa-trash"></i>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10 11V17M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                             </button>
                         </div>
                     `;
@@ -655,7 +662,9 @@ export class EventsCalendar {
         // Формируем информацию о лидере
         const leaderHTML = event.leader ? `
             <div class="event-leader">
-                <i class="fas fa-user"></i>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <span>${event.leader}</span>
             </div>
         ` : '';
@@ -663,7 +672,9 @@ export class EventsCalendar {
         // Формируем информацию об участниках
         const participantsHTML = event.participants && event.participants.length > 0 ? `
             <div class="event-participants">
-                <i class="fas fa-users"></i>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <span>${event.participants.length} участ.</span>
             </div>
         ` : '';
@@ -684,10 +695,17 @@ export class EventsCalendar {
                     ${canManageEvents() ? `
                         <div class="event-actions" onclick="event.stopPropagation();">
                             <button class="icon-button" onclick="window.eventsCalendar.handleEditEvent('${event.id}')" title="Редактировать">
-                                <i class="fas fa-edit"></i>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                             </button>
                             <button class="icon-button delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
-                                <i class="fas fa-trash"></i>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10 11V17M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                             </button>
                         </div>
                     ` : ''}
