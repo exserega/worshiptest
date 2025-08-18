@@ -153,7 +153,7 @@ function initNameSync() {
                                 
                                 if (updateCount > 0) {
                                     setTimeout(() => {
-                                        alert(`✅ Имя успешно обновлено в ${updateCount} событиях!`);
+                                        alert('✅ Имя успешно обновлено!');
                                     }, 100);
                                 }
                             } catch (error) {
