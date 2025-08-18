@@ -465,7 +465,11 @@ class EventCreationModal {
         container.innerHTML = participants.map((p, index) => `
             <div class="participant-chip">
                 ${p.userName}
-                <button onclick="eventCreationModal.removeParticipant('${instrumentId}', ${index})">×</button>
+                <button onclick="eventCreationModal.removeParticipant('${instrumentId}', ${index})" title="Удалить участника">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
             </div>
         `).join('');
     }
