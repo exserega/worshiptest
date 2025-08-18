@@ -312,23 +312,7 @@
     border-left-width: 5px;
 }
 
-/* Добавим маленький значок в угол карточки */
-.event-card.user-participant::after {
-    content: "✓";
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    width: 20px;
-    height: 20px;
-    background: rgb(16, 185, 129);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-}
+
 
 /* ===== Стили кнопок действий в карточках ===== */
 
@@ -342,10 +326,10 @@
     width: 32px;
     height: 32px;
     padding: 0;
-    background: rgba(59, 130, 246, 0.15);
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     transition: all 0.2s ease;
-    color: #60a5fa !important;
+    color: rgba(255, 255, 255, 0.5) !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -353,22 +337,22 @@
 }
 
 .event-actions .icon-button:hover {
-    background: rgba(59, 130, 246, 0.25);
-    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
     transform: scale(1.05);
-    color: #93bbfc !important;
+    color: rgba(59, 130, 246, 0.8) !important;
 }
 
 .event-actions .icon-button.delete {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #f87171 !important;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .event-actions .icon-button.delete:hover {
-    background: rgba(239, 68, 68, 0.25);
-    border-color: rgba(239, 68, 68, 0.5);
-    color: #fca5a5 !important;
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: rgba(239, 68, 68, 0.8) !important;
 }
 
 .event-actions .icon-button svg {
