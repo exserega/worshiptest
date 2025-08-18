@@ -124,3 +124,51 @@
     font-size: 0.8125rem;
     color: var(--text-primary);
 }
+
+/* Индикация участия пользователя */
+.user-participant-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgb(16, 185, 129);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-left: 1rem;
+}
+
+/* Подсветка контейнера события для участника */
+.event-container.user-participant {
+    position: relative;
+}
+
+.event-container.user-participant .event-info {
+    border: 2px solid rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+/* Для темной темы */
+:root .event-container.user-participant .event-info {
+    background: rgba(16, 185, 129, 0.08);
+}
+
+/* Для светлой темы */
+[data-theme="light"] .event-container.user-participant .event-info {
+    background: rgba(16, 185, 129, 0.04);
+}
+
+/* Подсветка участника в списке участников */
+.participant-chip.current-user {
+    background: rgb(16, 185, 129);
+    color: white;
+    border-color: rgb(16, 185, 129);
+    font-weight: 600;
+}
+
+/* Добавим иконку к чипу текущего пользователя */
+.participant-chip.current-user::before {
+    content: "✓ ";
+    font-weight: bold;
+}

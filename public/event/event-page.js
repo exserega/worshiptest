@@ -180,8 +180,39 @@ async function loadEvent() {
  * Отображение данных события
  */
 function displayEvent() {
+    // Проверяем, участвует ли текущий пользователь
+    let isUserParticipant = false;
+    if (currentUser) {
+        // Проверяем, является ли пользователь лидером
+        if (eventData.leaderId === currentUser.uid) {
+            isUserParticipant = true;
+            console.log('✨ Текущий пользователь - лидер события');
+        }
+        
+        // Проверяем участников
+        if (!isUserParticipant && eventData.participants && eventData.participants.length > 0) {
+            isUserParticipant = eventData.participants.some(p => 
+                p.userId === currentUser.uid || p.id === currentUser.uid
+            );
+            if (isUserParticipant) {
+                console.log('✨ Текущий пользователь - участник события');
+            }
+        }
+    }
+    
     // Заголовок
     elements.headerTitle.textContent = eventData.name || 'Событие';
+    
+    // Добавляем индикатор участия в заголовок
+    if (isUserParticipant) {
+        const indicator = document.createElement('span');
+        indicator.className = 'user-participant-indicator';
+        indicator.textContent = '✓ Вы участвуете';
+        elements.headerTitle.parentElement.appendChild(indicator);
+        
+        // Добавляем класс к контейнеру события
+        document.querySelector('.event-container').classList.add('user-participant');
+    }
     
     // Дата и время
     if (eventData.date) {
@@ -374,7 +405,11 @@ function displayParticipants() {
         if (!grouped[p.instrumentName]) {
             grouped[p.instrumentName] = [];
         }
-        grouped[p.instrumentName].push(p.userName);
+        // Сохраняем объект с именем и ID для проверки
+        grouped[p.instrumentName].push({
+            name: p.userName,
+            id: p.userId || p.id
+        });
     });
     
     // Создаем HTML
@@ -390,7 +425,10 @@ function displayParticipants() {
             <div class="participant-group">
                 <div class="participant-instrument" data-instrument="${instrumentKey}">${instrument}:</div>
                 <div class="participant-names">
-                    ${names.map(name => `<span class="participant-chip">${name}</span>`).join('')}
+                    ${names.map(participant => {
+                        const isCurrentUser = currentUser && participant.id === currentUser.uid;
+                        return `<span class="participant-chip ${isCurrentUser ? 'current-user' : ''}">${participant.name}</span>`;
+                    }).join('')}
                 </div>
             </div>
         `;
