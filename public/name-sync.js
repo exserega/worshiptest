@@ -29,9 +29,12 @@ function initNameSync() {
             const leaderEventsSnapshot = await db.collection('events')
                 .where('leaderId', '==', userId)
                 .get();
+            
+            console.log(`📊 Найдено событий где пользователь лидер: ${leaderEventsSnapshot.size}`);
                 
             // Получаем все события для поиска участника
             const allEventsSnapshot = await db.collection('events').get();
+            console.log(`📊 Всего событий для проверки участников: ${allEventsSnapshot.size}`);
             
             const batch = db.batch();
             let updateCount = 0;
@@ -100,29 +103,43 @@ function initNameSync() {
         
         const originalEditName = window.editName;
         
-        window.editName = function() {
+        window.editName = async function() {
             const oldName = window.currentUser?.name;
+            console.log('📝 editName вызвана. Старое имя:', oldName);
             
             // Вызываем оригинальную функцию
             originalEditName();
             
-            // Проверяем изменилось ли имя через небольшую задержку
-            setTimeout(async () => {
-                if (window.currentUser?.name && window.currentUser.name !== oldName) {
-                    console.log('🔄 Обнаружено изменение имени, запускаем синхронизацию...');
+            // Ждем несколько проверок с интервалом
+            let attempts = 0;
+            const checkInterval = setInterval(async () => {
+                attempts++;
+                const newName = window.currentUser?.name;
+                console.log(`🔍 Проверка ${attempts}: currentUser.name = ${newName}, oldName = ${oldName}`);
+                
+                if (newName && newName !== oldName) {
+                    clearInterval(checkInterval);
+                    console.log('🔄 Обнаружено изменение имени:', oldName, '->', newName);
+                    console.log('📍 currentUser.id:', window.currentUser.id);
+                    
                     try {
-                        const updateCount = await syncUserNameInEvents(window.currentUser.id, window.currentUser.name);
+                        const updateCount = await syncUserNameInEvents(window.currentUser.id, newName);
+                        console.log(`✅ Синхронизация завершена. Обновлено событий: ${updateCount}`);
+                        
                         if (updateCount > 0) {
                             setTimeout(() => {
                                 alert(`✅ Имя успешно обновлено в ${updateCount} событиях!`);
                             }, 100);
                         }
                     } catch (error) {
-                        console.error('Ошибка синхронизации:', error);
+                        console.error('❌ Ошибка синхронизации:', error);
                         alert('⚠️ Профиль обновлен, но произошла ошибка при обновлении имени в событиях');
                     }
+                } else if (attempts >= 10) {
+                    clearInterval(checkInterval);
+                    console.log('⏱️ Превышено количество попыток проверки изменения имени');
                 }
-            }, 2000); // Ждем пока профиль обновится в Firestore
+            }, 1000); // Проверяем каждую секунду
         };
         
         console.log('✅ Синхронизация имен успешно подключена');

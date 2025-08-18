@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ручная синхронизация имен</title>
+</head>
+<body>
+    <h1>Ручная синхронизация имен в событиях</h1>
+    <p>Эта страница выполнит синхронизацию вашего текущего имени во всех событиях.</p>
+    
+    <button id="syncBtn" onclick="runSync()">Запустить синхронизацию</button>
+    
+    <div id="result"></div>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <!-- Инициализация Firebase -->
+    <script type="module" src="../firebase-init.js"></script>
+    
+    <script>
+        let currentUser = null;
+        
+        // Ждем инициализации
+        setTimeout(() => {
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    // Получаем данные пользователя
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        currentUser = {
+                            ...userDoc.data(),
+                            uid: user.uid
+                        };
+                        document.getElementById('result').innerHTML = 
+                            `<p>Текущий пользователь: ${currentUser.name} (${currentUser.email})</p>`;
+                    }
+                } else {
+                    document.getElementById('result').innerHTML = 
+                        '<p style="color: red;">Необходимо войти в систему!</p>';
+                }
+            });
+        }, 1000);
+        
+        async function runSync() {
+            if (!currentUser) {
+                alert('Сначала войдите в систему!');
+                return;
+            }
+            
+            const btn = document.getElementById('syncBtn');
+            btn.disabled = true;
+            btn.textContent = 'Синхронизация...';
+            
+            try {
+                const db = firebase.firestore();
+                const userId = currentUser.uid;
+                const newName = currentUser.name;
+                
+                console.log('🔄 Начинаем синхронизацию для:', { userId, newName });
+                
+                // Получаем события где пользователь - лидер
+                const leaderEventsSnapshot = await db.collection('events')
+                    .where('leaderId', '==', userId)
+                    .get();
+                    
+                // Получаем все события
+                const allEventsSnapshot = await db.collection('events').get();
+                
+                const batch = db.batch();
+                let updateCount = 0;
+                let details = [];
+                
+                // Обновляем где лидер
+                leaderEventsSnapshot.forEach(doc => {
+                    batch.update(doc.ref, {
+                        leaderName: newName,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    updateCount++;
+                    details.push(`Лидер в событии: ${doc.data().name}`);
+                });
+                
+                // Обновляем где участник
+                allEventsSnapshot.forEach(doc => {
+                    const eventData = doc.data();
+                    let needsUpdate = false;
+                    const updatedParticipants = {};
+                    
+                    if (eventData.participants) {
+                        Object.entries(eventData.participants).forEach(([key, participant]) => {
+                            if (participant.userId === userId) {
+                                updatedParticipants[key] = {
+                                    ...participant,
+                                    userName: newName
+                                };
+                                needsUpdate = true;
+                            } else {
+                                updatedParticipants[key] = participant;
+                            }
+                        });
+                        
+                        if (needsUpdate) {
+                            batch.update(doc.ref, {
+                                participants: updatedParticipants,
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            updateCount++;
+                            details.push(`Участник в событии: ${eventData.name}`);
+                        }
+                    }
+                });
+                
+                if (updateCount > 0) {
+                    await batch.commit();
+                    document.getElementById('result').innerHTML += 
+                        `<p style="color: green;">✅ Успешно обновлено ${updateCount} событий!</p>
+                         <ul>${details.map(d => `<li>${d}</li>`).join('')}</ul>`;
+                } else {
+                    document.getElementById('result').innerHTML += 
+                        '<p>Нет событий для обновления.</p>';
+                }
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('result').innerHTML += 
+                    `<p style="color: red;">❌ Ошибка: ${error.message}</p>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Запустить синхронизацию';
+            }
+        }
+    </script>
+</body>
+</html>
