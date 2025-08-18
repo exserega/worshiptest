@@ -424,6 +424,26 @@ export class EventsCalendar {
             const eventsHTML = events.map(event => {
                 console.log(`🎯 Обработка события ${event.id}:`, event); // Отладка
                 
+                // Проверяем участие текущего пользователя
+                const currentUser = getCurrentUser();
+                let isUserParticipant = false;
+                
+                if (currentUser && currentUser.uid) {
+                    // Проверяем, является ли пользователь лидером
+                    if (event.leaderId === currentUser.uid) {
+                        isUserParticipant = true;
+                        logger.log(`✨ Пользователь - лидер события ${event.name}`);
+                    }
+                    
+                    // Проверяем участников
+                    if (!isUserParticipant && event.participants && Array.isArray(event.participants)) {
+                        isUserParticipant = event.participants.some(p => p.id === currentUser.uid);
+                        if (isUserParticipant) {
+                            logger.log(`✨ Пользователь - участник события ${event.name}`);
+                        }
+                    }
+                }
+                
                 // Формируем компактный список участников
                 let participantsHTML = '';
                 if (event.participants && Array.isArray(event.participants)) {
