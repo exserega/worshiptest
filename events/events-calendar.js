@@ -352,12 +352,19 @@ export class EventsCalendar {
         }
         
         // Обработчик клика по дням календаря
-        this.calendarDays.addEventListener('click', (e) => {
-            const dayEl = e.target.closest('.calendar-day');
-            if (dayEl && !dayEl.classList.contains('other-month')) {
-                this.handleDayClick({ target: dayEl });
-            }
-        });
+        // Сохраняем ссылку на обработчик для возможности удаления
+        if (!this.dayClickHandler) {
+            this.dayClickHandler = (e) => {
+                const dayEl = e.target.closest('.calendar-day');
+                if (dayEl && !dayEl.classList.contains('other-month')) {
+                    this.handleDayClick({ target: dayEl });
+                }
+            };
+        }
+        
+        // Удаляем старый обработчик перед добавлением нового
+        this.calendarDays.removeEventListener('click', this.dayClickHandler);
+        this.calendarDays.addEventListener('click', this.dayClickHandler);
     }
     
     /**
@@ -417,6 +424,9 @@ export class EventsCalendar {
      */
     showSelectedDateEvents(date, events) {
         const container = this.selectedDateEvents;
+        
+        // Убеждаемся, что контейнер видим
+        container.style.display = 'block';
         
         if (events.length === 0) {
             // Нет событий
@@ -806,6 +816,8 @@ export class EventsCalendar {
             this.weekdays.style.display = '';
             this.calendarDays.style.display = '';
             this.selectedDateEvents.style.display = 'none';
+            this.selectedDateEvents.innerHTML = ''; // Очищаем контейнер
+            this.selectedDate = null; // Сбрасываем выбранную дату
         }
         
         // Перерисовываем интерфейс
