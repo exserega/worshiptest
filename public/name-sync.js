@@ -104,7 +104,27 @@ function initNameSync() {
         const originalEditName = window.editName;
         
         window.editName = async function() {
-            const oldName = window.currentUser?.name;
+            // Получаем текущего пользователя из Firebase Auth
+            const auth = firebase.auth();
+            const user = auth.currentUser;
+            
+            if (!user) {
+                console.error('❌ Пользователь не авторизован');
+                originalEditName();
+                return;
+            }
+            
+            // Получаем текущие данные пользователя из Firestore
+            let oldName = null;
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    oldName = userDoc.data().name;
+                }
+            } catch (error) {
+                console.error('Ошибка получения данных пользователя:', error);
+            }
+            
             console.log('📝 editName вызвана. Старое имя:', oldName);
             
             // Вызываем оригинальную функцию
@@ -114,28 +134,39 @@ function initNameSync() {
             let attempts = 0;
             const checkInterval = setInterval(async () => {
                 attempts++;
-                const newName = window.currentUser?.name;
-                console.log(`🔍 Проверка ${attempts}: currentUser.name = ${newName}, oldName = ${oldName}`);
                 
-                if (newName && newName !== oldName) {
-                    clearInterval(checkInterval);
-                    console.log('🔄 Обнаружено изменение имени:', oldName, '->', newName);
-                    console.log('📍 currentUser.id:', window.currentUser.id);
-                    
-                    try {
-                        const updateCount = await syncUserNameInEvents(window.currentUser.id, newName);
-                        console.log(`✅ Синхронизация завершена. Обновлено событий: ${updateCount}`);
+                try {
+                    // Получаем обновленные данные из Firestore
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        const newName = userDoc.data().name;
+                        console.log(`🔍 Проверка ${attempts}: name в Firestore = ${newName}, oldName = ${oldName}`);
                         
-                        if (updateCount > 0) {
-                            setTimeout(() => {
-                                alert(`✅ Имя успешно обновлено в ${updateCount} событиях!`);
-                            }, 100);
+                        if (newName && newName !== oldName) {
+                            clearInterval(checkInterval);
+                            console.log('🔄 Обнаружено изменение имени:', oldName, '->', newName);
+                            console.log('📍 userId:', user.uid);
+                            
+                            try {
+                                const updateCount = await syncUserNameInEvents(user.uid, newName);
+                                console.log(`✅ Синхронизация завершена. Обновлено событий: ${updateCount}`);
+                                
+                                if (updateCount > 0) {
+                                    setTimeout(() => {
+                                        alert(`✅ Имя успешно обновлено в ${updateCount} событиях!`);
+                                    }, 100);
+                                }
+                            } catch (error) {
+                                console.error('❌ Ошибка синхронизации:', error);
+                                alert('⚠️ Профиль обновлен, но произошла ошибка при обновлении имени в событиях');
+                            }
                         }
-                    } catch (error) {
-                        console.error('❌ Ошибка синхронизации:', error);
-                        alert('⚠️ Профиль обновлен, но произошла ошибка при обновлении имени в событиях');
                     }
-                } else if (attempts >= 10) {
+                } catch (error) {
+                    console.error('Ошибка проверки имени:', error);
+                }
+                
+                if (attempts >= 10) {
                     clearInterval(checkInterval);
                     console.log('⏱️ Превышено количество попыток проверки изменения имени');
                 }
