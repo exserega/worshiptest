@@ -404,6 +404,11 @@ class EventCreationModal {
         selector.innerHTML = `
             <div class="selector-content">
                 <button class="selector-close-btn" onclick="this.closest('.participant-selector').remove()">×</button>
+                <div class="custom-participant-input">
+                    <input type="text" id="customParticipantName" placeholder="Введите имя участника" class="form-control">
+                    <button class="btn btn-primary" onclick="eventCreationModal.addCustomParticipant('${instrumentId}')">Добавить</button>
+                </div>
+                <div class="selector-divider">или выберите из списка:</div>
                 <div class="user-list">
                     ${this.availableUsers.map(u => `
                         <div class="user-item" onclick="eventCreationModal.addParticipant('${instrumentId}', '${u.id}', '${u.name.replace(/'/g, "\\'")}')">
