@@ -85,8 +85,33 @@ async function init() {
         // Проверяем аутентификацию (необязательно для просмотра)
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                currentUser = user;
-                console.log('👤 Пользователь авторизован:', user.email);
+                // Получаем полные данные пользователя из Firestore
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        currentUser = {
+                            ...userDoc.data(),
+                            uid: user.uid,
+                            email: user.email
+                        };
+                        console.log('👤 Пользователь авторизован:', currentUser.name || currentUser.email);
+                    } else {
+                        // Если профиля нет в БД, используем минимальные данные
+                        currentUser = {
+                            uid: user.uid,
+                            email: user.email,
+                            name: user.displayName || user.email
+                        };
+                        console.log('👤 Пользователь авторизован (без профиля):', user.email);
+                    }
+                } catch (error) {
+                    console.error('Ошибка загрузки профиля:', error);
+                    currentUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        name: user.displayName || user.email
+                    };
+                }
             } else {
                 console.log('👤 Гостевой режим');
             }
@@ -208,8 +233,11 @@ function displayEvent() {
         indicator.textContent = '✓ Вы участвуете';
         elements.headerTitle.parentElement.appendChild(indicator);
         
-        // Добавляем класс к контейнеру события
-        document.querySelector('.event-container').classList.add('user-participant');
+        // Добавляем класс к главному контейнеру
+        const appContainer = document.getElementById('app');
+        if (appContainer) {
+            appContainer.classList.add('user-participant');
+        }
     }
     
     // Дата и время
