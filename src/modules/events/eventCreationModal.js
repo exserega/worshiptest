@@ -4,7 +4,7 @@
  */
 
 import logger from '../../utils/logger.js';
-import { createEvent } from './eventsApi.js';
+import { createEvent, updateEvent } from './eventsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
 import { db } from '../../utils/firebase-v8-adapter.js';
 
@@ -14,10 +14,27 @@ class EventCreationModal {
         this.selectedDate = new Date();
         this.selectedParticipants = {};
         this.onSuccess = null;
+        this.editMode = false;
+        this.editingEventId = null;
+        this.editingEventData = null;
     }
     
-    async open(date = new Date(), onSuccess = null) {
-        this.selectedDate = date instanceof Date ? date : new Date(date);
+    async open(dateOrEvent = new Date(), onSuccess = null) {
+        // Определяем режим работы
+        if (dateOrEvent && typeof dateOrEvent === 'object' && dateOrEvent.id) {
+            // Режим редактирования
+            this.editMode = true;
+            this.editingEventId = dateOrEvent.id;
+            this.editingEventData = dateOrEvent;
+            this.selectedDate = dateOrEvent.date instanceof Date ? dateOrEvent.date : new Date(dateOrEvent.date);
+        } else {
+            // Режим создания
+            this.editMode = false;
+            this.editingEventId = null;
+            this.editingEventData = null;
+            this.selectedDate = dateOrEvent instanceof Date ? dateOrEvent : new Date(dateOrEvent);
+        }
+        
         this.onSuccess = onSuccess;
         
         // Создаем модальное окно
@@ -25,6 +42,11 @@ class EventCreationModal {
         
         // Загружаем данные
         await this.loadData();
+        
+        // Если режим редактирования, заполняем форму
+        if (this.editMode) {
+            await this.fillFormWithEventData();
+        }
         
         // Показываем модальное окно
         this.show();
@@ -41,7 +63,7 @@ class EventCreationModal {
                 <div class="modal-overlay" onclick="eventCreationModal.close()"></div>
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2>Создать событие</h2>
+                        <h2>${this.editMode ? 'Редактировать событие' : 'Создать событие'}</h2>
                         <button class="close-btn" onclick="eventCreationModal.close()">×</button>
                     </div>
                     
@@ -106,7 +128,7 @@ class EventCreationModal {
                     
                     <div class="modal-footer">
                         <button class="btn btn-secondary" onclick="eventCreationModal.close()">Отмена</button>
-                        <button class="btn btn-primary" onclick="eventCreationModal.save()">Создать событие</button>
+                        <button class="btn btn-primary" onclick="eventCreationModal.save()">${this.editMode ? 'Сохранить изменения' : 'Создать событие'}</button>
                     </div>
                 </div>
             </div>
@@ -206,6 +228,68 @@ class EventCreationModal {
             
         } catch (error) {
             logger.error('Ошибка загрузки данных:', error);
+        }
+    }
+    
+    async fillFormWithEventData() {
+        if (!this.editingEventData) return;
+        
+        const data = this.editingEventData;
+        
+        // Заполняем название события
+        const nameInput = document.getElementById('eventName');
+        if (nameInput) nameInput.value = data.name || '';
+        
+        // Заполняем дату
+        const dateInput = document.getElementById('eventDate');
+        if (dateInput) {
+            const date = data.date instanceof Date ? data.date : new Date(data.date);
+            dateInput.value = date.toISOString().split('T')[0];
+        }
+        
+        // Заполняем время
+        const timeInput = document.getElementById('eventTime');
+        if (timeInput) timeInput.value = data.time || '';
+        
+        // Заполняем ведущего
+        const leaderSelect = document.getElementById('eventLeader');
+        if (leaderSelect && data.leaderId) {
+            leaderSelect.value = data.leaderId;
+        }
+        
+        // Заполняем сетлист
+        const setlistSelect = document.getElementById('eventSetlist');
+        if (setlistSelect && data.setlistId) {
+            setlistSelect.value = data.setlistId;
+        }
+        
+        // Заполняем комментарий
+        const commentTextarea = document.getElementById('eventComment');
+        if (commentTextarea) commentTextarea.value = data.comment || '';
+        
+        // Заполняем участников
+        if (data.participants && typeof data.participants === 'object') {
+            // Очищаем текущих участников
+            this.selectedParticipants = {};
+            
+            // Преобразуем объект участников в нужный формат
+            Object.entries(data.participants).forEach(([key, participant]) => {
+                const instrumentId = participant.instrument || key.split('_')[0];
+                
+                if (!this.selectedParticipants[instrumentId]) {
+                    this.selectedParticipants[instrumentId] = [];
+                }
+                
+                this.selectedParticipants[instrumentId].push({
+                    userId: participant.userId || participant.id,
+                    userName: participant.userName || participant.name
+                });
+            });
+            
+            // Обновляем UI для каждого инструмента
+            Object.keys(this.selectedParticipants).forEach(instrumentId => {
+                this.updateParticipantsList(instrumentId);
+            });
         }
     }
     
@@ -385,11 +469,19 @@ class EventCreationModal {
             // Показываем индикатор загрузки
             const saveBtn = this.modal.querySelector('.btn-primary');
             saveBtn.disabled = true;
-            saveBtn.textContent = 'Создание...';
+            saveBtn.textContent = this.editMode ? 'Сохранение...' : 'Создание...';
             
-            const eventId = await createEvent(eventData);
-            
-            logger.log('✅ Событие создано:', eventId);
+            let eventId;
+            if (this.editMode) {
+                // Обновляем существующее событие
+                await updateEvent(this.editingEventId, eventData);
+                eventId = this.editingEventId;
+                logger.log('✅ Событие обновлено:', eventId);
+            } else {
+                // Создаем новое событие
+                eventId = await createEvent(eventData);
+                logger.log('✅ Событие создано:', eventId);
+            }
             
             // Закрываем модальное окно
             this.close();

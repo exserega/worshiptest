@@ -380,6 +380,31 @@
     fill: none;
 }
 
+/* Стили кнопок для светлой темы */
+[data-theme="light"] .event-actions .icon-button {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="light"] .event-actions .icon-button:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+    color: rgba(59, 130, 246, 0.9) !important;
+}
+
+[data-theme="light"] .event-actions .icon-button.delete {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="light"] .event-actions .icon-button.delete:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: rgba(239, 68, 68, 0.9) !important;
+}
+
 
 
 /* ===== Вид списка событий ===== */
