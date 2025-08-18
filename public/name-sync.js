@@ -1,5 +1,8 @@
 // Модуль синхронизации имени пользователя в событиях
 
+let syncAttempts = 0;
+const MAX_ATTEMPTS = 10;
+
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         initNameSync();
@@ -9,7 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
 function initNameSync() {
     if (!window.firebase || !window.firebase.firestore) {
         console.error('Firebase не загружен, повтор через 1 сек');
-        setTimeout(initNameSync, 1000);
+        if (syncAttempts < MAX_ATTEMPTS) {
+            syncAttempts++;
+            setTimeout(initNameSync, 1000);
+        }
         return;
     }
     
@@ -85,35 +91,47 @@ function initNameSync() {
         }
     }
     
-    // Перехватываем оригинальную функцию updateUserProfile
-    if (window.updateUserProfile) {
-        console.log('🎯 Найдена функция updateUserProfile, добавляем синхронизацию');
-        const originalUpdateUserProfile = window.updateUserProfile;
+    // Делаем функцию синхронизации глобальной
+    window.syncUserNameInEvents = syncUserNameInEvents;
+    
+    // Перехватываем функцию editName
+    if (window.editName) {
+        console.log('🎯 Найдена функция editName, добавляем синхронизацию');
         
-        window.updateUserProfile = async function(updates) {
+        const originalEditName = window.editName;
+        
+        window.editName = function() {
             const oldName = window.currentUser?.name;
             
-            await originalUpdateUserProfile(updates);
+            // Вызываем оригинальную функцию
+            originalEditName();
             
-            if (updates.name && updates.name !== oldName && window.currentUser?.id) {
-                console.log('🔄 Обнаружено изменение имени, запускаем синхронизацию...');
-                try {
-                    const updateCount = await syncUserNameInEvents(window.currentUser.id, updates.name);
-                    if (updateCount > 0) {
-                        setTimeout(() => {
-                            alert(`✅ Имя успешно обновлено в ${updateCount} событиях!`);
-                        }, 100);
+            // Проверяем изменилось ли имя через небольшую задержку
+            setTimeout(async () => {
+                if (window.currentUser?.name && window.currentUser.name !== oldName) {
+                    console.log('🔄 Обнаружено изменение имени, запускаем синхронизацию...');
+                    try {
+                        const updateCount = await syncUserNameInEvents(window.currentUser.id, window.currentUser.name);
+                        if (updateCount > 0) {
+                            setTimeout(() => {
+                                alert(`✅ Имя успешно обновлено в ${updateCount} событиях!`);
+                            }, 100);
+                        }
+                    } catch (error) {
+                        console.error('Ошибка синхронизации:', error);
+                        alert('⚠️ Профиль обновлен, но произошла ошибка при обновлении имени в событиях');
                     }
-                } catch (error) {
-                    console.error('Ошибка синхронизации:', error);
-                    alert('⚠️ Профиль обновлен, но произошла ошибка при обновлении имени в событиях');
                 }
-            }
+            }, 2000); // Ждем пока профиль обновится в Firestore
         };
+        
         console.log('✅ Синхронизация имен успешно подключена');
     } else {
-        console.warn('⚠️ Функция updateUserProfile не найдена, повтор через 1 сек');
-        setTimeout(initNameSync, 1000);
+        console.warn('⚠️ Функция editName не найдена');
+        if (syncAttempts < MAX_ATTEMPTS) {
+            syncAttempts++;
+            setTimeout(initNameSync, 1000);
+        }
     }
 }
 
