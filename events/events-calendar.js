@@ -879,15 +879,23 @@ export class EventsCalendar {
                 
                 // Перезагружаем события
                 await this.loadEvents();
-                this.render();
                 
-                // Выбираем дату с новым событием
-                const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
-                for (const dayEl of dayElements) {
-                    const dayDate = new Date(dayEl.dataset.date);
-                    if (dayDate.toDateString() === eventDate.toDateString()) {
-                        this.handleDayClick({ target: dayEl });
-                        break;
+                // В зависимости от режима обновляем отображение
+                if (this.viewMode === 'list') {
+                    // В режиме списка перерисовываем список
+                    this.renderListView();
+                } else {
+                    // В режиме календаря перерисовываем календарь
+                    this.render();
+                    
+                    // Выбираем дату с новым событием
+                    const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
+                    for (const dayEl of dayElements) {
+                        const dayDate = new Date(dayEl.dataset.date);
+                        if (dayDate.toDateString() === eventDate.toDateString()) {
+                            this.handleDayClick({ target: dayEl });
+                            break;
+                        }
                     }
                 }
             });
@@ -917,11 +925,18 @@ export class EventsCalendar {
                 logger.log('✅ Событие обновлено:', updatedEventId);
                 // Перезагружаем события
                 await this.loadEvents();
-                // Перерисовываем календарь
-                this.render();
-                // Если была выбрана дата, обновляем её отображение
-                if (this.selectedDate) {
-                    this.showSelectedDateEvents(this.selectedDate);
+                
+                // В зависимости от режима обновляем отображение
+                if (this.viewMode === 'list') {
+                    // В режиме списка перерисовываем список
+                    this.renderListView();
+                } else {
+                    // В режиме календаря перерисовываем календарь
+                    this.render();
+                    // Если была выбрана дата, обновляем её отображение
+                    if (this.selectedDate) {
+                        this.showSelectedDateEvents(this.selectedDate);
+                    }
                 }
             });
         } catch (error) {
@@ -946,19 +961,27 @@ export class EventsCalendar {
             
             // Перезагружаем события
             await this.loadEvents();
-            this.render();
             
-            // Если есть выбранная дата, обновляем отображение
-            if (this.selectedDate) {
-                const selectedDateStr = this.selectedDate.toDateString();
-                const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
+            // В зависимости от режима обновляем отображение
+            if (this.viewMode === 'list') {
+                // В режиме списка перерисовываем список
+                this.renderListView();
+            } else {
+                // В режиме календаря перерисовываем календарь
+                this.render();
                 
-                for (const dayEl of dayElements) {
-                    if (dayEl.dataset.date) {
-                        const dayDate = new Date(dayEl.dataset.date);
-                        if (dayDate.toDateString() === selectedDateStr) {
-                            this.handleDayClick({ target: dayEl });
-                            break;
+                // Если есть выбранная дата, обновляем отображение
+                if (this.selectedDate) {
+                    const selectedDateStr = this.selectedDate.toDateString();
+                    const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
+                    
+                    for (const dayEl of dayElements) {
+                        if (dayEl.dataset.date) {
+                            const dayDate = new Date(dayEl.dataset.date);
+                            if (dayDate.toDateString() === selectedDateStr) {
+                                this.handleDayClick({ target: dayEl });
+                                break;
+                            }
                         }
                     }
                 }
