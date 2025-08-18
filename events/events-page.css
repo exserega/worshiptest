@@ -385,11 +385,15 @@
 /* ===== Вид списка событий ===== */
 
 .events-list-view {
-    padding: 1rem;
+    padding: 0;
 }
 
 .month-section {
     margin-bottom: 1.5rem;
+}
+
+.month-section:first-child {
+    margin-top: 0;
 }
 
 .month-section-title {
@@ -428,7 +432,7 @@
 /* Компактный вид для мобильных */
 @media (max-width: 768px) {
     .events-list-view {
-        padding: 0.5rem;
+        padding: 0;
     }
     
     .month-section {
