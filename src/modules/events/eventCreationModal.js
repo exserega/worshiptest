@@ -448,6 +448,22 @@ class EventCreationModal {
         document.querySelector('.participant-selector')?.remove();
     }
     
+    addCustomParticipant(instrumentId) {
+        const input = document.getElementById('customParticipantName');
+        const customName = input ? input.value.trim() : '';
+        
+        if (!customName) {
+            alert('Введите имя участника');
+            return;
+        }
+        
+        // Генерируем уникальный ID для кастомного участника
+        const customId = 'custom_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        // Добавляем участника
+        this.addParticipant(instrumentId, customId, customName);
+    }
+    
     getInstrumentName(instrumentId) {
         const names = {
             'vocals': 'Вокал',

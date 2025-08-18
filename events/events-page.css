@@ -1354,3 +1354,50 @@ textarea.form-control {
         z-index: 100;
     }
 }
+
+/* Поле для ввода кастомного участника */
+.custom-participant-input {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+}
+
+.custom-participant-input input {
+    flex: 1;
+}
+
+.custom-participant-input .btn {
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+}
+
+/* Разделитель */
+.selector-divider {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin: 1rem 0;
+    position: relative;
+    padding: 0 1rem;
+}
+
+.selector-divider::before,
+.selector-divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 5rem);
+    height: 1px;
+    background: var(--border-color);
+}
+
+.selector-divider::before {
+    left: 1rem;
+}
+
+.selector-divider::after {
+    right: 1rem;
+}
