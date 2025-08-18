@@ -3,19 +3,10 @@
  * @module EventPage
  */
 
-// Конфигурация Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyDTqPgrfZ6ACzHkL3EWqTWU0m_VCM0q2vg",
-    authDomain: "song-archive-389a6.firebaseapp.com",
-    projectId: "song-archive-389a6",
-    storageBucket: "song-archive-389a6.appspot.com",
-    messagingSenderId: "1072269559435",
-    appId: "1:1072269559435:web:bf93c5a8b76a7dab1f9c07"
-};
-
-// Инициализация Firebase
-if (!window.firebase.apps.length) {
-    window.firebase.initializeApp(firebaseConfig);
+// Firebase уже должен быть инициализирован через firebase-init.js в HTML
+// Проверяем, что Firebase инициализирован
+if (!window.firebase || !window.firebase.apps.length) {
+    console.error('Firebase не инициализирован! Проверьте подключение firebase-init.js');
 }
 
 // Получаем сервисы
@@ -94,25 +85,8 @@ async function init() {
         // Проверяем аутентификацию (необязательно для просмотра)
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                // Получаем полные данные пользователя из Firestore
-                try {
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    if (userDoc.exists) {
-                        currentUser = {
-                            ...userDoc.data(),
-                            uid: user.uid,
-                            email: user.email
-                        };
-                        console.log('👤 Пользователь авторизован:', currentUser.name || currentUser.email);
-                    } else {
-                        // Если профиля нет в БД, используем данные из auth
-                        currentUser = user;
-                        console.log('👤 Пользователь авторизован (без профиля):', user.email);
-                    }
-                } catch (error) {
-                    console.error('Ошибка загрузки профиля:', error);
-                    currentUser = user;
-                }
+                currentUser = user;
+                console.log('👤 Пользователь авторизован:', user.email);
             } else {
                 console.log('👤 Гостевой режим');
             }
