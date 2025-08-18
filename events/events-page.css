@@ -1160,6 +1160,7 @@ textarea.form-control {
 /* Поле для ввода кастомного участника */
 .custom-participant-input {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
     padding: 1rem;
