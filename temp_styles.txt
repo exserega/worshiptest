@@ -1,0 +1,136 @@
+/* Кнопка закрытия селектора */
+.selector-close-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.selector-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Поле для ввода кастомного участника */
+.custom-participant-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.25rem;
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.custom-participant-input input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+    font-size: 0.9375rem;
+    transition: all 0.2s;
+}
+
+.custom-participant-input input:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    outline: none;
+}
+
+.custom-participant-input input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.custom-participant-input .btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 178, 188, 0.15);
+    border: 1px solid rgba(0, 178, 188, 0.3);
+    color: #00b2bc;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.custom-participant-input .btn:hover {
+    background: rgba(0, 178, 188, 0.25);
+    border-color: rgba(0, 178, 188, 0.5);
+    transform: translateY(-1px);
+}
+
+/* Разделитель */
+.selector-divider {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8125rem;
+    margin: 0;
+    padding: 1rem 1.25rem;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Список пользователей */
+.user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 200px;
+}
+
+.user-item {
+    padding: 0.875rem 1rem;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9375rem;
+    margin: 0 0.25rem 0.25rem 0.25rem;
+}
+
+.user-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(2px);
+}
+
+.user-item:active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(0);
+}
+
+/* Скроллбар для списка */
+.user-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.user-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.user-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.user-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
