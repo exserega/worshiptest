@@ -262,8 +262,24 @@ class EventCreationModal {
         const data = this.editingEventData;
         
         // Заполняем название события
-        const nameInput = document.getElementById('eventName');
-        if (nameInput) nameInput.value = data.name || '';
+        const namePreset = document.getElementById('eventNamePreset');
+        const nameCustom = document.getElementById('eventNameCustom');
+        
+        if (namePreset && data.name) {
+            // Проверяем, есть ли название в списке предустановленных
+            const presetOptions = ['Молодёжная молитва', 'Воскресное служение', 'Молодёжное служение'];
+            
+            if (presetOptions.includes(data.name)) {
+                namePreset.value = data.name;
+            } else {
+                // Если название не из списка, используем custom
+                namePreset.value = 'custom';
+                if (nameCustom) {
+                    nameCustom.style.display = 'block';
+                    nameCustom.value = data.name;
+                }
+            }
+        }
         
         // Заполняем дату
         const dateInput = document.getElementById('eventDate');
@@ -289,7 +305,31 @@ class EventCreationModal {
         
         // Заполняем время
         const timeInput = document.getElementById('eventTime');
-        if (timeInput) timeInput.value = data.time || '';
+        if (timeInput) {
+            if (data.time) {
+                // Если время сохранено отдельно
+                timeInput.value = data.time;
+            } else if (data.date) {
+                // Пытаемся извлечь время из даты
+                let date;
+                if (data.date instanceof Date) {
+                    date = data.date;
+                } else if (data.date.toDate && typeof data.date.toDate === 'function') {
+                    date = data.date.toDate();
+                } else if (data.date.seconds) {
+                    date = new Date(data.date.seconds * 1000);
+                } else {
+                    date = new Date(data.date);
+                }
+                
+                if (!isNaN(date.getTime())) {
+                    // Форматируем время в HH:MM
+                    const hours = date.getHours().toString().padStart(2, '0');
+                    const minutes = date.getMinutes().toString().padStart(2, '0');
+                    timeInput.value = `${hours}:${minutes}`;
+                }
+            }
+        }
         
         // Заполняем ведущего
         const leaderSelect = document.getElementById('eventLeader');
