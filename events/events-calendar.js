@@ -213,6 +213,34 @@ export class EventsCalendar {
             // Добавляем класс для подсветки
             dayEl.classList.add('has-events');
             
+            // Проверяем, участвует ли текущий пользователь в каком-либо событии этого дня
+            const currentUser = getCurrentUser();
+            if (currentUser && currentUser.uid) {
+                const isUserParticipant = dayEvents.some(event => {
+                    // Проверяем, является ли пользователь лидером
+                    if (event.leaderId === currentUser.uid) {
+                        logger.log(`📍 Пользователь ${currentUser.name} - лидер события ${event.name}`);
+                        return true;
+                    }
+                    
+                    // Проверяем участников
+                    if (event.participants && Array.isArray(event.participants)) {
+                        const isParticipant = event.participants.some(p => p.id === currentUser.uid);
+                        if (isParticipant) {
+                            logger.log(`📍 Пользователь ${currentUser.name} - участник события ${event.name}`);
+                        }
+                        return isParticipant;
+                    }
+                    
+                    return false;
+                });
+                
+                if (isUserParticipant) {
+                    dayEl.classList.add('user-participant');
+                    logger.log(`✨ День ${date.toDateString()} помечен как день участия пользователя`);
+                }
+            }
+            
             // Добавляем индикаторы событий
             const eventsEl = document.createElement('div');
             eventsEl.className = 'calendar-day-events';

@@ -246,6 +246,49 @@
     color: white;
 }
 
+/* Дни где пользователь участвует в событиях */
+.calendar-day.user-participant {
+    background: rgba(16, 185, 129, 0.15) !important; /* Зеленоватый фон */
+    border: 2px solid rgba(16, 185, 129, 0.5);
+    position: relative;
+}
+
+/* Для темной темы */
+:root .calendar-day.user-participant {
+    background: rgba(16, 185, 129, 0.2) !important;
+    border-color: rgba(16, 185, 129, 0.6);
+}
+
+/* Для светлой темы */
+[data-theme="light"] .calendar-day.user-participant {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* При наведении на день участия */
+.calendar-day.user-participant:hover:not(.other-month) {
+    background: rgba(16, 185, 129, 0.25) !important;
+    border-color: rgba(16, 185, 129, 0.8);
+    transform: scale(1.08);
+}
+
+/* Если день участия выбран */
+.calendar-day.user-participant.selected {
+    background: rgb(16, 185, 129) !important;
+    border-color: rgb(16, 185, 129);
+}
+
+/* Точки событий для дней участия - делаем их зелеными */
+.calendar-day.user-participant .calendar-event-dot {
+    background: rgb(16, 185, 129);
+}
+
+/* Если день участия - сегодня */
+.calendar-day.user-participant.today {
+    border-width: 3px;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
 .calendar-day-number {
     font-size: 1rem;
     font-weight: 500;
