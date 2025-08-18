@@ -94,7 +94,7 @@
     color: var(--text-primary);
     margin: 0;
     text-align: center;
-    flex: 1;
+    width: 100%;
 }
 
 .top-bar-actions {
@@ -510,7 +510,7 @@
 
 /* Блок 3: События выбранной даты */
 .selected-date-events {
-    flex: 1;
+    width: 100%;
     overflow-y: auto;
     background: var(--bg-primary);
     padding: 1rem;
@@ -583,12 +583,12 @@
 .event-time {
     color: var(--primary-color);
     font-weight: 600;
-    white-space: nowrap;
+    width: 100%;
 }
 
 .event-name {
     font-weight: 600;
-    flex: 1;
+    width: 100%;
 }
 
 .event-leader {
@@ -608,7 +608,7 @@
 
 .instrument-line {
     color: var(--text-secondary);
-    white-space: nowrap;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -1169,11 +1169,11 @@ textarea.form-control {
 }
 
 .custom-participant-input input {
-    flex: 1;
+    width: 100%;
 }
 
 .custom-participant-input .btn {
-    white-space: nowrap;
+    width: 100%;
     padding: 0.5rem 1rem;
 }
 
@@ -1414,11 +1414,11 @@ textarea.form-control {
 }
 
 .custom-participant-input input {
-    flex: 1;
+    width: 100%;
 }
 
 .custom-participant-input .btn {
-    white-space: nowrap;
+    width: 100%;
     padding: 0.5rem 1rem;
 }
 
