@@ -1116,6 +1116,8 @@ textarea.form-control {
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Кнопка закрытия селектора */
@@ -1154,7 +1156,8 @@ textarea.form-control {
     gap: 0;
     padding: 1rem;
     overflow-y: auto;
-    max-height: 40vh;
+    flex: 1;
+    min-height: 200px;
 }
 
 /* Поле для ввода кастомного участника */
@@ -1162,7 +1165,8 @@ textarea.form-control {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin: 1rem;
+    margin-bottom: 0;
     padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 0.5rem;
