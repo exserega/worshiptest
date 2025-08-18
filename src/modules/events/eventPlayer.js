@@ -528,20 +528,40 @@ class EventPlayer {
     }
     
     enterFullscreen() {
-        if (!document.fullscreenElement) {
-            this.overlay.requestFullscreen().catch(err => {
-                console.error('Ошибка входа в полноэкранный режим:', err);
-            });
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            // Проверяем поддержку fullscreen API
+            if (this.overlay.requestFullscreen) {
+                this.overlay.requestFullscreen().catch(err => {
+                    console.error('Ошибка входа в полноэкранный режим:', err);
+                });
+            } else if (this.overlay.webkitRequestFullscreen) {
+                // Safari iOS использует webkit префикс
+                this.overlay.webkitRequestFullscreen();
+            } else {
+                console.log('Полноэкранный режим не поддерживается на этом устройстве');
+            }
         }
     }
     
     toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            this.overlay.requestFullscreen().catch(err => {
-                console.error('Ошибка входа в полноэкранный режим:', err);
-            });
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            // Входим в полноэкранный режим
+            if (this.overlay.requestFullscreen) {
+                this.overlay.requestFullscreen().catch(err => {
+                    console.error('Ошибка входа в полноэкранный режим:', err);
+                });
+            } else if (this.overlay.webkitRequestFullscreen) {
+                // Safari iOS
+                this.overlay.webkitRequestFullscreen();
+            }
         } else {
-            document.exitFullscreen();
+            // Выходим из полноэкранного режима
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                // Safari iOS
+                document.webkitExitFullscreen();
+            }
         }
     }
     
