@@ -1257,3 +1257,35 @@ textarea.form-control {
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
+
+/* Исправление прокрутки для мобильных в режиме списка */
+@media (max-width: 768px) {
+    /* Когда активен режим списка, делаем одну общую прокрутку */
+    body:has(.events-list-view) {
+        overflow: auto;
+    }
+    
+    body:has(.events-list-view) .events-page-container {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+    }
+    
+    body:has(.events-list-view) .events-page-main {
+        height: auto;
+        flex: none;
+    }
+    
+    body:has(.events-list-view) .selected-date-events {
+        overflow-y: visible;
+        height: auto;
+        flex: none;
+    }
+    
+    /* Шапка остается фиксированной */
+    body:has(.events-list-view) .events-top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+}
