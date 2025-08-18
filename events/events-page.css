@@ -396,6 +396,11 @@
     margin-top: -1rem;
 }
 
+.month-section:first-child .month-section-title {
+    margin-top: 0;
+    padding-top: 0;
+}
+
 .month-section-title {
     color: var(--text-primary);
     font-size: 1.2rem;

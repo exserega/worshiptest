@@ -96,6 +96,10 @@ export class EventsCalendar {
         }
         
         // Обычный вид календаря
+        // Показываем кнопки навигации по месяцам
+        if (this.prevMonthBtn) this.prevMonthBtn.style.display = '';
+        if (this.nextMonthBtn) this.nextMonthBtn.style.display = '';
+        
         // Обновляем заголовок месяца
         this.updateMonthTitle();
         
@@ -723,6 +727,10 @@ export class EventsCalendar {
         // Скрываем календарь и показываем контейнер для списка
         this.weekdays.style.display = 'none';
         this.calendarDays.style.display = 'none';
+        
+        // Скрываем кнопки навигации по месяцам
+        if (this.prevMonthBtn) this.prevMonthBtn.style.display = 'none';
+        if (this.nextMonthBtn) this.nextMonthBtn.style.display = 'none';
         
         // Очищаем и используем selectedDateEvents для списка
         this.selectedDateEvents.innerHTML = '';
