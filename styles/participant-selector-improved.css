@@ -1,0 +1,330 @@
+/* ====================================
+   IMPROVED PARTICIPANT SELECTOR STYLES
+   ==================================== */
+
+/* Оверлей селектора участников */
+.participant-selector {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.selector-content {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    position: relative;
+}
+
+/* Кнопка закрытия - улучшенная видимость */
+.selector-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 24px;
+    line-height: 1;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+}
+
+.selector-close-btn:hover {
+    background: var(--danger-color);
+    color: white;
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Темная тема - улучшенная видимость кнопки закрытия */
+[data-theme="dark"] .selector-close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .selector-close-btn:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+/* Светлая тема - кнопка закрытия */
+[data-theme="light"] .selector-close-btn {
+    background: rgba(0, 0, 0, 0.08);
+    color: #374151;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .selector-close-btn:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+}
+
+/* Поле ввода кастомного участника - уменьшенный размер */
+.custom-participant-input {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.custom-participant-input input {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.custom-participant-input input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(103, 232, 249, 0.2);
+}
+
+/* Кнопка добавления - уменьшенный размер */
+.custom-participant-input .btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.custom-participant-input .btn-primary {
+    background: var(--accent-color);
+    color: var(--button-text-color);
+}
+
+.custom-participant-input .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Разделитель */
+.selector-divider {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin: 16px 0;
+    position: relative;
+}
+
+.selector-divider::before,
+.selector-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 60px);
+    height: 1px;
+    background: var(--border-color);
+}
+
+.selector-divider::before {
+    left: 0;
+}
+
+.selector-divider::after {
+    right: 0;
+}
+
+/* Список пользователей с поиском */
+.user-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+
+.user-item {
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    background: var(--bg-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-item:hover {
+    background: var(--bg-hover);
+    transform: translateX(4px);
+}
+
+.user-item.selected {
+    background: var(--accent-color);
+    color: var(--button-text-color);
+}
+
+/* Автодополнение для поля ввода */
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.autocomplete-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+    background: var(--bg-hover);
+}
+
+.autocomplete-item.selected {
+    background: var(--accent-color);
+    color: var(--button-text-color);
+}
+
+/* Улучшение видимости в модальном окне событий */
+.event-modal .participant-selector {
+    z-index: 10001; /* Выше чем модальное окно */
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .selector-content {
+        padding: 20px;
+        margin: 16px;
+    }
+    
+    .custom-participant-input {
+        flex-direction: column;
+    }
+    
+    .custom-participant-input input,
+    .custom-participant-input .btn {
+        width: 100%;
+    }
+    
+    .user-list {
+        max-height: 200px;
+    }
+}
+
+/* Анимация появления */
+.participant-selector {
+    animation: fadeIn 0.2s ease;
+}
+
+.selector-content {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Dropdown для выбора лидера с автодополнением */
+.leader-autocomplete-wrapper {
+    position: relative;
+}
+
+.leader-autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: none;
+}
+
+.leader-autocomplete-dropdown.show {
+    display: block;
+}
+
+.leader-autocomplete-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.leader-autocomplete-item:hover {
+    background: var(--bg-hover);
+}
+
+.leader-autocomplete-item.active {
+    background: var(--accent-color);
+    color: var(--button-text-color);
+}
+
+.leader-autocomplete-item .user-role {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-left: auto;
+}
+
+/* Подсветка совпадений в автодополнении */
+.highlight {
+    background: rgba(103, 232, 249, 0.3);
+    font-weight: 600;
+}

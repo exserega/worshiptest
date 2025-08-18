@@ -121,9 +121,11 @@ class EventCreationModal {
                         <!-- Ведущий -->
                         <div class="form-group">
                             <label>Ведущий прославления</label>
-                            <select id="eventLeader" class="form-control">
-                                <option value="">Выберите ведущего</option>
-                            </select>
+                            <div class="leader-autocomplete-wrapper">
+                                <input type="text" id="eventLeaderInput" class="form-control" placeholder="Начните вводить имя ведущего" autocomplete="off">
+                                <input type="hidden" id="eventLeader" value="">
+                                <div id="leaderAutocomplete" class="leader-autocomplete-dropdown"></div>
+                            </div>
                         </div>
                         
                         <!-- Сетлист -->
@@ -403,12 +405,18 @@ class EventCreationModal {
         selector.className = 'participant-selector';
         selector.innerHTML = `
             <div class="selector-content">
-                <button class="selector-close-btn" onclick="this.closest('.participant-selector').remove()">×</button>
-                <div class="custom-participant-input">
-                    <input type="text" id="customParticipantName" placeholder="Введите имя участника" class="form-control">
+                <button class="selector-close-btn" aria-label="Закрыть">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <h3 style="margin: 0 0 16px 0; font-size: 18px; color: var(--text-primary);">Добавить участника</h3>
+                <div class="custom-participant-input" style="position: relative;">
+                    <input type="text" id="customParticipantName" placeholder="Введите имя участника" class="form-control" autocomplete="off">
                     <button class="btn btn-primary" onclick="eventCreationModal.addCustomParticipant('${instrumentId}')">Добавить</button>
+                    <div id="participant-autocomplete" class="autocomplete-dropdown" style="display: none;"></div>
                 </div>
-                <div class="selector-divider">или выберите из списка:</div>
+                <div class="selector-divider">или выберите из списка</div>
                 <div class="user-list">
                     ${this.availableUsers.map(u => `
                         <div class="user-item" onclick="eventCreationModal.addParticipant('${instrumentId}', '${u.id}', '${u.name.replace(/'/g, "\\'")}')">
@@ -420,6 +428,14 @@ class EventCreationModal {
         `;
         
         document.body.appendChild(selector);
+        
+        // Добавляем обработчик для кнопки закрытия
+        selector.querySelector('.selector-close-btn').addEventListener('click', () => {
+            selector.remove();
+        });
+        
+        // Добавляем автодополнение
+        this.setupParticipantAutocomplete(instrumentId);
     }
     
     addParticipant(instrumentId, userId, userName) {
@@ -498,6 +514,88 @@ class EventCreationModal {
     removeParticipant(instrumentId, index) {
         this.selectedParticipants[instrumentId].splice(index, 1);
         this.updateParticipantsList(instrumentId);
+    }
+    
+    setupParticipantAutocomplete(instrumentId) {
+        const input = document.getElementById('customParticipantName');
+        const dropdown = document.getElementById('participant-autocomplete');
+        
+        if (!input || !dropdown) return;
+        
+        // Обработчик ввода
+        input.addEventListener('input', () => {
+            const value = input.value.toLowerCase().trim();
+            
+            if (value.length < 2) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            // Фильтруем пользователей
+            const matches = this.availableUsers.filter(u => 
+                u.name.toLowerCase().includes(value)
+            );
+            
+            if (matches.length === 0) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            // Показываем результаты
+            dropdown.innerHTML = matches.map(u => `
+                <div class="autocomplete-item" data-id="${u.id}" data-name="${u.name}">
+                    ${this.highlightMatch(u.name, value)}
+                </div>
+            `).join('');
+            
+            dropdown.style.display = 'block';
+            
+            // Обработчики для элементов автодополнения
+            dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const userId = item.dataset.id;
+                    const userName = item.dataset.name;
+                    this.addParticipant(instrumentId, userId, userName);
+                });
+            });
+        });
+        
+        // Скрываем dropdown при клике вне
+        document.addEventListener('click', (e) => {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // Навигация с клавиатуры
+        let currentIndex = -1;
+        input.addEventListener('keydown', (e) => {
+            const items = dropdown.querySelectorAll('.autocomplete-item');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                currentIndex = Math.min(currentIndex + 1, items.length - 1);
+                this.updateActiveItem(items, currentIndex);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                currentIndex = Math.max(currentIndex - 1, -1);
+                this.updateActiveItem(items, currentIndex);
+            } else if (e.key === 'Enter' && currentIndex >= 0) {
+                e.preventDefault();
+                items[currentIndex].click();
+            }
+        });
+    }
+    
+    highlightMatch(text, query) {
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+    
+    updateActiveItem(items, index) {
+        items.forEach((item, i) => {
+            item.classList.toggle('active', i === index);
+        });
     }
     
     async save() {
