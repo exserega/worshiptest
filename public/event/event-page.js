@@ -94,8 +94,25 @@ async function init() {
         // Проверяем аутентификацию (необязательно для просмотра)
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                currentUser = user;
-                console.log('👤 Пользователь авторизован:', user.email);
+                // Получаем полные данные пользователя из Firestore
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        currentUser = {
+                            ...userDoc.data(),
+                            uid: user.uid,
+                            email: user.email
+                        };
+                        console.log('👤 Пользователь авторизован:', currentUser.name || currentUser.email);
+                    } else {
+                        // Если профиля нет в БД, используем данные из auth
+                        currentUser = user;
+                        console.log('👤 Пользователь авторизован (без профиля):', user.email);
+                    }
+                } catch (error) {
+                    console.error('Ошибка загрузки профиля:', error);
+                    currentUser = user;
+                }
             } else {
                 console.log('👤 Гостевой режим');
             }
@@ -182,7 +199,11 @@ async function loadEvent() {
 function displayEvent() {
     // Проверяем, участвует ли текущий пользователь
     let isUserParticipant = false;
-    if (currentUser) {
+    console.log('🔍 Проверка участия. CurrentUser:', currentUser);
+    console.log('🔍 EventData leaderId:', eventData.leaderId);
+    console.log('🔍 EventData participants:', eventData.participants);
+    
+    if (currentUser && currentUser.uid) {
         // Проверяем, является ли пользователь лидером
         if (eventData.leaderId === currentUser.uid) {
             isUserParticipant = true;
@@ -191,13 +212,16 @@ function displayEvent() {
         
         // Проверяем участников
         if (!isUserParticipant && eventData.participants && eventData.participants.length > 0) {
-            isUserParticipant = eventData.participants.some(p => 
-                p.userId === currentUser.uid || p.id === currentUser.uid
-            );
+            isUserParticipant = eventData.participants.some(p => {
+                console.log('🔍 Проверяем участника:', p, 'currentUser.uid:', currentUser.uid);
+                return p.userId === currentUser.uid || p.id === currentUser.uid;
+            });
             if (isUserParticipant) {
                 console.log('✨ Текущий пользователь - участник события');
             }
         }
+    } else {
+        console.log('⚠️ CurrentUser не определен или не имеет uid');
     }
     
     // Заголовок
