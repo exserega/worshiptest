@@ -24,12 +24,17 @@ export class EventsCalendar {
         this.prevMonthBtn = document.getElementById('prevMonthBtn');
         this.nextMonthBtn = document.getElementById('nextMonthBtn');
         this.createEventBtn = document.getElementById('createEventBtn');
+        this.listViewBtn = document.getElementById('listViewBtn');
+        
+        // Состояние вида
+        this.viewMode = 'calendar'; // 'calendar' или 'list'
         
         // Привязываем методы к контексту
         this.handlePrevMonth = this.handlePrevMonth.bind(this);
         this.handleNextMonth = this.handleNextMonth.bind(this);
         this.handleCreateEvent = this.handleCreateEvent.bind(this);
         this.handleDayClick = this.handleDayClick.bind(this);
+        this.handleViewToggle = this.handleViewToggle.bind(this);
     }
     
     /**
@@ -331,6 +336,12 @@ export class EventsCalendar {
         const createEventBtn = document.getElementById('createEventBtn');
         if (createEventBtn) {
             createEventBtn.addEventListener('click', () => this.handleCreateEvent());
+        }
+        
+        // Кнопка переключения вида
+        if (this.listViewBtn) {
+            this.listViewBtn.style.display = 'block';
+            this.listViewBtn.addEventListener('click', () => this.handleViewToggle());
         }
         
         // Обработчик клика по дням календаря
