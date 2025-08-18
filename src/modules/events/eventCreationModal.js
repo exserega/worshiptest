@@ -282,7 +282,9 @@ class EventCreationModal {
                 
                 this.selectedParticipants[instrumentId].push({
                     userId: participant.userId || participant.id,
-                    userName: participant.userName || participant.name
+                    userName: participant.userName || participant.name,
+                    instrument: instrumentId,
+                    instrumentName: participant.instrumentName || this.getInstrumentName(instrumentId)
                 });
             });
             

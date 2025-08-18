@@ -891,14 +891,17 @@ export class EventsCalendar {
             }
 
             const { openEventCreationModal } = await import('../src/modules/events/eventCreationModal.js');
-            openEventCreationModal(new Date(event.date), async (updatedEventId) => {
-                if (updatedEventId === eventId) {
-                    logger.log('✅ Событие обновлено:', eventId);
-                    await this.loadEvents();
-                    this.render();
-                    this.handleDayClick({ target: this.calendarDays.querySelector(`.calendar-day[data-date="${event.date.toISOString()}"]`) });
-                } else {
-                    logger.warn('Событие с другим ID было создано:', updatedEventId);
+            
+            // Передаем объект события для редактирования
+            openEventCreationModal(event, async (updatedEventId) => {
+                logger.log('✅ Событие обновлено:', updatedEventId);
+                // Перезагружаем события
+                await this.loadEvents();
+                // Перерисовываем календарь
+                this.render();
+                // Если была выбрана дата, обновляем её отображение
+                if (this.selectedDate) {
+                    this.showSelectedDateEvents(this.selectedDate);
                 }
             });
         } catch (error) {
