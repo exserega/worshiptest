@@ -426,13 +426,33 @@ export class EventsCalendar {
     /**
      * Показать события выбранной даты
      */
-    showSelectedDateEvents(date, events) {
+    showSelectedDateEvents(date, events = null) {
         const container = this.selectedDateEvents;
         
         // Убеждаемся, что контейнер видим
         container.style.display = 'block';
         
-        if (events.length === 0) {
+        // Если события не переданы, получаем их для указанной даты
+        if (!events) {
+            // Пытаемся найти день в календаре
+            const dayElements = this.calendarDays.querySelectorAll('.calendar-day');
+            for (const dayEl of dayElements) {
+                if (dayEl.dataset.date) {
+                    const dayDate = new Date(dayEl.dataset.date);
+                    if (dayDate.toDateString() === date.toDateString()) {
+                        events = JSON.parse(dayEl.dataset.events || '[]');
+                        break;
+                    }
+                }
+            }
+            
+            // Если не нашли, используем пустой массив
+            if (!events) {
+                events = [];
+            }
+        }
+        
+        if (!events || events.length === 0) {
             // Нет событий
             container.innerHTML = `
                 <div class="selected-date-header">
