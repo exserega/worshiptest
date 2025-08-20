@@ -89,13 +89,17 @@ class EventCreationModal {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2>${this.editMode ? 'Редактировать событие' : 'Создать событие'}</h2>
-                        <button class="close-btn" onclick="eventCreationModal.close()">×</button>
+                        <button class="close-btn" onclick="eventCreationModal.close()" aria-label="Закрыть">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                     </div>
                     
                     <div class="modal-body">
                         <!-- Название события -->
                         <div class="form-group">
-                            <label>Название события</label>
+                            <label for="eventNamePreset">Название события</label>
                             <select id="eventNamePreset" class="form-control" onchange="eventCreationModal.updateEventName()">
                                 <option value="">Выберите или введите название</option>
                                 <option value="Молодёжная молитва">Молодёжная молитва в четверг в 19:00</option>
@@ -109,18 +113,18 @@ class EventCreationModal {
                         <!-- Дата и время -->
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Дата</label>
-                                <input type="date" id="eventDate" class="form-control" value="${this.selectedDate && !isNaN(this.selectedDate.getTime()) ? this.selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}">
+                                <label for="eventDate">Дата</label>
+                                <input type="date" id="eventDate" class="form-control" value="${this.selectedDate && !isNaN(this.selectedDate.getTime()) ? this.selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}" required>
                             </div>
                             <div class="form-group">
-                                <label>Время</label>
-                                <input type="time" id="eventTime" class="form-control" value="19:00">
+                                <label for="eventTime">Время</label>
+                                <input type="time" id="eventTime" class="form-control" value="19:00" required>
                             </div>
                         </div>
                         
                         <!-- Ведущий -->
                         <div class="form-group">
-                            <label>Ведущий прославления</label>
+                            <label for="eventLeader">Ведущий прославления</label>
                             <select id="eventLeader" class="form-control">
                                 <option value="">Выберите ведущего</option>
                             </select>
@@ -128,7 +132,7 @@ class EventCreationModal {
                         
                         <!-- Сетлист -->
                         <div class="form-group">
-                            <label>Список песен</label>
+                            <label for="eventSetlist">Список песен</label>
                             <select id="eventSetlist" class="form-control">
                                 <option value="">Выберите сетлист</option>
                             </select>
@@ -146,14 +150,14 @@ class EventCreationModal {
                         
                         <!-- Комментарий -->
                         <div class="form-group">
-                            <label>Комментарий (необязательно)</label>
-                            <textarea id="eventComment" class="form-control" rows="2"></textarea>
+                            <label for="eventComment">Комментарий <span style="font-weight: 400; opacity: 0.7;">(необязательно)</span></label>
+                            <textarea id="eventComment" class="form-control" rows="2" placeholder="Дополнительная информация о событии"></textarea>
                         </div>
                     </div>
                     
                     <div class="modal-footer">
                         <button class="btn btn-secondary" onclick="eventCreationModal.close()">Отмена</button>
-                        <button class="btn btn-primary" onclick="eventCreationModal.save()">${this.editMode ? 'Сохранить изменения' : 'Создать событие'}</button>
+                        <button class="btn btn-primary" onclick="eventCreationModal.save()">${this.editMode ? 'Сохранить' : 'Создать событие'}</button>
                     </div>
                 </div>
             </div>
@@ -183,7 +187,11 @@ class EventCreationModal {
             <div class="instrument-group">
                 <div class="instrument-header">
                     <span>${inst.icon} ${inst.name}</span>
-                    <button type="button" class="add-participant-btn" onclick="eventCreationModal.showParticipantSelector('${inst.id}')">+</button>
+                    <button type="button" class="add-participant-btn" onclick="eventCreationModal.showParticipantSelector('${inst.id}')" aria-label="Добавить участника">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="instrument-participants" id="participants-${inst.id}"></div>
             </div>
@@ -403,23 +411,40 @@ class EventCreationModal {
         selector.className = 'participant-selector';
         selector.innerHTML = `
             <div class="selector-content">
-                <button class="selector-close-btn" onclick="this.closest('.participant-selector').remove()">×</button>
+                <button class="selector-close-btn" onclick="this.closest('.participant-selector').remove()" aria-label="Закрыть">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
                 <div class="custom-participant-input">
                     <input type="text" id="customParticipantName" placeholder="Введите имя участника" class="form-control">
-                    <button class="btn btn-primary" onclick="eventCreationModal.addCustomParticipant('${instrumentId}')">Добавить</button>
+                    <button class="btn btn-primary" onclick="eventCreationModal.addCustomParticipant('${instrumentId}')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.375rem;">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Добавить
+                    </button>
                 </div>
-                <div class="selector-divider">или выберите из списка:</div>
+                <div class="selector-divider">или выберите из списка</div>
                 <div class="user-list">
-                    ${this.availableUsers.map(u => `
+                    ${this.availableUsers.length > 0 ? this.availableUsers.map(u => `
                         <div class="user-item" onclick="eventCreationModal.addParticipant('${instrumentId}', '${u.id}', '${u.name.replace(/'/g, "\\'")}')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                             ${u.name}
                         </div>
-                    `).join('')}
+                    `).join('') : '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">Нет доступных пользователей</div>'}
                 </div>
             </div>
         `;
         
         document.body.appendChild(selector);
+        
+        // Фокус на поле ввода
+        setTimeout(() => {
+            document.getElementById('customParticipantName')?.focus();
+        }, 100);
     }
     
     addParticipant(instrumentId, userId, userName) {
