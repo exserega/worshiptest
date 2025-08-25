@@ -131,6 +131,11 @@ class EventCreationModal {
                                        class="form-control" 
                                        placeholder="Введите имя ведущего"
                                        autocomplete="off">
+                                <button type="button" class="leader-dropdown-toggle" onclick="eventCreationModal.toggleLeaderDropdown()" aria-label="Показать всех участников">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
                                 <input type="hidden" id="eventLeader" value="">
                                 <div id="leaderDropdown" class="leader-dropdown"></div>
                             </div>
@@ -555,6 +560,20 @@ class EventCreationModal {
         input.value = userName;
         hiddenInput.value = userId || `new:${userName}`;
         dropdown.style.display = 'none';
+    }
+    
+    toggleLeaderDropdown() {
+        const dropdown = document.getElementById('leaderDropdown');
+        const input = document.getElementById('eventLeaderInput');
+        
+        if (dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+        } else {
+            // Показываем всех пользователей
+            this.showLeaderDropdown(this.availableUsers, '');
+            // Фокус на поле ввода для удобства
+            input.focus();
+        }
     }
     
     showParticipantSelector(instrumentId) {
