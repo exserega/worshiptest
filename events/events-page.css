@@ -1297,6 +1297,100 @@ textarea.form-control {
     display: none;
 }
 
+/* Стили для поля выбора ведущего */
+.leader-selector-wrapper {
+    position: relative;
+}
+
+.leader-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 5px 10px -5px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.leader-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.leader-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.leader-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.leader-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+}
+
+.leader-item:last-child {
+    border-bottom: none;
+}
+
+.leader-item:hover,
+.leader-item.active {
+    background: rgba(0, 178, 188, 0.1);
+}
+
+.leader-item.create-new {
+    color: #00b2bc;
+    font-weight: 500;
+}
+
+.leader-item strong {
+    color: #00b2bc;
+}
+
+/* Улучшения оверлея участников */
+.selector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.selector-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.user-item.create-new {
+    background: rgba(0, 178, 188, 0.05);
+    border: 1px solid rgba(0, 178, 188, 0.2);
+    margin-bottom: 0.5rem;
+}
+
+.user-item.create-new:hover {
+    background: rgba(0, 178, 188, 0.15);
+    border-color: #00b2bc;
+}
+
 /* Responsive */
 
 /* Модальное окно создания события - Минималистичный дизайн */

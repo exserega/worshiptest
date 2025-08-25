@@ -340,9 +340,19 @@ class EventCreationModal {
         }
         
         // Заполняем ведущего
-        const leaderSelect = document.getElementById('eventLeader');
-        if (leaderSelect && data.leaderId) {
-            leaderSelect.value = data.leaderId;
+        const leaderInput = document.getElementById('eventLeaderInput');
+        const leaderHidden = document.getElementById('eventLeader');
+        if (leaderInput && data.leaderId) {
+            // Находим имя ведущего
+            const leader = this.availableUsers.find(u => u.id === data.leaderId);
+            if (leader) {
+                leaderInput.value = leader.name;
+                leaderHidden.value = data.leaderId;
+            } else if (data.leaderName) {
+                // Если ведущий не найден среди пользователей, но есть имя
+                leaderInput.value = data.leaderName;
+                leaderHidden.value = data.leaderId;
+            }
         }
         
         // Заполняем сетлист
