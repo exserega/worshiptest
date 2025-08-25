@@ -717,11 +717,13 @@ class EventCreationModal {
         document.querySelector('.participant-selector')?.remove();
     }
     
-    addCustomParticipant(instrumentId) {
-        const input = document.getElementById('customParticipantName');
-        const customName = input ? input.value.trim() : '';
+    addCustomParticipant(instrumentId, name = null) {
+        if (!name) {
+            const input = document.getElementById('participantSearchInput') || document.getElementById('customParticipantName');
+            name = input?.value.trim();
+        }
         
-        if (!customName) {
+        if (!name) {
             alert('Введите имя участника');
             return;
         }
@@ -730,7 +732,10 @@ class EventCreationModal {
         const customId = 'custom_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         
         // Добавляем участника
-        this.addParticipant(instrumentId, customId, customName);
+        this.addParticipant(instrumentId, customId, name);
+        
+        // Закрываем селектор
+        document.querySelector('.participant-selector')?.remove();
     }
     
     getInstrumentName(instrumentId) {
@@ -782,9 +787,23 @@ class EventCreationModal {
             
             const eventDate = document.getElementById('eventDate').value;
             const eventTime = document.getElementById('eventTime').value;
-            const leaderId = document.getElementById('eventLeader').value;
+            const leaderValue = document.getElementById('eventLeader').value;
+            const leaderName = document.getElementById('eventLeaderInput').value;
             const setlistId = document.getElementById('eventSetlist').value;
             const comment = document.getElementById('eventComment').value;
+            
+            // Обрабатываем ведущего
+            let leaderId = null;
+            let leaderData = null;
+            if (leaderValue) {
+                if (leaderValue.startsWith('new:')) {
+                    // Новый ведущий - будет создан как участник
+                    leaderId = 'custom_leader_' + Date.now();
+                    leaderData = { name: leaderName };
+                } else {
+                    leaderId = leaderValue;
+                }
+            }
             
             if (!eventDate || !eventTime) {
                 alert('Укажите дату и время события');
