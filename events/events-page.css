@@ -1300,6 +1300,12 @@ textarea.form-control {
 /* Стили для поля выбора ведущего */
 .leader-selector-wrapper {
     position: relative;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.leader-selector-wrapper .form-control {
+    flex: 1;
 }
 
 .leader-dropdown {
@@ -1785,6 +1791,12 @@ textarea.form-control {
 /* Стили для поля выбора ведущего */
 .leader-selector-wrapper {
     position: relative;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.leader-selector-wrapper .form-control {
+    flex: 1;
 }
 
 .leader-dropdown {
