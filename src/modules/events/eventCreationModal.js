@@ -125,9 +125,15 @@ class EventCreationModal {
                         <!-- Ведущий -->
                         <div class="form-group">
                             <label for="eventLeader">Ведущий прославления</label>
-                            <select id="eventLeader" class="form-control">
-                                <option value="">Выберите ведущего</option>
-                            </select>
+                            <div class="leader-selector-wrapper">
+                                <input type="text" 
+                                       id="eventLeaderInput" 
+                                       class="form-control" 
+                                       placeholder="Введите имя ведущего"
+                                       autocomplete="off">
+                                <input type="hidden" id="eventLeader" value="">
+                                <div id="leaderDropdown" class="leader-dropdown"></div>
+                            </div>
                         </div>
                         
                         <!-- Сетлист -->
@@ -221,17 +227,11 @@ class EventCreationModal {
                 });
             });
             
-            // Заполняем селект ведущих
-            const leaderSelect = document.getElementById('eventLeader');
-            users.forEach(u => {
-                const option = document.createElement('option');
-                option.value = u.id;
-                option.textContent = u.name;
-                leaderSelect.appendChild(option);
-            });
-            
-            // Сохраняем для выбора участников
+            // Сохраняем для выбора участников и ведущих
             this.availableUsers = users;
+            
+            // Инициализируем поле выбора ведущего
+            this.initLeaderSelector();
             
             // Загружаем сетлисты
             const setlistsSnapshot = await db.collection('worship_setlists')
@@ -405,46 +405,290 @@ class EventCreationModal {
         }
     }
     
+    initLeaderSelector() {
+        const input = document.getElementById('eventLeaderInput');
+        const dropdown = document.getElementById('leaderDropdown');
+        const hiddenInput = document.getElementById('eventLeader');
+        
+        if (!input || !dropdown) return;
+        
+        // Обработчик ввода
+        input.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            
+            if (query.length === 0) {
+                dropdown.style.display = 'none';
+                hiddenInput.value = '';
+                return;
+            }
+            
+            // Фильтруем пользователей
+            const filtered = this.availableUsers.filter(user => 
+                user.name.toLowerCase().includes(query)
+            );
+            
+            // Показываем результаты
+            this.showLeaderDropdown(filtered, query);
+        });
+        
+        // Обработчик фокуса
+        input.addEventListener('focus', () => {
+            if (input.value.trim().length > 0) {
+                const query = input.value.toLowerCase().trim();
+                const filtered = this.availableUsers.filter(user => 
+                    user.name.toLowerCase().includes(query)
+                );
+                this.showLeaderDropdown(filtered, query);
+            }
+        });
+        
+        // Закрытие при клике вне
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.leader-selector-wrapper')) {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // Обработка клавиш
+        input.addEventListener('keydown', (e) => {
+            const items = dropdown.querySelectorAll('.leader-item');
+            const activeItem = dropdown.querySelector('.leader-item.active');
+            let index = Array.from(items).indexOf(activeItem);
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (index < items.length - 1) index++;
+                else index = 0;
+                this.setActiveLeaderItem(items[index]);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (index > 0) index--;
+                else index = items.length - 1;
+                this.setActiveLeaderItem(items[index]);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeItem) {
+                    activeItem.click();
+                } else if (items.length === 1) {
+                    items[0].click();
+                } else if (input.value.trim()) {
+                    // Создаем нового пользователя
+                    this.selectLeader(null, input.value.trim());
+                }
+            } else if (e.key === 'Escape') {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
+    
+    showLeaderDropdown(users, query) {
+        const dropdown = document.getElementById('leaderDropdown');
+        
+        // Очищаем dropdown
+        dropdown.innerHTML = '';
+        
+        // Добавляем существующих пользователей
+        users.forEach((user, index) => {
+            const item = document.createElement('div');
+            item.className = 'leader-item';
+            if (index === 0) item.classList.add('active');
+            item.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                ${this.highlightMatch(user.name, query)}
+            `;
+            item.onclick = () => this.selectLeader(user.id, user.name);
+            dropdown.appendChild(item);
+        });
+        
+        // Если нет точного совпадения, показываем опцию создания
+        const exactMatch = users.some(u => u.name.toLowerCase() === query);
+        if (!exactMatch && query.length > 0) {
+            const createItem = document.createElement('div');
+            createItem.className = 'leader-item create-new';
+            if (users.length === 0) createItem.classList.add('active');
+            createItem.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
+                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Создать: <strong>${query}</strong>
+            `;
+            createItem.onclick = () => this.selectLeader(null, query);
+            dropdown.appendChild(createItem);
+        }
+        
+        // Показываем dropdown
+        dropdown.style.display = users.length > 0 || query.length > 0 ? 'block' : 'none';
+    }
+    
+    highlightMatch(text, query) {
+        if (!query) return text;
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<strong>$1</strong>');
+    }
+    
+    setActiveLeaderItem(item) {
+        const dropdown = document.getElementById('leaderDropdown');
+        dropdown.querySelectorAll('.leader-item').forEach(el => el.classList.remove('active'));
+        if (item) {
+            item.classList.add('active');
+            item.scrollIntoView({ block: 'nearest' });
+        }
+    }
+    
+    selectLeader(userId, userName) {
+        const input = document.getElementById('eventLeaderInput');
+        const hiddenInput = document.getElementById('eventLeader');
+        const dropdown = document.getElementById('leaderDropdown');
+        
+        input.value = userName;
+        hiddenInput.value = userId || `new:${userName}`;
+        dropdown.style.display = 'none';
+    }
+    
     showParticipantSelector(instrumentId) {
         // Создаем селектор участников
         const selector = document.createElement('div');
         selector.className = 'participant-selector';
+        selector.dataset.instrumentId = instrumentId;
+        
         selector.innerHTML = `
             <div class="selector-content">
-                <button class="selector-close-btn" onclick="this.closest('.participant-selector').remove()" aria-label="Закрыть">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-                <div class="custom-participant-input">
-                    <input type="text" id="customParticipantName" placeholder="Введите имя участника" class="form-control">
-                    <button class="btn btn-primary" onclick="eventCreationModal.addCustomParticipant('${instrumentId}')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.375rem;">
-                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <div class="selector-header">
+                    <h3>Добавить участника</h3>
+                    <button class="selector-close-btn" onclick="this.closest('.participant-selector').remove()" aria-label="Закрыть">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        Добавить
                     </button>
                 </div>
-                <div class="selector-divider">или выберите из списка</div>
-                <div class="user-list">
-                    ${this.availableUsers.length > 0 ? this.availableUsers.map(u => `
-                        <div class="user-item" onclick="eventCreationModal.addParticipant('${instrumentId}', '${u.id}', '${u.name.replace(/'/g, "\\'")}')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            ${u.name}
-                        </div>
-                    `).join('') : '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">Нет доступных пользователей</div>'}
+                <div class="custom-participant-input">
+                    <input type="text" 
+                           id="participantSearchInput" 
+                           placeholder="Введите имя для поиска или создания" 
+                           class="form-control"
+                           autocomplete="off">
+                </div>
+                <div class="user-list" id="participantsList">
+                    ${this.renderParticipantsList(this.availableUsers, '', instrumentId)}
                 </div>
             </div>
         `;
         
         document.body.appendChild(selector);
         
+        // Инициализируем поиск
+        this.initParticipantSearch(selector, instrumentId);
+        
         // Фокус на поле ввода
         setTimeout(() => {
-            document.getElementById('customParticipantName')?.focus();
+            document.getElementById('participantSearchInput')?.focus();
         }, 100);
+    }
+    
+    renderParticipantsList(users, query, instrumentId) {
+        if (users.length === 0 && !query) {
+            return '<div class="empty-state">Нет доступных участников</div>';
+        }
+        
+        let html = '';
+        
+        // Показываем отфильтрованных пользователей
+        users.forEach((user, index) => {
+            html += `
+                <div class="user-item" data-user-id="${user.id}" onclick="eventCreationModal.addParticipant('${instrumentId}', '${user.id}', '${user.name.replace(/'/g, "\\'")}'')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    ${query ? this.highlightMatch(user.name, query) : user.name}
+                </div>
+            `;
+        });
+        
+        // Если есть запрос и нет точного совпадения, показываем опцию создания
+        if (query) {
+            const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
+            if (!exactMatch) {
+                html = `
+                    <div class="user-item create-new" onclick="eventCreationModal.addCustomParticipant('${instrumentId}', '${query.replace(/'/g, "\\'")}')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Создать: <strong>${query}</strong>
+                    </div>
+                ` + html;
+            }
+        }
+        
+        return html || '<div class="empty-state">Не найдено участников</div>';
+    }
+    
+    initParticipantSearch(selector, instrumentId) {
+        const input = selector.querySelector('#participantSearchInput');
+        const list = selector.querySelector('#participantsList');
+        
+        if (!input || !list) return;
+        
+        // Обработчик ввода
+        input.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            
+            if (query.length === 0) {
+                list.innerHTML = this.renderParticipantsList(this.availableUsers, '', instrumentId);
+                return;
+            }
+            
+            // Фильтруем пользователей
+            const filtered = this.availableUsers.filter(user => 
+                user.name.toLowerCase().includes(query)
+            );
+            
+            // Обновляем список
+            list.innerHTML = this.renderParticipantsList(filtered, query, instrumentId);
+        });
+        
+        // Обработка клавиш
+        input.addEventListener('keydown', (e) => {
+            const items = list.querySelectorAll('.user-item');
+            const activeItem = list.querySelector('.user-item.active');
+            let index = Array.from(items).indexOf(activeItem);
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (index < items.length - 1) index++;
+                else index = 0;
+                this.setActiveParticipantItem(items[index]);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (index > 0) index--;
+                else index = items.length - 1;
+                this.setActiveParticipantItem(items[index]);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeItem) {
+                    activeItem.click();
+                } else if (items.length === 1) {
+                    items[0].click();
+                } else if (input.value.trim()) {
+                    // Создаем нового участника
+                    this.addCustomParticipant(instrumentId, input.value.trim());
+                }
+            } else if (e.key === 'Escape') {
+                selector.remove();
+            }
+        });
+    }
+    
+    setActiveParticipantItem(item) {
+        const list = item?.closest('.user-list');
+        if (!list) return;
+        
+        list.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
+        if (item) {
+            item.classList.add('active');
+            item.scrollIntoView({ block: 'nearest' });
+        }
     }
     
     addParticipant(instrumentId, userId, userName) {
