@@ -1755,12 +1755,31 @@ textarea.form-control {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    align-items: start; /* Выравниваем по верхнему краю */
+    align-items: stretch; /* Растягиваем элементы на всю высоту */
 }
 
 /* Убираем разное выравнивание для групп форм внутри row */
 .event-creation-modal .form-row .form-group {
-    margin-bottom: 0; /* Убираем нижний отступ для элементов в строке */
+    margin-bottom: 0 !important; /* Убираем нижний отступ для элементов в строке */
+    margin-top: 0 !important; /* Убираем верхний отступ */
+    display: block; /* Отменяем flex для элементов в строке */
+    gap: 0; /* Убираем gap */
+}
+
+/* Отменяем стили для соседних form-group внутри form-row */
+.event-creation-modal .form-row .form-group + .form-group {
+    margin-top: 0 !important;
+}
+
+.event-creation-modal .form-row .form-group label {
+    margin-bottom: 0.375rem; /* Одинаковый отступ для label в строке */
+}
+
+/* Убеждаемся что инпуты даты и времени одинаковой высоты */
+.event-creation-modal .form-row input[type="date"],
+.event-creation-modal .form-row input[type="time"] {
+    height: 48px; /* Фиксированная высота */
+    box-sizing: border-box;
 }
 
 /* Select элементы */
@@ -1917,6 +1936,13 @@ textarea.form-control {
         display: grid;
         grid-template-columns: 1fr 1fr; /* Сохраняем две колонки даже на мобильных */
         gap: 0.75rem; /* Уменьшаем gap для мобильных */
+    }
+    
+    /* Фиксированная высота для инпутов даты и времени на мобильных */
+    .event-creation-modal .form-row input[type="date"],
+    .event-creation-modal .form-row input[type="time"] {
+        height: 44px;
+        font-size: 16px; /* Предотвращаем зум на iOS */
     }
     
     .event-creation-modal .modal-footer {
