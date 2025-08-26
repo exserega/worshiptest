@@ -1,5 +1,5 @@
-// Service Worker v354 - Add event player styles to main page
-const CACHE_NAME = 'agape-worship-cache-v354';
+// Service Worker v355 - Fix player icon colors
+const CACHE_NAME = 'agape-worship-cache-v355';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

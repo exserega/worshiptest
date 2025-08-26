@@ -107,7 +107,15 @@
 
 .player-close-btn:hover,
 .player-toggle-controls-btn:hover {
-    background: var(--bg-hover);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Явно устанавливаем цвет для всех иконок в шапке плеера */
+.event-player-header i,
+.event-player-header .fas,
+.event-player-header .far,
+.event-player-header .fab {
+    color: var(--text-primary) !important;
 }
 
 /* Анимация для панели инструментов */
@@ -210,12 +218,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
     transition: all 0.2s ease;
+    gap: 4px;
     min-width: 40px;
 }
 
-/* Иконка T для "только аккорды" */
+/* Явно устанавливаем цвет для иконок FontAwesome */
+.player-control-btn i,
+.player-control-btn .fas,
+.player-control-btn .far,
+.player-control-btn .fab {
+    color: var(--text-primary) !important;
+}
+
 .player-control-btn .text-icon {
     font-weight: 700;
     font-size: 13px;
@@ -244,6 +259,14 @@
     background: var(--accent-color);
     color: var(--bg-primary);
     border-color: var(--accent-color);
+}
+
+/* Цвет иконок в активных кнопках */
+.player-control-btn.active i,
+.player-control-btn.active .fas,
+.player-control-btn.active .far,
+.player-control-btn.active .fab {
+    color: var(--bg-primary) !important;
 }
 
 /* Успешное состояние (для копирования) */
