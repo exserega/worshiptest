@@ -304,9 +304,9 @@
     display: none;
     flex-direction: column;
     gap: 2px;
-    padding: 4px;
-    width: 120px;
-    max-height: 300px;
+    padding: 6px;
+    width: 100px;
+    max-height: 420px; /* Увеличено на 40% от 300px */
     overflow-y: auto;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     z-index: 100;
@@ -320,15 +320,15 @@
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     color: var(--text-primary) !important;
-    padding: 10px 12px;
+    padding: 8px 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 14px;
     transition: all 0.2s ease;
     width: 100%;
     text-align: center;
     font-weight: 500;
-    height: 40px;
+    height: 36px;
     white-space: nowrap;
 }
 
@@ -460,16 +460,16 @@
     
     /* Компактный выпадающий список тональностей на мобильных */
     .player-key-dropdown {
-        width: 100px;
-        max-height: 250px;
+        width: 90px;
+        max-height: 350px; /* Увеличено на 40% от 250px */
         gap: 2px;
-        padding: 4px;
+        padding: 5px;
     }
     
     .player-key-dropdown button {
-        font-size: 14px;
-        padding: 8px 10px;
-        height: 36px;
+        font-size: 13px;
+        padding: 7px 8px;
+        height: 32px;
     }
 }
 
