@@ -78,21 +78,13 @@
     justify-self: end;
 }
 
-/* Вторая строка шапки - название песни */
+/* Вторая строка шапки - название песни и тональность/BPM */
 .player-header-row-2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2px 12px;
-    text-align: center;
-}
-
-/* Третья строка шапки - тональность и BPM */
-.player-header-row-3 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2px 12px 8px;
+    padding: 4px 12px 8px;
+    gap: 12px;
     border-bottom: 1px solid rgba(var(--border-color-rgb), 0.3);
 }
 
@@ -136,8 +128,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 100%;
-    padding: 0 8px;
+    flex: 1;
+    text-align: center;
+    min-width: 0;
 }
 
 /* Тональность и BPM в шапке */
@@ -360,11 +353,8 @@
     }
     
     .player-header-row-2 {
-        padding: 2px 8px;
-    }
-    
-    .player-header-row-3 {
-        padding: 2px 8px 6px;
+        padding: 3px 8px 6px;
+        gap: 8px;
     }
     
     .player-header-left {

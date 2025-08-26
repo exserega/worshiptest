@@ -42,8 +42,8 @@ class EventPlayer {
                         <button class="player-close-btn" aria-label="Закрыть плеер">
                             <i class="fas fa-times"></i>
                         </button>
-                        <button class="player-toggle-controls-btn" aria-label="Показать/скрыть панель инструментов">
-                            <i class="fas fa-bars"></i>
+                        <button class="player-toggle-controls-btn" aria-label="Скрыть панель инструментов" title="Скрыть панель инструментов">
+                            <i class="fas fa-chevron-up"></i>
                         </button>
                     </div>
                     
@@ -59,13 +59,9 @@ class EventPlayer {
                     </div>
                 </div>
                 
-                <!-- Вторая строка: название песни -->
+                <!-- Вторая строка: название песни и тональность/BPM -->
                 <div class="player-header-row-2">
                     <span class="player-song-name">Название песни</span>
-                </div>
-                
-                <!-- Третья строка: тональность и BPM -->
-                <div class="player-header-row-3">
                     <div class="player-song-key-bpm">
                         <span class="player-key">C</span>
                         <span class="divider">|</span>
@@ -147,7 +143,8 @@ class EventPlayer {
             
             // Изменяем иконку
             const icon = toggleBtn.querySelector('i');
-            icon.className = isHidden ? 'fas fa-times' : 'fas fa-bars';
+            icon.className = isHidden ? 'fas fa-chevron-up' : 'fas fa-bars';
+            toggleBtn.title = isHidden ? 'Скрыть панель инструментов' : 'Показать панель инструментов';
             
             // Сохраняем состояние
             localStorage.setItem('eventPlayerControlsHidden', !isHidden);
@@ -159,6 +156,10 @@ class EventPlayer {
             controlsRow.style.display = 'none';
             toggleBtn.classList.add('controls-hidden');
             toggleBtn.querySelector('i').className = 'fas fa-bars';
+            toggleBtn.title = 'Показать панель инструментов';
+        } else {
+            toggleBtn.querySelector('i').className = 'fas fa-chevron-up';
+            toggleBtn.title = 'Скрыть панель инструментов';
         }
         
         // Навигация
