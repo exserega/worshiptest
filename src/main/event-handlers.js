@@ -602,6 +602,12 @@ function setupSetlistEventHandlers() {
                 try {
                     ui.setlistsPanel.classList.add('open');
                     
+                    // Скрываем нижнюю панель навигации
+                    const bottomNav = document.querySelector('.mobile-bottom-nav');
+                    if (bottomNav) {
+                        bottomNav.style.transform = 'translateY(100%)';
+                    }
+                    
                     // Проверяем права пользователя для текущего филиала
                     const createBtn = document.getElementById('create-new-setlist-header-btn');
                     const addSongBtn = document.getElementById('add-song-btn');

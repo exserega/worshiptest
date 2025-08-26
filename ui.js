@@ -210,6 +210,12 @@ export function closeAllSidePanels() {
     if (toggleSetlistsButton) toggleSetlistsButton.classList.remove('active');
     if (toggleMyListButton) toggleMyListButton.classList.remove('active');
     if (toggleRepertoireButton) toggleRepertoireButton.classList.remove('active');
+    
+    // Показываем нижнюю панель обратно
+    const bottomNav = document.querySelector('.mobile-bottom-nav');
+    if (bottomNav) {
+        bottomNav.style.transform = 'translateY(0)';
+    }
 }
 
 /**

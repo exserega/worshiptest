@@ -1,5 +1,5 @@
-// Service Worker для Agape Worship с поддержкой PWA
-const CACHE_NAME = 'agape-worship-cache-v348';
+// Service Worker v349 - Hide bottom nav when setlists panel opens
+const CACHE_NAME = 'agape-worship-cache-v349';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
