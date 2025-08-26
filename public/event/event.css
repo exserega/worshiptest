@@ -34,12 +34,6 @@
     font-weight: 500;
 }
 
-.event-leader::before {
-    content: "Ведущий: ";
-    color: var(--text-secondary);
-    font-weight: 400;
-}
-
 /* Секция участников */
 .participants-section {
     background: var(--bg-secondary);

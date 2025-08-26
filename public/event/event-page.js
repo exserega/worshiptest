@@ -170,9 +170,7 @@ async function loadEvent() {
             await loadSongs();
         }
         
-        if (eventData.participants && eventData.participants.length > 0) {
-            displayParticipants();
-        }
+        // Отдельная секция участников больше не нужна - используется разворачивающийся список
         
         // Настраиваем обработчики
         setupEventHandlers();
@@ -227,23 +225,8 @@ function displayEvent() {
     // Заголовок
     elements.headerTitle.textContent = eventData.name || 'Событие';
     
-    // Добавляем индикатор участия в заголовок
+    // Добавляем класс к главному контейнеру если пользователь участвует
     if (isUserParticipant) {
-        // Создаем wrapper для заголовка если его еще нет
-        let titleWrapper = elements.headerTitle.parentElement;
-        if (!titleWrapper.classList.contains('header-title-wrapper')) {
-            titleWrapper = document.createElement('div');
-            titleWrapper.className = 'header-title-wrapper';
-            elements.headerTitle.parentNode.insertBefore(titleWrapper, elements.headerTitle);
-            titleWrapper.appendChild(elements.headerTitle);
-        }
-        
-        const indicator = document.createElement('span');
-        indicator.className = 'user-participant-indicator';
-        indicator.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Вы участвуете';
-        titleWrapper.appendChild(indicator);
-        
-        // Добавляем класс к главному контейнеру
         const appContainer = document.getElementById('app');
         if (appContainer) {
             appContainer.classList.add('user-participant');
@@ -265,14 +248,82 @@ function displayEvent() {
     
     // Лидер
     if (eventData.leaderName) {
-        elements.eventLeader.textContent = eventData.leaderName;
+        elements.eventLeader.textContent = `Ведущий: ${eventData.leaderName}`;
         elements.eventLeaderInfo.style.display = 'flex';
     }
     
-    // Участники
+    // Участники с разворачивающимся списком
     if (eventData.participantCount > 0) {
-        elements.eventParticipantsCount.textContent = eventData.participantCount;
-        elements.eventParticipantsInfo.style.display = 'flex';
+        // Создаем контейнер для участников с возможностью разворачивания
+        const participantsContainer = document.createElement('div');
+        participantsContainer.className = 'event-participants-container';
+        
+        // Создаем кликабельный заголовок
+        const participantsSummary = document.createElement('div');
+        participantsSummary.className = 'participants-summary-header';
+        participantsSummary.innerHTML = `
+            <div class="participants-count-info">
+                <i class="fas fa-users"></i>
+                <span>${eventData.participantCount} ${getParticipantWord(eventData.participantCount)}</span>
+                ${isUserParticipant ? '<span class="user-participant-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Вы участвуете</span>' : ''}
+            </div>
+            <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg>
+        `;
+        
+        // Создаем детальный список участников (изначально скрыт)
+        const participantsDetail = document.createElement('div');
+        participantsDetail.className = 'participants-detail-list';
+        participantsDetail.style.display = 'none';
+        
+        // Заполняем список участников
+        if (eventData.participants && eventData.participants.length > 0) {
+            const grouped = {};
+            eventData.participants.forEach(p => {
+                if (!grouped[p.instrumentName]) {
+                    grouped[p.instrumentName] = [];
+                }
+                grouped[p.instrumentName].push({
+                    name: p.userName,
+                    id: p.userId || p.id
+                });
+            });
+            
+            participantsDetail.innerHTML = Object.entries(grouped).map(([instrument, participants]) => {
+                const instrumentKey = instrument.toLowerCase()
+                    .replace('электрогитара', 'electric_guitar')
+                    .replace('акустическая гитара', 'acoustic_guitar')
+                    .replace('бас-гитара', 'bass')
+                    .replace(/\s+/g, '_');
+                
+                return `
+                    <div class="participant-line">
+                        <span class="participant-instrument-name" data-instrument="${instrumentKey}">${instrument}:</span>
+                        <span class="participant-names-list">
+                            ${participants.map(p => {
+                                const isCurrentUser = currentUser && p.id === currentUser.uid;
+                                return isCurrentUser ? `<strong>${p.name}</strong>` : p.name;
+                            }).join(', ')}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Добавляем обработчик клика
+        participantsSummary.addEventListener('click', () => {
+            const isOpen = participantsDetail.style.display !== 'none';
+            participantsDetail.style.display = isOpen ? 'none' : 'block';
+            participantsSummary.classList.toggle('open', !isOpen);
+        });
+        
+        participantsContainer.appendChild(participantsSummary);
+        participantsContainer.appendChild(participantsDetail);
+        
+        // Заменяем старый элемент
+        elements.eventParticipantsInfo.style.display = 'none';
+        elements.eventParticipantsInfo.parentNode.insertBefore(participantsContainer, elements.eventParticipantsInfo.nextSibling);
     }
     
     // Комментарий
@@ -423,6 +474,28 @@ function getSongWord(count) {
     }
     
     return 'песен';
+}
+
+/**
+ * Склонение слова "участник"
+ */
+function getParticipantWord(count) {
+    const lastDigit = count % 10;
+    const lastTwoDigits = count % 100;
+    
+    if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+        return 'участников';
+    }
+    
+    if (lastDigit === 1) {
+        return 'участник';
+    }
+    
+    if (lastDigit >= 2 && lastDigit <= 4) {
+        return 'участника';
+    }
+    
+    return 'участников';
 }
 
 /**
