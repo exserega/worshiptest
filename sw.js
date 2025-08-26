@@ -1,5 +1,5 @@
-// Service Worker v353 - Fix presentation player functionality
-const CACHE_NAME = 'agape-worship-cache-v353';
+// Service Worker v354 - Add event player styles to main page
+const CACHE_NAME = 'agape-worship-cache-v354';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
