@@ -38,6 +38,25 @@ export class EventsCalendar {
     }
     
     /**
+     * Порядок сортировки инструментов
+     */
+    getInstrumentOrder(instrument) {
+        const order = {
+            'вокал': 1,
+            'клавиши': 2,
+            'электрогитара': 3,
+            'барабаны': 4,
+            'кахон': 4, // Барабаны и кахон имеют одинаковый приоритет
+            'бас-гитара': 5,
+            'акустическая гитара': 6,
+            'звукооператор': 7
+        };
+        
+        const instrumentLower = instrument.toLowerCase();
+        return order[instrumentLower] || 8; // Все остальное - "другое" с приоритетом 8
+    }
+    
+    /**
      * Инициализация календаря
      */
     async init() {
@@ -548,8 +567,12 @@ export class EventsCalendar {
                             instrumentGroups[instrumentName].names.push(p.userName || p.name);
                         });
                     
-                    // Формируем HTML
-                    const instrumentLines = Object.entries(instrumentGroups).map(([instrument, data]) => {
+                    // Сортируем инструменты и формируем HTML
+                    const sortedInstruments = Object.entries(instrumentGroups).sort(([a], [b]) => {
+                        return this.getInstrumentOrder(a) - this.getInstrumentOrder(b);
+                    });
+                    
+                    const instrumentLines = sortedInstruments.map(([instrument, data]) => {
                         const names = data.names.join(', ');
                         return `<div class="instrument-line">${data.icon}${instrument} - ${names}</div>`;
                     });
@@ -748,8 +771,12 @@ export class EventsCalendar {
                     instrumentGroups[instrumentName].names.push(p.userName || p.name);
                 });
             
-            // Формируем HTML детального списка
-            const instrumentLines = Object.entries(instrumentGroups).map(([instrument, data]) => {
+            // Сортируем инструменты и формируем HTML детального списка
+            const sortedInstruments = Object.entries(instrumentGroups).sort(([a], [b]) => {
+                return this.getInstrumentOrder(a) - this.getInstrumentOrder(b);
+            });
+            
+            const instrumentLines = sortedInstruments.map(([instrument, data]) => {
                 const names = data.names.join(', ');
                 return `<div class="participant-line">${data.icon} ${instrument} - ${names}</div>`;
             });

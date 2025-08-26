@@ -290,7 +290,12 @@ function displayEvent() {
                 });
             });
             
-            participantsDetail.innerHTML = Object.entries(grouped).map(([instrument, participants]) => {
+            // Сортируем инструменты в правильном порядке
+            const sortedInstruments = Object.entries(grouped).sort(([a], [b]) => {
+                return getInstrumentOrder(a) - getInstrumentOrder(b);
+            });
+            
+            participantsDetail.innerHTML = sortedInstruments.map(([instrument, participants]) => {
                 const instrumentKey = instrument.toLowerCase()
                     .replace('электрогитара', 'electric_guitar')
                     .replace('акустическая гитара', 'acoustic_guitar')
@@ -496,6 +501,25 @@ function getParticipantWord(count) {
     }
     
     return 'участников';
+}
+
+/**
+ * Порядок сортировки инструментов
+ */
+function getInstrumentOrder(instrument) {
+    const order = {
+        'вокал': 1,
+        'клавиши': 2,
+        'электрогитара': 3,
+        'барабаны': 4,
+        'кахон': 4, // Барабаны и кахон имеют одинаковый приоритет
+        'бас-гитара': 5,
+        'акустическая гитара': 6,
+        'звукооператор': 7
+    };
+    
+    const instrumentLower = instrument.toLowerCase();
+    return order[instrumentLower] || 8; // Все остальное - "другое" с приоритетом 8
 }
 
 /**
