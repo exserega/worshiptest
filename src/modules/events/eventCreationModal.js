@@ -540,12 +540,7 @@ class EventCreationModal {
             const item = document.createElement('div');
             item.className = 'leader-item';
             if (index === 0) item.classList.add('active');
-            item.innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                ${this.highlightMatch(user.name, query)}
-            `;
+            item.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>${this.highlightMatch(user.name, query)}`;
             item.onclick = () => this.selectLeader(user.id, user.name);
             dropdown.appendChild(item);
         });
@@ -556,12 +551,7 @@ class EventCreationModal {
             const createItem = document.createElement('div');
             createItem.className = 'leader-item create-new';
             if (users.length === 0) createItem.classList.add('active');
-            createItem.innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
-                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Создать: <strong>${query}</strong>
-            `;
+            createItem.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${query}</strong>`;
             createItem.onclick = () => this.selectLeader(null, query);
             dropdown.appendChild(createItem);
         }
