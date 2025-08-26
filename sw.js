@@ -1,5 +1,5 @@
-// Service Worker v357 - Compact key selector dropdown
-const CACHE_NAME = 'agape-worship-cache-v357';
+// Service Worker v358 - Vertical scrollable key selector
+const CACHE_NAME = 'agape-worship-cache-v358';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
