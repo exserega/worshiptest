@@ -19,6 +19,14 @@ class EventCreationModal {
         this.editingEventData = null;
     }
     
+    formatDateForInput(date) {
+        // Форматируем дату в локальном времени для input[type="date"]
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
     async open(dateOrEvent = new Date(), onSuccess = null) {
         // Определяем режим работы
         if (dateOrEvent && typeof dateOrEvent === 'object' && dateOrEvent.id) {
@@ -114,7 +122,7 @@ class EventCreationModal {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="eventDate">Дата</label>
-                                <input type="date" id="eventDate" class="form-control" value="${this.selectedDate && !isNaN(this.selectedDate.getTime()) ? this.selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}" required>
+                                <input type="date" id="eventDate" class="form-control" value="${this.selectedDate && !isNaN(this.selectedDate.getTime()) ? this.formatDateForInput(this.selectedDate) : this.formatDateForInput(new Date())}" required>
                             </div>
                             <div class="form-group">
                                 <label for="eventTime">Время</label>
