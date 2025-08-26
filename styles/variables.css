@@ -24,7 +24,11 @@
     --glow-color: rgba(34, 211, 238, 0.4);
     
     /* Additional colors for modals and UI */
+    --bg-primary: #111827;
+    --bg-secondary: #1f2937;
     --bg-tertiary: #1a1f2e;
+    --bg-hover: #374151;
+    --hover-bg: #374151; /* Для обратной совместимости */
     --bg-info: rgba(34, 211, 238, 0.1);
     --accent-info: #22d3ee;
     --accent-primary-transparent: rgba(34, 211, 238, 0.1);
@@ -58,7 +62,11 @@ body[data-theme="light"] {
     --glow-color: rgba(28, 126, 214, 0.3);
     
     /* Additional colors for modals and UI */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
     --bg-tertiary: #f1f5f9;
+    --bg-hover: #e2e8f0;
+    --hover-bg: #e2e8f0; /* Для обратной совместимости */
     --bg-info: rgba(51, 154, 240, 0.1);
     --accent-info: #339af0;
     --accent-primary-transparent: rgba(51, 154, 240, 0.1);

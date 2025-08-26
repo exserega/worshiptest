@@ -85,11 +85,11 @@ class EventCreationModal {
         
         const modalHTML = `
             <div class="event-creation-modal" id="eventCreationModal">
-                <div class="modal-overlay" onclick="eventCreationModal.close()"></div>
+                <div class="modal-overlay"></div>
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2>${this.editMode ? 'Редактировать событие' : 'Создать событие'}</h2>
-                        <button class="close-btn" onclick="eventCreationModal.close()" aria-label="Закрыть">
+                        <button class="close-btn" data-action="close" aria-label="Закрыть">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                                 <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -100,7 +100,7 @@ class EventCreationModal {
                         <!-- Название события -->
                         <div class="form-group">
                             <label for="eventNamePreset">Название события</label>
-                            <select id="eventNamePreset" class="form-control" onchange="eventCreationModal.updateEventName()">
+                            <select id="eventNamePreset" class="form-control">
                                 <option value="">Выберите или введите название</option>
                                 <option value="Молодёжная молитва">Молодёжная молитва в четверг в 19:00</option>
                                 <option value="Воскресное служение">Воскресное служение в воскресенье в 8:00</option>
@@ -162,8 +162,8 @@ class EventCreationModal {
                     </div>
                     
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="eventCreationModal.close()">Отмена</button>
-                        <button class="btn btn-primary" onclick="eventCreationModal.save()">${this.editMode ? 'Сохранить' : 'Создать событие'}</button>
+                        <button class="btn btn-secondary" data-action="cancel">Отмена</button>
+                        <button class="btn btn-primary" data-action="save">${this.editMode ? 'Сохранить' : 'Создать событие'}</button>
                     </div>
                 </div>
             </div>
@@ -172,8 +172,35 @@ class EventCreationModal {
         document.body.insertAdjacentHTML('beforeend', modalHTML);
         this.modal = document.getElementById('eventCreationModal');
         
+        // Привязываем обработчики событий
+        this.attachModalEventHandlers();
+        
         // Делаем доступным глобально
         window.eventCreationModal = this;
+    }
+    
+    attachModalEventHandlers() {
+        // Обработчики закрытия
+        const overlay = this.modal.querySelector('.modal-overlay');
+        const closeBtn = this.modal.querySelector('[data-action="close"]');
+        const cancelBtn = this.modal.querySelector('[data-action="cancel"]');
+        const saveBtn = this.modal.querySelector('[data-action="save"]');
+        
+        overlay.addEventListener('click', () => this.close());
+        closeBtn.addEventListener('click', () => this.close());
+        cancelBtn.addEventListener('click', () => this.close());
+        saveBtn.addEventListener('click', () => this.save());
+        
+        // Обработчик изменения названия события
+        const namePreset = document.getElementById('eventNamePreset');
+        namePreset.addEventListener('change', () => this.updateEventName());
+        
+        // Обработчики для кнопок добавления участников
+        const addParticipantBtns = this.modal.querySelectorAll('.add-participant-btn');
+        addParticipantBtns.forEach(btn => {
+            const instrumentId = btn.dataset.instrument;
+            btn.addEventListener('click', () => this.showParticipantSelector(instrumentId));
+        });
     }
     
     createInstrumentGroups() {
@@ -193,7 +220,7 @@ class EventCreationModal {
             <div class="instrument-group">
                 <div class="instrument-header">
                     <span>${inst.icon} ${inst.name}</span>
-                    <button type="button" class="add-participant-btn" onclick="eventCreationModal.showParticipantSelector('${inst.id}')" aria-label="Добавить участника">
+                    <button type="button" class="add-participant-btn" data-instrument="${inst.id}" aria-label="Добавить участника">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
@@ -388,7 +415,7 @@ class EventCreationModal {
             
             // Обновляем UI для каждого инструмента
             Object.keys(this.selectedParticipants).forEach(instrumentId => {
-                this.updateParticipantsList(instrumentId);
+                this.renderSelectedParticipant(instrumentId);
             });
         }
     }
@@ -567,7 +594,7 @@ class EventCreationModal {
             <div class="selector-content">
                 <div class="selector-header">
                     <h3>Добавить участника</h3>
-                    <button class="selector-close-btn" onclick="this.closest('.participant-selector').remove()" aria-label="Закрыть">
+                    <button class="selector-close-btn" data-action="close-selector" aria-label="Закрыть">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                             <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -588,13 +615,42 @@ class EventCreationModal {
         
         document.body.appendChild(selector);
         
+        // Привязываем обработчики
+        const closeBtn = selector.querySelector('[data-action="close-selector"]');
+        closeBtn.addEventListener('click', () => selector.remove());
+        
         // Инициализируем поиск
         this.initParticipantSearch(selector, instrumentId);
+        
+        // Привязываем обработчики для элементов списка
+        this.attachParticipantListHandlers(selector, instrumentId);
         
         // Фокус на поле ввода
         setTimeout(() => {
             document.getElementById('participantSearchInput')?.focus();
         }, 100);
+    }
+    
+    attachParticipantListHandlers(selector, instrumentId) {
+        const list = selector.querySelector('#participantsList');
+        
+        // Делегирование событий для динамического списка
+        list.addEventListener('click', (e) => {
+            const userItem = e.target.closest('.user-item');
+            if (!userItem) return;
+            
+            if (userItem.classList.contains('create-new')) {
+                const query = userItem.dataset.query;
+                this.addCustomParticipant(instrumentId, query);
+            } else {
+                const userId = userItem.dataset.userId;
+                const userName = userItem.dataset.userName;
+                this.addParticipant(instrumentId, userId, userName);
+            }
+            
+            // Закрываем селектор
+            selector.remove();
+        });
     }
     
     renderParticipantsList(users, query, instrumentId) {
@@ -607,7 +663,7 @@ class EventCreationModal {
         // Показываем отфильтрованных пользователей
         users.forEach((user, index) => {
             html += `
-                <div class="user-item" data-user-id="${user.id}" onclick="eventCreationModal.addParticipant('${instrumentId}', '${user.id}', '${user.name.replace(/'/g, "\\'")}'')">
+                <div class="user-item" data-user-id="${user.id}" data-user-name="${user.name}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -621,7 +677,7 @@ class EventCreationModal {
             const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
             if (!exactMatch) {
                 html = `
-                    <div class="user-item create-new" onclick="eventCreationModal.addCustomParticipant('${instrumentId}', '${query.replace(/'/g, "\\'")}')">
+                    <div class="user-item create-new" data-query="${query}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
@@ -646,16 +702,15 @@ class EventCreationModal {
             
             if (query.length === 0) {
                 list.innerHTML = this.renderParticipantsList(this.availableUsers, '', instrumentId);
-                return;
+            } else {
+                // Фильтруем пользователей
+                const filtered = this.availableUsers.filter(user => 
+                    user.name.toLowerCase().includes(query)
+                );
+                
+                // Обновляем список
+                list.innerHTML = this.renderParticipantsList(filtered, query, instrumentId);
             }
-            
-            // Фильтруем пользователей
-            const filtered = this.availableUsers.filter(user => 
-                user.name.toLowerCase().includes(query)
-            );
-            
-            // Обновляем список
-            list.innerHTML = this.renderParticipantsList(filtered, query, instrumentId);
         });
         
         // Обработка клавиш
@@ -683,6 +738,7 @@ class EventCreationModal {
                 } else if (input.value.trim()) {
                     // Создаем нового участника
                     this.addCustomParticipant(instrumentId, input.value.trim());
+                    selector.remove();
                 }
             } else if (e.key === 'Escape') {
                 selector.remove();
@@ -721,7 +777,7 @@ class EventCreationModal {
         });
         
         // Обновляем UI
-        this.updateParticipantsList(instrumentId);
+        this.renderSelectedParticipant(instrumentId);
         
         // Закрываем селектор
         document.querySelector('.participant-selector')?.remove();
@@ -763,25 +819,37 @@ class EventCreationModal {
         return names[instrumentId] || instrumentId;
     }
     
-    updateParticipantsList(instrumentId) {
+    renderSelectedParticipant(instrumentId) {
         const container = document.getElementById(`participants-${instrumentId}`);
+        if (!container) return;
+        
         const participants = this.selectedParticipants[instrumentId] || [];
         
         container.innerHTML = participants.map((p, index) => `
             <div class="participant-chip">
                 ${p.userName}
-                <button onclick="eventCreationModal.removeParticipant('${instrumentId}', ${index})" title="Удалить участника">
+                <button data-action="remove-participant" data-instrument="${instrumentId}" data-index="${index}" title="Удалить участника">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
             </div>
         `).join('');
+        
+        // Привязываем обработчики для удаления
+        container.querySelectorAll('[data-action="remove-participant"]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const instrumentId = btn.dataset.instrument;
+                const index = parseInt(btn.dataset.index);
+                this.removeParticipant(instrumentId, index);
+            });
+        });
     }
     
     removeParticipant(instrumentId, index) {
         this.selectedParticipants[instrumentId].splice(index, 1);
-        this.updateParticipantsList(instrumentId);
+        this.renderSelectedParticipant(instrumentId);
     }
     
     async save() {
