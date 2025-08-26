@@ -134,7 +134,7 @@ class EventCreationModal {
                                 <input type="hidden" id="eventLeader" value="">
                                 <button type="button" class="leader-select-btn" data-action="open-leader-selector" aria-label="Выбрать ведущего">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M12 14a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M12 4L14.5 9.5L20 10L16 14L17 20L12 17L7 20L8 14L4 10L9.5 9.5L12 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </button>
                                 <div id="leaderDropdown" class="leader-dropdown"></div>

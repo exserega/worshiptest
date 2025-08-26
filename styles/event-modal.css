@@ -435,10 +435,7 @@
         margin-bottom: 1rem; /* Уменьшен отступ */
     }
     
-    .form-row {
-        flex-direction: column;
-        gap: 1rem;
-    }
+    /* form-row теперь обрабатывается в events-page.css */
     
     .modal-header h2 {
         font-size: 1.125rem; /* Меньше размер заголовка */
