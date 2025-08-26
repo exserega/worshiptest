@@ -1,5 +1,5 @@
-// Service Worker v362 - Fixed dropdown container width
-const CACHE_NAME = 'agape-worship-cache-v362';
+// Service Worker v363 - Unified key selector style with forced colors
+const CACHE_NAME = 'agape-worship-cache-v363';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -298,8 +298,8 @@
     top: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%);
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    background: #1f2937 !important; /* Форсируем темный фон */
+    border: 1px solid #374151 !important; /* Форсируем темную рамку */
     border-radius: 8px;
     display: none;
     flex-direction: column;
@@ -317,9 +317,9 @@
 }
 
 .player-key-dropdown button {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary) !important;
+    background: #111827 !important; /* Форсируем темный фон кнопок */
+    border: 1px solid #374151 !important; /* Форсируем темную рамку */
+    color: #f3f4f6 !important; /* Форсируем светлый текст */
     padding: 10px 16px;
     border-radius: 4px;
     cursor: pointer;
@@ -333,9 +333,9 @@
 }
 
 .player-key-dropdown button:hover {
-    background: var(--accent-color);
-    color: var(--bg-primary) !important;
-    border-color: var(--accent-color);
+    background: #67e8f9 !important; /* Форсируем голубой фон при наведении */
+    color: #111827 !important; /* Форсируем темный текст при наведении */
+    border-color: #67e8f9 !important;
     transform: translateY(-1px);
 }
 
@@ -345,17 +345,17 @@
 }
 
 .player-key-dropdown::-webkit-scrollbar-track {
-    background: var(--bg-primary);
+    background: #111827 !important;
     border-radius: 2px;
 }
 
 .player-key-dropdown::-webkit-scrollbar-thumb {
-    background: var(--border-color);
+    background: #374151 !important;
     border-radius: 2px;
 }
 
 .player-key-dropdown::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-color);
+    background: #67e8f9 !important;
 }
 
 /* Контент плеера */
