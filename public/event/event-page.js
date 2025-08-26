@@ -126,12 +126,13 @@ async function init() {
 }
 
 /**
- * Применение темы - всегда темная
+ * Применение темы из настроек пользователя
  */
 function applyTheme() {
-    // Игнорируем сохраненную тему и всегда применяем темную
-    document.documentElement.setAttribute('data-theme', 'dark');
-    document.body.setAttribute('data-theme', 'dark');
+    // Получаем сохраненную тему из localStorage
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.body.setAttribute('data-theme', savedTheme);
 }
 
 /**
@@ -228,10 +229,19 @@ function displayEvent() {
     
     // Добавляем индикатор участия в заголовок
     if (isUserParticipant) {
+        // Создаем wrapper для заголовка если его еще нет
+        let titleWrapper = elements.headerTitle.parentElement;
+        if (!titleWrapper.classList.contains('header-title-wrapper')) {
+            titleWrapper = document.createElement('div');
+            titleWrapper.className = 'header-title-wrapper';
+            elements.headerTitle.parentNode.insertBefore(titleWrapper, elements.headerTitle);
+            titleWrapper.appendChild(elements.headerTitle);
+        }
+        
         const indicator = document.createElement('span');
         indicator.className = 'user-participant-indicator';
-        indicator.textContent = '✓ Вы участвуете';
-        elements.headerTitle.parentElement.appendChild(indicator);
+        indicator.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Вы участвуете';
+        titleWrapper.appendChild(indicator);
         
         // Добавляем класс к главному контейнеру
         const appContainer = document.getElementById('app');
