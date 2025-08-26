@@ -1,5 +1,5 @@
-// Service Worker v355 - Fix player icon colors
-const CACHE_NAME = 'agape-worship-cache-v355';
+// Service Worker v356 - Fix key selector and T icon colors
+const CACHE_NAME = 'agape-worship-cache-v356';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

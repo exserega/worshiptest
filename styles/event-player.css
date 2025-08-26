@@ -234,6 +234,7 @@
 .player-control-btn .text-icon {
     font-weight: 700;
     font-size: 13px;
+    color: var(--text-primary) !important;
 }
 
 /* Стили для символов транспонирования */
@@ -265,7 +266,8 @@
 .player-control-btn.active i,
 .player-control-btn.active .fas,
 .player-control-btn.active .far,
-.player-control-btn.active .fab {
+.player-control-btn.active .fab,
+.player-control-btn.active .text-icon {
     color: var(--bg-primary) !important;
 }
 
@@ -288,6 +290,7 @@
 
 .player-current-key {
     font-size: 16px;
+    color: var(--text-primary) !important;
 }
 
 .player-key-dropdown {
@@ -295,18 +298,17 @@
     top: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%);
-    background: var(--bg-primary);
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 4px;
     display: none;
-    flex-direction: column;
-    gap: 2px;
-    z-index: 1000;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    max-height: 300px;
-    overflow-y: auto;
-    min-width: 80px;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px;
+    width: max-content;
+    max-width: 280px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    z-index: 100;
 }
 
 .player-key-dropdown.show {
@@ -314,35 +316,24 @@
 }
 
 .player-key-dropdown button {
-    background: var(--bg-secondary);
-    border: 1px solid transparent;
-    color: var(--text-primary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary) !important;
     padding: 8px 12px;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    min-width: 45px;
     text-align: center;
-    white-space: nowrap;
+    font-weight: 500;
 }
 
 .player-key-dropdown button:hover {
     background: var(--accent-color);
-    color: white;
-}
-
-/* Темная тема для выпадающего списка */
-[data-theme="dark"] .player-key-dropdown {
-    background: var(--bg-elevated, #2a2a2a);
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .player-key-dropdown button {
-    background: transparent;
-}
-
-[data-theme="dark"] .player-key-dropdown button:hover {
-    background: var(--accent-color);
+    color: var(--bg-primary) !important;
+    border-color: var(--accent-color);
+    transform: translateY(-1px);
 }
 
 /* Контент плеера */
