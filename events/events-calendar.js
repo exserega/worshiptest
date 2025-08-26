@@ -681,41 +681,121 @@ export class EventsCalendar {
             day: 'numeric', 
             month: 'short',
             weekday: 'short'
-        }) : '';
+        }) : eventDate.toLocaleDateString('ru-RU', { 
+            day: 'numeric', 
+            month: 'short'
+        });
         
         // Формируем информацию о лидере
         const leaderHTML = event.leader ? `
             <div class="event-leader">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>${event.leader}</span>
+                <span>Ведущий: ${event.leader}</span>
             </div>
         ` : '';
         
-        // Формируем информацию об участниках
-        const participantsHTML = event.participants && event.participants.length > 0 ? `
-            <div class="event-participants">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>${event.participants.length} участ.</span>
-            </div>
-        ` : '';
+        // Формируем детальную информацию об участниках
+        let participantsHTML = '';
+        let participantsDetailHTML = '';
+        
+        if (event.participants && event.participants.length > 0) {
+            // Маппинг инструментов на эмодзи
+            const instrumentIcons = {
+                'vocals': '🎤',
+                'вокал': '🎤',
+                'guitar': '🎸',
+                'гитара': '🎸',
+                'electric_guitar': '🎸',
+                'электрогитара': '🎸',
+                'acoustic_guitar': '🎸',
+                'акустическая гитара': '🎸',
+                'bass': '🎸',
+                'бас': '🎸',
+                'бас-гитара': '🎸',
+                'keys': '🎹',
+                'keyboard': '🎹',
+                'piano': '🎹',
+                'клавиши': '🎹',
+                'drums': '🥁',
+                'барабаны': '🥁',
+                'cajon': '🪘',
+                'кахон': '🪘',
+                'sound': '🎧',
+                'звукооператор': '🎧',
+                'звук': '🎧',
+                'other': '🎵',
+                'другое': '🎵'
+            };
+            
+            // Группируем участников по инструментам
+            const instrumentGroups = {};
+            
+            event.participants
+                .filter(p => p.userName || p.name)
+                .forEach(p => {
+                    const instrumentName = p.instrumentName || p.instrument || 'Участник';
+                    if (!instrumentGroups[instrumentName]) {
+                        instrumentGroups[instrumentName] = {
+                            names: [],
+                            icon: instrumentIcons[(p.instrument || '').toLowerCase()] || 
+                                  instrumentIcons[(p.instrumentName || '').toLowerCase()] || 
+                                  '🎵'
+                        };
+                    }
+                    instrumentGroups[instrumentName].names.push(p.userName || p.name);
+                });
+            
+            // Формируем HTML детального списка
+            const instrumentLines = Object.entries(instrumentGroups).map(([instrument, data]) => {
+                const names = data.names.join(', ');
+                return `<div class="participant-line">${data.icon} ${instrument} - ${names}</div>`;
+            });
+            
+            if (instrumentLines.length > 0) {
+                participantsDetailHTML = `<div class="event-participants-detail" id="participants-${event.id}" style="display: none;">${instrumentLines.join('')}</div>`;
+            }
+            
+            // Основная информация об участниках с кнопкой разворачивания
+            participantsHTML = `
+                <div class="event-participants-toggle" onclick="window.eventsCalendar.toggleParticipants('${event.id}', event)">
+                    <div class="participants-summary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Участники (${event.participants.length})</span>
+                        <svg class="toggle-icon" width="12" height="12" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                ${participantsDetailHTML}
+            `;
+        }
         
         return `
             <div class="event-card ${isUserParticipant ? 'user-participant' : ''}" onclick="window.location.href='/public/event/?id=${event.id}'">
                 <div class="event-info">
-                    <div class="event-header">
-                        ${showDate ? `<span class="event-date">${dateStr}</span>` : ''}
-                        <span class="event-time">${this.formatTime(event.date)}</span>
-                        <span class="event-name">${event.name}</span>
+                    <div class="event-header-redesigned">
+                        <div class="event-title-block">
+                            <h3 class="event-name">${event.name}</h3>
+                        </div>
+                        <div class="event-datetime">
+                            <div class="event-date">${dateStr}</div>
+                            <div class="event-time">${this.formatTime(event.date)}</div>
+                        </div>
                     </div>
                     ${leaderHTML}
                     ${participantsHTML}
                 </div>
                 <div class="event-footer">
-                    <span class="event-count">${event.songCount || 0} песен</span>
+                    <span class="event-count">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 11V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v10m-4 0h4a2 2 0 0 0 2-2v-2M3 11h6v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        ${event.songCount || 0} песен
+                    </span>
                     ${canManageEvents() ? `
                         <div class="event-actions" onclick="event.stopPropagation();">
                             <button class="icon-button" onclick="window.eventsCalendar.handleEditEvent('${event.id}')" title="Редактировать">
@@ -736,6 +816,25 @@ export class EventsCalendar {
                 </div>
             </div>
         `;
+    }
+    
+    /**
+     * Переключение отображения участников
+     */
+    toggleParticipants(eventId, event) {
+        event.stopPropagation();
+        const detailsEl = document.getElementById(`participants-${eventId}`);
+        const toggleIcon = event.currentTarget.querySelector('.toggle-icon');
+        
+        if (detailsEl) {
+            if (detailsEl.style.display === 'none') {
+                detailsEl.style.display = 'block';
+                toggleIcon.style.transform = 'rotate(180deg)';
+            } else {
+                detailsEl.style.display = 'none';
+                toggleIcon.style.transform = 'rotate(0deg)';
+            }
+        }
     }
 
     /**
