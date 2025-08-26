@@ -572,8 +572,21 @@ class EventCreationModal {
     
     highlightMatch(text, query) {
         if (!query) return text;
-        const regex = new RegExp(`(${query})`, 'gi');
-        return text.replace(regex, '<strong>$1</strong>');
+        
+        // Экранируем специальные символы в запросе
+        const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        
+        // Ищем позицию совпадения без учета регистра
+        const index = text.toLowerCase().indexOf(query.toLowerCase());
+        if (index === -1) return text;
+        
+        // Разбиваем текст на три части: до совпадения, совпадение, после совпадения
+        const before = text.substring(0, index);
+        const match = text.substring(index, index + query.length);
+        const after = text.substring(index + query.length);
+        
+        // Возвращаем с подсвеченной средней частью
+        return `${before}<strong>${match}</strong>${after}`;
     }
     
     setActiveLeaderItem(item) {
@@ -694,14 +707,14 @@ class EventCreationModal {
         if (query) {
             const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
             if (!exactMatch) {
-                html = `
+                html += `
                     <div class="user-item create-new" data-query="${query}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                         Создать: <strong>${query}</strong>
                     </div>
-                ` + html;
+                `;
             }
         }
         
@@ -1097,14 +1110,14 @@ class EventCreationModal {
         if (query) {
             const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
             if (!exactMatch) {
-                html = `
+                html += `
                     <div class="user-item create-new" data-query="${query}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                         Создать: <strong>${query}</strong>
                     </div>
-                ` + html;
+                `;
             }
         }
         
