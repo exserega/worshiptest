@@ -36,14 +36,18 @@ class EventPlayer {
         this.overlay.className = 'event-player-overlay';
         this.overlay.innerHTML = `
             <div class="event-player-header">
-                <!-- Первая строка: закрытие, позиция, навигация -->
+                <!-- Первая строка: закрытие, переключатель панели, позиция, навигация -->
                 <div class="player-header-row-1">
                     <div class="player-header-left">
                         <button class="player-close-btn" aria-label="Закрыть плеер">
                             <i class="fas fa-times"></i>
                         </button>
-                        <span class="player-song-number">1 / 1</span>
+                        <button class="player-toggle-controls-btn" aria-label="Показать/скрыть панель инструментов">
+                            <i class="fas fa-bars"></i>
+                        </button>
                     </div>
+                    
+                    <span class="player-song-number">Песня 1/1</span>
                     
                     <div class="player-nav-compact">
                         <button class="player-nav-btn-small" id="player-prev" aria-label="Предыдущая">
@@ -55,11 +59,16 @@ class EventPlayer {
                     </div>
                 </div>
                 
-                <!-- Вторая строка: название песни и тональность/BPM -->
+                <!-- Вторая строка: название песни -->
                 <div class="player-header-row-2">
                     <span class="player-song-name">Название песни</span>
+                </div>
+                
+                <!-- Третья строка: тональность и BPM -->
+                <div class="player-header-row-3">
                     <div class="player-song-key-bpm">
                         <span class="player-key">C</span>
+                        <span class="divider">|</span>
                         <span class="player-bpm">120 BPM</span>
                     </div>
                 </div>
@@ -126,6 +135,31 @@ class EventPlayer {
         // Закрытие плеера
         const closeBtn = this.overlay.querySelector('.player-close-btn');
         closeBtn.addEventListener('click', () => this.close());
+        
+        // Переключение панели инструментов
+        const toggleBtn = this.overlay.querySelector('.player-toggle-controls-btn');
+        const controlsRow = this.overlay.querySelector('.player-controls-row');
+        
+        toggleBtn.addEventListener('click', () => {
+            const isHidden = controlsRow.style.display === 'none';
+            controlsRow.style.display = isHidden ? 'flex' : 'none';
+            toggleBtn.classList.toggle('controls-hidden', !isHidden);
+            
+            // Изменяем иконку
+            const icon = toggleBtn.querySelector('i');
+            icon.className = isHidden ? 'fas fa-times' : 'fas fa-bars';
+            
+            // Сохраняем состояние
+            localStorage.setItem('eventPlayerControlsHidden', !isHidden);
+        });
+        
+        // Восстанавливаем состояние панели
+        const savedState = localStorage.getItem('eventPlayerControlsHidden');
+        if (savedState === 'true') {
+            controlsRow.style.display = 'none';
+            toggleBtn.classList.add('controls-hidden');
+            toggleBtn.querySelector('i').className = 'fas fa-bars';
+        }
         
         // Навигация
         const prevBtn = this.overlay.querySelector('#player-prev');

@@ -54,42 +54,73 @@
 
 /* Первая строка шапки */
 .player-header-row-1 {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px 4px;
-    border-bottom: 1px solid rgba(var(--border-color-rgb), 0.3);
+    padding: 8px 12px 2px;
 }
 
 .player-header-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 4px;
+    justify-self: start;
 }
 
-/* Вторая строка шапки */
+/* Центрирование номера песни */
+.player-header-row-1 .player-song-number {
+    justify-self: center;
+    text-align: center;
+}
+
+/* Навигация справа */
+.player-header-row-1 .player-nav-compact {
+    justify-self: end;
+}
+
+/* Вторая строка шапки - название песни */
 .player-header-row-2 {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 4px 12px 8px;
-    gap: 12px;
-    min-height: 32px;
+    justify-content: center;
+    padding: 2px 12px;
+    text-align: center;
 }
 
-.player-close-btn {
+/* Третья строка шапки - тональность и BPM */
+.player-header-row-3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 12px 8px;
+    border-bottom: 1px solid rgba(var(--border-color-rgb), 0.3);
+}
+
+.player-close-btn,
+.player-toggle-controls-btn {
     background: transparent;
     border: none;
     color: var(--text-primary);
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
-    padding: 8px;
+    padding: 6px;
     border-radius: 4px;
     transition: background 0.2s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.player-close-btn:hover {
+.player-close-btn:hover,
+.player-toggle-controls-btn:hover {
     background: var(--bg-hover);
+}
+
+/* Анимация для панели инструментов */
+.player-controls-row {
+    transition: all 0.3s ease;
 }
 
 .player-song-number {
@@ -105,20 +136,25 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex: 1;
-    min-width: 0;
+    max-width: 100%;
+    padding: 0 8px;
 }
 
 /* Тональность и BPM в шапке */
 .player-song-key-bpm {
-    display: flex;
-    gap: 8px;
+    display: inline-flex;
+    gap: 6px;
     align-items: center;
-    flex-shrink: 0;
     background: rgba(var(--accent-color-rgb), 0.1);
-    padding: 4px 10px;
-    border-radius: 6px;
+    padding: 4px 12px;
+    border-radius: 16px;
     border: 1px solid rgba(var(--accent-color-rgb), 0.2);
+}
+
+.player-song-key-bpm .divider {
+    color: var(--accent-color);
+    opacity: 0.5;
+    font-weight: 300;
 }
 
 .player-key {
@@ -319,19 +355,28 @@
 @media (max-width: 768px) {
     /* Адаптация шапки плеера */
     .player-header-row-1 {
-        padding: 6px 10px 3px;
+        padding: 6px 8px 2px;
+        grid-template-columns: auto 1fr auto;
     }
     
     .player-header-row-2 {
-        padding: 3px 10px 6px;
-        min-height: 28px;
+        padding: 2px 8px;
     }
     
-    .player-close-btn {
-        padding: 6px;
-        font-size: 20px;
-        width: 32px;
-        height: 32px;
+    .player-header-row-3 {
+        padding: 2px 8px 6px;
+    }
+    
+    .player-header-left {
+        gap: 2px;
+    }
+    
+    .player-close-btn,
+    .player-toggle-controls-btn {
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+        font-size: 18px;
     }
     
     .player-song-number {
@@ -340,11 +385,13 @@
     
     .player-song-name {
         font-size: 14px;
+        padding: 0 4px;
     }
     
     .player-song-key-bpm {
-        padding: 3px 8px;
+        padding: 3px 10px;
         gap: 6px;
+        font-size: 12px;
     }
     
     .player-key {
@@ -356,8 +403,13 @@
     }
     
     .player-nav-btn-small {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
+    }
+    
+    .player-nav-compact {
+        gap: 2px;
     }
     
     /* Контент плеера */
