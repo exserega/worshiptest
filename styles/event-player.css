@@ -305,7 +305,7 @@
     flex-direction: column;
     gap: 2px;
     padding: 6px;
-    width: 100px;
+    width: 140px;
     max-height: 420px; /* Увеличено на 40% от 300px */
     overflow-y: auto;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
@@ -320,15 +320,15 @@
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     color: var(--text-primary) !important;
-    padding: 8px 10px;
+    padding: 10px 16px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     transition: all 0.2s ease;
     width: 100%;
     text-align: center;
     font-weight: 500;
-    height: 36px;
+    height: 42px;
     white-space: nowrap;
 }
 
@@ -460,16 +460,16 @@
     
     /* Компактный выпадающий список тональностей на мобильных */
     .player-key-dropdown {
-        width: 90px;
+        width: 120px;
         max-height: 350px; /* Увеличено на 40% от 250px */
         gap: 2px;
         padding: 5px;
     }
     
     .player-key-dropdown button {
-        font-size: 13px;
-        padding: 7px 8px;
-        height: 32px;
+        font-size: 15px;
+        padding: 9px 14px;
+        height: 38px;
     }
 }
 

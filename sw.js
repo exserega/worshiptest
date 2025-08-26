@@ -1,5 +1,5 @@
-// Service Worker v360 - Unified key selector style with increased height
-const CACHE_NAME = 'agape-worship-cache-v360';
+// Service Worker v361 - Wider key selector for better clickability
+const CACHE_NAME = 'agape-worship-cache-v361';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
