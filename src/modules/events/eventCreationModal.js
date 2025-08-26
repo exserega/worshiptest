@@ -693,28 +693,14 @@ class EventCreationModal {
         
         // Показываем отфильтрованных пользователей
         users.forEach((user, index) => {
-            html += `
-                <div class="user-item" data-user-id="${user.id}" data-user-name="${user.name}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    ${query ? this.highlightMatch(user.name, query) : user.name}
-                </div>
-            `;
+            html += `<div class="user-item" data-user-id="${user.id}" data-user-name="${user.name}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>${query ? this.highlightMatch(user.name, query) : user.name}</div>`;
         });
         
         // Если есть запрос и нет точного совпадения, показываем опцию создания
         if (query) {
             const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
             if (!exactMatch) {
-                html += `
-                    <div class="user-item create-new" data-query="${query}">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
-                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                        Создать: <strong>${query}</strong>
-                    </div>
-                `;
+                html += `<div class="user-item create-new" data-query="${query}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${query}</strong></div>`;
             }
         }
         
@@ -1096,28 +1082,14 @@ class EventCreationModal {
         
         // Показываем отфильтрованных пользователей
         users.forEach((user) => {
-            html += `
-                <div class="user-item" data-user-id="${user.id}" data-user-name="${user.name}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    ${query ? this.highlightMatch(user.name, query) : user.name}
-                </div>
-            `;
+            html += `<div class="user-item" data-user-id="${user.id}" data-user-name="${user.name}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>${query ? this.highlightMatch(user.name, query) : user.name}</div>`;
         });
         
         // Если есть запрос и нет точного совпадения, показываем опцию создания
         if (query) {
             const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
             if (!exactMatch) {
-                html += `
-                    <div class="user-item create-new" data-query="${query}">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
-                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                        Создать: <strong>${query}</strong>
-                    </div>
-                `;
+                html += `<div class="user-item create-new" data-query="${query}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${query}</strong></div>`;
             }
         }
         

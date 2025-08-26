@@ -1472,6 +1472,12 @@ textarea.form-control {
     border-color: #00b2bc;
 }
 
+/* Подсветка совпадений при поиске */
+.user-item strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
 /* Светлая тема - улучшенная контрастность для селектора участников */
 [data-theme="light"] .participant-selector {
     background: rgba(0, 0, 0, 0.4); /* Более темный фон overlay */
