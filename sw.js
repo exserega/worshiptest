@@ -1,5 +1,5 @@
-// Service Worker v365 - Fixed width for key selector dropdown
-const CACHE_NAME = 'agape-worship-cache-v365';
+// Service Worker v366 - Fix bottom nav restore on swipe close
+const CACHE_NAME = 'agape-worship-cache-v366';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

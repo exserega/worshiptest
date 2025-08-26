@@ -292,6 +292,15 @@ function setupSwipeToClose() {
                         if (panel.classList.contains('show') || panel.classList.contains('open')) {
                             panel.classList.remove('show', 'open');
                             console.log('👆 [Swipe] Закрытие левой панели свайпом влево');
+                            
+                            // Восстанавливаем нижнюю панель навигации при закрытии панели сет-листов
+                            if (panel.id === 'setlists-panel') {
+                                const bottomNav = document.querySelector('.mobile-bottom-nav');
+                                if (bottomNav) {
+                                    bottomNav.style.transform = 'translateY(0)';
+                                    console.log('👆 [Swipe] Восстановлена нижняя панель навигации');
+                                }
+                            }
                         }
                     }
                 }
