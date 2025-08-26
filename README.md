@@ -18,8 +18,8 @@
 - Порядок: сначала CDN SDK v8 (если нужно), затем `firebase-init.js`, затем ваши модули.
 
 ## Service Worker (PWA)
-- Текущая версия: v148.
-- При изменении путей/критичных ресурсов — увеличьте `CACHE_NAME` в `sw.js` (например, `v149`).
+- Текущая версия: v243.
+- При изменении путей/критичных ресурсов — увеличьте `CACHE_NAME` в `sw.js` (например, `v244`).
 - После обновления: в браузере DevTools → Application → Clear storage → Clear site data → перезагрузить страницу.
 
 ## Важно: работа с инструментами
@@ -57,6 +57,7 @@
 - Эффект размытия фона: `backdrop-filter: blur(20px)`
 - Радиусы скругления: 8px для кнопок, 12px для модальных окон
 - Переходы: `transition: all 0.2s ease`
+- **ВАЖНО**: См. `documentation/STYLE_GUIDE.md` для полного руководства по стилям и дизайну
 
 ## Диагностика
 - Если видите `Firebase: No Firebase App '[DEFAULT]'` — проверьте, что `firebase-init.js` загружается раньше модулей страницы.
@@ -104,3 +105,10 @@
   2. `git commit -m "тип: описание"` — создать коммит
   3. `git push` — отправить на GitHub
   4. GitHub Pages автоматически обновится через 1-2 минуты
+
+## Документация
+- `/documentation/AI_AGENT_CRITICAL_GUIDE.md` — критически важная информация для AI агентов
+- `/documentation/AI_AGENT_GUIDE.md` — детальное руководство по проекту
+- `/documentation/STYLE_GUIDE.md` — руководство по стилям и дизайну
+- `/documentation/EVENTS_FEATURE_GUIDE.md` — руководство по функционалу событий
+- `/documentation/ROLES_AND_PERMISSIONS_GUIDE.md` — система ролей и прав доступа
