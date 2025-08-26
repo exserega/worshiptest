@@ -714,6 +714,26 @@ class EventCreationModal {
         
         if (!input || !list) return;
         
+        // Обработчик фокуса для мобильных устройств
+        if (window.innerWidth <= 480) {
+            input.addEventListener('focus', () => {
+                const participantSelector = document.querySelector('.participant-selector');
+                if (participantSelector) {
+                    participantSelector.classList.add('keyboard-open');
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                const participantSelector = document.querySelector('.participant-selector');
+                if (participantSelector) {
+                    // Небольшая задержка чтобы успеть кликнуть по элементу списка
+                    setTimeout(() => {
+                        participantSelector.classList.remove('keyboard-open');
+                    }, 200);
+                }
+            });
+        }
+        
         // Обработчик ввода
         input.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
@@ -1096,6 +1116,26 @@ class EventCreationModal {
         const list = selector.querySelector('#leadersList');
         
         if (!input || !list) return;
+        
+        // Обработчик фокуса для мобильных устройств
+        if (window.innerWidth <= 480) {
+            input.addEventListener('focus', () => {
+                const participantSelector = document.querySelector('.participant-selector');
+                if (participantSelector) {
+                    participantSelector.classList.add('keyboard-open');
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                const participantSelector = document.querySelector('.participant-selector');
+                if (participantSelector) {
+                    // Небольшая задержка чтобы успеть кликнуть по элементу списка
+                    setTimeout(() => {
+                        participantSelector.classList.remove('keyboard-open');
+                    }, 200);
+                }
+            });
+        }
         
         // Обработчик ввода
         input.addEventListener('input', (e) => {
