@@ -1,5 +1,5 @@
-// Service Worker v349 - Hide bottom nav when setlists panel opens
-const CACHE_NAME = 'agape-worship-cache-v349';
+// Service Worker v350 - Fix updateSetlistName function export
+const CACHE_NAME = 'agape-worship-cache-v350';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

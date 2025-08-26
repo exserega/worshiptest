@@ -16,6 +16,7 @@ export const loadSetlists = api.loadSetlists;
 export const createSetlist = api.createSetlist;
 export const deleteSetlist = api.deleteSetlist;
 export const renameSetlist = api.renameSetlist;
+export const updateSetlistName = api.updateSetlistName; // Добавляем экспорт
 export const updateSongInRepertoire = api.updateSongInRepertoire;
 export const updateNotesForSong = api.updateNotesForSong;
 export const saveSongEdit = api.saveSongEdit;
