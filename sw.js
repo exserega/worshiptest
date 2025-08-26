@@ -1,5 +1,5 @@
-// Service Worker v350 - Fix updateSetlistName function export
-const CACHE_NAME = 'agape-worship-cache-v350';
+// Service Worker v351 - Update button text to "Добавленные"
+const CACHE_NAME = 'agape-worship-cache-v351';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
