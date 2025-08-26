@@ -867,19 +867,53 @@ function setupSetlistEventHandlers() {
             }
             
             try {
-                // Подготавливаем данные песен для плеера
-                const fullSongsData = currentSetlist.songs
-                    .map(setlistSong => {
-                        const songDetails = state.allSongs.find(s => s.id === setlistSong.songId) || {};
-                        return { 
-                            ...songDetails, 
-                            ...setlistSong,
-                            // Используем preferredKey из сет-листа или defaultKey из песни
-                            key: setlistSong.preferredKey || songDetails.defaultKey || 'C'
-                        };
+                // Закрываем все панели перед открытием плеера
+                ui.closeAllSidePanels();
+                
+                // Подготавливаем данные песен для плеера в том же формате, как на странице события
+                const songsWithDetails = await Promise.all(
+                    currentSetlist.songs.map(async (setlistSong) => {
+                        try {
+                            // Ищем песню в загруженных песнях
+                            const songData = state.allSongs.find(s => s.id === setlistSong.songId);
+                            
+                            if (songData) {
+                                return {
+                                    ...songData,
+                                    id: setlistSong.songId,
+                                    name: songData.name || setlistSong.songId,
+                                    preferredKey: setlistSong.preferredKey || songData.defaultKey || 'C',
+                                    order: setlistSong.order,
+                                    hasWebEdits: songData.hasWebEdits || false,
+                                    'Текст и аккорды (edited)': songData['Текст и аккорды (edited)'] || null
+                                };
+                            } else {
+                                // Если песня не найдена в загруженных песнях
+                                console.warn('⚠️ Песня не найдена в state.allSongs:', setlistSong.songId);
+                                return {
+                                    id: setlistSong.songId,
+                                    name: 'Песня не найдена',
+                                    preferredKey: setlistSong.preferredKey || 'C',
+                                    order: setlistSong.order,
+                                    BPM: null
+                                };
+                            }
+                        } catch (err) {
+                            console.error('❌ Ошибка загрузки деталей песни:', err);
+                            return {
+                                id: setlistSong.songId,
+                                name: 'Ошибка загрузки',
+                                preferredKey: setlistSong.preferredKey || 'C',
+                                order: setlistSong.order
+                            };
+                        }
                     })
-                    .filter(s => s.id)
-                    .sort((a, b) => a.order - b.order);
+                );
+                
+                // Сортируем по order
+                songsWithDetails.sort((a, b) => (a.order || 0) - (b.order || 0));
+                
+                console.log('🎵 [EventHandlers] Songs prepared for player:', songsWithDetails.length);
                 
                 // Скрываем скролл на основной странице
                 document.body.style.overflow = 'hidden';
@@ -889,10 +923,9 @@ function setupSetlistEventHandlers() {
                 
                 // Открываем плеер с песнями сет-листа
                 // Передаем null вместо eventId, так как это не событие, а сет-лист
-                await openEventPlayer(null, fullSongsData, 0);
+                await openEventPlayer(null, songsWithDetails, 0);
                 
                 console.log('✅ [EventHandlers] Player opened for setlist:', currentSetlist.name);
-                window.showNotification('Презентация запущена', 'success');
                 
             } catch (error) {
                 console.error('❌ [EventHandlers] Error opening presentation:', error);
