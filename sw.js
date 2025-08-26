@@ -1,5 +1,5 @@
-// Service Worker v361 - Wider key selector for better clickability
-const CACHE_NAME = 'agape-worship-cache-v361';
+// Service Worker v362 - Fixed dropdown container width
+const CACHE_NAME = 'agape-worship-cache-v362';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
