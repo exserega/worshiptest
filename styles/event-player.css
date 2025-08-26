@@ -302,31 +302,31 @@
     border: 1px solid var(--border-color);
     border-radius: 8px;
     display: none;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(6, 1fr);
     gap: 4px;
     padding: 8px;
-    width: max-content;
-    max-width: 280px;
+    width: 220px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     z-index: 100;
 }
 
 .player-key-dropdown.show {
-    display: flex;
+    display: grid;
 }
 
 .player-key-dropdown button {
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     color: var(--text-primary) !important;
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 6px 4px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     transition: all 0.2s ease;
-    min-width: 45px;
+    min-width: unset;
     text-align: center;
     font-weight: 500;
+    height: 32px;
 }
 
 .player-key-dropdown button:hover {
@@ -434,6 +434,20 @@
     .song-content * {
         max-width: 100% !important;
         overflow-x: hidden !important;
+    }
+    
+    /* Компактный выпадающий список тональностей на мобильных */
+    .player-key-dropdown {
+        width: 200px;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+        padding: 6px;
+    }
+    
+    .player-key-dropdown button {
+        font-size: 12px;
+        padding: 5px 2px;
+        height: 28px;
     }
 }
 

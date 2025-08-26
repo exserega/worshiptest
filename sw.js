@@ -1,5 +1,5 @@
-// Service Worker v356 - Fix key selector and T icon colors
-const CACHE_NAME = 'agape-worship-cache-v356';
+// Service Worker v357 - Compact key selector dropdown
+const CACHE_NAME = 'agape-worship-cache-v357';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
