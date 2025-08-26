@@ -305,11 +305,14 @@
     flex-direction: column;
     gap: 2px;
     padding: 8px !important;
-    width: 180px !important;
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
     max-height: 420px !important; /* Увеличено на 40% от 300px */
     overflow-y: auto;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     z-index: 100;
+    box-sizing: border-box !important;
 }
 
 .player-key-dropdown.show {
@@ -320,16 +323,17 @@
     background: #111827 !important; /* Форсируем темный фон кнопок */
     border: 1px solid #374151 !important; /* Форсируем темную рамку */
     color: #f3f4f6 !important; /* Форсируем светлый текст */
-    padding: 10px 16px;
+    padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     transition: all 0.2s ease;
     width: 100%;
     text-align: center;
     font-weight: 500;
-    height: 42px;
+    height: 38px;
     white-space: nowrap;
+    box-sizing: border-box !important;
 }
 
 .player-key-dropdown button:hover {
@@ -460,16 +464,18 @@
     
     /* Компактный выпадающий список тональностей на мобильных */
     .player-key-dropdown {
-        width: 160px !important;
+        width: 130px !important;
+        min-width: 130px !important;
+        max-width: 130px !important;
         max-height: 350px !important; /* Увеличено на 40% от 250px */
         gap: 2px;
         padding: 6px !important;
     }
     
     .player-key-dropdown button {
-        font-size: 15px;
-        padding: 9px 14px;
-        height: 38px;
+        font-size: 14px;
+        padding: 8px 10px;
+        height: 36px;
     }
 }
 

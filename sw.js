@@ -1,5 +1,5 @@
-// Service Worker v364 - Force key selector styles with !important
-const CACHE_NAME = 'agape-worship-cache-v364';
+// Service Worker v365 - Fixed width for key selector dropdown
+const CACHE_NAME = 'agape-worship-cache-v365';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
