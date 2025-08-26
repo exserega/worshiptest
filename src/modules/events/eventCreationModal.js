@@ -969,15 +969,8 @@ class EventCreationModal {
                 });
             });
             
-            // Если нет участников, добавляем создателя как участника
-            if (Object.keys(participantsObject).length === 0) {
-                participantsObject[user.uid] = {
-                    userId: user.uid,
-                    userName: user.displayName || user.email,
-                    instrument: '',
-                    instrumentName: ''
-                };
-            }
+            // Не добавляем создателя автоматически в участники
+            // Оставляем список участников пустым если никого не выбрали
             
             // Добавляем отладочную информацию
             logger.log('📋 Выбранные участники:', this.selectedParticipants);
@@ -987,7 +980,7 @@ class EventCreationModal {
                 name: eventName,
                 date: new Date(`${eventDate}T${eventTime}`),
                 leaderId: leaderId || user.uid,
-                leaderName: leaderId ? this.availableUsers.find(u => u.id === leaderId)?.name : user.displayName || user.email,
+                leaderName: leaderId ? this.availableUsers.find(u => u.id === leaderId)?.name : user.name || user.email,
                 setlistId: setlistId || '',
                 participants: participantsObject, // Firebase хранит как объект
                 participantCount: Object.keys(participantsObject).length,
