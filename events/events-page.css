@@ -856,7 +856,7 @@
 
 .form-control {
     width: 100%;
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 1rem; /* Уменьшаем padding для лучшего отображения */
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
@@ -865,7 +865,7 @@
     transition: all 0.2s;
     line-height: 1.4;
     min-height: 48px;
-    font-family: inherit;
+    height: auto;
     box-sizing: border-box;
 }
 
@@ -878,9 +878,11 @@ select.form-control {
     background-size: 16px;
     cursor: pointer;
     min-height: 48px;
-    display: flex;
-    align-items: center;
-    line-height: 1.5; /* Увеличиваем line-height */
+    /* Убираем display: flex и align-items */
+    line-height: 1.4; /* Правильная высота строки */
+    /* Добавляем вертикальное выравнивание */
+    display: block;
+    box-sizing: border-box;
 }
 
 input[type="text"].form-control,
@@ -893,8 +895,8 @@ textarea.form-control {
 /* Для Firefox */
 @-moz-document url-prefix() {
     select.form-control {
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
+        padding-top: 0.875rem;
+        padding-bottom: 0.875rem;
     }
 }
 
@@ -1335,11 +1337,39 @@ textarea.form-control {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    /* Убираем transform чтобы кнопка не двигалась */
 }
 
 .leader-select-btn svg {
     width: 16px;
     height: 16px;
+}
+
+.leader-select-btn svg path {
+    stroke: currentColor !important;
+    fill: none !important;
+}
+
+/* Темная тема для кнопки выбора ведущего */
+:root .leader-select-btn {
+    color: #b0b0b0 !important;
+}
+
+:root .leader-select-btn:hover {
+    color: white !important;
+}
+
+/* Светлая тема для кнопки выбора ведущего */
+[data-theme="light"] .leader-select-btn {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: #666666 !important;
+}
+
+[data-theme="light"] .leader-select-btn:hover {
+    background: var(--primary-color);
+    color: white !important;
+    border-color: var(--primary-color);
 }
 
 /* Увеличиваем padding справа для input чтобы кнопка не перекрывала текст */
@@ -1649,9 +1679,9 @@ textarea.form-control {
     color: var(--text-primary);
     font-size: 0.9375rem;
     transition: all 0.2s;
-    line-height: 1.5;
+    line-height: 1.4;
     min-height: 44px;
-    font-family: inherit;
+    height: auto;
     box-sizing: border-box;
 }
 
@@ -1723,9 +1753,11 @@ textarea.form-control {
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 12px;
-    padding: 0.875rem 2.5rem 0.875rem 1rem; /* Увеличиваем padding */
+    padding: 0.75rem 2.5rem 0.75rem 1rem; /* Правильные отступы для текста */
     cursor: pointer;
-    line-height: 1.5; /* Правильная высота строки */
+    line-height: 1.4; /* Правильная высота строки */
+    box-sizing: border-box;
+    display: block;
 }
 
 /* Стрелка для темной темы */
@@ -1852,12 +1884,18 @@ textarea.form-control {
     }
     
     .event-creation-modal .form-control {
-        padding: 0.75rem 0.875rem; /* Увеличиваем padding для мобильных */
+        padding: 0.625rem 0.875rem; /* Правильный padding для мобильных */
         font-size: 16px; /* Предотвращает зум на iOS */
         min-height: 44px; /* Достаточная высота */
-        line-height: 1.5; /* Правильная высота строки */
+        line-height: 1.4; /* Правильная высота строки */
     }
     
+    /* Специальная настройка для select на мобильных */
+    .event-creation-modal select.form-control {
+        padding-top: 0.625rem;
+        padding-bottom: 0.625rem;
+    }
+
     .event-creation-modal .form-row {
         flex-direction: column;
         gap: 1rem;
@@ -2081,17 +2119,4 @@ textarea.form-control {
     .user-item:hover {
         padding-left: 1rem;
     }
-}
-
-/* Светлая тема для кнопки выбора ведущего */
-[data-theme="light"] .leader-select-btn {
-    background: var(--bg-secondary);
-    border-color: var(--border-color);
-    color: var(--text-secondary);
-}
-
-[data-theme="light"] .leader-select-btn:hover {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
 }

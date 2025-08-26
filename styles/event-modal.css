@@ -42,6 +42,7 @@
     font-size: 14px;
     font-family: 'Montserrat', sans-serif;
     transition: all 0.2s ease;
+    box-sizing: border-box; /* Важно для правильного расчета размеров */
 }
 
 .form-input:focus,
@@ -66,10 +67,10 @@
     background-position: right 12px center;
     padding-right: 36px;
     appearance: none;
-    line-height: 1.6; /* Увеличиваем высоту строки для лучшей читаемости */
+    line-height: 1.4; /* Уменьшаем высоту строки */
     min-height: 48px; /* Увеличиваем минимальную высоту */
-    padding-top: 14px; /* Увеличиваем верхний отступ */
-    padding-bottom: 14px; /* Увеличиваем нижний отступ */
+    padding-top: 13px; /* Точная настройка верхнего отступа */
+    padding-bottom: 13px; /* Точная настройка нижнего отступа */
 }
 
 /* Кнопки формы */
@@ -459,11 +460,17 @@
     .form-input,
     .form-select,
     .form-textarea {
-        padding: 0.75rem 0.875rem; /* Увеличиваем padding для мобильных */
+        padding: 0.625rem 0.875rem; /* Сохраняем разумный padding */
         min-height: 44px; /* Достаточная высота для мобильных */
-        line-height: 1.5; /* Правильная высота строки */
+        line-height: 1.4; /* Правильная высота строки */
     }
     
+    /* Специальная настройка для select на мобильных */
+    .form-select {
+        padding-top: 0.625rem;
+        padding-bottom: 0.625rem;
+    }
+
     /* Компактные чипы участников */
     .participant-chip {
         padding: 0.375rem 0.75rem;
