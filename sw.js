@@ -1,5 +1,5 @@
-// Service Worker v363 - Unified key selector style with forced colors
-const CACHE_NAME = 'agape-worship-cache-v363';
+// Service Worker v364 - Force key selector styles with !important
+const CACHE_NAME = 'agape-worship-cache-v364';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
