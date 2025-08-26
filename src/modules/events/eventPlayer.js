@@ -36,19 +36,13 @@ class EventPlayer {
         this.overlay.className = 'event-player-overlay';
         this.overlay.innerHTML = `
             <div class="event-player-header">
-                <!-- Верхняя часть шапки -->
-                <div class="player-header-top">
-                    <button class="player-close-btn" aria-label="Закрыть плеер">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    
-                    <div class="player-song-title-wrapper">
+                <!-- Первая строка: закрытие, позиция, навигация -->
+                <div class="player-header-row-1">
+                    <div class="player-header-left">
+                        <button class="player-close-btn" aria-label="Закрыть плеер">
+                            <i class="fas fa-times"></i>
+                        </button>
                         <span class="player-song-number">1 / 1</span>
-                        <span class="player-song-name">Название песни</span>
-                        <div class="player-song-key-bpm">
-                            <span class="player-key">C</span>
-                            <span class="player-bpm">120 BPM</span>
-                        </div>
                     </div>
                     
                     <div class="player-nav-compact">
@@ -58,6 +52,15 @@ class EventPlayer {
                         <button class="player-nav-btn-small" id="player-next" aria-label="Следующая">
                             <i class="fas fa-chevron-right"></i>
                         </button>
+                    </div>
+                </div>
+                
+                <!-- Вторая строка: название песни и тональность/BPM -->
+                <div class="player-header-row-2">
+                    <span class="player-song-name">Название песни</span>
+                    <div class="player-song-key-bpm">
+                        <span class="player-key">C</span>
+                        <span class="player-bpm">120 BPM</span>
                     </div>
                 </div>
                 
@@ -252,7 +255,7 @@ class EventPlayer {
         this.currentKey = null;  // Сбрасываем тональность для загрузки из сетлиста
         
         // Устанавливаем базовый размер шрифта в зависимости от устройства
-        this.currentFontSize = window.innerWidth <= 768 ? 10 : 16;
+        this.currentFontSize = window.innerWidth <= 768 ? 12 : 16;
         
         if (!this.songs || this.songs.length === 0) {
             console.error('❌ Нет песен для отображения');
@@ -335,9 +338,25 @@ class EventPlayer {
         const song = this.songs[this.currentIndex];
         const numberEl = this.overlay.querySelector('.player-song-number');
         const nameEl = this.overlay.querySelector('.player-song-name');
+        const keyEl = this.overlay.querySelector('.player-key');
+        const bpmEl = this.overlay.querySelector('.player-bpm');
         
-        numberEl.textContent = `${this.currentIndex + 1} / ${this.songs.length}`;
+        // Обновляем номер и название песни
+        numberEl.textContent = `Песня ${this.currentIndex + 1}/${this.songs.length}`;
         nameEl.textContent = song.name || 'Без названия';
+        
+        // Обновляем тональность
+        const songKey = song.preferredKey || song.defaultKey || 'C';
+        keyEl.textContent = songKey;
+        
+        // Обновляем BPM
+        const bpm = song.BPM || song.bpm || song.tempo || '';
+        if (bpm && bpm !== 'NA') {
+            bpmEl.textContent = `${bpm} BPM`;
+            bpmEl.style.display = '';
+        } else {
+            bpmEl.style.display = 'none';
+        }
     }
     
     async displaySong(song) {

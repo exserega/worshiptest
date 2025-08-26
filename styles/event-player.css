@@ -49,15 +49,32 @@
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
+    padding-top: env(safe-area-inset-top, 0);
 }
 
-/* Верхняя часть шапки */
-.player-header-top {
+/* Первая строка шапки */
+.player-header-row-1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
-    gap: 10px;
+    padding: 8px 12px 4px;
+    border-bottom: 1px solid rgba(var(--border-color-rgb), 0.3);
+}
+
+.player-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Вторая строка шапки */
+.player-header-row-2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 12px 8px;
+    gap: 12px;
+    min-height: 32px;
 }
 
 .player-close-btn {
@@ -75,47 +92,46 @@
     background: var(--bg-hover);
 }
 
-/* Обертка для названия песни */
-.player-song-title-wrapper {
-    flex: 1;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    min-width: 0;
-}
-
 .player-song-number {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-secondary);
+    font-weight: 500;
 }
 
 .player-song-name {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     color: var(--text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
+    min-width: 0;
 }
 
 /* Тональность и BPM в шапке */
 .player-song-key-bpm {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
-    font-size: 12px;
+    flex-shrink: 0;
+    background: rgba(var(--accent-color-rgb), 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(var(--accent-color-rgb), 0.2);
 }
 
 .player-key {
     color: var(--accent-color);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13px;
 }
 
 .player-bpm {
-    color: var(--text-secondary);
-    font-size: 11px;
+    color: var(--accent-color);
+    font-size: 12px;
+    opacity: 0.8;
+    font-weight: 500;
 }
 
 /* Компактная навигация в шапке */
@@ -301,14 +317,58 @@
 }
 
 @media (max-width: 768px) {
+    /* Адаптация шапки плеера */
+    .player-header-row-1 {
+        padding: 6px 10px 3px;
+    }
+    
+    .player-header-row-2 {
+        padding: 3px 10px 6px;
+        min-height: 28px;
+    }
+    
+    .player-close-btn {
+        padding: 6px;
+        font-size: 20px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .player-song-number {
+        font-size: 11px;
+    }
+    
+    .player-song-name {
+        font-size: 14px;
+    }
+    
+    .player-song-key-bpm {
+        padding: 3px 8px;
+        gap: 6px;
+    }
+    
+    .player-key {
+        font-size: 12px;
+    }
+    
+    .player-bpm {
+        font-size: 11px;
+    }
+    
+    .player-nav-btn-small {
+        width: 32px;
+        height: 32px;
+    }
+    
+    /* Контент плеера */
     .event-player-content {
-        padding: 10px 5px; /* Отступы 5px слева и справа */
+        padding: 10px 5px;
         width: 100%;
         box-sizing: border-box;
     }
     
     .player-song-display {
-        padding: 0; /* Без отступов - максимум экрана */
+        padding: 0;
         width: 100%;
         box-sizing: border-box;
     }
@@ -334,7 +394,7 @@
 /* Размер шрифта для мобильных */
 @media (max-width: 768px) {
     .song-content {
-        font-size: 10px !important; /* Мелкий шрифт для смартфонов */
+        font-size: 12px !important; /* Увеличенный базовый шрифт для смартфонов */
         line-height: 1.4; /* Компактный межстрочный интервал */
     }
 }
@@ -713,6 +773,23 @@ body[data-theme="light"] .song-content .song-block-legend {
 
 /* Адаптивность для очень маленьких экранов (как в responsive.css) */
 @media (max-width: 380px) {
+    /* Скрываем BPM на очень маленьких экранах */
+    .player-bpm {
+        display: none;
+    }
+    
+    .player-song-name {
+        font-size: 13px;
+    }
+    
+    .player-song-key-bpm {
+        padding: 2px 6px;
+    }
+    
+    .player-key {
+        font-size: 11px;
+    }
+    
     /* УЛЬТРА-КОМПАКТНЫЕ блоки песни для очень маленьких экранов */
     .song-content .song-block {
         margin: 0px 0 !important;
