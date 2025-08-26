@@ -847,6 +847,65 @@ function setupSetlistEventHandlers() {
         console.error('🎵 [EventHandlers] create-new-setlist-header-btn не найден!');
     }
     
+    // ОБРАБОТЧИК КНОПКИ ПРЕЗЕНТАЦИИ - ВАЖНО!
+    if (ui.startPresentationButton) {
+        ui.startPresentationButton.addEventListener('click', async () => {
+            console.log('🎭 [EventHandlers] Presentation button clicked');
+            
+            // Получаем текущий выбранный сет-лист
+            const currentSetlistId = state.currentSetlistId;
+            const currentSetlist = state.setlists?.find(s => s.id === currentSetlistId);
+            
+            if (!currentSetlist) {
+                window.showNotification('Сначала выберите сет-лист', 'warning');
+                return;
+            }
+            
+            if (!currentSetlist.songs || currentSetlist.songs.length === 0) {
+                window.showNotification('В сет-листе нет песен', 'warning');
+                return;
+            }
+            
+            try {
+                // Подготавливаем данные песен для плеера
+                const fullSongsData = currentSetlist.songs
+                    .map(setlistSong => {
+                        const songDetails = state.allSongs.find(s => s.id === setlistSong.songId) || {};
+                        return { 
+                            ...songDetails, 
+                            ...setlistSong,
+                            // Используем preferredKey из сет-листа или defaultKey из песни
+                            key: setlistSong.preferredKey || songDetails.defaultKey || 'C'
+                        };
+                    })
+                    .filter(s => s.id)
+                    .sort((a, b) => a.order - b.order);
+                
+                // Скрываем скролл на основной странице
+                document.body.style.overflow = 'hidden';
+                
+                // Динамически импортируем модуль плеера
+                const { openEventPlayer } = await import('../modules/events/eventPlayer.js');
+                
+                // Открываем плеер с песнями сет-листа
+                // Передаем null вместо eventId, так как это не событие, а сет-лист
+                await openEventPlayer(null, fullSongsData, 0);
+                
+                console.log('✅ [EventHandlers] Player opened for setlist:', currentSetlist.name);
+                window.showNotification('Презентация запущена', 'success');
+                
+            } catch (error) {
+                console.error('❌ [EventHandlers] Error opening presentation:', error);
+                window.showNotification('Ошибка при запуске презентации', 'error');
+                // Восстанавливаем скролл
+                document.body.style.overflow = '';
+            }
+        });
+        console.log('🎭 [EventHandlers] Presentation button handler attached');
+    } else {
+        console.log('⚠️ [EventHandlers] Presentation button not found');
+    }
+    
     // ОБРАБОТЧИКИ КНОПОК ОВЕРЛЕЕВ - КРИТИЧЕСКИ ВАЖНО!
     
     // Кнопка закрытия overlay добавления песен

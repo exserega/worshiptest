@@ -1,5 +1,5 @@
-// Service Worker v351 - Update button text to "Добавленные"
-const CACHE_NAME = 'agape-worship-cache-v351';
+// Service Worker v352 - Add presentation player functionality
+const CACHE_NAME = 'agape-worship-cache-v352';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
