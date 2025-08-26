@@ -389,6 +389,75 @@ export class EventsCalendar {
         // Удаляем старый обработчик перед добавлением нового
         this.calendarDays.removeEventListener('click', this.dayClickHandler);
         this.calendarDays.addEventListener('click', this.dayClickHandler);
+        
+        // Добавляем обработчики свайпов для навигации по месяцам
+        this.attachSwipeHandlers();
+    }
+    
+    /**
+     * Привязка обработчиков свайпов для мобильных устройств
+     */
+    attachSwipeHandlers() {
+        let touchStartX = null;
+        let touchStartY = null;
+        const minSwipeDistance = 50; // Минимальная дистанция для регистрации свайпа
+        const maxVerticalDistance = 100; // Максимальное вертикальное отклонение
+        
+        // Обработчик начала касания
+        const handleTouchStart = (e) => {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        };
+        
+        // Обработчик окончания касания
+        const handleTouchEnd = (e) => {
+            if (!touchStartX || !touchStartY) {
+                return;
+            }
+            
+            const touch = e.changedTouches[0];
+            const touchEndX = touch.clientX;
+            const touchEndY = touch.clientY;
+            
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
+            
+            // Проверяем, что свайп горизонтальный
+            if (Math.abs(diffY) > maxVerticalDistance) {
+                touchStartX = null;
+                touchStartY = null;
+                return;
+            }
+            
+            // Определяем направление свайпа
+            if (Math.abs(diffX) > minSwipeDistance) {
+                if (diffX > 0) {
+                    // Свайп влево - следующий месяц
+                    this.navigateMonth(1);
+                } else {
+                    // Свайп вправо - предыдущий месяц
+                    this.navigateMonth(-1);
+                }
+            }
+            
+            // Сбрасываем начальные координаты
+            touchStartX = null;
+            touchStartY = null;
+        };
+        
+        // Обработчик отмены касания
+        const handleTouchCancel = () => {
+            touchStartX = null;
+            touchStartY = null;
+        };
+        
+        // Добавляем обработчики на контейнер календаря
+        if (this.calendarDays) {
+            this.calendarDays.addEventListener('touchstart', handleTouchStart, { passive: true });
+            this.calendarDays.addEventListener('touchend', handleTouchEnd, { passive: true });
+            this.calendarDays.addEventListener('touchcancel', handleTouchCancel, { passive: true });
+        }
     }
     
     /**
