@@ -735,8 +735,33 @@ class EventCreationModal {
                     user.name.toLowerCase().includes(query)
                 );
                 
-                // Обновляем список
-                list.innerHTML = this.renderParticipantsList(filtered, query, instrumentId);
+                // Очищаем список
+                list.innerHTML = '';
+                
+                // Добавляем отфильтрованных пользователей через DOM манипуляцию как в leader dropdown
+                filtered.forEach((user, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'user-item';
+                    item.dataset.userId = user.id;
+                    item.dataset.userName = user.name;
+                    item.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>${this.highlightMatch(user.name, query)}`;
+                    list.appendChild(item);
+                });
+                
+                // Если есть запрос и нет точного совпадения, показываем опцию создания
+                const exactMatch = filtered.some(u => u.name.toLowerCase() === query.toLowerCase());
+                if (!exactMatch) {
+                    const createItem = document.createElement('div');
+                    createItem.className = 'user-item create-new';
+                    createItem.dataset.query = query;
+                    createItem.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${query}</strong>`;
+                    list.appendChild(createItem);
+                }
+                
+                // Если нет результатов
+                if (filtered.length === 0 && exactMatch) {
+                    list.innerHTML = '<div class="empty-state">Не найдено участников</div>';
+                }
             }
         });
         
