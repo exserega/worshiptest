@@ -283,7 +283,8 @@ export class EventsCalendar {
             participants: event.participants || [],
             participantCount: event.participantCount || 0,
             leader: event.leader || '',
-            branchId: event.branchId
+            branchId: event.branchId,
+            songCount: event.songCount || 0
         }));
         
         dayEl.dataset.events = JSON.stringify(fullEventsData);
