@@ -132,6 +132,11 @@ class EventCreationModal {
                                        placeholder="Введите имя ведущего"
                                        autocomplete="off">
                                 <input type="hidden" id="eventLeader" value="">
+                                <button type="button" class="leader-select-btn" data-action="open-leader-selector" aria-label="Выбрать ведущего">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M12 14a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
                                 <div id="leaderDropdown" class="leader-dropdown"></div>
                             </div>
                         </div>
@@ -194,6 +199,12 @@ class EventCreationModal {
         // Обработчик изменения названия события
         const namePreset = document.getElementById('eventNamePreset');
         namePreset.addEventListener('change', () => this.updateEventName());
+        
+        // Обработчик кнопки выбора ведущего
+        const leaderSelectBtn = this.modal.querySelector('[data-action="open-leader-selector"]');
+        if (leaderSelectBtn) {
+            leaderSelectBtn.addEventListener('click', () => this.showLeaderSelector());
+        }
         
         // Обработчики для кнопок добавления участников
         const addParticipantBtns = this.modal.querySelectorAll('.add-participant-btn');
@@ -579,9 +590,16 @@ class EventCreationModal {
         const hiddenInput = document.getElementById('eventLeader');
         const dropdown = document.getElementById('leaderDropdown');
         
+        // Заполняем поля
         input.value = userName;
         hiddenInput.value = userId || `new:${userName}`;
-        dropdown.style.display = 'none';
+        
+        // Закрываем dropdown если он открыт
+        if (dropdown) {
+            dropdown.style.display = 'none';
+        }
+        
+        logger.log(`✅ Выбран ведущий: ${userName} (${userId || 'новый'})`);
     }
     
     showParticipantSelector(instrumentId) {
@@ -987,6 +1005,168 @@ class EventCreationModal {
         }
         document.body.style.overflow = '';
         window.eventCreationModal = null;
+    }
+
+    showLeaderSelector() {
+        // Создаем селектор ведущего (аналогично селектору участников)
+        const selector = document.createElement('div');
+        selector.className = 'participant-selector'; // Используем те же стили
+        selector.dataset.type = 'leader';
+        
+        selector.innerHTML = `
+            <div class="selector-content">
+                <div class="selector-header">
+                    <h3>Выбрать ведущего</h3>
+                    <button class="selector-close-btn" data-action="close-selector" aria-label="Закрыть">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="custom-participant-input">
+                    <input type="text" 
+                           id="leaderSearchInput" 
+                           placeholder="Введите имя для поиска или создания" 
+                           class="form-control"
+                           autocomplete="off">
+                </div>
+                <div class="user-list" id="leadersList">
+                    ${this.renderLeadersList(this.availableUsers, '')}
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(selector);
+        
+        // Привязываем обработчики
+        const closeBtn = selector.querySelector('[data-action="close-selector"]');
+        closeBtn.addEventListener('click', () => selector.remove());
+        
+        // Инициализируем поиск
+        this.initLeaderSearch(selector);
+        
+        // Привязываем обработчики для элементов списка
+        this.attachLeaderListHandlers(selector);
+        
+        // Фокус на поле ввода
+        setTimeout(() => {
+            document.getElementById('leaderSearchInput')?.focus();
+        }, 100);
+    }
+    
+    renderLeadersList(users, query) {
+        if (users.length === 0 && !query) {
+            return '<div class="empty-state">Нет доступных пользователей</div>';
+        }
+        
+        let html = '';
+        
+        // Показываем отфильтрованных пользователей
+        users.forEach((user) => {
+            html += `
+                <div class="user-item" data-user-id="${user.id}" data-user-name="${user.name}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    ${query ? this.highlightMatch(user.name, query) : user.name}
+                </div>
+            `;
+        });
+        
+        // Если есть запрос и нет точного совпадения, показываем опцию создания
+        if (query) {
+            const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
+            if (!exactMatch) {
+                html = `
+                    <div class="user-item create-new" data-query="${query}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Создать: <strong>${query}</strong>
+                    </div>
+                ` + html;
+            }
+        }
+        
+        return html || '<div class="empty-state">Не найдено пользователей</div>';
+    }
+    
+    initLeaderSearch(selector) {
+        const input = selector.querySelector('#leaderSearchInput');
+        const list = selector.querySelector('#leadersList');
+        
+        if (!input || !list) return;
+        
+        // Обработчик ввода
+        input.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            
+            if (query.length === 0) {
+                list.innerHTML = this.renderLeadersList(this.availableUsers, '');
+            } else {
+                // Фильтруем пользователей
+                const filtered = this.availableUsers.filter(user => 
+                    user.name.toLowerCase().includes(query)
+                );
+                
+                // Обновляем список
+                list.innerHTML = this.renderLeadersList(filtered, query);
+            }
+        });
+        
+        // Обработка клавиш (как в селекторе участников)
+        input.addEventListener('keydown', (e) => {
+            const items = list.querySelectorAll('.user-item');
+            const activeItem = list.querySelector('.user-item.active');
+            let index = Array.from(items).indexOf(activeItem);
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (index < items.length - 1) index++;
+                else index = 0;
+                this.setActiveParticipantItem(items[index]);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (index > 0) index--;
+                else index = items.length - 1;
+                this.setActiveParticipantItem(items[index]);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeItem) {
+                    activeItem.click();
+                } else if (items.length === 1) {
+                    items[0].click();
+                } else if (input.value.trim()) {
+                    // Создаем нового ведущего
+                    this.selectLeader(null, input.value.trim());
+                    selector.remove();
+                }
+            } else if (e.key === 'Escape') {
+                selector.remove();
+            }
+        });
+    }
+    
+    attachLeaderListHandlers(selector) {
+        const list = selector.querySelector('#leadersList');
+        
+        // Делегирование событий для динамического списка
+        list.addEventListener('click', (e) => {
+            const userItem = e.target.closest('.user-item');
+            if (!userItem) return;
+            
+            if (userItem.classList.contains('create-new')) {
+                const query = userItem.dataset.query;
+                this.selectLeader(null, query);
+            } else {
+                const userId = userItem.dataset.userId;
+                const userName = userItem.dataset.userName;
+                this.selectLeader(userId, userName);
+            }
+            
+            // Закрываем селектор
+            selector.remove();
+        });
     }
 }
 

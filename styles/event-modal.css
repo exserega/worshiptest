@@ -66,8 +66,10 @@
     background-position: right 12px center;
     padding-right: 36px;
     appearance: none;
-    line-height: 1.5; /* Добавляем высоту строки */
-    min-height: 44px; /* Минимальная высота для лучшей читаемости */
+    line-height: 1.6; /* Увеличиваем высоту строки для лучшей читаемости */
+    min-height: 48px; /* Увеличиваем минимальную высоту */
+    padding-top: 14px; /* Увеличиваем верхний отступ */
+    padding-bottom: 14px; /* Увеличиваем нижний отступ */
 }
 
 /* Кнопки формы */
@@ -457,8 +459,9 @@
     .form-input,
     .form-select,
     .form-textarea {
-        padding: 0.625rem 0.875rem;
-        min-height: 40px;
+        padding: 0.75rem 0.875rem; /* Увеличиваем padding для мобильных */
+        min-height: 44px; /* Достаточная высота для мобильных */
+        line-height: 1.5; /* Правильная высота строки */
     }
     
     /* Компактные чипы участников */
