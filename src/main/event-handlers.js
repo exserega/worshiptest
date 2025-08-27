@@ -940,8 +940,12 @@ function setupSetlistEventHandlers() {
     }
     
     // ОБРАБОТЧИК КНОПКИ "В КАЛЕНДАРЬ" - НОВАЯ ИНТЕГРАЦИЯ
-    if (ui.addToCalendarButton) {
-        ui.addToCalendarButton.addEventListener('click', async () => {
+    // Проверяем наличие кнопки через прямой поиск, так как она может быть скрыта
+    const calendarBtn = document.getElementById('add-to-calendar-btn');
+    console.log('📅 [EventHandlers] Looking for calendar button, found:', calendarBtn);
+    
+    if (calendarBtn) {
+        calendarBtn.addEventListener('click', async () => {
             console.log('📅 [EventHandlers] Add to calendar button clicked');
             
             // Получаем текущий выбранный сет-лист
@@ -961,9 +965,10 @@ function setupSetlistEventHandlers() {
                 window.showNotification('Функция недоступна', 'error');
             }
         });
-        console.log('📅 [EventHandlers] Calendar button handler attached');
+        console.log('📅 [EventHandlers] Calendar button handler attached successfully');
     } else {
-        console.log('⚠️ [EventHandlers] Calendar button not found');
+        console.warn('⚠️ [EventHandlers] Calendar button not found in DOM');
+        console.log('⚠️ [EventHandlers] Will retry to attach handler when setlist is selected');
     }
     
     // ОБРАБОТЧИКИ КНОПОК ОВЕРЛЕЕВ - КРИТИЧЕСКИ ВАЖНО!

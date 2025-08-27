@@ -1,5 +1,5 @@
-// Service Worker v370 - Date picker modal for calendar integration
-const CACHE_NAME = 'agape-worship-cache-v370';
+// Service Worker v371 - Fix calendar button event handler
+const CACHE_NAME = 'agape-worship-cache-v371';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
