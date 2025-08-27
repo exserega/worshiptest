@@ -586,8 +586,21 @@ function debounce(func, wait) {
 document.addEventListener('DOMContentLoaded', async () => {
     // Ждем инициализации Firebase
     if (window.firebase && window.firebase.auth) {
-        // Даем время Firebase полностью инициализироваться
+        // Ждем пока Firebase Auth определит состояние пользователя
+        const auth = window.firebase.auth();
+        
+        // Используем промис для ожидания первого вызова onAuthStateChanged
+        await new Promise((resolve) => {
+            const unsubscribe = auth.onAuthStateChanged((user) => {
+                // Отписываемся после первого вызова
+                unsubscribe();
+                resolve();
+            });
+        });
+        
+        // Небольшая задержка для стабильности
         await new Promise(resolve => setTimeout(resolve, 100));
+        
         initializePage();
     } else {
         logger.error('❌ Firebase not initialized');
