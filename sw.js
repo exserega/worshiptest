@@ -1,5 +1,5 @@
-// Service Worker v438 - Fix: use standard Firebase init approach like main page
-const CACHE_NAME = 'agape-worship-cache-v438';
+// Service Worker v439 - Fix: improved song loading with better format handling
+const CACHE_NAME = 'agape-worship-cache-v439';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

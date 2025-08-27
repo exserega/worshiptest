@@ -409,15 +409,27 @@ async function loadSetlistSongs(setlistId, container) {
         
         // Находим сет-лист
         const setlist = archiveSetlists.find(s => s.id === setlistId);
+        logger.log('Loading songs for setlist:', setlistId, setlist);
+        
         if (!setlist || !setlist.songs || setlist.songs.length === 0) {
             container.innerHTML = '<div class="no-songs">Нет песен в сет-листе</div>';
             return;
         }
         
+        logger.log('Setlist songs:', setlist.songs);
+        
         // Загружаем информацию о песнях из коллекции songs
         const songIds = setlist.songs
-            .map(s => typeof s === 'string' ? s : s.id)
-            .filter(id => id); // Фильтруем undefined
+            .map(s => {
+                // Обрабатываем разные форматы хранения песен
+                if (typeof s === 'string') return s;
+                if (s && s.id) return s.id;
+                if (s && s.songId) return s.songId; // Возможно используется songId
+                return null;
+            })
+            .filter(id => id); // Фильтруем null/undefined
+            
+        logger.log('Song IDs to load:', songIds);
             
         if (songIds.length === 0) {
             container.innerHTML = '<div class="no-songs">Нет корректных песен в сет-листе</div>';
@@ -436,13 +448,21 @@ async function loadSetlistSongs(setlistId, container) {
         // Создаем HTML для песен
         const songsHtml = setlist.songs.map((songRef, index) => {
             // Обрабатываем разные форматы хранения песен
-            const songId = typeof songRef === 'string' ? songRef : songRef.id;
+            let songId;
+            if (typeof songRef === 'string') {
+                songId = songRef;
+            } else if (songRef && songRef.id) {
+                songId = songRef.id;
+            } else if (songRef && songRef.songId) {
+                songId = songRef.songId;
+            }
+            
             const song = songsMap.get(songId);
             const songName = song ? song.name : 'Неизвестная песня';
             
             // Если songRef это объект, берем key и bpm оттуда, иначе из song
-            const key = (typeof songRef === 'object' ? songRef.key : null) || song?.originalKey || '-';
-            const bpm = (typeof songRef === 'object' ? songRef.bpm : null) || song?.bpm || '-';
+            const key = (typeof songRef === 'object' && songRef.key) ? songRef.key : (song?.originalKey || '-');
+            const bpm = (typeof songRef === 'object' && songRef.bpm) ? songRef.bpm : (song?.bpm || '-');
             
             return `
                 <div class="song-item">
