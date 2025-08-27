@@ -2,68 +2,20 @@
  * Стили для интеграции сет-листов с календарем
  */
 
-/* Оверлей модального окна */
-#date-picker-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+/* Используем стили из global-overlay */
+#date-picker-modal.global-overlay {
+    /* Наследуем стили от .global-overlay из основных стилей */
 }
 
-/* Модальное окно выбора даты */
-.date-picker-modal {
-    background: var(--modal-background, #1f2937);
-    border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    max-width: 420px;
-    width: 100%;
-    max-height: 90vh;
-    overflow: hidden;
-    position: relative;
+/* Контент модального окна выбора даты */
+.overlay-content.date-picker-modal {
+    max-width: 420px !important;
+    width: 90% !important;
 }
 
-.date-picker-modal .modal-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.date-picker-modal .modal-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: var(--text-primary);
-    font-weight: 600;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.date-picker-modal .close-btn {
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
-
-.date-picker-modal .close-btn:hover {
-    background: var(--hover-color);
-    color: var(--text-primary);
+/* Дополнительные стили для заголовка */
+.date-picker-modal .overlay-header i {
+    color: var(--accent-color);
 }
 
 /* Информация о сет-листе */

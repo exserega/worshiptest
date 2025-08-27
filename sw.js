@@ -1,5 +1,5 @@
-// Service Worker v373 - Improved date picker modal design
-const CACHE_NAME = 'agape-worship-cache-v373';
+// Service Worker v374 - Fix date picker modal display issue
+const CACHE_NAME = 'agape-worship-cache-v374';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

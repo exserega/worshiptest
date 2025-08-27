@@ -29,16 +29,22 @@ class DatePickerModal {
      */
     createModal() {
         const modalHTML = `
-            <div id="date-picker-modal" class="modal-overlay" style="display: none;">
-                <div class="modal-content date-picker-modal">
-                    <div class="modal-header">
-                        <h3>Добавить в календарь</h3>
-                        <button class="close-btn" aria-label="Закрыть">
+            <div id="date-picker-modal" class="global-overlay">
+                <div class="overlay-content date-picker-modal">
+                    <div class="overlay-header">
+                        <div class="header-info">
+                            <i class="fas fa-calendar-plus"></i>
+                            <div>
+                                <h3>Добавить в календарь</h3>
+                                <p>Выберите дату для события</p>
+                            </div>
+                        </div>
+                        <button class="overlay-close-btn" aria-label="Закрыть">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
-                    <div class="modal-body">
+                    <div class="overlay-body">
                         <div class="setlist-info">
                             <div class="info-icon">
                                 <i class="fas fa-music"></i>
@@ -80,7 +86,7 @@ class DatePickerModal {
                         </div>
                     </div>
                     
-                    <div class="modal-footer">
+                    <div class="overlay-footer">
                         <button class="btn-secondary cancel-btn">Отмена</button>
                         <button class="btn-primary continue-btn" disabled>
                             <span>Далее</span>
@@ -109,7 +115,7 @@ class DatePickerModal {
      */
     attachEventListeners() {
         const modal = this.modal;
-        const closeBtn = modal.querySelector('.close-btn');
+        const closeBtn = modal.querySelector('.overlay-close-btn');
         const cancelBtn = modal.querySelector('.cancel-btn');
         const continueBtn = modal.querySelector('.continue-btn');
         const dateInput = modal.querySelector('#event-date-input');
@@ -191,7 +197,7 @@ class DatePickerModal {
         continueBtn.disabled = true;
         
         // Показываем модальное окно
-        this.modal.style.display = 'flex';
+        this.modal.classList.add('show');
         document.addEventListener('keydown', this.escapeHandler);
         
         // Фокус на поле даты
@@ -204,7 +210,7 @@ class DatePickerModal {
      * Закрыть модальное окно
      */
     close() {
-        this.modal.style.display = 'none';
+        this.modal.classList.remove('show');
         document.removeEventListener('keydown', this.escapeHandler);
         
         // Очистка данных
