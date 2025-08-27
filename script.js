@@ -1022,17 +1022,15 @@ window.addSetlistToCalendar = async function(setlistId) {
         logger.log('📅 Открываем создание нового события');
         
         // Импортируем модальное окно создания события
-        const { openEventModal } = await import('./src/modules/events/eventModal.js');
+        const { openEventCreationModal } = await import('./src/modules/events/eventCreationModal.js');
         
-        // Подготавливаем данные для нового события
-        const eventData = {
-            date: new Date(selectedDate),
-            setlistId: setlistData.id,
-            name: setlistData.name // Предзаполняем название из сет-листа
-        };
-        
-        // Открываем модальное окно
-        openEventModal(eventData);
+        // Открываем модальное окно с предзаполненными данными
+        openEventCreationModal(new Date(selectedDate), async (createdEvent) => {
+            // После успешного создания события добавляем к нему сет-лист
+            if (createdEvent && createdEvent.id) {
+                await updateEventSetlist(createdEvent.id, setlistData.id, setlistData.name);
+            }
+        });
     }
     
     /**

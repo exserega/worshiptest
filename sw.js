@@ -1,5 +1,5 @@
-// Service Worker v396 - Complete redesign of action buttons with minimalist style
-const CACHE_NAME = 'agape-worship-cache-v396';
+// Service Worker v397 - Fix event creation modal import path
+const CACHE_NAME = 'agape-worship-cache-v397';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
