@@ -1,5 +1,5 @@
-// Service Worker v397 - Fix event creation modal import path
-const CACHE_NAME = 'agape-worship-cache-v397';
+// Service Worker v398 - Fix event creation modal styling and display
+const CACHE_NAME = 'agape-worship-cache-v398';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
