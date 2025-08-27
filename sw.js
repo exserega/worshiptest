@@ -1,5 +1,5 @@
-// Service Worker v431 - Fix: restore firebase-init exports, fix module loading
-const CACHE_NAME = 'agape-worship-cache-v431';
+// Service Worker v432 - Fix: archive page firebase loading with separate global init
+const CACHE_NAME = 'agape-worship-cache-v432';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -17,6 +17,7 @@ const urlsToCache = [
   './js/constants.js',
   './js/firebase-config.js',
   './firebase-init.js',
+  './firebase-init-global.js',
   // Модульные UI для офлайн
   './src/main/initialization.js',
   './src/main/controller.js',
