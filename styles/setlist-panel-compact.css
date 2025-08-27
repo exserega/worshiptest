@@ -123,32 +123,41 @@
 #setlists-panel .action-buttons {
     display: flex !important;
     flex-direction: row !important;
-    gap: 4px !important;
+    gap: 3px !important;
     flex-wrap: nowrap !important;
     overflow-x: hidden !important;
+    width: 100% !important;
 }
 
 #setlists-panel .action-btn {
-    padding: 6px 10px !important;
+    padding: 6px 8px !important;
     min-height: 30px !important;
-    font-size: 0.8rem !important;
+    font-size: 0.75rem !important;
     border-radius: 6px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    flex-shrink: 1 !important;
+    min-width: 0 !important;
 }
 
 #setlists-panel .action-btn i {
     font-size: 0.7rem !important;
+    margin-right: 4px !important;
 }
 
 #setlists-panel .primary-action {
     background: var(--primary-color) !important;
     color: var(--color-button-text) !important;
     border: 1px solid var(--primary-color) !important;
+    flex: 0 1 auto !important;
 }
 
 #setlists-panel .secondary-action {
     background: transparent !important;
     color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
+    flex: 0 1 auto !important;
 }
 
 #setlists-panel .calendar-action {
@@ -158,12 +167,13 @@
     min-width: auto !important;
     width: auto !important;
     height: 30px !important;
-    padding: 6px 10px !important;
+    padding: 6px 8px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     border-radius: 6px !important;
     transition: all 0.2s ease !important;
+    flex-shrink: 0 !important;
 }
 
 #setlists-panel .calendar-action:hover {
@@ -243,5 +253,21 @@ body[data-theme="light"] #setlists-panel .create-btn-modern {
     
     #setlists-panel .action-btn {
         padding: 8px !important;
+    }
+}
+
+/* Дополнительная адаптация для кнопок действий */
+@media (max-width: 360px) {
+    #setlists-panel .action-btn span {
+        display: none !important;
+    }
+    
+    #setlists-panel .action-btn {
+        padding: 6px !important;
+        min-width: 36px !important;
+    }
+    
+    #setlists-panel .action-btn i {
+        margin-right: 0 !important;
     }
 }

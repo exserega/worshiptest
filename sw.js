@@ -1,5 +1,5 @@
-// Service Worker v390 - Fix button sizes and modal colors for both themes
-const CACHE_NAME = 'agape-worship-cache-v390';
+// Service Worker v391 - Make all action buttons more compact
+const CACHE_NAME = 'agape-worship-cache-v391';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
