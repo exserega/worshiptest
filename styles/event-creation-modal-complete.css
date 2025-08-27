@@ -224,7 +224,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    align-items: stretch; /* Растягиваем элементы на всю высоту */
+    align-items: start; /* Выравниваем по верху */
+    margin-bottom: 0; /* Убираем нижний отступ у строки */
 }
 
 /* Убираем разное выравнивание для групп форм внутри row */
@@ -232,7 +233,6 @@
     margin-bottom: 0 !important; /* Убираем нижний отступ для элементов в строке */
     margin-top: 0 !important; /* Убираем верхний отступ */
     display: block; /* Отменяем flex для элементов в строке */
-    gap: 0; /* Убираем gap */
 }
 
 /* Отменяем стили для соседних form-group внутри form-row */
@@ -247,7 +247,7 @@
 /* Убеждаемся что инпуты даты и времени одинаковой высоты */
 .event-creation-modal .form-row input[type="date"],
 .event-creation-modal .form-row input[type="time"] {
-    height: 48px; /* Фиксированная высота */
+    height: 44px; /* Стандартная высота как у других полей */
     box-sizing: border-box;
 }
 
@@ -325,6 +325,99 @@
 .event-creation-modal .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: var(--text-secondary);
+}
+
+/* Стили для поля выбора ведущего */
+.leader-selector-wrapper {
+    position: relative;
+}
+
+.leader-select-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: rgba(34, 211, 238, 0.1); /* Прозрачный фон с оттенком primary */
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 8px;
+    color: var(--primary-color) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.leader-select-btn:hover {
+    background: rgba(34, 211, 238, 0.2);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+    /* Убираем transform чтобы кнопка не двигалась */
+}
+
+.leader-select-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.leader-select-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.leader-select-btn svg path {
+    stroke: currentColor !important;
+    fill: none !important;
+    stroke-width: 2;
+}
+
+/* Темная тема для кнопки выбора ведущего */
+:root .leader-select-btn {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: rgba(34, 211, 238, 0.2);
+    color: var(--primary-color) !important;
+}
+
+:root .leader-select-btn:hover {
+    background: rgba(34, 211, 238, 0.2);
+    color: var(--accent-color) !important;
+}
+
+/* Светлая тема для кнопки выбора ведущего */
+[data-theme="light"] .leader-select-btn {
+    background: rgba(51, 154, 240, 0.08);
+    border-color: rgba(51, 154, 240, 0.2);
+    color: var(--primary-color) !important;
+}
+
+[data-theme="light"] .leader-select-btn:hover {
+    background: rgba(51, 154, 240, 0.15);
+    border-color: var(--primary-color);
+    color: var(--secondary-color) !important;
+    box-shadow: 0 0 10px rgba(51, 154, 240, 0.2);
+}
+
+/* Увеличиваем padding справа для input чтобы кнопка не перекрывала текст */
+.leader-selector-wrapper input {
+    padding-right: 48px;
+}
+
+.leader-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    display: none;
 }
 
 /* Группы инструментов - Минималистичный дизайн */
@@ -488,13 +581,15 @@
     }
     
     .event-creation-modal .form-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr; /* Сохраняем две колонки даже на мобильных */
+        gap: 0.75rem; /* Уменьшаем gap для мобильных */
     }
     
-    /* Восстанавливаем отступ для элементов в колонке на мобильных */
+    /* Фиксированная высота для инпутов даты и времени на мобильных */
     .event-creation-modal .form-row input[type="date"],
     .event-creation-modal .form-row input[type="time"] {
-        height: 44px; /* Стандартная высота для мобильных */
+        height: 44px;
+        font-size: 16px; /* Предотвращаем зум на iOS */
     }
     
     .event-creation-modal .modal-footer {
@@ -530,6 +625,22 @@
     .event-creation-modal .participant-chip button {
         width: 28px;
         height: 28px;
+    }
+    
+    /* Кнопка выбора ведущего на мобильных */
+    .leader-select-btn {
+        width: 28px;
+        height: 28px;
+        right: 6px;
+    }
+    
+    .leader-select-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .leader-selector-wrapper input {
+        padding-right: 40px;
     }
 }
 

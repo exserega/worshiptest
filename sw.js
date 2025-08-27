@@ -1,5 +1,5 @@
-// Service Worker v405 - Complete 1:1 event modal styles from events page
-const CACHE_NAME = 'agape-worship-cache-v405';
+// Service Worker v406 - Fix date/time row, leader button and participant plus icons
+const CACHE_NAME = 'agape-worship-cache-v406';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
