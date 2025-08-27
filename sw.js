@@ -1,5 +1,5 @@
-// Service Worker v377 - Force cache update for dateInput fix
-const CACHE_NAME = 'agape-worship-cache-v377';
+// Service Worker v378 - Add event checking functionality
+const CACHE_NAME = 'agape-worship-cache-v378';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -22,6 +22,7 @@ const urlsToCache = [
   './src/modules/integration/datePickerModal.js',
   './src/modules/integration/integrationStyles.css',
   './src/modules/integration/calendarStyles.css',
+  './src/modules/integration/eventChecker.js',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются

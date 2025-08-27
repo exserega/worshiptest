@@ -974,11 +974,29 @@ window.addSetlistToCalendar = async function(setlistId) {
         datePickerModal.open(setlist, async (selectedDate, setlistData) => {
             logger.log('📅 Выбрана дата:', selectedDate, 'для сет-листа:', setlistData.name);
             
-            // Временно показываем результат
-            window.showNotification(`📅 Дата выбрана: ${new Date(selectedDate).toLocaleDateString('ru-RU')}`, 'info');
+            // Проверяем события на выбранную дату
+            const { checkEventsOnDate, getEventsDescription } = await import('./src/modules/integration/eventChecker.js');
+            const events = await checkEventsOnDate(selectedDate);
             
-            // TODO: В следующем этапе здесь будет проверка событий на выбранную дату
-            console.log('Следующий шаг: проверка событий на дату', selectedDate);
+            // Показываем информацию о найденных событиях
+            const description = getEventsDescription(events);
+            window.showNotification(`📅 ${description}`, 'info');
+            
+            // Обрабатываем результат
+            if (events.length === 0) {
+                // Нет событий - предлагаем создать новое
+                logger.log('📅 На дату нет событий, предлагаем создать новое');
+                // TODO: handleCreateNewEvent(selectedDate, setlistData);
+            } else if (events.length === 1) {
+                // Одно событие - проверяем, есть ли у него сет-лист
+                const event = events[0];
+                logger.log('📅 Найдено одно событие:', event.name, 'Сет-лист:', event.setlistId ? 'есть' : 'нет');
+                // TODO: handleSingleEvent(event, setlistData);
+            } else {
+                // Несколько событий - показываем выбор
+                logger.log('📅 Найдено несколько событий, показываем выбор');
+                // TODO: handleMultipleEvents(events, selectedDate, setlistData);
+            }
         });
         
     } catch (error) {

@@ -1,0 +1,118 @@
+/**
+ * Модуль для проверки событий на выбранную дату
+ * Часть интеграции сет-листов с календарем событий
+ */
+
+import { db } from '../../js/firebase-init.js';
+import { getCurrentUserBranch } from '../branches/branchSelection.js';
+import logger from '../../utils/logger.js';
+
+/**
+ * Проверяет события на конкретную дату
+ * @param {string} dateString - Дата в формате YYYY-MM-DD
+ * @returns {Promise<Array>} Массив событий на эту дату
+ */
+export async function checkEventsOnDate(dateString) {
+    try {
+        logger.log('📅 Проверка событий на дату:', dateString);
+        
+        // Получаем текущий филиал пользователя
+        const userBranch = await getCurrentUserBranch();
+        if (!userBranch) {
+            logger.warn('❌ Филиал пользователя не найден');
+            return [];
+        }
+        
+        // Создаем объекты даты для начала и конца дня
+        const startOfDay = new Date(dateString);
+        startOfDay.setHours(0, 0, 0, 0);
+        
+        const endOfDay = new Date(dateString);
+        endOfDay.setHours(23, 59, 59, 999);
+        
+        // Запрашиваем события из Firestore
+        const eventsRef = db.collection('events');
+        const query = eventsRef
+            .where('branchId', '==', userBranch.branchId)
+            .where('date', '>=', startOfDay)
+            .where('date', '<=', endOfDay)
+            .where('archived', '==', false);
+            
+        const snapshot = await query.get();
+        
+        const events = [];
+        snapshot.forEach(doc => {
+            const eventData = doc.data();
+            events.push({
+                id: doc.id,
+                ...eventData,
+                // Преобразуем timestamp в строку для удобства
+                dateString: eventData.date.toDate().toISOString()
+            });
+        });
+        
+        logger.log(`📅 Найдено ${events.length} событий на дату ${dateString}`);
+        
+        // Сортируем события по времени
+        events.sort((a, b) => a.date.toDate() - b.date.toDate());
+        
+        return events;
+        
+    } catch (error) {
+        logger.error('❌ Ошибка при проверке событий:', error);
+        return [];
+    }
+}
+
+/**
+ * Проверяет, есть ли у события сет-лист
+ * @param {Object} event - Объект события
+ * @returns {boolean}
+ */
+export function eventHasSetlist(event) {
+    return !!(event && event.setlistId);
+}
+
+/**
+ * Форматирует информацию о событии для отображения
+ * @param {Object} event - Объект события
+ * @returns {Object} Отформатированная информация
+ */
+export function formatEventInfo(event) {
+    if (!event) return null;
+    
+    const date = event.date.toDate ? event.date.toDate() : new Date(event.dateString);
+    const time = date.toLocaleTimeString('ru-RU', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+    });
+    
+    return {
+        id: event.id,
+        name: event.name || 'Без названия',
+        time: time,
+        hasSetlist: eventHasSetlist(event),
+        setlistId: event.setlistId || null,
+        leaderName: event.leaderName || 'Не указан',
+        participantCount: event.participantCount || 0
+    };
+}
+
+/**
+ * Создает описание для списка событий
+ * @param {Array} events - Массив событий
+ * @returns {string} Текстовое описание
+ */
+export function getEventsDescription(events) {
+    if (!events || events.length === 0) {
+        return 'На эту дату нет событий';
+    }
+    
+    if (events.length === 1) {
+        const event = events[0];
+        const info = formatEventInfo(event);
+        return `Найдено событие: "${info.name}" в ${info.time}`;
+    }
+    
+    return `Найдено ${events.length} события на эту дату`;
+}
