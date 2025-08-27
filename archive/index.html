@@ -64,14 +64,22 @@
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
-            <div class="groups-scroll-container">
-                <div class="groups-list" id="groups-list">
-                    <button class="group-chip active" data-group-id="all">
-                        Все
-                        <span class="group-count">0</span>
-                    </button>
-                    <!-- Группы будут добавлены динамически -->
+            <div class="groups-scroll-wrapper" style="position: relative;">
+                <button class="scroll-arrow left" id="scroll-left" style="display: none;">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="groups-scroll-container" id="groups-scroll-container">
+                    <div class="groups-list" id="groups-list">
+                        <button class="group-chip active" data-group-id="all">
+                            Все
+                            <span class="group-count">0</span>
+                        </button>
+                        <!-- Группы будут добавлены динамически -->
+                    </div>
                 </div>
+                <button class="scroll-arrow right" id="scroll-right" style="display: none;">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
         

@@ -270,6 +270,10 @@ function createSetlistCard(setlist) {
                 <i class="fas fa-calendar-plus"></i>
                 В календарь
             </button>
+            <button class="action-btn" onclick="addToGroup('${setlist.id}')">
+                <i class="fas fa-folder-plus"></i>
+                В группу
+            </button>
             <button class="action-btn" onclick="editSetlist('${setlist.id}')">
                 <i class="fas fa-edit"></i>
             </button>
@@ -302,6 +306,9 @@ function setupEventHandlers() {
             applyFiltersAndSort();
         }
     });
+    
+    // Настройка стрелок скролла для групп
+    setupGroupsScrollArrows();
     
     // Сортировка
     elements.sortButtons.forEach(btn => {
@@ -345,6 +352,15 @@ window.addToCalendar = function(setlistId) {
 };
 
 /**
+ * Добавление в группу
+ */
+window.addToGroup = function(setlistId) {
+    // TODO: Открыть модальное окно выбора группы
+    logger.log('Add to group:', setlistId);
+    alert('Добавление в группу - в разработке');
+};
+
+/**
  * Редактирование сет-листа
  */
 window.editSetlist = function(setlistId) {
@@ -366,6 +382,41 @@ function showLoading(show) {
 function showError(message) {
     // TODO: Использовать существующую систему уведомлений
     alert(message);
+}
+
+/**
+ * Настройка стрелок скролла для групп
+ */
+function setupGroupsScrollArrows() {
+    const scrollContainer = document.getElementById('groups-scroll-container');
+    const leftArrow = document.getElementById('scroll-left');
+    const rightArrow = document.getElementById('scroll-right');
+    
+    if (!scrollContainer || !leftArrow || !rightArrow) return;
+    
+    // Показываем стрелки только на десктопе
+    if (window.innerWidth >= 768) {
+        const checkScroll = () => {
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            leftArrow.style.display = scrollContainer.scrollLeft > 0 ? 'flex' : 'none';
+            rightArrow.style.display = scrollContainer.scrollLeft < maxScroll ? 'flex' : 'none';
+        };
+        
+        // Прокрутка при клике на стрелки
+        leftArrow.addEventListener('click', () => {
+            scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
+        });
+        
+        rightArrow.addEventListener('click', () => {
+            scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
+        });
+        
+        // Проверка при скролле
+        scrollContainer.addEventListener('scroll', checkScroll);
+        
+        // Начальная проверка
+        setTimeout(checkScroll, 100);
+    }
 }
 
 /**

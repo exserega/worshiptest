@@ -87,16 +87,17 @@
 
 .search-icon {
     position: absolute;
-    left: 12px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-secondary, #9ca3af);
     font-size: 0.9rem;
+    pointer-events: none;
 }
 
 .search-input {
     width: 100%;
-    padding: 10px 12px 10px 36px;
+    padding: 10px 36px 10px 12px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 8px;
@@ -120,6 +121,7 @@
     padding: 1rem 1.5rem;
     background: var(--bg-secondary, #1f2937);
     border-bottom: 1px solid var(--border-color, #374151);
+    position: relative;
 }
 
 .groups-header {
@@ -163,6 +165,7 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    position: relative;
 }
 
 .groups-scroll-container::-webkit-scrollbar {
@@ -173,6 +176,45 @@
     display: flex;
     gap: 8px;
     padding-bottom: 4px;
+}
+
+/* Стрелки скролла для десктопа */
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    display: none; /* Скрыты по умолчанию, покажем через JS */
+}
+
+.scroll-arrow:hover {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white;
+}
+
+.scroll-arrow.left {
+    left: -40px;
+}
+
+.scroll-arrow.right {
+    right: -40px;
+}
+
+@media (min-width: 768px) {
+    .groups-scroll-container {
+        margin: 0 40px;
+    }
 }
 
 .group-chip {
@@ -214,34 +256,36 @@
 
 /* Секция сортировки */
 .archive-sort-section {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     background: var(--bg-secondary, #1f2937);
     border-bottom: 1px solid var(--border-color, #374151);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
 .sort-label {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--text-secondary, #9ca3af);
     font-weight: 500;
 }
 
 .sort-buttons {
     display: flex;
-    gap: 8px;
+    gap: 6px;
+    flex: 1;
 }
 
 .sort-btn {
-    padding: 4px 12px;
+    padding: 3px 8px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 6px;
     color: var(--text-secondary, #9ca3af) !important;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
 .sort-btn:hover {
