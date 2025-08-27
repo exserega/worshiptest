@@ -210,6 +210,7 @@ function renderSetlists() {
 function createSetlistCard(setlist) {
     const card = document.createElement('div');
     card.className = 'archive-setlist-card';
+    card.dataset.setlistId = setlist.id;
     
     const songCount = setlist.songs?.length || 0;
     const creatorName = setlist.creatorName || 'Неизвестно';
@@ -234,14 +235,6 @@ function createSetlistCard(setlist) {
                     <i class="fas fa-user"></i>
                     ${creatorName}
                 </div>
-                ${setlist.groups ? `
-                    <div class="setlist-groups">
-                        ${setlist.groups.map(groupId => {
-                            const group = archiveGroups.find(g => g.id === groupId);
-                            return group ? `<span class="group-tag">${group.name}</span>` : '';
-                        }).join('')}
-                    </div>
-                ` : ''}
             </div>
         </div>
         
@@ -255,32 +248,66 @@ function createSetlistCard(setlist) {
                 ${dateStr}
             </div>
             <div class="meta-item">
-                <i class="fas fa-play-circle"></i>
-                ${usageCount} раз
+                <i class="fas fa-chart-line"></i>
+                Использований: ${usageCount}
             </div>
         </div>
         
-        <button class="edit-btn-corner" onclick="editSetlist('${setlist.id}')" title="Редактировать">
+        <button class="edit-btn-corner" title="Редактировать">
             <i class="fas fa-edit"></i>
         </button>
         
         <div class="setlist-actions">
             <div class="setlist-actions-row">
-                <button class="action-btn" onclick="addToCalendar('${setlist.id}')">
+                <button class="action-btn" data-action="calendar">
                     <i class="fas fa-calendar-plus"></i>
                     В календарь
                 </button>
-                <button class="action-btn" onclick="addToGroup('${setlist.id}')">
+                <button class="action-btn" data-action="group">
                     <i class="fas fa-folder-plus"></i>
                     В группу
                 </button>
             </div>
-            <button class="action-btn view-btn" onclick="viewSetlist('${setlist.id}')">
+            <button class="action-btn view-btn" data-action="view">
                 <i class="fas fa-eye"></i>
                 Просмотр
             </button>
         </div>
     `;
+    
+    // Обработчик клика на карточку
+    card.addEventListener('click', (e) => {
+        // Проверяем, что клик не по кнопке
+        if (!e.target.closest('button')) {
+            card.classList.toggle('expanded');
+        }
+    });
+    
+    // Обработчики для кнопок
+    const editBtn = card.querySelector('.edit-btn-corner');
+    editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        editSetlist(setlist.id);
+    });
+    
+    const actionBtns = card.querySelectorAll('.action-btn');
+    actionBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const action = btn.dataset.action;
+            switch(action) {
+                case 'calendar':
+                    addToCalendar(setlist.id);
+                    break;
+                case 'group':
+                    addToGroup(setlist.id);
+                    break;
+                case 'view':
+                    viewSetlist(setlist.id);
+                    break;
+            }
+        });
+    });
     
     return card;
 }
@@ -342,13 +369,20 @@ function setupEventHandlers() {
         alert('Создание группы - в разработке');
     });
     
-    // Список групп
+    // Список групп (обе кнопки)
     const listGroupsBtn = document.getElementById('list-groups-btn');
+    const listGroupsIconBtn = document.getElementById('list-groups-icon-btn');
+    
+    const handleListGroups = () => {
+        // TODO: Открыть вертикальный список групп
+        alert('Список групп - в разработке');
+    };
+    
     if (listGroupsBtn) {
-        listGroupsBtn.addEventListener('click', () => {
-            // TODO: Открыть вертикальный список групп
-            alert('Список групп - в разработке');
-        });
+        listGroupsBtn.addEventListener('click', handleListGroups);
+    }
+    if (listGroupsIconBtn) {
+        listGroupsIconBtn.addEventListener('click', handleListGroups);
     }
 }
 

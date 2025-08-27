@@ -1,5 +1,5 @@
-// Service Worker v427 - Archive UI fixes: equal button heights, groups logic, scroll arrows on all devices
-const CACHE_NAME = 'agape-worship-cache-v427';
+// Service Worker v428 - Archive: collapsible cards, groups list button, UI improvements
+const CACHE_NAME = 'agape-worship-cache-v428';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

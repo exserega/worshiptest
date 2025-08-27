@@ -137,8 +137,7 @@
     font-weight: 500;
 }
 
-.add-group-btn,
-.list-groups-btn {
+.add-group-btn {
     width: 24px;
     height: 24px;
     background: var(--bg-tertiary, #1a1f2e);
@@ -153,7 +152,36 @@
     font-size: 0.75rem;
 }
 
-.add-group-btn:hover,
+.add-group-btn:hover {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white !important;
+}
+
+.list-groups-btn {
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 6px;
+    color: var(--text-secondary, #9ca3af) !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.75rem;
+}
+
+.list-groups-btn.text-btn {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+}
+
+.list-groups-btn.icon-btn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+}
+
 .list-groups-btn:hover {
     background: var(--primary-color, #22d3ee);
     border-color: var(--primary-color, #22d3ee);
@@ -368,12 +396,17 @@
     padding: 16px;
     transition: all 0.2s ease;
     position: relative;
+    cursor: pointer;
 }
 
 .archive-setlist-card:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--primary-color, #22d3ee);
-    transform: translateY(-1px);
+}
+
+.archive-setlist-card.expanded {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-color, #22d3ee);
 }
 
 .setlist-card-header {
@@ -427,7 +460,7 @@
     align-items: center;
     gap: 12px;
     margin-top: 8px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-secondary, #9ca3af);
     flex-wrap: wrap;
 }
@@ -439,7 +472,8 @@
 }
 
 .meta-item i {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
+    opacity: 0.7;
 }
 
 .setlist-actions {
@@ -447,11 +481,13 @@
     flex-direction: column;
     gap: 8px;
     margin-top: 12px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
 }
 
-.setlist-actions-row {
-    display: flex;
-    gap: 8px;
+.archive-setlist-card.expanded .setlist-actions {
+    max-height: 150px;
 }
 
 .edit-btn-corner {
@@ -470,6 +506,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.archive-setlist-card.expanded .edit-btn-corner {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.setlist-actions-row {
+    display: flex;
+    gap: 8px;
 }
 
 .edit-btn-corner:hover {
