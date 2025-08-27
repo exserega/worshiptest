@@ -164,9 +164,9 @@
 #setlists-panel .calendar-action {
     background: transparent !important;
     color: var(--accent-color, #00b2bc) !important;
-    border: 1px solid var(--accent-color, #00b2bc) !important;
-    min-width: 36px !important;
-    width: 36px !important;
+    border: none !important;
+    min-width: 42px !important;
+    width: 42px !important;
     height: 30px !important;
     padding: 0 !important;
     display: inline-flex !important;
@@ -174,13 +174,13 @@
     justify-content: center !important;
     border-radius: 6px !important;
     transition: all 0.2s ease !important;
-    flex: 0 0 36px !important;
+    flex: 0 0 42px !important;
 }
 
 #setlists-panel .calendar-action:hover {
-    background: rgba(0, 178, 188, 0.1) !important;
+    background: rgba(0, 178, 188, 0.15) !important;
     color: var(--accent-color, #00b2bc) !important;
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 #setlists-panel .calendar-action:active {
@@ -188,7 +188,7 @@
 }
 
 #setlists-panel .calendar-action i {
-    font-size: 0.9rem !important;
+    font-size: 1.2rem !important;
     margin: 0 !important;
 }
 

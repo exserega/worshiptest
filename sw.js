@@ -1,5 +1,5 @@
-// Service Worker v394 - Increase button widths by 10% more and reduce icon spacing
-const CACHE_NAME = 'agape-worship-cache-v394';
+// Service Worker v395 - Calendar button borderless with larger icon
+const CACHE_NAME = 'agape-worship-cache-v395';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
