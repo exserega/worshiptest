@@ -138,8 +138,8 @@
 }
 
 .add-group-btn {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 6px;
@@ -149,7 +149,14 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    padding: 0;
+}
+
+.add-group-btn i {
     font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .add-group-btn:hover {
@@ -166,19 +173,20 @@
 }
 
 .list-groups-btn {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 6px;
     color: var(--text-secondary, #9ca3af) !important;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 16px;
+    padding: 0;
 }
 
 .list-groups-btn:hover {
@@ -258,27 +266,27 @@
     }
     
     .groups-scroll-container::after {
-        content: '›';
+        content: '▸';
         position: absolute;
-        right: 5px;
+        right: 2px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 1.2rem;
+        font-size: 0.8rem;
         color: var(--text-secondary, #9ca3af);
-        opacity: 0.5;
+        opacity: 0.4;
         pointer-events: none;
         transition: opacity 0.2s;
     }
     
     .groups-scroll-container.scrolled-left::before {
-        content: '‹';
+        content: '◂';
         position: absolute;
-        left: 5px;
+        left: 2px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 1.2rem;
+        font-size: 0.8rem;
         color: var(--text-secondary, #9ca3af);
-        opacity: 0.5;
+        opacity: 0.4;
         pointer-events: none;
         z-index: 1;
     }
@@ -521,14 +529,11 @@
 /* Список песен в развернутой карточке */
 .setlist-songs {
     margin-top: 12px;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
+    display: none;
 }
 
 .archive-setlist-card.expanded .setlist-songs {
-    max-height: 400px;
-    overflow-y: auto;
+    display: block;
 }
 
 .songs-list {
@@ -581,12 +586,13 @@
 }
 
 .song-key {
-    background: rgba(34, 211, 238, 0.15);
+    background: var(--bg-tertiary, #1a1f2e);
     padding: 1px 6px;
     border-radius: 3px;
     font-weight: 600;
-    color: var(--primary-color, #22d3ee);
+    color: var(--text-secondary, #9ca3af);
     font-size: 0.7rem;
+    border: 1px solid var(--border-color, #374151);
 }
 
 .song-bpm {

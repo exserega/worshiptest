@@ -1,5 +1,5 @@
-// Service Worker v444 - Fix: mobile scroll indicators, alphabetic groups, compact songs
-const CACHE_NAME = 'agape-worship-cache-v444';
+// Service Worker v445 - Fix: smaller mobile arrows, bigger buttons, key styling, single scroll
+const CACHE_NAME = 'agape-worship-cache-v445';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
