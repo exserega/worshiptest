@@ -1,5 +1,5 @@
-// Service Worker v388 - Add event action modal functionality
-const CACHE_NAME = 'agape-worship-cache-v388';
+// Service Worker v389 - Fix UI issues (buttons layout, colors, modal)
+const CACHE_NAME = 'agape-worship-cache-v389';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -121,6 +121,8 @@
 
 /* Кнопки действий - компактные */
 #setlists-panel .action-buttons {
+    display: flex !important;
+    flex-direction: row !important;
     gap: 6px !important;
 }
 

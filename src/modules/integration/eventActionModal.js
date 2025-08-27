@@ -30,9 +30,6 @@ class EventActionModal {
         const modalHTML = `
             <div id="event-action-modal" class="global-overlay">
                 <div class="overlay-content event-action-modal">
-                    <button class="modal-close-btn" aria-label="Закрыть">
-                        <i class="fas fa-times"></i>
-                    </button>
                     
                     <div class="modal-header">
                         <i class="fas fa-calendar-check"></i>
@@ -60,7 +57,7 @@ class EventActionModal {
                             <button class="action-btn create-new-btn">
                                 <i class="fas fa-plus-circle"></i>
                                 <span>Создать новое событие</span>
-                                <small>На эту же дату</small>
+
                             </button>
                             
                             <button class="action-btn cancel-btn">
@@ -82,13 +79,11 @@ class EventActionModal {
      */
     attachEventListeners() {
         const modal = this.modal;
-        const closeBtn = modal.querySelector('.modal-close-btn');
         const replaceBtn = modal.querySelector('.replace-setlist-btn');
         const createNewBtn = modal.querySelector('.create-new-btn');
         const cancelBtn = modal.querySelector('.cancel-btn');
         
         // Закрытие модального окна
-        closeBtn.addEventListener('click', () => this.close());
         cancelBtn.addEventListener('click', () => this.close());
         
         // Замена сет-листа
@@ -154,7 +149,7 @@ class EventActionModal {
             eventSetlistEl.classList.add('no-setlist');
         }
         
-        newSetlistNameEl.textContent = `"${setlistData.name}"`;
+        newSetlistNameEl.textContent = setlistData.name;
         
         // Показываем модальное окно
         this.modal.classList.add('show');
