@@ -92,7 +92,7 @@ class EventCreationModal {
         }
         
         const modalHTML = `
-            <div class="event-modal" id="eventCreationModal">
+            <div class="event-creation-modal" id="eventCreationModal">
                 <div class="modal-overlay"></div>
                 <div class="modal-content">
                     <div class="modal-header">
