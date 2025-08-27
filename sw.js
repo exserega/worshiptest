@@ -1,5 +1,5 @@
-// Service Worker v387 - Fix import path and archived field name
-const CACHE_NAME = 'agape-worship-cache-v387';
+// Service Worker v388 - Add event action modal functionality
+const CACHE_NAME = 'agape-worship-cache-v388';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -23,6 +23,8 @@ const urlsToCache = [
   './src/modules/integration/integrationStyles.css',
   './src/modules/integration/calendarStyles.css',
   './src/modules/integration/eventChecker.js',
+  './src/modules/integration/eventActionModal.js',
+  './src/modules/integration/eventActionStyles.css',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются

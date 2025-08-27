@@ -993,16 +993,16 @@ window.addSetlistToCalendar = async function(setlistId) {
                 if (events.length === 0) {
                     // Нет событий - предлагаем создать новое
                     logger.log('📅 На дату нет событий, предлагаем создать новое');
-                    // TODO: handleCreateNewEvent(selectedDate, setlistData);
+                    await handleCreateNewEvent(selectedDate, setlistData);
                 } else if (events.length === 1) {
-                    // Одно событие - проверяем, есть ли у него сет-лист
+                    // Одно событие - показываем выбор действия
                     const event = events[0];
                     logger.log('📅 Найдено одно событие:', event.name, 'Сет-лист:', event.setlistId ? 'есть' : 'нет');
-                    // TODO: handleSingleEvent(event, setlistData);
+                    await handleSingleEvent(event, setlistData, selectedDate);
                 } else {
                     // Несколько событий - показываем выбор
                     logger.log('📅 Найдено несколько событий, показываем выбор');
-                    // TODO: handleMultipleEvents(events, selectedDate, setlistData);
+                    await handleMultipleEvents(events, selectedDate, setlistData);
                 }
             } catch (error) {
                 logger.error('❌ Ошибка при проверке событий:', error);
@@ -1013,6 +1013,77 @@ window.addSetlistToCalendar = async function(setlistId) {
     } catch (error) {
         logger.error('Ошибка при добавлении в календарь:', error);
         window.showNotification('❌ Произошла ошибка', 'error');
+    }
+    
+    /**
+     * Обработка случая, когда на дату нет событий
+     */
+    async function handleCreateNewEvent(selectedDate, setlistData) {
+        logger.log('📅 Открываем создание нового события');
+        
+        // Импортируем модальное окно создания события
+        const { openEventModal } = await import('./src/modules/events/eventModal.js');
+        
+        // Подготавливаем данные для нового события
+        const eventData = {
+            date: new Date(selectedDate),
+            setlistId: setlistData.id,
+            name: setlistData.name // Предзаполняем название из сет-листа
+        };
+        
+        // Открываем модальное окно
+        openEventModal(eventData);
+    }
+    
+    /**
+     * Обработка случая, когда найдено одно событие
+     */
+    async function handleSingleEvent(event, setlistData, selectedDate) {
+        const { formatEventInfo } = await import('./src/modules/integration/eventChecker.js');
+        const { getEventActionModal } = await import('./src/modules/integration/eventActionModal.js');
+        
+        const eventInfo = formatEventInfo(event);
+        const modal = getEventActionModal();
+        
+        modal.open(eventInfo, setlistData, async (action, eventData, setlistData) => {
+            if (action === 'replace') {
+                logger.log('📅 Заменяем сет-лист в событии');
+                await updateEventSetlist(eventData.id, setlistData.id, setlistData.name);
+            } else if (action === 'create') {
+                logger.log('📅 Создаем новое событие');
+                await handleCreateNewEvent(selectedDate, setlistData);
+            }
+        });
+    }
+    
+    /**
+     * Обработка случая с несколькими событиями
+     */
+    async function handleMultipleEvents(events, selectedDate, setlistData) {
+        // TODO: Реализовать выбор из нескольких событий
+        window.showNotification('📅 Выбор из нескольких событий будет реализован в следующем этапе', 'info');
+    }
+    
+    /**
+     * Обновление сет-листа в событии
+     */
+    async function updateEventSetlist(eventId, setlistId, setlistName) {
+        try {
+            const { db } = await import('./firebase-init.js');
+            
+            // Обновляем событие
+            await db.collection('events').doc(eventId).update({
+                setlistId: setlistId,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            window.showNotification(`✅ Сет-лист "${setlistName}" добавлен в событие`, 'success');
+            logger.log('✅ Сет-лист обновлен в событии');
+            
+        } catch (error) {
+            logger.error('❌ Ошибка при обновлении события:', error);
+            window.showNotification('❌ Ошибка при обновлении события', 'error');
+        }
     }
 };
 
