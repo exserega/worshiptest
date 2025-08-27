@@ -4,7 +4,7 @@
  */
 
 import { db } from '../../../firebase-init.js';
-import { getCurrentUserBranch } from '../branches/branchSelection.js';
+import { getCurrentBranchId } from '../auth/authCheck.js';
 import logger from '../../utils/logger.js';
 
 /**
@@ -15,8 +15,8 @@ import logger from '../../utils/logger.js';
  */
 export async function createTestEvent(dateString, options = {}) {
     try {
-        const userBranch = await getCurrentUserBranch();
-        if (!userBranch) {
+        const branchId = getCurrentBranchId();
+        if (!branchId) {
             throw new Error('Филиал пользователя не найден');
         }
         
@@ -27,7 +27,7 @@ export async function createTestEvent(dateString, options = {}) {
         const eventData = {
             name: options.name || `Тестовое событие ${new Date().getTime()}`,
             date: eventDate,
-            branchId: userBranch.branchId,
+            branchId: branchId,
             archived: false,
             createdAt: new Date(),
             createdBy: firebase.auth().currentUser.uid,

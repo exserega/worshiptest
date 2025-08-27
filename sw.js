@@ -1,5 +1,5 @@
-// Service Worker v379 - Fix import paths in eventChecker
-const CACHE_NAME = 'agape-worship-cache-v379';
+// Service Worker v380 - Fix getCurrentBranchId import
+const CACHE_NAME = 'agape-worship-cache-v380';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -4,7 +4,7 @@
  */
 
 import { db } from '../../../firebase-init.js';
-import { getCurrentUserBranch } from '../branches/branchSelection.js';
+import { getCurrentBranchId } from '../auth/authCheck.js';
 import logger from '../../utils/logger.js';
 
 /**
@@ -17,8 +17,8 @@ export async function checkEventsOnDate(dateString) {
         logger.log('📅 Проверка событий на дату:', dateString);
         
         // Получаем текущий филиал пользователя
-        const userBranch = await getCurrentUserBranch();
-        if (!userBranch) {
+        const branchId = getCurrentBranchId();
+        if (!branchId) {
             logger.warn('❌ Филиал пользователя не найден');
             return [];
         }
@@ -33,7 +33,7 @@ export async function checkEventsOnDate(dateString) {
         // Запрашиваем события из Firestore
         const eventsRef = db.collection('events');
         const query = eventsRef
-            .where('branchId', '==', userBranch.branchId)
+            .where('branchId', '==', branchId)
             .where('date', '>=', startOfDay)
             .where('date', '<=', endOfDay)
             .where('archived', '==', false);
