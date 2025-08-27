@@ -1,5 +1,5 @@
-// Service Worker v368 - Calendar button icon only
-const CACHE_NAME = 'agape-worship-cache-v368';
+// Service Worker v369 - Calendar button icon-only design
+const CACHE_NAME = 'agape-worship-cache-v369';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
