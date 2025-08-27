@@ -2,10 +2,33 @@
  * Стили для интеграции сет-листов с календарем
  */
 
+/* Оверлей модального окна */
+#date-picker-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
 /* Модальное окно выбора даты */
 .date-picker-modal {
-    max-width: 420px !important;
-    width: 90% !important;
+    background: var(--modal-background, #1f2937);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-width: 420px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    position: relative;
 }
 
 .date-picker-modal .modal-header {
@@ -15,9 +38,10 @@
 
 .date-picker-modal .modal-header h3 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     color: var(--text-primary);
     font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .date-picker-modal .close-btn {
@@ -46,32 +70,54 @@
 .setlist-info {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    margin-bottom: 20px;
+    gap: 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, 
+        rgba(0, 178, 188, 0.1) 0%, 
+        rgba(0, 178, 188, 0.05) 100%);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(0, 178, 188, 0.2);
 }
 
-.setlist-info i {
-    font-size: 1.2rem;
-    color: var(--primary-color);
+.setlist-info .info-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--accent-color);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.setlist-info .info-icon i {
+    font-size: 1.5rem;
+    color: white;
 }
 
 .setlist-info .info-content {
     flex: 1;
+    min-width: 0;
 }
 
 .setlist-info .setlist-name-label {
     color: var(--text-secondary);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     display: block;
+    margin-bottom: 4px;
 }
 
 .setlist-info .setlist-name {
     color: var(--text-primary);
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 1.125rem;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* Выбор даты */
@@ -97,45 +143,84 @@
     padding: 12px 16px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
-    background: var(--input-background);
+    background: var(--bg-secondary, #374151);
     color: var(--text-primary);
     font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
     transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.date-input:hover {
+    border-color: var(--accent-color);
 }
 
 .date-input:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 178, 188, 0.1);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(0, 178, 188, 0.2);
+}
+
+/* Стилизация календаря для webkit браузеров */
+.date-input::-webkit-calendar-picker-indicator {
+    background: transparent;
+    color: var(--accent-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+/* Для Firefox */
+.date-input[type="date"] {
+    position: relative;
+}
+
+/* Секция даты */
+.date-section {
+    padding: 0 4px;
 }
 
 /* Быстрый выбор даты */
 .quick-dates {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    justify-content: center;
+    margin-top: 16px;
     margin-bottom: 20px;
 }
 
 .quick-date-btn {
-    padding: 8px 16px;
-    border: 1px solid var(--border-color);
-    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
     color: var(--text-secondary);
-    border-radius: 20px;
-    font-size: 0.875rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-align: center;
+}
+
+.quick-date-btn i {
+    font-size: 1.25rem;
+    color: var(--accent-color);
+}
+
+.quick-date-btn span {
+    font-weight: 500;
 }
 
 .quick-date-btn:hover {
     border-color: var(--accent-color);
-    color: var(--accent-color);
-    background: rgba(0, 178, 188, 0.05);
+    background: rgba(0, 178, 188, 0.1);
+    transform: translateY(-2px);
 }
 
 .quick-date-btn:active {
-    transform: scale(0.95);
+    transform: translateY(0);
 }
 
 /* Кнопки в футере */
@@ -170,12 +255,19 @@
 }
 
 .date-picker-modal .btn-primary {
-    background: var(--primary-color);
+    background: var(--accent-color);
     color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-picker-modal .btn-primary i {
+    font-size: 0.875rem;
 }
 
 .date-picker-modal .btn-primary:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--primary-color) 85%, black);
+    background: color-mix(in srgb, var(--accent-color) 85%, black);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 178, 188, 0.3);
 }
@@ -183,6 +275,10 @@
 .date-picker-modal .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.date-picker-modal .btn-primary:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 /* Адаптация для мобильных */

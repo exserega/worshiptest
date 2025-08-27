@@ -30,9 +30,9 @@ class DatePickerModal {
     createModal() {
         const modalHTML = `
             <div id="date-picker-modal" class="modal-overlay" style="display: none;">
-                <div class="modal-content compact date-picker-modal">
+                <div class="modal-content date-picker-modal">
                     <div class="modal-header">
-                        <h3>Добавить сет-лист в календарь</h3>
+                        <h3>Добавить в календарь</h3>
                         <button class="close-btn" aria-label="Закрыть">
                             <i class="fas fa-times"></i>
                         </button>
@@ -40,36 +40,52 @@ class DatePickerModal {
                     
                     <div class="modal-body">
                         <div class="setlist-info">
-                            <i class="fas fa-music"></i>
+                            <div class="info-icon">
+                                <i class="fas fa-music"></i>
+                            </div>
                             <div class="info-content">
-                                <span class="setlist-name-label">Сет-лист:</span>
+                                <span class="setlist-name-label">Сет-лист</span>
                                 <span id="modal-setlist-name" class="setlist-name"></span>
                             </div>
                         </div>
                         
-                        <div class="date-selection">
-                            <label for="event-date-input" class="date-label">
-                                <i class="fas fa-calendar"></i>
-                                Выберите дату:
-                            </label>
-                            <input 
-                                type="date" 
-                                id="event-date-input" 
-                                class="form-control date-input"
-                                min="${this.getTodayDate()}"
-                            >
-                        </div>
-                        
-                        <div class="quick-dates">
-                            <button class="quick-date-btn" data-days="0">Сегодня</button>
-                            <button class="quick-date-btn" data-days="1">Завтра</button>
-                            <button class="quick-date-btn" data-days="7">Через неделю</button>
+                        <div class="date-section">
+                            <div class="date-selection">
+                                <label for="event-date-input" class="date-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Дата события</span>
+                                </label>
+                                <input 
+                                    type="date" 
+                                    id="event-date-input" 
+                                    class="date-input"
+                                    min="${this.getTodayDate()}"
+                                >
+                            </div>
+                            
+                            <div class="quick-dates">
+                                <button class="quick-date-btn" data-days="0">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span>Сегодня</span>
+                                </button>
+                                <button class="quick-date-btn" data-days="1">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    <span>Завтра</span>
+                                </button>
+                                <button class="quick-date-btn" data-days="7">
+                                    <i class="fas fa-calendar-week"></i>
+                                    <span>Через неделю</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="modal-footer">
                         <button class="btn-secondary cancel-btn">Отмена</button>
-                        <button class="btn-primary continue-btn" disabled>Далее</button>
+                        <button class="btn-primary continue-btn" disabled>
+                            <span>Далее</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -151,6 +167,12 @@ class DatePickerModal {
      * @param {Function} onDateSelected - Callback при выборе даты
      */
     open(setlistData, onDateSelected) {
+        // Проверяем, создано ли модальное окно
+        if (!this.modal) {
+            logger.warn('📅 Модальное окно не инициализировано, создаем...');
+            this.init();
+        }
+        
         this.setlistData = setlistData;
         this.onDateSelected = onDateSelected;
         this.selectedDate = null;

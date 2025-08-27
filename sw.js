@@ -1,5 +1,5 @@
-// Service Worker v372 - Fix state.setlists access
-const CACHE_NAME = 'agape-worship-cache-v372';
+// Service Worker v373 - Improved date picker modal design
+const CACHE_NAME = 'agape-worship-cache-v373';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
