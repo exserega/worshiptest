@@ -708,6 +708,18 @@ function setupSetlistEventHandlers() {
         });
     }
     
+    // Кнопка "Архив" - переход на страницу архива сет-листов
+    const toggleArchiveButton = document.getElementById('toggle-archive');
+    if (toggleArchiveButton) {
+        toggleArchiveButton.addEventListener('click', () => {
+            console.log('📚 [EventHandlers] Archive button clicked - navigating to archive page');
+            ui.closeAllSidePanels(); // Закрываем все панели
+            
+            // Переходим на страницу архива
+            window.location.href = '/archive/';
+        });
+    }
+    
     // Панель "Мои" - ПРЯМАЯ ЛОГИКА (оставляем для обратной совместимости, но скрываем)
     if (ui.toggleMyListButton) {
         ui.toggleMyListButton.addEventListener('click', async () => {

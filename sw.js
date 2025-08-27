@@ -1,5 +1,5 @@
-// Service Worker v418 - Clickable event cards with confirmation dialog
-const CACHE_NAME = 'agape-worship-cache-v418';
+// Service Worker v419 - Archive functionality and navigation changes
+const CACHE_NAME = 'agape-worship-cache-v419';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
