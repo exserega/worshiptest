@@ -1,5 +1,5 @@
-// Service Worker v412 - Fix event creation modal opening after date selection
-const CACHE_NAME = 'agape-worship-cache-v412';
+// Service Worker v413 - Add event selector modal for multiple events
+const CACHE_NAME = 'agape-worship-cache-v413';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -25,6 +25,8 @@ const urlsToCache = [
   './src/modules/integration/eventChecker.js',
   './src/modules/integration/eventActionModal.js',
   './src/modules/integration/eventActionStyles.css',
+  './src/modules/integration/eventSelectorModal.js',
+  './src/modules/integration/eventSelectorStyles.css',
   './src/modules/events/eventModal.js',
   './styles/event-creation-fixes.css',
   './styles/event-creation-modal-complete.css',

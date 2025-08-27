@@ -1,0 +1,214 @@
+/**
+ * Стили для модального окна выбора событий
+ */
+
+.event-selector-modal .overlay-content {
+    max-width: 600px;
+    width: 90%;
+}
+
+.event-selector-modal .selector-info {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+/* Список событий */
+.event-selector-modal .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+}
+
+/* Карточка события */
+.event-selector-modal .event-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.event-selector-modal .event-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+/* Подсветка событий с сет-листом */
+.event-selector-modal .event-card.has-setlist {
+    background: rgba(0, 178, 188, 0.05);
+    border-color: rgba(0, 178, 188, 0.3);
+}
+
+/* Время события */
+.event-selector-modal .event-time {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    white-space: nowrap;
+}
+
+/* Информация о событии */
+.event-selector-modal .event-info {
+    flex: 1;
+}
+
+.event-selector-modal .event-name {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.event-selector-modal .event-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.event-selector-modal .event-details span {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.event-selector-modal .event-details i {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.event-selector-modal .event-setlist {
+    color: var(--success-color);
+}
+
+.event-selector-modal .event-no-setlist {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Кнопка выбора */
+.event-selector-modal .event-select-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.event-selector-modal .event-select-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 178, 188, 0.3);
+}
+
+.event-selector-modal .event-select-btn:active {
+    transform: scale(0.95);
+}
+
+/* Действия внизу */
+.event-selector-modal .selector-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.event-selector-modal .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.event-selector-modal .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.event-selector-modal .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--text-secondary);
+    transform: translateY(-1px);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 640px) {
+    .event-selector-modal .overlay-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .event-selector-modal .events-list {
+        max-height: 300px;
+    }
+    
+    .event-selector-modal .event-card {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    
+    .event-selector-modal .event-time {
+        font-size: 1.125rem;
+    }
+    
+    .event-selector-modal .event-details {
+        justify-content: center;
+    }
+    
+    .event-selector-modal .event-select-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Светлая тема */
+[data-theme="light"] .event-selector-modal .event-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: #e5e7eb;
+}
+
+[data-theme="light"] .event-selector-modal .event-card:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: var(--primary-color);
+}
+
+[data-theme="light"] .event-selector-modal .event-card.has-setlist {
+    background: rgba(0, 178, 188, 0.08);
+    border-color: rgba(0, 178, 188, 0.4);
+}
+
+[data-theme="light"] .event-selector-modal .btn-secondary {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: #d1d5db;
+}
+
+[data-theme="light"] .event-selector-modal .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: #9ca3af;
+}

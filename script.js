@@ -993,11 +993,7 @@ window.addSetlistToCalendar = async function(setlistId) {
                 if (events.length === 0) {
                     // Нет событий - предлагаем создать новое
                     logger.log('📅 На дату нет событий, предлагаем создать новое');
-                    
-                    // Небольшая задержка чтобы закрылось модальное окно выбора даты
-                    setTimeout(async () => {
-                        await handleCreateNewEvent(selectedDate, setlistData);
-                    }, 300);
+                    await handleCreateNewEvent(selectedDate, setlistData);
                 } else if (events.length === 1) {
                     // Одно событие - показываем выбор действия
                     const event = events[0];
@@ -1073,8 +1069,28 @@ window.addSetlistToCalendar = async function(setlistId) {
      * Обработка случая с несколькими событиями
      */
     async function handleMultipleEvents(events, selectedDate, setlistData) {
-        // TODO: Реализовать выбор из нескольких событий
-        window.showNotification('📅 Выбор из нескольких событий будет реализован в следующем этапе', 'info');
+        logger.log('📅 Открываем выбор из нескольких событий');
+        
+        try {
+            const { getEventSelectorModal } = await import('./src/modules/integration/eventSelectorModal.js');
+            const selectorModal = getEventSelectorModal();
+            
+            selectorModal.open(events, selectedDate, setlistData, async (action, eventData, setlistData, selectedDate) => {
+                if (action === 'select') {
+                    // Выбрано существующее событие
+                    logger.log('📅 Выбрано событие:', eventData.name);
+                    await handleSingleEvent(eventData, setlistData, selectedDate);
+                } else if (action === 'create') {
+                    // Создание нового события
+                    logger.log('📅 Создаем новое событие вместо выбора из существующих');
+                    await handleCreateNewEvent(selectedDate, setlistData);
+                }
+            });
+            
+        } catch (error) {
+            logger.error('❌ Ошибка при открытии селектора событий:', error);
+            window.showNotification('❌ Ошибка при выборе события', 'error');
+        }
     }
     
     /**
