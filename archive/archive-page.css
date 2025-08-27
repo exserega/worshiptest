@@ -60,8 +60,17 @@
 }
 
 .icon-button svg path {
-    stroke: currentColor;
-    fill: none;
+    stroke: currentColor !important;
+    fill: none !important;
+}
+
+/* Принудительно светлый цвет для темной темы */
+.icon-button {
+    color: #b0b0b0 !important;
+}
+
+.icon-button:hover {
+    color: white !important;
 }
 
 /* Секция поиска */
@@ -132,7 +141,7 @@
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 6px;
-    color: var(--text-secondary, #9ca3af);
+    color: var(--text-secondary, #9ca3af) !important;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -144,7 +153,7 @@
 .add-group-btn:hover {
     background: var(--primary-color, #22d3ee);
     border-color: var(--primary-color, #22d3ee);
-    color: white;
+    color: white !important;
 }
 
 /* Горизонтальный скролл для групп */
@@ -383,7 +392,7 @@
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 8px;
-    color: var(--text-primary, #e5e7eb);
+    color: var(--text-primary, #e5e7eb) !important;
     font-size: 0.8rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -393,14 +402,15 @@
     gap: 6px;
 }
 
+.action-btn i {
+    font-size: 0.85rem;
+    color: inherit !important;
+}
+
 .action-btn:hover {
     background: var(--primary-color, #22d3ee);
     border-color: var(--primary-color, #22d3ee);
-    color: white;
-}
-
-.action-btn i {
-    font-size: 0.85rem;
+    color: white !important;
 }
 
 /* Индикатор загрузки */

@@ -1,5 +1,5 @@
-// Service Worker v422 - Archive page path fix
-const CACHE_NAME = 'agape-worship-cache-v422';
+// Service Worker v423 - Archive page icon colors fix
+const CACHE_NAME = 'agape-worship-cache-v423';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
