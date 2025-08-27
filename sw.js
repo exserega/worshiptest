@@ -1,5 +1,5 @@
-// Service Worker v439 - Fix: improved song loading with better format handling
-const CACHE_NAME = 'agape-worship-cache-v439';
+// Service Worker v440 - Fix: song display styles and field name handling
+const CACHE_NAME = 'agape-worship-cache-v440';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

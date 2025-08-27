@@ -442,8 +442,12 @@ async function loadSetlistSongs(setlistId, container) {
         
         const songsMap = new Map();
         songsSnapshot.forEach(doc => {
-            songsMap.set(doc.id, { id: doc.id, ...doc.data() });
+            const songData = doc.data();
+            logger.log('Song data:', doc.id, songData);
+            songsMap.set(doc.id, { id: doc.id, ...songData });
         });
+        
+        logger.log('Songs map:', songsMap);
         
         // Создаем HTML для песен
         const songsHtml = setlist.songs.map((songRef, index) => {
@@ -458,10 +462,13 @@ async function loadSetlistSongs(setlistId, container) {
             }
             
             const song = songsMap.get(songId);
-            const songName = song ? song.name : 'Неизвестная песня';
+            logger.log('Processing song:', songId, song, songRef);
+            
+            // Получаем название песни (может быть name или title)
+            const songName = song ? (song.name || song.title || 'Неизвестная песня') : 'Неизвестная песня';
             
             // Если songRef это объект, берем key и bpm оттуда, иначе из song
-            const key = (typeof songRef === 'object' && songRef.key) ? songRef.key : (song?.originalKey || '-');
+            const key = (typeof songRef === 'object' && songRef.key) ? songRef.key : (song?.originalKey || song?.key || '-');
             const bpm = (typeof songRef === 'object' && songRef.bpm) ? songRef.bpm : (song?.bpm || '-');
             
             return `
