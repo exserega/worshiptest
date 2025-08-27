@@ -1,5 +1,5 @@
-// Service Worker v429 - Archive: songs display in expanded cards, lazy loading, optimized performance
-const CACHE_NAME = 'agape-worship-cache-v429';
+// Service Worker v430 - Fix: archive songs loading error, removed export from firebase-init
+const CACHE_NAME = 'agape-worship-cache-v430';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

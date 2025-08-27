@@ -405,7 +405,15 @@ async function loadSetlistSongs(setlistId, container) {
         }
         
         // Загружаем информацию о песнях из коллекции songs
-        const songIds = setlist.songs.map(s => s.id);
+        const songIds = setlist.songs
+            .map(s => typeof s === 'string' ? s : s.id)
+            .filter(id => id); // Фильтруем undefined
+            
+        if (songIds.length === 0) {
+            container.innerHTML = '<div class="no-songs">Нет корректных песен в сет-листе</div>';
+            return;
+        }
+        
         const songsSnapshot = await db.collection('songs')
             .where(firebase.firestore.FieldPath.documentId(), 'in', songIds)
             .get();
@@ -417,10 +425,14 @@ async function loadSetlistSongs(setlistId, container) {
         
         // Создаем HTML для песен
         const songsHtml = setlist.songs.map((songRef, index) => {
-            const song = songsMap.get(songRef.id);
+            // Обрабатываем разные форматы хранения песен
+            const songId = typeof songRef === 'string' ? songRef : songRef.id;
+            const song = songsMap.get(songId);
             const songName = song ? song.name : 'Неизвестная песня';
-            const key = songRef.key || song?.originalKey || '-';
-            const bpm = songRef.bpm || song?.bpm || '-';
+            
+            // Если songRef это объект, берем key и bpm оттуда, иначе из song
+            const key = (typeof songRef === 'object' ? songRef.key : null) || song?.originalKey || '-';
+            const bpm = (typeof songRef === 'object' ? songRef.bpm : null) || song?.bpm || '-';
             
             return `
                 <div class="song-item">
