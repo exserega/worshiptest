@@ -1,5 +1,5 @@
-// Service Worker v419 - Archive functionality and navigation changes
-const CACHE_NAME = 'agape-worship-cache-v419';
+// Service Worker v420 - Profile button styling fixes
+const CACHE_NAME = 'agape-worship-cache-v420';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
