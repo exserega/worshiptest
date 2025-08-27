@@ -2,6 +2,7 @@
 
 import { SONG_CATEGORIES_ORDER, MIN_FONT_SIZE, chords } from './js/constants.js';
 import logger from './src/utils/logger.js';
+import { canManageEvents } from './src/modules/permissions/permissions.js';
 
 // --- UTILITY FUNCTIONS ---
 
@@ -1229,6 +1230,18 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
     // Показываем блок управления выбранным списком
     if (selectedSetlistControl) {
         selectedSetlistControl.style.display = 'block';
+    }
+    
+    // Показываем/скрываем кнопку "В календарь" в зависимости от прав
+    const addToCalendarBtn = document.getElementById('add-to-calendar-btn');
+    if (addToCalendarBtn) {
+        if (canManageEvents()) {
+            addToCalendarBtn.style.display = 'flex';
+            logger.log('📅 Кнопка "В календарь" показана для admin/moderator');
+        } else {
+            addToCalendarBtn.style.display = 'none';
+            logger.log('📅 Кнопка "В календарь" скрыта - недостаточно прав');
+        }
     }
 
     // Обновляем счетчик песен в новом блоке управления

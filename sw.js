@@ -1,5 +1,5 @@
-// Service Worker v366 - Fix bottom nav restore on swipe close
-const CACHE_NAME = 'agape-worship-cache-v366';
+// Service Worker v367 - Add calendar integration button
+const CACHE_NAME = 'agape-worship-cache-v367';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

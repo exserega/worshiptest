@@ -147,6 +147,19 @@
     border-color: var(--primary-color) !important;
 }
 
+#setlists-panel .calendar-action {
+    background: transparent !important;
+    color: var(--accent-color, #00b2bc) !important;
+    border: 2px solid var(--accent-color, #00b2bc) !important;
+}
+
+#setlists-panel .calendar-action:hover {
+    background: var(--accent-color, #00b2bc) !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 178, 188, 0.3);
+}
+
 /* Список песен - компактный */
 #setlists-panel .songs-list {
     padding: 6px 8px !important;

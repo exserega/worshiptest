@@ -17,6 +17,7 @@ import * as state from './js/state.js';
 import * as api from './js/api.js';
 import * as ui from './ui.js';
 import logger from './src/utils/logger.js';
+import { canManageEvents } from './src/modules/permissions/permissions.js';
 
 // ====================================
 // 🚀 MAIN INITIALIZATION IMPORT
@@ -939,5 +940,42 @@ window.handleCreateSetlist = async function() {
 };
 
 console.log('✨ [EntryPoint] Agape Worship App v2.0 - Modular Architecture Ready!');
+
+// ====================================
+// 📅 SETLIST TO EVENT INTEGRATION
+// ====================================
+
+/**
+ * Добавляет сет-лист в календарь событий
+ * @param {string} setlistId - ID сет-листа для добавления
+ */
+window.addSetlistToCalendar = async function(setlistId) {
+    try {
+        // Проверяем права доступа
+        if (!canManageEvents()) {
+            window.showNotification('❌ У вас нет прав для управления событиями', 'error');
+            return;
+        }
+        
+        // Получаем информацию о сет-листе
+        const setlists = state.getSetlists();
+        const setlist = setlists.find(s => s.id === setlistId);
+        
+        if (!setlist) {
+            window.showNotification('❌ Сет-лист не найден', 'error');
+            return;
+        }
+        
+        // Временно показываем alert для тестирования
+        alert(`Функция интеграции с календарем в разработке.\n\nСет-лист: ${setlist.name}\nID: ${setlistId}\nКоличество песен: ${setlist.songs ? setlist.songs.length : 0}`);
+        
+        // TODO: Реализовать полную интеграцию в следующих этапах
+        logger.log('📅 Добавление сет-листа в календарь:', setlist);
+        
+    } catch (error) {
+        logger.error('Ошибка при добавлении в календарь:', error);
+        window.showNotification('❌ Произошла ошибка', 'error');
+    }
+};
 
 // ОБРАБОТЧИКИ ПАНЕЛЕЙ ТЕПЕРЬ В event-handlers.js - МОДУЛЬНО И ПРАВИЛЬНО!

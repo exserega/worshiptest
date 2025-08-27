@@ -939,6 +939,33 @@ function setupSetlistEventHandlers() {
         console.log('⚠️ [EventHandlers] Presentation button not found');
     }
     
+    // ОБРАБОТЧИК КНОПКИ "В КАЛЕНДАРЬ" - НОВАЯ ИНТЕГРАЦИЯ
+    if (ui.addToCalendarButton) {
+        ui.addToCalendarButton.addEventListener('click', async () => {
+            console.log('📅 [EventHandlers] Add to calendar button clicked');
+            
+            // Получаем текущий выбранный сет-лист
+            const currentSetlistId = state.currentSetlistId;
+            const currentSetlist = state.setlists?.find(s => s.id === currentSetlistId);
+            
+            if (!currentSetlist) {
+                window.showNotification('Сначала выберите сет-лист', 'warning');
+                return;
+            }
+            
+            // Вызываем функцию интеграции
+            if (window.addSetlistToCalendar) {
+                await window.addSetlistToCalendar(currentSetlistId);
+            } else {
+                console.error('❌ [EventHandlers] addSetlistToCalendar function not found');
+                window.showNotification('Функция недоступна', 'error');
+            }
+        });
+        console.log('📅 [EventHandlers] Calendar button handler attached');
+    } else {
+        console.log('⚠️ [EventHandlers] Calendar button not found');
+    }
+    
     // ОБРАБОТЧИКИ КНОПОК ОВЕРЛЕЕВ - КРИТИЧЕСКИ ВАЖНО!
     
     // Кнопка закрытия overlay добавления песен

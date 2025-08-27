@@ -36,6 +36,7 @@ export const setlistsListContainer = document.getElementById('setlists-list-cont
 export const currentSetlistTitle = document.getElementById('current-setlist-title');
 export const currentSetlistControls = document.querySelector('.current-setlist-controls');
 export const startPresentationButton = document.getElementById('start-presentation-button');
+export const addToCalendarButton = document.getElementById('add-to-calendar-btn');
 export const deleteSetlistButton = document.getElementById('delete-setlist-button');
 export const currentSetlistSongsContainer = document.getElementById('current-setlist-songs-container');
 export const vocalistSelect = document.getElementById('vocalist-select');
