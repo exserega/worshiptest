@@ -8,8 +8,12 @@ const firebaseConfig = {
     appId: "1:639974006584:web:19e7e78c8103a09cf87595"
 };
 
-// Инициализация Firebase
-firebase.initializeApp(firebaseConfig);
+// Инициализация Firebase только если еще не инициализирован
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+} else {
+    console.log('✅ Firebase уже был инициализирован');
+}
 
 // Сокращения для удобства
 const auth = firebase.auth();

@@ -1,5 +1,5 @@
-// Service Worker v433 - Fix: archive page auth redirect issue, add error handling
-const CACHE_NAME = 'agape-worship-cache-v433';
+// Service Worker v434 - Fix: add Firebase Storage SDK to archive page
+const CACHE_NAME = 'agape-worship-cache-v434';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
