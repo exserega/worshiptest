@@ -1,5 +1,5 @@
-// Service Worker v442 - Fix: correct song structure with songId field and order sorting
-const CACHE_NAME = 'agape-worship-cache-v442';
+// Service Worker v443 - Fix: song layout with number on left, key/bpm stacked on right
+const CACHE_NAME = 'agape-worship-cache-v443';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

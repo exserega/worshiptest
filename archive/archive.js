@@ -467,13 +467,11 @@ async function loadSetlistSongs(setlistId, container) {
             
             return `
                 <div class="song-item">
-                    <div class="song-info">
-                        <span class="song-number">${index + 1}.</span>
-                        <span class="song-name">${songName}</span>
-                    </div>
+                    <span class="song-number">${index + 1}.</span>
+                    <span class="song-name">${songName}</span>
                     <div class="song-details">
-                        ${key !== '-' ? `<span class="song-key">${key}</span>` : ''}
-                        ${bpm !== '-' ? `<span class="song-bpm">${bpm} BPM</span>` : ''}
+                        ${key !== '-' ? `<div class="song-key">${key}</div>` : ''}
+                        ${bpm !== '-' && bpm !== 'NA' ? `<div class="song-bpm">${bpm} BPM</div>` : ''}
                     </div>
                 </div>
             `;
