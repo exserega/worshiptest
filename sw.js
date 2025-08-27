@@ -1,5 +1,5 @@
-// Service Worker v440 - Fix: song display styles and field name handling
-const CACHE_NAME = 'agape-worship-cache-v440';
+// Service Worker v441 - Fix: use preferredKey and BPM fields, better song layout
+const CACHE_NAME = 'agape-worship-cache-v441';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

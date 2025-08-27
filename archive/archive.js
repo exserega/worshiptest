@@ -96,9 +96,14 @@ async function loadArchiveData() {
         
         archiveSetlists = [];
         snapshot.forEach(doc => {
+            const data = doc.data();
+            logger.log('Setlist structure:', doc.id, data);
+            if (data.songs && data.songs.length > 0) {
+                logger.log('First song structure:', data.songs[0]);
+            }
             archiveSetlists.push({
                 id: doc.id,
-                ...doc.data()
+                ...data
             });
         });
         
@@ -468,18 +473,20 @@ async function loadSetlistSongs(setlistId, container) {
             const songName = song ? (song.name || song.title || 'Неизвестная песня') : 'Неизвестная песня';
             
             // Если songRef это объект, берем key и bpm оттуда, иначе из song
-            const key = (typeof songRef === 'object' && songRef.key) ? songRef.key : (song?.originalKey || song?.key || '-');
-            const bpm = (typeof songRef === 'object' && songRef.bpm) ? songRef.bpm : (song?.bpm || '-');
+            const key = (typeof songRef === 'object' && songRef.preferredKey) ? songRef.preferredKey : 
+                       (song?.preferredKey || song?.originalKey || song?.key || '-');
+            const bpm = (typeof songRef === 'object' && songRef.BPM) ? songRef.BPM : 
+                       (song?.BPM || song?.bpm || '-');
             
             return `
                 <div class="song-item">
                     <div class="song-info">
-                        <div class="song-number">${index + 1}</div>
-                        <div class="song-name">${songName}</div>
+                        <span class="song-number">${index + 1}.</span>
+                        <span class="song-name">${songName}</span>
                     </div>
                     <div class="song-details">
-                        <span class="song-key">${key}</span>
-                        <span class="song-bpm">${bpm} BPM</span>
+                        ${key !== '-' ? `<span class="song-key">${key}</span>` : ''}
+                        ${bpm !== '-' ? `<span class="song-bpm">${bpm} BPM</span>` : ''}
                     </div>
                 </div>
             `;
