@@ -1,5 +1,5 @@
-// Service Worker v430 - Fix: archive songs loading error, removed export from firebase-init
-const CACHE_NAME = 'agape-worship-cache-v430';
+// Service Worker v431 - Fix: restore firebase-init exports, fix module loading
+const CACHE_NAME = 'agape-worship-cache-v431';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

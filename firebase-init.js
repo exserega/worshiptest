@@ -62,4 +62,5 @@ if (isIOSSafari) {
     }
 }
 
-// Глобальные переменные уже доступны через window
+// Экспорт для модулей
+export { firebase, auth, db, storage, firebaseConfig };
