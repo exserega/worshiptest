@@ -1,5 +1,5 @@
-// Service Worker v380 - Fix getCurrentBranchId import
-const CACHE_NAME = 'agape-worship-cache-v380';
+// Service Worker v381 - Simplify Firestore query to avoid index requirement
+const CACHE_NAME = 'agape-worship-cache-v381';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

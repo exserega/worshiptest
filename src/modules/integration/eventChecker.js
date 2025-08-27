@@ -32,10 +32,9 @@ export async function checkEventsOnDate(dateString) {
         
         // Запрашиваем события из Firestore
         const eventsRef = db.collection('events');
+        // Временно упрощаем запрос - сначала получаем все события филиала
         const query = eventsRef
             .where('branchId', '==', branchId)
-            .where('date', '>=', startOfDay)
-            .where('date', '<=', endOfDay)
             .where('archived', '==', false);
             
         const snapshot = await query.get();
@@ -43,12 +42,17 @@ export async function checkEventsOnDate(dateString) {
         const events = [];
         snapshot.forEach(doc => {
             const eventData = doc.data();
-            events.push({
-                id: doc.id,
-                ...eventData,
-                // Преобразуем timestamp в строку для удобства
-                dateString: eventData.date.toDate().toISOString()
-            });
+            const eventDate = eventData.date.toDate();
+            
+            // Фильтруем по дате на клиентской стороне
+            if (eventDate >= startOfDay && eventDate <= endOfDay) {
+                events.push({
+                    id: doc.id,
+                    ...eventData,
+                    // Преобразуем timestamp в строку для удобства
+                    dateString: eventDate.toISOString()
+                });
+            }
         });
         
         logger.log(`📅 Найдено ${events.length} событий на дату ${dateString}`);
