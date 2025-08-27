@@ -1,5 +1,5 @@
-// Service Worker v409 - Fix participant selector overlay styles and structure
-const CACHE_NAME = 'agape-worship-cache-v409';
+// Service Worker v410 - Isolate participant selector styles to not affect setlist selector
+const CACHE_NAME = 'agape-worship-cache-v410';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
