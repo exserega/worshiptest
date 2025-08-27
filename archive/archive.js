@@ -423,15 +423,12 @@ async function loadSetlistSongs(setlistId, container) {
         
         logger.log('Setlist songs:', setlist.songs);
         
-        // Загружаем информацию о песнях из коллекции songs
-        const songIds = setlist.songs
-            .map(s => {
-                // Обрабатываем разные форматы хранения песен
-                if (typeof s === 'string') return s;
-                if (s && s.id) return s.id;
-                if (s && s.songId) return s.songId; // Возможно используется songId
-                return null;
-            })
+        // Сортируем песни по полю order
+        const sortedSongs = [...setlist.songs].sort((a, b) => (a.order || 0) - (b.order || 0));
+        
+        // Получаем ID песен из поля songId
+        const songIds = sortedSongs
+            .map(s => s.songId)
             .filter(id => id); // Фильтруем null/undefined
             
         logger.log('Song IDs to load:', songIds);
@@ -455,28 +452,18 @@ async function loadSetlistSongs(setlistId, container) {
         logger.log('Songs map:', songsMap);
         
         // Создаем HTML для песен
-        const songsHtml = setlist.songs.map((songRef, index) => {
-            // Обрабатываем разные форматы хранения песен
-            let songId;
-            if (typeof songRef === 'string') {
-                songId = songRef;
-            } else if (songRef && songRef.id) {
-                songId = songRef.id;
-            } else if (songRef && songRef.songId) {
-                songId = songRef.songId;
-            }
-            
+        const songsHtml = sortedSongs.map((songRef, index) => {
+            const songId = songRef.songId;
             const song = songsMap.get(songId);
+            
             logger.log('Processing song:', songId, song, songRef);
             
-            // Получаем название песни (может быть name или title)
-            const songName = song ? (song.name || song.title || 'Неизвестная песня') : 'Неизвестная песня';
+            // Получаем название песни
+            const songName = song ? (song.name || song.title || songId || 'Неизвестная песня') : songId || 'Неизвестная песня';
             
-            // Если songRef это объект, берем key и bpm оттуда, иначе из song
-            const key = (typeof songRef === 'object' && songRef.preferredKey) ? songRef.preferredKey : 
-                       (song?.preferredKey || song?.originalKey || song?.key || '-');
-            const bpm = (typeof songRef === 'object' && songRef.BPM) ? songRef.BPM : 
-                       (song?.BPM || song?.bpm || '-');
+            // Тональность берем из songRef.preferredKey, BPM из данных песни
+            const key = songRef.preferredKey || '-';
+            const bpm = song?.BPM || song?.bpm || '-';
             
             return `
                 <div class="song-item">

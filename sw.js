@@ -1,5 +1,5 @@
-// Service Worker v441 - Fix: use preferredKey and BPM fields, better song layout
-const CACHE_NAME = 'agape-worship-cache-v441';
+// Service Worker v442 - Fix: correct song structure with songId field and order sorting
+const CACHE_NAME = 'agape-worship-cache-v442';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
