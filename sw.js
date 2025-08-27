@@ -1,5 +1,5 @@
-// Service Worker v376 - Fix calendar display and sizing
-const CACHE_NAME = 'agape-worship-cache-v376';
+// Service Worker v377 - Force cache update for dateInput fix
+const CACHE_NAME = 'agape-worship-cache-v377';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
