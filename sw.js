@@ -1,5 +1,5 @@
-// Service Worker v391 - Make all action buttons more compact
-const CACHE_NAME = 'agape-worship-cache-v391';
+// Service Worker v392 - Optimize button widths (narrow text buttons, wider calendar)
+const CACHE_NAME = 'agape-worship-cache-v392';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
