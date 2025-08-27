@@ -1,5 +1,5 @@
-// Service Worker v406 - Fix date/time row, leader button and participant plus icons
-const CACHE_NAME = 'agape-worship-cache-v406';
+// Service Worker v408 - Isolated styles for event modal without affecting setlist selector
+const CACHE_NAME = 'agape-worship-cache-v408';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
