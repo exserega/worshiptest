@@ -1030,15 +1030,11 @@ window.addSetlistToCalendar = async function(setlistId) {
             const newModal = new EventCreationModal();
             logger.log('✅ Экземпляр модального окна создан');
             
-            // Открываем модальное окно с датой
+            // Открываем модальное окно с датой и предвыбранным сет-листом
             newModal.open(new Date(selectedDate), async (eventId) => {
                 logger.log('✅ Событие создано:', eventId);
-                
-                // После создания события добавляем к нему сет-лист
-                if (eventId) {
-                    await updateEventSetlist(eventId, setlistData.id, setlistData.name);
-                }
-            });
+                // Сет-лист уже был выбран в модальном окне, не нужно его обновлять отдельно
+            }, setlistData.id);
             
             logger.log('✅ Метод open() вызван');
             

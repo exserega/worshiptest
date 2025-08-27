@@ -20,9 +20,9 @@ export function getEventModal() {
         /**
          * Открыть для создания нового события
          */
-        openForCreate(onSuccess) {
+        openForCreate(onSuccess, preselectedSetlistId = null) {
             logger.log('📅 Открываем модальное окно для создания события');
-            modalInstance.open(null, onSuccess);
+            modalInstance.open(null, onSuccess, preselectedSetlistId);
         },
         
         /**

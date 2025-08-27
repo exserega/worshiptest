@@ -27,7 +27,10 @@ class EventCreationModal {
         return `${year}-${month}-${day}`;
     }
     
-    async open(dateOrEvent = new Date(), onSuccess = null) {
+    async open(dateOrEvent = new Date(), onSuccess = null, preselectedSetlistId = null) {
+        // Сохраняем предвыбранный сет-лист
+        this.preselectedSetlistId = preselectedSetlistId;
+        
         // Определяем режим работы
         if (dateOrEvent && typeof dateOrEvent === 'object' && dateOrEvent.id) {
             // Режим редактирования
@@ -304,6 +307,11 @@ class EventCreationModal {
                 option.textContent = setlist.name;
                 setlistSelect.appendChild(option);
             });
+            
+            // Если есть предвыбранный сет-лист, выбираем его
+            if (this.preselectedSetlistId && !this.editMode) {
+                setlistSelect.value = this.preselectedSetlistId;
+            }
             
         } catch (error) {
             logger.error('Ошибка загрузки данных:', error);

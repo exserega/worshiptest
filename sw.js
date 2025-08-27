@@ -1,5 +1,5 @@
-// Service Worker v410 - Isolate participant selector styles to not affect setlist selector
-const CACHE_NAME = 'agape-worship-cache-v410';
+// Service Worker v411 - Add preselected setlist to event creation modal
+const CACHE_NAME = 'agape-worship-cache-v411';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
