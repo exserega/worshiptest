@@ -966,11 +966,20 @@ window.addSetlistToCalendar = async function(setlistId) {
             return;
         }
         
-        // Временно показываем alert для тестирования
-        alert(`Функция интеграции с календарем в разработке.\n\nСет-лист: ${setlist.name}\nID: ${setlistId}\nКоличество песен: ${setlist.songs ? setlist.songs.length : 0}`);
+        // Динамически импортируем модуль модального окна
+        const { getDatePickerModal } = await import('./src/modules/integration/datePickerModal.js');
+        const datePickerModal = getDatePickerModal();
         
-        // TODO: Реализовать полную интеграцию в следующих этапах
-        logger.log('📅 Добавление сет-листа в календарь:', setlist);
+        // Открываем модальное окно выбора даты
+        datePickerModal.open(setlist, async (selectedDate, setlistData) => {
+            logger.log('📅 Выбрана дата:', selectedDate, 'для сет-листа:', setlistData.name);
+            
+            // Временно показываем результат
+            window.showNotification(`📅 Дата выбрана: ${new Date(selectedDate).toLocaleDateString('ru-RU')}`, 'info');
+            
+            // TODO: В следующем этапе здесь будет проверка событий на выбранную дату
+            console.log('Следующий шаг: проверка событий на дату', selectedDate);
+        });
         
     } catch (error) {
         logger.error('Ошибка при добавлении в календарь:', error);

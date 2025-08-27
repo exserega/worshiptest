@@ -1,5 +1,5 @@
-// Service Worker v369 - Calendar button icon-only design
-const CACHE_NAME = 'agape-worship-cache-v369';
+// Service Worker v370 - Date picker modal for calendar integration
+const CACHE_NAME = 'agape-worship-cache-v370';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -19,6 +19,8 @@ const urlsToCache = [
   './src/core/index.js',
   './src/ui/song-display.js',
   './styles/variables.css',
+  './src/modules/integration/datePickerModal.js',
+  './src/modules/integration/integrationStyles.css',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются
