@@ -98,13 +98,8 @@ class EventSelectorModal {
                 ? `<span class="event-setlist"><i class="fas fa-music"></i> Есть сет-лист</span>`
                 : `<span class="event-no-setlist"><i class="fas fa-music"></i> Нет сет-листа</span>`;
             
-            const actionText = event.setlistId ? 'Заменить' : 'Добавить';
-            const setlistIcon = event.setlistId 
-                ? '<i class="fas fa-exchange-alt"></i>'
-                : '<i class="fas fa-plus"></i>';
-            
             return `
-                <div class="event-card ${hasSetlist}" data-event-id="${event.id}">
+                <div class="event-card ${hasSetlist} clickable" data-event-id="${event.id}" data-has-setlist="${!!event.setlistId}">
                     <div class="event-time">${time}</div>
                     <div class="event-info">
                         <h4 class="event-name">${event.name || 'Без названия'}</h4>
@@ -118,9 +113,6 @@ class EventSelectorModal {
                             </span>
                         </div>
                     </div>
-                    <button class="event-select-btn" data-event-id="${event.id}" data-action="select-event">
-                        ${setlistIcon} ${actionText}
-                    </button>
                 </div>
             `;
         }).join('');
@@ -135,15 +127,26 @@ class EventSelectorModal {
             }
         });
         
-        // Выбор события
-        this.modal.querySelectorAll('[data-action="select-event"]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const eventId = e.currentTarget.dataset.eventId;
+        // Клик по карточке события
+        this.modal.addEventListener('click', (e) => {
+            const eventCard = e.target.closest('.event-card');
+            if (eventCard && !e.target.closest('[data-action]')) {
+                const eventId = eventCard.dataset.eventId;
+                const hasSetlist = eventCard.dataset.hasSetlist === 'true';
                 const selectedEvent = this.events.find(evt => evt.id === eventId);
+                
                 if (selectedEvent) {
-                    this.selectEvent(selectedEvent);
+                    if (hasSetlist) {
+                        // Если есть сет-лист, спрашиваем подтверждение
+                        if (confirm(`Заменить существующий сет-лист в событии "${selectedEvent.name}"?`)) {
+                            this.selectEvent(selectedEvent);
+                        }
+                    } else {
+                        // Если нет сет-листа, просто добавляем
+                        this.selectEvent(selectedEvent);
+                    }
                 }
-            });
+            }
         });
         
         // Создание нового события

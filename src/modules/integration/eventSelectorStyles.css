@@ -53,17 +53,24 @@
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 0.375rem 0.5rem;
+    padding: 0.5rem 0.75rem;
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 0.375rem;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
     align-items: center;
     transition: all 0.2s;
+    cursor: pointer;
 }
 
 .event-selector-modal .event-card:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.08);
     border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-selector-modal .event-card:active {
+    transform: translateY(0);
 }
 
 /* Подсветка событий с сет-листом */
@@ -127,35 +134,7 @@
     opacity: 0.7;
 }
 
-/* Кнопка выбора */
-.event-selector-modal .event-select-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    transition: all 0.2s;
-    white-space: nowrap;
-}
 
-.event-selector-modal .event-select-btn:hover {
-    background: var(--primary-hover);
-    box-shadow: 0 2px 4px rgba(0, 178, 188, 0.3);
-}
-
-.event-selector-modal .event-select-btn:active {
-    transform: scale(0.98);
-}
-
-.event-selector-modal .event-select-btn i {
-    font-size: 0.75rem;
-}
 
 /* Действия внизу */
 .event-selector-modal .selector-actions {
