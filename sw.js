@@ -1,5 +1,5 @@
-// Service Worker v421 - Archive page added
-const CACHE_NAME = 'agape-worship-cache-v421';
+// Service Worker v422 - Archive page path fix
+const CACHE_NAME = 'agape-worship-cache-v422';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -715,8 +715,8 @@ function setupSetlistEventHandlers() {
             console.log('📚 [EventHandlers] Archive button clicked - navigating to archive page');
             ui.closeAllSidePanels(); // Закрываем все панели
             
-            // Переходим на страницу архива
-            window.location.href = '/archive/';
+            // Переходим на страницу архива с полным путем для GitHub Pages
+            window.location.href = '/archive/index.html';
         });
     }
     
