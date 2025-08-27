@@ -1,5 +1,5 @@
-// Service Worker v386 - Fix date comparison for Firestore Timestamps
-const CACHE_NAME = 'agape-worship-cache-v386';
+// Service Worker v387 - Fix import path and archived field name
+const CACHE_NAME = 'agape-worship-cache-v387';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

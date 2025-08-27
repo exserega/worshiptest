@@ -3,7 +3,7 @@
  * Часть интеграции сет-листов с календарем событий
  */
 
-import { db } from '../../../firebase-init.js';
+import { db } from '../../utils/firebase-v8-adapter.js';
 import { getCurrentBranchId } from '../auth/authCheck.js';
 import logger from '../../utils/logger.js';
 
@@ -34,10 +34,9 @@ export async function checkEventsOnDate(dateString) {
         
         // Запрашиваем события из Firestore
         const eventsRef = db.collection('events');
-        // Временно упрощаем запрос - сначала получаем все события филиала
+        // Получаем все события филиала
         const query = eventsRef
-            .where('branchId', '==', branchId)
-            .where('archived', '==', false);
+            .where('branchId', '==', branchId);
             
         const snapshot = await query.get();
         
@@ -72,8 +71,8 @@ export async function checkEventsOnDate(dateString) {
             const startDateOnly = new Date(startOfDay);
             startDateOnly.setHours(0, 0, 0, 0);
             
-            // Сравниваем только даты
-            if (eventDateOnly.getTime() === startDateOnly.getTime()) {
+            // Сравниваем только даты и проверяем, что событие не архивное
+            if (eventDateOnly.getTime() === startDateOnly.getTime() && !eventData.isArchived) {
                 logger.log(`✅ Событие "${eventData.name}" подходит по дате`);
                 events.push({
                     id: doc.id,
@@ -82,7 +81,7 @@ export async function checkEventsOnDate(dateString) {
                     dateString: eventDate.toISOString()
                 });
             } else {
-                logger.log(`❌ Событие "${eventData.name}" не подходит по дате`);
+                logger.log(`❌ Событие "${eventData.name}" не подходит по дате или архивное`);
             }
         });
         
