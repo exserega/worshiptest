@@ -1,5 +1,5 @@
-// Service Worker v416 - Restored event info and added create button in selector
-const CACHE_NAME = 'agape-worship-cache-v416';
+// Service Worker v417 - Reduced padding and fixed selector modal layout
+const CACHE_NAME = 'agape-worship-cache-v417';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
