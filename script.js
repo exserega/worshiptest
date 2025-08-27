@@ -958,7 +958,7 @@ window.addSetlistToCalendar = async function(setlistId) {
         }
         
         // Получаем информацию о сет-листе
-        const setlists = state.getSetlists();
+        const setlists = state.setlists || [];
         const setlist = setlists.find(s => s.id === setlistId);
         
         if (!setlist) {

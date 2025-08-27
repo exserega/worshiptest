@@ -1,5 +1,5 @@
-// Service Worker v371 - Fix calendar button event handler
-const CACHE_NAME = 'agape-worship-cache-v371';
+// Service Worker v372 - Fix state.setlists access
+const CACHE_NAME = 'agape-worship-cache-v372';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
