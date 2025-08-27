@@ -39,19 +39,28 @@ export async function checkEventsOnDate(dateString) {
             
         const snapshot = await query.get();
         
+        logger.log(`📊 Получено ${snapshot.size} событий из базы для филиала ${branchId}`);
+        
         const events = [];
         snapshot.forEach(doc => {
             const eventData = doc.data();
             const eventDate = eventData.date.toDate();
             
+            // Логируем для отладки
+            logger.log(`📅 Проверяем событие "${eventData.name}" на дату:`, eventDate.toISOString());
+            logger.log(`📅 Сравниваем с диапазоном: ${startOfDay.toISOString()} - ${endOfDay.toISOString()}`);
+            
             // Фильтруем по дате на клиентской стороне
             if (eventDate >= startOfDay && eventDate <= endOfDay) {
+                logger.log(`✅ Событие "${eventData.name}" подходит по дате`);
                 events.push({
                     id: doc.id,
                     ...eventData,
                     // Преобразуем timestamp в строку для удобства
                     dateString: eventDate.toISOString()
                 });
+            } else {
+                logger.log(`❌ Событие "${eventData.name}" не подходит по дате`);
             }
         });
         

@@ -1,5 +1,5 @@
-// Service Worker v381 - Simplify Firestore query to avoid index requirement
-const CACHE_NAME = 'agape-worship-cache-v381';
+// Service Worker v382 - Add debug logging for event date checking
+const CACHE_NAME = 'agape-worship-cache-v382';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
