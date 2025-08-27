@@ -11,7 +11,7 @@ let currentUser = null;
 let archiveSetlists = [];
 let filteredSetlists = [];
 let archiveGroups = [];
-let selectedGroupId = 'all';
+let selectedGroupId = null; // null означает показать все
 let currentSort = 'name';
 
 // DOM элементы
@@ -116,16 +116,15 @@ async function loadArchiveData() {
  * Отрисовка групп
  */
 function renderGroups() {
-    const allCount = archiveSetlists.length;
+    elements.groupsList.innerHTML = '';
     
-    // Обновляем счетчик "Все"
-    const allChip = elements.groupsList.querySelector('[data-group-id="all"] .group-count');
-    if (allChip) {
-        allChip.textContent = allCount;
-    }
+    // Сортируем группы по алфавиту
+    const sortedGroups = [...archiveGroups].sort((a, b) => 
+        a.name.localeCompare(b.name, 'ru')
+    );
     
-    // Добавляем остальные группы
-    archiveGroups.forEach(group => {
+    // Добавляем группы
+    sortedGroups.forEach(group => {
         const chip = document.createElement('button');
         chip.className = 'group-chip';
         chip.dataset.groupId = group.id;
@@ -145,7 +144,7 @@ function applyFiltersAndSort() {
     filteredSetlists = [...archiveSetlists];
     
     // Фильтр по группе
-    if (selectedGroupId !== 'all') {
+    if (selectedGroupId) {
         filteredSetlists = filteredSetlists.filter(setlist => 
             setlist.groups && setlist.groups.includes(selectedGroupId)
         );
@@ -299,13 +298,21 @@ function setupEventHandlers() {
     elements.groupsList.addEventListener('click', (e) => {
         const chip = e.target.closest('.group-chip');
         if (chip) {
-            // Убираем active со всех
-            elements.groupsList.querySelectorAll('.group-chip').forEach(c => 
-                c.classList.remove('active')
-            );
-            // Добавляем active на выбранную
-            chip.classList.add('active');
-            selectedGroupId = chip.dataset.groupId;
+            const groupId = chip.dataset.groupId;
+            
+            if (selectedGroupId === groupId) {
+                // Повторный клик - снимаем выделение
+                chip.classList.remove('active');
+                selectedGroupId = null;
+            } else {
+                // Убираем active со всех
+                elements.groupsList.querySelectorAll('.group-chip').forEach(c => 
+                    c.classList.remove('active')
+                );
+                // Добавляем active на выбранную
+                chip.classList.add('active');
+                selectedGroupId = groupId;
+            }
             applyFiltersAndSort();
         }
     });
@@ -334,6 +341,15 @@ function setupEventHandlers() {
         // TODO: Открыть модальное окно создания группы
         alert('Создание группы - в разработке');
     });
+    
+    // Список групп
+    const listGroupsBtn = document.getElementById('list-groups-btn');
+    if (listGroupsBtn) {
+        listGroupsBtn.addEventListener('click', () => {
+            // TODO: Открыть вертикальный список групп
+            alert('Список групп - в разработке');
+        });
+    }
 }
 
 /**
@@ -397,45 +413,42 @@ function setupGroupsScrollArrows() {
     
     if (!scrollContainer || !leftArrow || !rightArrow) return;
     
-    // Показываем стрелки только на десктопе
-    if (window.innerWidth >= 768) {
-        const checkScroll = () => {
-            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            const canScrollLeft = scrollContainer.scrollLeft > 0;
-            const canScrollRight = scrollContainer.scrollLeft < maxScroll - 5; // небольшой буфер
-            
-            leftArrow.disabled = !canScrollLeft;
-            rightArrow.disabled = !canScrollRight;
-            
-            // Показываем стрелки только если есть что скроллить
-            const hasScroll = scrollContainer.scrollWidth > scrollContainer.clientWidth;
-            if (!hasScroll) {
-                leftArrow.style.display = 'none';
-                rightArrow.style.display = 'none';
-            } else {
-                leftArrow.style.display = 'flex';
-                rightArrow.style.display = 'flex';
-            }
-        };
+    const checkScroll = () => {
+        const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+        const canScrollLeft = scrollContainer.scrollLeft > 0;
+        const canScrollRight = scrollContainer.scrollLeft < maxScroll - 5; // небольшой буфер
         
-        // Прокрутка при клике на стрелки
-        leftArrow.addEventListener('click', () => {
-            scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
-        });
+        leftArrow.disabled = !canScrollLeft;
+        rightArrow.disabled = !canScrollRight;
         
-        rightArrow.addEventListener('click', () => {
-            scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
-        });
-        
-        // Проверка при скролле
-        scrollContainer.addEventListener('scroll', checkScroll);
-        
-        // Проверка при изменении размера окна
-        window.addEventListener('resize', checkScroll);
-        
-        // Начальная проверка
-        setTimeout(checkScroll, 100);
-    }
+        // Показываем стрелки только если есть что скроллить
+        const hasScroll = scrollContainer.scrollWidth > scrollContainer.clientWidth;
+        if (!hasScroll) {
+            leftArrow.style.display = 'none';
+            rightArrow.style.display = 'none';
+        } else {
+            leftArrow.style.display = 'flex';
+            rightArrow.style.display = 'flex';
+        }
+    };
+    
+    // Прокрутка при клике на стрелки
+    leftArrow.addEventListener('click', () => {
+        scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+    
+    rightArrow.addEventListener('click', () => {
+        scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
+    });
+    
+    // Проверка при скролле
+    scrollContainer.addEventListener('scroll', checkScroll);
+    
+    // Проверка при изменении размера окна
+    window.addEventListener('resize', checkScroll);
+    
+    // Начальная проверка
+    setTimeout(checkScroll, 100);
 }
 
 /**

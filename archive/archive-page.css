@@ -137,7 +137,8 @@
     font-weight: 500;
 }
 
-.add-group-btn {
+.add-group-btn,
+.list-groups-btn {
     width: 24px;
     height: 24px;
     background: var(--bg-tertiary, #1a1f2e);
@@ -152,7 +153,8 @@
     font-size: 0.75rem;
 }
 
-.add-group-btn:hover {
+.add-group-btn:hover,
+.list-groups-btn:hover {
     background: var(--primary-color, #22d3ee);
     border-color: var(--primary-color, #22d3ee);
     color: white !important;
@@ -217,10 +219,16 @@
     color: inherit !important;
 }
 
-/* Скрываем стрелки на мобильных */
+/* На мобильных делаем стрелки меньше */
 @media (max-width: 767px) {
     .scroll-arrow {
-        display: none !important;
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+    
+    .groups-scroll-wrapper {
+        gap: 4px;
     }
 }
 
@@ -477,7 +485,7 @@
 
 .action-btn {
     flex: 1;
-    padding: 8px 12px;
+    padding: 10px 12px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 8px;
@@ -489,6 +497,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    height: 40px;
 }
 
 .action-btn i {

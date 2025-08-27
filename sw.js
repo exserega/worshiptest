@@ -1,5 +1,5 @@
-// Service Worker v426 - Archive card redesign: edit button corner, pyramid layout, fixed scroll arrows
-const CACHE_NAME = 'agape-worship-cache-v426';
+// Service Worker v427 - Archive UI fixes: equal button heights, groups logic, scroll arrows on all devices
+const CACHE_NAME = 'agape-worship-cache-v427';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
