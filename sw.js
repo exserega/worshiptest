@@ -1,11 +1,15 @@
-// Service Worker v420 - Profile button styling fixes
-const CACHE_NAME = 'agape-worship-cache-v420';
+// Service Worker v421 - Archive page added
+const CACHE_NAME = 'agape-worship-cache-v421';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
   './script.js',
   './styles.css',
   './manifest.json',
+  './archive/', // Страница архива
+  './archive/index.html',
+  './archive/archive.js',
+  './archive/archive-page.css',
   './js/api.js',
   './ui.js',
   './js/core.js',
