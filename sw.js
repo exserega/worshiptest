@@ -1,5 +1,5 @@
-// Service Worker v384 - Add error handling for event checking
-const CACHE_NAME = 'agape-worship-cache-v384';
+// Service Worker v385 - Fix events variable scope error
+const CACHE_NAME = 'agape-worship-cache-v385';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
