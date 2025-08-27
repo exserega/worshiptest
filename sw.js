@@ -1,5 +1,5 @@
-// Service Worker v435 - Fix: remove duplicate Firebase init, use single approach
-const CACHE_NAME = 'agape-worship-cache-v435';
+// Service Worker v436 - Fix: init Firebase in HTML before modules load
+const CACHE_NAME = 'agape-worship-cache-v436';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

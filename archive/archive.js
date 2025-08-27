@@ -5,20 +5,7 @@
 import logger from '../src/utils/logger.js';
 import { getCurrentUser, initAuthGate } from '../src/modules/auth/authCheck.js';
 
-// Инициализация Firebase
-if (!window.firebase.apps.length) {
-    const firebaseConfig = {
-        apiKey: "AIzaSyBdReqK7n6QxKFm_o9g6Ejrj7JDSu6PJIc",
-        authDomain: "agape-worship-app.firebaseapp.com",
-        projectId: "agape-worship-app",
-        storageBucket: "agape-worship-app.appspot.com",
-        messagingSenderId: "639974006584",
-        appId: "1:639974006584:web:19e7e78c8103a09cf87595"
-    };
-    window.firebase.initializeApp(firebaseConfig);
-}
-
-// Получаем ссылки на сервисы
+// Получаем ссылки на сервисы Firebase (уже инициализирован в HTML)
 const db = window.firebase.firestore();
 
 // Глобальные переменные
