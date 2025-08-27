@@ -1,0 +1,178 @@
+/* Исправления для модального окна создания события */
+
+/* Основное модальное окно как оверлей */
+.event-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.event-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+/* Оверлей для затемнения */
+.event-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+/* Селектор участников как оверлей */
+.participant-selector {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    z-index: 10000 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+}
+
+/* Контент селектора */
+.participant-selector .selector-content {
+    background: var(--modal-background, #1a1f2e);
+    border-radius: 12px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Заголовок селектора */
+.participant-selector .selector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.participant-selector .selector-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--modal-text-color, #fff);
+}
+
+/* Кнопка закрытия */
+.participant-selector .selector-close-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.participant-selector .selector-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Поиск участников */
+.participant-selector .custom-participant-input {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.participant-selector .custom-participant-input input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--modal-text-color, #fff);
+    font-size: 1rem;
+}
+
+/* Список участников */
+.participant-selector .user-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.participant-selector .user-item {
+    padding: 12px 16px;
+    margin: 4px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--modal-text-color, #fff);
+}
+
+.participant-selector .user-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+
+/* Переменные для светлой темы */
+body[data-theme="light"] .participant-selector {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+body[data-theme="light"] .participant-selector .selector-content {
+    background: #ffffff;
+}
+
+body[data-theme="light"] .participant-selector .selector-header {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"] .participant-selector .selector-header h3 {
+    color: #1a1f2e;
+}
+
+body[data-theme="light"] .participant-selector .user-item {
+    background: rgba(0, 0, 0, 0.05);
+    color: #1a1f2e;
+}
+
+body[data-theme="light"] .participant-selector .user-item:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 480px) {
+    .participant-selector {
+        padding: 0 !important;
+    }
+    
+    .participant-selector .selector-content {
+        max-width: 100%;
+        height: 100%;
+        max-height: 100%;
+        border-radius: 0;
+    }
+    
+    .participant-selector.keyboard-open .selector-content {
+        max-height: 50vh;
+    }
+}

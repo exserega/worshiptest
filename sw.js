@@ -1,5 +1,5 @@
-// Service Worker v399 - Add eventModal wrapper for consistent behavior
-const CACHE_NAME = 'agape-worship-cache-v399';
+// Service Worker v400 - Fix event modal and participant selector styling
+const CACHE_NAME = 'agape-worship-cache-v400';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -26,6 +26,7 @@ const urlsToCache = [
   './src/modules/integration/eventActionModal.js',
   './src/modules/integration/eventActionStyles.css',
   './src/modules/events/eventModal.js',
+  './styles/event-creation-fixes.css',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются

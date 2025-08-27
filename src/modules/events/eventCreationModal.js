@@ -92,9 +92,9 @@ class EventCreationModal {
         }
         
         const modalHTML = `
-            <div class="event-modal global-overlay" id="eventCreationModal">
+            <div class="event-modal" id="eventCreationModal">
                 <div class="modal-overlay"></div>
-                <div class="modal-content overlay-content">
+                <div class="modal-content">
                     <div class="modal-header">
                         <h2>${this.editMode ? 'Редактировать событие' : 'Создать событие'}</h2>
                         <button class="close-btn" data-action="close" aria-label="Закрыть">
