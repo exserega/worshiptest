@@ -268,18 +268,30 @@ function createSetlistCard(setlist) {
                     В группу
                 </button>
             </div>
-            <button class="action-btn view-btn" data-action="view">
-                <i class="fas fa-eye"></i>
-                Просмотр
-            </button>
+        </div>
+        
+        <div class="setlist-songs">
+            <div class="songs-list" id="songs-${setlist.id}">
+                <!-- Песни будут загружены при развертывании -->
+            </div>
         </div>
     `;
     
     // Обработчик клика на карточку
-    card.addEventListener('click', (e) => {
+    card.addEventListener('click', async (e) => {
         // Проверяем, что клик не по кнопке
         if (!e.target.closest('button')) {
+            const isExpanding = !card.classList.contains('expanded');
             card.classList.toggle('expanded');
+            
+            // Загружаем песни при первом развертывании
+            if (isExpanding) {
+                const songsContainer = card.querySelector(`#songs-${setlist.id}`);
+                if (songsContainer && !songsContainer.dataset.loaded) {
+                    await loadSetlistSongs(setlist.id, songsContainer);
+                    songsContainer.dataset.loaded = 'true';
+                }
+            }
         }
     });
     
@@ -301,9 +313,6 @@ function createSetlistCard(setlist) {
                     break;
                 case 'group':
                     addToGroup(setlist.id);
-                    break;
-                case 'view':
-                    viewSetlist(setlist.id);
                     break;
             }
         });
@@ -369,20 +378,69 @@ function setupEventHandlers() {
         alert('Создание группы - в разработке');
     });
     
-    // Список групп (обе кнопки)
+    // Список групп
     const listGroupsBtn = document.getElementById('list-groups-btn');
-    const listGroupsIconBtn = document.getElementById('list-groups-icon-btn');
-    
-    const handleListGroups = () => {
-        // TODO: Открыть вертикальный список групп
-        alert('Список групп - в разработке');
-    };
     
     if (listGroupsBtn) {
-        listGroupsBtn.addEventListener('click', handleListGroups);
+        listGroupsBtn.addEventListener('click', () => {
+            // TODO: Открыть вертикальный список групп
+            alert('Список групп - в разработке');
+        });
     }
-    if (listGroupsIconBtn) {
-        listGroupsIconBtn.addEventListener('click', handleListGroups);
+}
+
+/**
+ * Загрузка песен сет-листа
+ */
+async function loadSetlistSongs(setlistId, container) {
+    try {
+        // Показываем загрузку
+        container.innerHTML = '<div class="loading-songs">Загрузка песен...</div>';
+        
+        // Находим сет-лист
+        const setlist = archiveSetlists.find(s => s.id === setlistId);
+        if (!setlist || !setlist.songs || setlist.songs.length === 0) {
+            container.innerHTML = '<div class="no-songs">Нет песен в сет-листе</div>';
+            return;
+        }
+        
+        // Загружаем информацию о песнях из коллекции songs
+        const songIds = setlist.songs.map(s => s.id);
+        const songsSnapshot = await db.collection('songs')
+            .where(firebase.firestore.FieldPath.documentId(), 'in', songIds)
+            .get();
+        
+        const songsMap = new Map();
+        songsSnapshot.forEach(doc => {
+            songsMap.set(doc.id, { id: doc.id, ...doc.data() });
+        });
+        
+        // Создаем HTML для песен
+        const songsHtml = setlist.songs.map((songRef, index) => {
+            const song = songsMap.get(songRef.id);
+            const songName = song ? song.name : 'Неизвестная песня';
+            const key = songRef.key || song?.originalKey || '-';
+            const bpm = songRef.bpm || song?.bpm || '-';
+            
+            return `
+                <div class="song-item">
+                    <div class="song-info">
+                        <div class="song-number">${index + 1}</div>
+                        <div class="song-name">${songName}</div>
+                    </div>
+                    <div class="song-details">
+                        <span class="song-key">${key}</span>
+                        <span class="song-bpm">${bpm} BPM</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        container.innerHTML = songsHtml;
+        
+    } catch (error) {
+        logger.error('Ошибка загрузки песен:', error);
+        container.innerHTML = '<div class="error-loading">Ошибка загрузки песен</div>';
     }
 }
 

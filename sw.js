@@ -1,5 +1,5 @@
-// Service Worker v428 - Archive: collapsible cards, groups list button, UI improvements
-const CACHE_NAME = 'agape-worship-cache-v428';
+// Service Worker v429 - Archive: songs display in expanded cards, lazy loading, optimized performance
+const CACHE_NAME = 'agape-worship-cache-v429';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -158,7 +158,16 @@
     color: white !important;
 }
 
+.list-groups-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary, #9ca3af);
+    font-weight: 500;
+    margin-right: 8px;
+}
+
 .list-groups-btn {
+    width: 24px;
+    height: 24px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 6px;
@@ -166,20 +175,10 @@
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 0.75rem;
-}
-
-.list-groups-btn.text-btn {
-    padding: 4px 10px;
-    font-size: 0.8rem;
-}
-
-.list-groups-btn.icon-btn {
-    width: 24px;
-    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 8px;
+    margin-right: 16px;
 }
 
 .list-groups-btn:hover {
@@ -487,7 +486,103 @@
 }
 
 .archive-setlist-card.expanded .setlist-actions {
-    max-height: 150px;
+    max-height: 100px;
+}
+
+/* Список песен в развернутой карточке */
+.setlist-songs {
+    margin-top: 12px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.archive-setlist-card.expanded .setlist-songs {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.songs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.song-item {
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+
+.song-item:hover {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: rgba(34, 211, 238, 0.3);
+}
+
+.song-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.song-number {
+    width: 24px;
+    height: 24px;
+    background: rgba(34, 211, 238, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary-color, #22d3ee);
+}
+
+.song-name {
+    font-size: 0.85rem;
+    color: var(--text-primary, #e5e7eb);
+    font-weight: 500;
+}
+
+.song-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: var(--text-secondary, #9ca3af);
+}
+
+.song-key {
+    background: rgba(34, 211, 238, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.song-bpm {
+    opacity: 0.8;
+}
+
+/* Состояния загрузки */
+.loading-songs, .no-songs, .error-loading {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary, #9ca3af);
+    font-size: 0.85rem;
+}
+
+.loading-songs {
+    color: var(--primary-color, #22d3ee);
+}
+
+.error-loading {
+    color: #ef4444;
 }
 
 .edit-btn-corner {
