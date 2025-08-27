@@ -3,7 +3,8 @@
 /* Контейнер календаря */
 .date-picker-modal .calendar-container {
     background: #111827;
-    padding: 20px;
+    padding: 16px;
+    border-radius: 0 0 16px 16px;
 }
 
 /* Заголовок календаря */
@@ -11,13 +12,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
-    padding: 0 10px;
+    margin-bottom: 16px;
+    padding: 0 8px;
 }
 
 .date-picker-modal .calendar-month {
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
     margin: 0;
     text-align: center;
@@ -26,8 +27,8 @@
 
 /* Кнопки навигации */
 .date-picker-modal .calendar-nav-btn {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border: none;
     background: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.6);
@@ -37,6 +38,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    font-size: 0.875rem;
 }
 
 .date-picker-modal .calendar-nav-btn:hover {
@@ -48,40 +50,41 @@
 .date-picker-modal .calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    margin-bottom: 8px;
+    gap: 3px;
+    margin-bottom: 6px;
 }
 
 .date-picker-modal .weekday {
     text-align: center;
     color: rgba(255, 255, 255, 0.5);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 8px 0;
+    padding: 6px 0;
 }
 
 /* Сетка дней */
 .date-picker-modal .calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    gap: 3px;
 }
 
 /* День календаря */
 .date-picker-modal .calendar-day {
     aspect-ratio: 1;
     background: rgba(255, 255, 255, 0.05);
-    border: 2px solid transparent;
-    border-radius: 8px;
+    border: 1.5px solid transparent;
+    border-radius: 6px;
     color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
     position: relative;
     transition: all 0.2s ease;
+    min-height: 36px;
 }
 
 /* Пустые ячейки */
@@ -147,14 +150,35 @@
 /* Адаптация для мобильных */
 @media (max-width: 480px) {
     .date-picker-modal .calendar-container {
-        padding: 16px;
+        padding: 12px;
+    }
+    
+    .date-picker-modal .calendar-header {
+        margin-bottom: 12px;
+    }
+    
+    .date-picker-modal .calendar-month {
+        font-size: 1rem;
+    }
+    
+    .date-picker-modal .calendar-nav-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
     }
     
     .date-picker-modal .calendar-day {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        min-height: 32px;
     }
     
     .date-picker-modal .weekday {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
+        padding: 4px 0;
+    }
+    
+    .date-picker-modal .calendar-weekdays,
+    .date-picker-modal .calendar-days {
+        gap: 2px;
     }
 }

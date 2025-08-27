@@ -249,9 +249,6 @@ class DatePickerModal {
         this.modal.classList.add('show');
         document.addEventListener('keydown', this.escapeHandler);
         
-        // Фокус на поле даты
-        setTimeout(() => dateInput.focus(), 100);
-        
         logger.log('📅 Модальное окно выбора даты открыто для сет-листа:', setlistData.name);
     }
     

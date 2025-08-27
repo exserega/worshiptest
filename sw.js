@@ -1,5 +1,5 @@
-// Service Worker v375 - Minimalist calendar design
-const CACHE_NAME = 'agape-worship-cache-v375';
+// Service Worker v376 - Fix calendar display and sizing
+const CACHE_NAME = 'agape-worship-cache-v376';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

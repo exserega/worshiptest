@@ -4,21 +4,24 @@
 
 /* Контент модального окна */
 .overlay-content.date-picker-modal {
-    max-width: 400px !important;
+    max-width: 380px !important;
     width: 90% !important;
+    max-height: 90vh !important;
     padding: 0 !important;
     background: #1a1f2e !important;
     border-radius: 16px !important;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Кнопка закрытия */
 .date-picker-modal .modal-close-btn {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 36px;
-    height: 36px;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
     border: none;
     background: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.6);
@@ -29,6 +32,7 @@
     justify-content: center;
     z-index: 10;
     transition: all 0.2s ease;
+    font-size: 0.875rem;
 }
 
 .date-picker-modal .modal-close-btn:hover {
@@ -40,8 +44,8 @@
 .date-picker-modal .modal-title {
     text-align: center;
     color: white;
-    font-size: 1.5rem;
-    margin: 24px 0 16px;
+    font-size: 1.3rem;
+    margin: 20px 50px 12px;
     font-weight: 600;
 }
 
@@ -49,9 +53,31 @@
 .date-picker-modal .setlist-name-display {
     text-align: center;
     color: var(--accent-color);
-    font-size: 1.1rem;
-    margin-bottom: 24px;
+    font-size: 1rem;
+    margin-bottom: 20px;
     padding: 0 20px;
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 480px) {
+    .overlay-content.date-picker-modal {
+        max-width: 95% !important;
+        width: 95% !important;
+        max-height: 80vh !important;
+    }
+    
+    .date-picker-modal .modal-title {
+        font-size: 1.2rem;
+        margin: 16px 40px 10px;
+    }
+    
+    .date-picker-modal .setlist-name-display {
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+    }
 }
 
