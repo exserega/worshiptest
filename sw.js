@@ -1,5 +1,5 @@
-// Service Worker v378 - Add event checking functionality
-const CACHE_NAME = 'agape-worship-cache-v378';
+// Service Worker v379 - Fix import paths in eventChecker
+const CACHE_NAME = 'agape-worship-cache-v379';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

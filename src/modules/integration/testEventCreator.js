@@ -3,7 +3,7 @@
  * Используется только для разработки
  */
 
-import { db } from '../../js/firebase-init.js';
+import { db } from '../../../firebase-init.js';
 import { getCurrentUserBranch } from '../branches/branchSelection.js';
 import logger from '../../utils/logger.js';
 
