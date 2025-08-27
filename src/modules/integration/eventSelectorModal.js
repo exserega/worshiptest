@@ -39,7 +39,12 @@ class EventSelectorModal {
             this.modal.remove();
         }
         
-        const dateString = this.selectedDate.toLocaleDateString('ru-RU', {
+        // Преобразуем selectedDate в объект Date если это строка
+        const dateObj = typeof this.selectedDate === 'string' 
+            ? new Date(this.selectedDate) 
+            : this.selectedDate;
+            
+        const dateString = dateObj.toLocaleDateString('ru-RU', {
             day: 'numeric',
             month: 'long',
             year: 'numeric'
