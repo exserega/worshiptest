@@ -178,42 +178,49 @@
     padding-bottom: 4px;
 }
 
-/* Стрелки скролла для десктопа */
+/* Обертка для групп со стрелками */
+.groups-scroll-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Стрелки скролла */
 .scroll-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
-    border-radius: 50%;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 10;
     transition: all 0.2s ease;
-    display: none; /* Скрыты по умолчанию, покажем через JS */
+    color: var(--text-secondary, #9ca3af) !important;
+    font-size: 0.75rem;
 }
 
 .scroll-arrow:hover {
     background: var(--primary-color, #22d3ee);
     border-color: var(--primary-color, #22d3ee);
-    color: white;
+    color: white !important;
 }
 
-.scroll-arrow.left {
-    left: -40px;
+.scroll-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
-.scroll-arrow.right {
-    right: -40px;
+.scroll-arrow i {
+    color: inherit !important;
 }
 
-@media (min-width: 768px) {
-    .groups-scroll-container {
-        margin: 0 40px;
+/* Скрываем стрелки на мобильных */
+@media (max-width: 767px) {
+    .scroll-arrow {
+        display: none !important;
     }
 }
 
@@ -352,6 +359,7 @@
     border-radius: 12px;
     padding: 16px;
     transition: all 0.2s ease;
+    position: relative;
 }
 
 .archive-setlist-card:hover {
@@ -428,8 +436,43 @@
 
 .setlist-actions {
     display: flex;
+    flex-direction: column;
     gap: 8px;
     margin-top: 12px;
+}
+
+.setlist-actions-row {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-btn-corner {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 8px;
+    color: var(--text-secondary, #9ca3af) !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-btn-corner:hover {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white !important;
+}
+
+.edit-btn-corner i {
+    font-size: 0.85rem;
+    color: inherit !important;
 }
 
 .action-btn {
@@ -457,6 +500,12 @@
     background: var(--primary-color, #22d3ee);
     border-color: var(--primary-color, #22d3ee);
     color: white !important;
+}
+
+.action-btn.view-btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 /* Индикатор загрузки */

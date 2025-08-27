@@ -261,21 +261,24 @@ function createSetlistCard(setlist) {
             </div>
         </div>
         
+        <button class="edit-btn-corner" onclick="editSetlist('${setlist.id}')" title="Редактировать">
+            <i class="fas fa-edit"></i>
+        </button>
+        
         <div class="setlist-actions">
-            <button class="action-btn" onclick="viewSetlist('${setlist.id}')">
+            <div class="setlist-actions-row">
+                <button class="action-btn" onclick="addToCalendar('${setlist.id}')">
+                    <i class="fas fa-calendar-plus"></i>
+                    В календарь
+                </button>
+                <button class="action-btn" onclick="addToGroup('${setlist.id}')">
+                    <i class="fas fa-folder-plus"></i>
+                    В группу
+                </button>
+            </div>
+            <button class="action-btn view-btn" onclick="viewSetlist('${setlist.id}')">
                 <i class="fas fa-eye"></i>
                 Просмотр
-            </button>
-            <button class="action-btn" onclick="addToCalendar('${setlist.id}')">
-                <i class="fas fa-calendar-plus"></i>
-                В календарь
-            </button>
-            <button class="action-btn" onclick="addToGroup('${setlist.id}')">
-                <i class="fas fa-folder-plus"></i>
-                В группу
-            </button>
-            <button class="action-btn" onclick="editSetlist('${setlist.id}')">
-                <i class="fas fa-edit"></i>
             </button>
         </div>
     `;
@@ -398,8 +401,21 @@ function setupGroupsScrollArrows() {
     if (window.innerWidth >= 768) {
         const checkScroll = () => {
             const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            leftArrow.style.display = scrollContainer.scrollLeft > 0 ? 'flex' : 'none';
-            rightArrow.style.display = scrollContainer.scrollLeft < maxScroll ? 'flex' : 'none';
+            const canScrollLeft = scrollContainer.scrollLeft > 0;
+            const canScrollRight = scrollContainer.scrollLeft < maxScroll - 5; // небольшой буфер
+            
+            leftArrow.disabled = !canScrollLeft;
+            rightArrow.disabled = !canScrollRight;
+            
+            // Показываем стрелки только если есть что скроллить
+            const hasScroll = scrollContainer.scrollWidth > scrollContainer.clientWidth;
+            if (!hasScroll) {
+                leftArrow.style.display = 'none';
+                rightArrow.style.display = 'none';
+            } else {
+                leftArrow.style.display = 'flex';
+                rightArrow.style.display = 'flex';
+            }
         };
         
         // Прокрутка при клике на стрелки
@@ -413,6 +429,9 @@ function setupGroupsScrollArrows() {
         
         // Проверка при скролле
         scrollContainer.addEventListener('scroll', checkScroll);
+        
+        // Проверка при изменении размера окна
+        window.addEventListener('resize', checkScroll);
         
         // Начальная проверка
         setTimeout(checkScroll, 100);
