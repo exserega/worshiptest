@@ -730,8 +730,8 @@
     margin-top: 1.5rem; /* Нормальный отступ после блока даты/времени */
 }
 
-/* Селектор участников - только для модального окна событий */
-.event-creation-modal .participant-selector {
+/* Селектор участников - для модального окна событий */
+.participant-selector {
     position: fixed;
     top: 0;
     left: 0;
@@ -747,7 +747,7 @@
     padding: 1rem;
 }
 
-.event-creation-modal .selector-content {
+.selector-content {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -761,7 +761,7 @@
     flex-direction: column;
 }
 
-.event-creation-modal .selector-header {
+.selector-header {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--border-color);
     background: var(--bg-primary);
@@ -771,14 +771,14 @@
     border-radius: 12px 12px 0 0;
 }
 
-.event-creation-modal .selector-header h3 {
+.selector-header h3 {
     font-size: 1.125rem;
     font-weight: 600;
     margin: 0;
     color: var(--text-primary);
 }
 
-.event-creation-modal .selector-close-btn {
+.selector-close-btn {
     background: rgba(255, 255, 255, 0.1);
     border: none;
     width: 32px;
@@ -794,19 +794,19 @@
     padding: 0;
 }
 
-.event-creation-modal .selector-close-btn:hover {
+.selector-close-btn:hover {
     background: var(--primary-color);
     color: white;
     transform: translateY(-1px);
 }
 
-.event-creation-modal .selector-body {
+.selector-body {
     flex: 1;
     overflow-y: auto;
     padding: 1rem;
 }
 
-.event-creation-modal .custom-participant-input {
+.custom-participant-input {
     width: 100%;
     padding: 0.75rem 1rem;
     background: transparent;
@@ -818,18 +818,18 @@
     transition: all 0.2s;
 }
 
-.event-creation-modal .custom-participant-input:focus {
+.custom-participant-input:focus {
     outline: none;
     border-color: var(--primary-color);
     background: rgba(255, 255, 255, 0.05);
 }
 
-.event-creation-modal .user-list {
+.user-list {
     max-height: 400px;
     overflow-y: auto;
 }
 
-.event-creation-modal .user-item {
+.user-item {
     padding: 0.75rem 1rem;
     cursor: pointer;
     transition: all 0.15s ease;
@@ -840,76 +840,76 @@
     gap: 0.5rem;
 }
 
-.event-creation-modal .user-item:hover {
+.user-item:hover {
     background: rgba(0, 178, 188, 0.1);
     padding-left: 1.25rem;
 }
 
-.event-creation-modal .user-item.selected {
+.user-item.selected {
     background: rgba(0, 178, 188, 0.15);
     color: var(--primary-color);
     font-weight: 600;
 }
 
 /* Светлая тема - улучшенная контрастность для селектора участников */
-[data-theme="light"] .event-creation-modal .participant-selector {
+[data-theme="light"] .participant-selector {
     background: rgba(0, 0, 0, 0.4); /* Более темный фон overlay */
 }
 
-[data-theme="light"] .event-creation-modal .selector-content {
+[data-theme="light"] .selector-content {
     background: #ffffff;
     border-color: #cbd5e1;
 }
 
-[data-theme="light"] .event-creation-modal .selector-close-btn {
+[data-theme="light"] .selector-close-btn {
     background: rgba(0, 0, 0, 0.05);
     color: #1e293b;
 }
 
-[data-theme="light"] .event-creation-modal .selector-close-btn:hover {
+[data-theme="light"] .selector-close-btn:hover {
     background: var(--primary-color);
     color: white;
 }
 
-[data-theme="light"] .event-creation-modal .custom-participant-input {
+[data-theme="light"] .custom-participant-input {
     background: transparent;
     border-color: #e5e7eb;
     color: #1e293b;
 }
 
-[data-theme="light"] .event-creation-modal .custom-participant-input:focus {
+[data-theme="light"] .custom-participant-input:focus {
     background: rgba(51, 154, 240, 0.05);
     border-color: var(--primary-color);
 }
 
-[data-theme="light"] .event-creation-modal .user-item:hover {
+[data-theme="light"] .user-item:hover {
     background: rgba(51, 154, 240, 0.08);
 }
 
-[data-theme="light"] .event-creation-modal .user-item.selected {
+[data-theme="light"] .user-item.selected {
     background: rgba(51, 154, 240, 0.15);
     color: var(--primary-color);
 }
 
 /* Мобильная адаптация для селектора участников события */
 @media (max-width: 480px) {
-    .event-creation-modal .participant-selector {
+    .participant-selector {
         padding: 0.5rem;
     }
     
     /* Когда поле ввода в фокусе, поднимаем модальное окно */
-    .event-creation-modal .participant-selector:has(input:focus) .selector-content {
+    .participant-selector:has(input:focus) .selector-content {
         transform: translateY(-20vh);
         transition: transform 0.3s ease;
     }
     
     /* Для браузеров без поддержки :has() используем класс */
-    .event-creation-modal .participant-selector.keyboard-open .selector-content {
+    .participant-selector.keyboard-open .selector-content {
         transform: translateY(-20vh);
         transition: transform 0.3s ease;
     }
     
-    .event-creation-modal .selector-content {
+    .selector-content {
         max-width: calc(100vw - 1rem);
         width: 100%;
         max-height: calc(100vh - 1rem);
@@ -918,41 +918,41 @@
         transition: transform 0.3s ease;
     }
     
-    .event-creation-modal .selector-header {
+    .selector-header {
         padding: 0.5rem 0.75rem; /* Еще меньше отступ на мобильных */
     }
     
-    .event-creation-modal .selector-header h3 {
+    .selector-header h3 {
         font-size: 0.9375rem; /* Немного меньше размер */
     }
     
-    .event-creation-modal .selector-close-btn {
+    .selector-close-btn {
         width: 28px;
         height: 28px;
         font-size: 1rem;
     }
     
-    .event-creation-modal .selector-body {
+    .selector-body {
         padding: 0.75rem;
     }
     
-    .event-creation-modal .custom-participant-input {
+    .custom-participant-input {
         font-size: 16px; /* Предотвращаем зум на iOS */
         padding: 0.625rem 0.875rem;
     }
     
-    .event-creation-modal .user-item {
+    .user-item {
         padding: 0.625rem 0.875rem;
         font-size: 0.875rem;
     }
     
-    .event-creation-modal .user-item:hover {
+    .user-item:hover {
         padding-left: 1rem;
     }
     
     /* Когда клавиатура открыта, ограничиваем высоту списка */
-    .event-creation-modal .participant-selector:has(input:focus) .user-list,
-    .event-creation-modal .participant-selector.keyboard-open .user-list {
+    .participant-selector:has(input:focus) .user-list,
+    .participant-selector.keyboard-open .user-list {
         max-height: 35vh; /* Ограничиваем высоту списка */
         overflow-y: auto;
     }

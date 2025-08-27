@@ -1,5 +1,5 @@
-// Service Worker v408 - Isolated styles for event modal without affecting setlist selector
-const CACHE_NAME = 'agape-worship-cache-v408';
+// Service Worker v409 - Fix participant selector overlay styles and structure
+const CACHE_NAME = 'agape-worship-cache-v409';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -629,15 +629,15 @@ class EventCreationModal {
                         </svg>
                     </button>
                 </div>
-                <div class="custom-participant-input">
+                <div class="selector-body">
                     <input type="text" 
                            id="participantSearchInput" 
                            placeholder="Введите имя для поиска или создания" 
-                           class="form-control"
+                           class="custom-participant-input"
                            autocomplete="off">
-                </div>
-                <div class="user-list" id="participantsList">
-                    ${this.renderParticipantsList(this.availableUsers, '', instrumentId)}
+                    <div class="user-list" id="participantsList">
+                        ${this.renderParticipantsList(this.availableUsers, '', instrumentId)}
+                    </div>
                 </div>
             </div>
         `;
