@@ -1,5 +1,5 @@
-// Service Worker v401 - Complete event modal styling override
-const CACHE_NAME = 'agape-worship-cache-v401';
+// Service Worker v402 - Use original events-page.css styles
+const CACHE_NAME = 'agape-worship-cache-v402';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -27,7 +27,7 @@ const urlsToCache = [
   './src/modules/integration/eventActionStyles.css',
   './src/modules/events/eventModal.js',
   './styles/event-creation-fixes.css',
-  './styles/event-modal-override.css',
+  './events/events-page.css',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются
