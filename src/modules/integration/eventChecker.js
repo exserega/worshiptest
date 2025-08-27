@@ -51,14 +51,29 @@ export async function checkEventsOnDate(dateString) {
         const events = [];
         snapshot.forEach(doc => {
             const eventData = doc.data();
-            const eventDate = eventData.date.toDate();
+            
+            // Проверяем, что у события есть дата
+            if (!eventData.date) {
+                logger.warn(`⚠️ У события "${eventData.name}" нет даты`);
+                return;
+            }
+            
+            // Преобразуем Firestore Timestamp в Date
+            const eventDate = eventData.date.toDate ? eventData.date.toDate() : new Date(eventData.date);
             
             // Логируем для отладки
             logger.log(`📅 Проверяем событие "${eventData.name}" на дату:`, eventDate.toISOString());
             logger.log(`📅 Сравниваем с диапазоном: ${startOfDay.toISOString()} - ${endOfDay.toISOString()}`);
             
-            // Фильтруем по дате на клиентской стороне
-            if (eventDate >= startOfDay && eventDate <= endOfDay) {
+            // Получаем только дату без времени для сравнения
+            const eventDateOnly = new Date(eventDate);
+            eventDateOnly.setHours(0, 0, 0, 0);
+            
+            const startDateOnly = new Date(startOfDay);
+            startDateOnly.setHours(0, 0, 0, 0);
+            
+            // Сравниваем только даты
+            if (eventDateOnly.getTime() === startDateOnly.getTime()) {
                 logger.log(`✅ Событие "${eventData.name}" подходит по дате`);
                 events.push({
                     id: doc.id,

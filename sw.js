@@ -1,5 +1,5 @@
-// Service Worker v385 - Fix events variable scope error
-const CACHE_NAME = 'agape-worship-cache-v385';
+// Service Worker v386 - Fix date comparison for Firestore Timestamps
+const CACHE_NAME = 'agape-worship-cache-v386';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
