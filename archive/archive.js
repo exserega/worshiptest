@@ -3,8 +3,23 @@
  */
 
 import logger from '../src/utils/logger.js';
-import { db } from '../firebase-init.js';
 import { getCurrentUser, initAuthGate } from '../src/modules/auth/authCheck.js';
+
+// Инициализация Firebase
+if (!window.firebase.apps.length) {
+    const firebaseConfig = {
+        apiKey: "AIzaSyBdReqK7n6QxKFm_o9g6Ejrj7JDSu6PJIc",
+        authDomain: "agape-worship-app.firebaseapp.com",
+        projectId: "agape-worship-app",
+        storageBucket: "agape-worship-app.appspot.com",
+        messagingSenderId: "639974006584",
+        appId: "1:639974006584:web:19e7e78c8103a09cf87595"
+    };
+    window.firebase.initializeApp(firebaseConfig);
+}
+
+// Получаем ссылки на сервисы
+const db = window.firebase.firestore();
 
 // Глобальные переменные
 let currentUser = null;
@@ -425,7 +440,7 @@ async function loadSetlistSongs(setlistId, container) {
         }
         
         const songsSnapshot = await db.collection('songs')
-            .where(firebase.firestore.FieldPath.documentId(), 'in', songIds)
+            .where(window.firebase.firestore.FieldPath.documentId(), 'in', songIds)
             .get();
         
         const songsMap = new Map();

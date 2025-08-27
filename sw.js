@@ -1,5 +1,5 @@
-// Service Worker v434 - Fix: add Firebase Storage SDK to archive page
-const CACHE_NAME = 'agape-worship-cache-v434';
+// Service Worker v435 - Fix: remove duplicate Firebase init, use single approach
+const CACHE_NAME = 'agape-worship-cache-v435';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -17,7 +17,6 @@ const urlsToCache = [
   './js/constants.js',
   './js/firebase-config.js',
   './firebase-init.js',
-  './firebase-init-global.js',
   // Модульные UI для офлайн
   './src/main/initialization.js',
   './src/main/controller.js',
