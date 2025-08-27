@@ -32,29 +32,39 @@ const elements = {
 async function initializePage() {
     logger.log('🗂️ Initializing archive page');
     
-    // Проверка авторизации
-    const authPassed = await initAuthGate({
-        requireAuth: true,
-        requireBranch: false,
-        requireAdmin: false
-    });
-    
-    if (!authPassed) {
-        logger.log('❌ Auth check failed');
-        return;
+    try {
+        // Проверка авторизации
+        const authPassed = await initAuthGate({
+            requireAuth: true,
+            requireBranch: false,
+            requireAdmin: false
+        });
+        
+        if (!authPassed) {
+            logger.log('❌ Auth check failed');
+            return;
+        }
+        
+        currentUser = getCurrentUser();
+        logger.log('✅ User authenticated:', currentUser?.email);
+        
+        if (!currentUser) {
+            logger.error('❌ getCurrentUser returned null after auth passed');
+            return;
+        }
+        
+        // Инициализация DOM элементов
+        initializeElements();
+        
+        // Загрузка данных
+        await loadArchiveData();
+        
+        // Настройка обработчиков событий
+        setupEventHandlers();
+        
+    } catch (error) {
+        logger.error('❌ Error initializing archive page:', error);
     }
-    
-    currentUser = getCurrentUser();
-    logger.log('✅ User authenticated:', currentUser?.email);
-    
-    // Инициализация DOM элементов
-    initializeElements();
-    
-    // Загрузка данных
-    await loadArchiveData();
-    
-    // Настройка обработчиков событий
-    setupEventHandlers();
 }
 
 /**
@@ -571,4 +581,13 @@ function debounce(func, wait) {
 }
 
 // Запуск при загрузке страницы
-document.addEventListener('DOMContentLoaded', initializePage);
+document.addEventListener('DOMContentLoaded', async () => {
+    // Ждем инициализации Firebase
+    if (window.firebase && window.firebase.auth) {
+        // Даем время Firebase полностью инициализироваться
+        await new Promise(resolve => setTimeout(resolve, 100));
+        initializePage();
+    } else {
+        logger.error('❌ Firebase not initialized');
+    }
+});

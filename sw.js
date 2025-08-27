@@ -1,5 +1,5 @@
-// Service Worker v432 - Fix: archive page firebase loading with separate global init
-const CACHE_NAME = 'agape-worship-cache-v432';
+// Service Worker v433 - Fix: archive page auth redirect issue, add error handling
+const CACHE_NAME = 'agape-worship-cache-v433';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
