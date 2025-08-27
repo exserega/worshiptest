@@ -314,6 +314,35 @@ function getInstrumentOrder(instrument) {
 }
 ```
 
+### Критические стили плеера (ОБНОВЛЕНО)
+```css
+/* ВАЖНО: Форсированные цвета для единообразия */
+.event-player-overlay {
+    --bg-primary: #111827 !important;
+    --text-primary: #f3f4f6 !important;
+}
+
+/* Выпадающий список тональностей - ФИКСИРОВАННЫЕ размеры */
+.player-key-dropdown {
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    height: 420px !important;
+    background: #1f2937 !important;
+}
+
+/* Иконки в кнопках - ОБЯЗАТЕЛЬНО с !important */
+.player-control-btn i,
+.player-control-btn .fas {
+    color: var(--text-primary) !important;
+}
+
+/* Активное состояние кнопок */
+.player-control-btn.active i {
+    color: var(--bg-primary) !important;
+}
+```
+
 ### Управление видимостью панели инструментов
 - Кнопка-переключатель меняет иконку: ↑ (скрыть) / ≡ (показать)
 - Состояние сохраняется в localStorage
