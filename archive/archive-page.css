@@ -169,7 +169,7 @@
     font-size: 0.875rem;
     color: var(--text-secondary, #9ca3af);
     font-weight: 500;
-    margin-right: 4px;
+    margin-right: 2px;
 }
 
 .list-groups-btn {
@@ -185,7 +185,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 12px;
+    margin-right: 8px;
+    margin-left: 0;
     padding: 0;
 }
 
@@ -220,6 +221,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    position: relative;
 }
 
 /* Стрелки скролла */
@@ -265,10 +267,10 @@
         position: relative;
     }
     
-    .groups-scroll-container::after {
+    .groups-scroll-wrapper::after {
         content: '▸';
         position: absolute;
-        right: -15px;
+        right: 5px;
         top: 50%;
         transform: translateY(-50%);
         font-size: 0.8rem;
@@ -278,10 +280,10 @@
         transition: opacity 0.2s;
     }
     
-    .groups-scroll-container.scrolled-left::before {
+    .groups-scroll-wrapper.scrolled-left::before {
         content: '◂';
         position: absolute;
-        left: -15px;
+        left: 5px;
         top: 50%;
         transform: translateY(-50%);
         font-size: 0.8rem;
@@ -291,7 +293,7 @@
         z-index: 1;
     }
     
-    .groups-scroll-container.scrolled-right::after {
+    .groups-scroll-wrapper.scrolled-right::after {
         opacity: 0;
     }
 }
@@ -586,13 +588,14 @@
 }
 
 .song-key {
-    background: var(--bg-tertiary, #1a1f2e);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-weight: 600;
-    color: var(--text-secondary, #9ca3af);
-    font-size: 0.7rem;
-    border: 1px solid var(--border-color, #374151);
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    padding: 1px 6px !important;
+    border-radius: 3px !important;
+    font-weight: 600 !important;
+    color: var(--text-secondary, #9ca3af) !important;
+    font-size: 0.7rem !important;
+    border: 1px solid var(--border-color, #374151) !important;
+    display: inline-block !important;
 }
 
 .song-bpm {
