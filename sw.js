@@ -1,5 +1,5 @@
-// Service Worker v403 - Isolated event creation modal styles
-const CACHE_NAME = 'agape-worship-cache-v403';
+// Service Worker v404 - Fix modal show method and add logging
+const CACHE_NAME = 'agape-worship-cache-v404';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
