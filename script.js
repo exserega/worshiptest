@@ -1076,15 +1076,12 @@ window.addSetlistToCalendar = async function(setlistId) {
             const selectorModal = getEventSelectorModal();
             
             selectorModal.open(events, selectedDate, setlistData, async (action, eventData, setlistData, selectedDate) => {
-                if (action === 'select') {
-                    // Выбрано существующее событие
-                    logger.log('📅 Выбрано событие:', eventData.name);
-                    await handleSingleEvent(eventData, setlistData, selectedDate);
-                } else if (action === 'create') {
+                if (action === 'create') {
                     // Создание нового события
                     logger.log('📅 Создаем новое событие вместо выбора из существующих');
                     await handleCreateNewEvent(selectedDate, setlistData);
                 }
+                // Обработка выбора события теперь происходит внутри eventSelectorModal
             });
             
         } catch (error) {

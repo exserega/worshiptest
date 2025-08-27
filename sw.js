@@ -1,5 +1,5 @@
-// Service Worker v414 - Fix date handling in event selector modal
-const CACHE_NAME = 'agape-worship-cache-v414';
+// Service Worker v415 - Compact event selector with direct setlist update
+const CACHE_NAME = 'agape-worship-cache-v415';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

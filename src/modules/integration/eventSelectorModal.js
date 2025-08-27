@@ -94,27 +94,23 @@ class EventSelectorModal {
             });
             
             const hasSetlist = event.setlistId ? 'has-setlist' : 'no-setlist';
-            const setlistInfo = event.setlistId 
-                ? `<span class="event-setlist"><i class="fas fa-music"></i> Есть сет-лист</span>`
-                : `<span class="event-no-setlist"><i class="fas fa-music"></i> Нет сет-листа</span>`;
+            const actionText = event.setlistId ? 'Заменить' : 'Добавить';
+            const setlistIcon = event.setlistId 
+                ? '<i class="fas fa-exchange-alt"></i>'
+                : '<i class="fas fa-plus"></i>';
             
             return `
                 <div class="event-card ${hasSetlist}" data-event-id="${event.id}">
                     <div class="event-time">${time}</div>
                     <div class="event-info">
-                        <h4 class="event-name">${event.name || 'Без названия'}</h4>
-                        <div class="event-details">
-                            <span class="event-leader">
-                                <i class="fas fa-user"></i> ${event.leaderName || 'Не указан'}
-                            </span>
-                            ${setlistInfo}
-                            <span class="event-participants">
-                                <i class="fas fa-users"></i> ${event.participantCount || 0}
-                            </span>
+                        <div class="event-name">${event.name || 'Без названия'}</div>
+                        <div class="event-meta">
+                            ${event.leaderName || 'Ведущий не указан'}
+                            ${event.setlistId ? ' • Есть сет-лист' : ''}
                         </div>
                     </div>
                     <button class="event-select-btn" data-event-id="${event.id}" data-action="select-event">
-                        <i class="fas fa-check"></i> Выбрать
+                        ${setlistIcon} ${actionText}
                     </button>
                 </div>
             `;
@@ -154,12 +150,40 @@ class EventSelectorModal {
         });
     }
     
-    selectEvent(event) {
+    async selectEvent(event) {
         logger.log('📅 Выбрано событие:', event.name);
-        this.close();
         
-        if (this.onEventSelected) {
-            this.onEventSelected('select', event, this.setlistData, this.selectedDate);
+        try {
+            // Определяем действие - добавление или замена
+            const action = event.setlistId ? 'замена' : 'добавление';
+            logger.log(`📅 Выполняется ${action} сет-листа`);
+            
+            // Закрываем модальное окно
+            this.close();
+            
+            // Обновляем сет-лист в событии
+            await this.updateEventSetlist(event.id, this.setlistData.id, this.setlistData.name);
+            
+            // Показываем уведомление об успехе
+            const message = event.setlistId 
+                ? `✅ Сет-лист заменен в событии "${event.name}"`
+                : `✅ Сет-лист добавлен в событие "${event.name}"`;
+            window.showNotification(message, 'success');
+            
+        } catch (error) {
+            logger.error('❌ Ошибка при обновлении события:', error);
+            window.showNotification('❌ Ошибка при обновлении события', 'error');
+        }
+    }
+    
+    async updateEventSetlist(eventId, setlistId, setlistName) {
+        try {
+            const { updateEventSetlistApi } = await import('../events/eventsApi.js');
+            await updateEventSetlistApi(eventId, setlistId, setlistName);
+            logger.log('✅ Сет-лист обновлен в событии');
+        } catch (error) {
+            logger.error('❌ Ошибка при обновлении сет-листа:', error);
+            throw error;
         }
     }
     

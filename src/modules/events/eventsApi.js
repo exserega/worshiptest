@@ -320,3 +320,38 @@ export async function getEvent(eventId) {
         throw error;
     }
 }
+
+/**
+ * Обновить сет-лист в событии
+ * @param {string} eventId - ID события
+ * @param {string} setlistId - ID сет-листа
+ * @param {string} setlistName - Название сет-листа (опционально)
+ */
+export async function updateEventSetlistApi(eventId, setlistId, setlistName) {
+    try {
+        // Получаем количество песен в сетлисте
+        let songCount = 0;
+        if (setlistId) {
+            const setlistDoc = await db.collection('worship_setlists').doc(setlistId).get();
+            if (setlistDoc.exists) {
+                const setlistData = setlistDoc.data();
+                songCount = setlistData.songs ? setlistData.songs.length : 0;
+            }
+        }
+        
+        // Обновляем событие
+        const updates = {
+            setlistId: setlistId,
+            songCount: songCount,
+            updatedAt: Timestamp.now()
+        };
+        
+        const eventRef = db.collection('events').doc(eventId);
+        await eventRef.update(updates);
+        
+        logger.log(`✅ Сет-лист обновлен в событии ${eventId}`);
+    } catch (error) {
+        logger.error('❌ Ошибка обновления сет-листа в событии:', error);
+        throw error;
+    }
+}
