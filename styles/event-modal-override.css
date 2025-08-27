@@ -1,0 +1,283 @@
+/* Переопределения для правильного отображения модального окна событий */
+
+/* Основная обертка модального окна */
+#eventCreationModal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    display: none !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+    padding: 0 !important;
+}
+
+#eventCreationModal.show {
+    display: flex !important;
+}
+
+/* Переопределяем стили для .modal-content внутри .event-modal */
+#eventCreationModal .modal-content {
+    position: relative !important;
+    background: var(--modal-background, #1a1f2e) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+    max-width: 480px !important;
+    width: calc(100% - 2rem) !important;
+    max-height: calc(100vh - 2rem) !important;
+    margin: 1rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+/* Заголовок модального окна */
+#eventCreationModal .modal-header {
+    background: var(--modal-header-bg, #141922) !important;
+    padding: 20px 24px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-shrink: 0 !important;
+}
+
+#eventCreationModal .modal-header h2 {
+    margin: 0 !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    color: var(--modal-text-color, #ffffff) !important;
+}
+
+/* Кнопка закрытия */
+#eventCreationModal .close-btn {
+    background: transparent !important;
+    border: none !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    cursor: pointer !important;
+    padding: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+#eventCreationModal .close-btn:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+/* Форма */
+#eventCreationModal .event-form {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    padding: 24px !important;
+    background: var(--modal-background, #1a1f2e) !important;
+}
+
+/* Группы полей */
+#eventCreationModal .form-group {
+    margin-bottom: 20px !important;
+}
+
+#eventCreationModal .form-group label {
+    display: block !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: var(--modal-text-color-secondary, rgba(255, 255, 255, 0.8)) !important;
+    margin-bottom: 8px !important;
+}
+
+/* Поля ввода */
+#eventCreationModal .form-input,
+#eventCreationModal .form-select,
+#eventCreationModal .form-textarea {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--modal-text-color, #ffffff) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    font-size: 1rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+}
+
+#eventCreationModal .form-input:focus,
+#eventCreationModal .form-select:focus,
+#eventCreationModal .form-textarea:focus {
+    outline: none !important;
+    border-color: var(--accent-color, #00b2bc) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 0 0 3px rgba(0, 178, 188, 0.1) !important;
+}
+
+/* Кнопки действий */
+#eventCreationModal .form-actions {
+    display: flex !important;
+    gap: 12px !important;
+    padding: 20px 24px !important;
+    background: var(--modal-header-bg, #141922) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    flex-shrink: 0 !important;
+}
+
+#eventCreationModal .btn-primary {
+    background: var(--accent-color, #00b2bc) !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    flex: 1 !important;
+}
+
+#eventCreationModal .btn-primary:hover:not(:disabled) {
+    background: var(--accent-color-hover, #009ca5) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 178, 188, 0.3) !important;
+}
+
+#eventCreationModal .btn-secondary {
+    background: transparent !important;
+    color: var(--modal-text-color, #ffffff) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+#eventCreationModal .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Блоки участников */
+#eventCreationModal .participants-section {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+#eventCreationModal .section-title {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: var(--modal-text-color, #ffffff) !important;
+    margin-bottom: 16px !important;
+}
+
+/* Чипы участников */
+#eventCreationModal .participant-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: rgba(0, 178, 188, 0.15) !important;
+    color: var(--accent-color, #00b2bc) !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 0.875rem !important;
+    margin: 4px !important;
+}
+
+#eventCreationModal .participant-chip .remove-btn {
+    background: transparent !important;
+    border: none !important;
+    color: currentColor !important;
+    cursor: pointer !important;
+    padding: 2px !important;
+    display: flex !important;
+    align-items: center !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.2s ease !important;
+}
+
+#eventCreationModal .participant-chip .remove-btn:hover {
+    opacity: 1 !important;
+}
+
+/* Переменные для светлой темы */
+body[data-theme="light"] #eventCreationModal {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+body[data-theme="light"] #eventCreationModal .modal-content {
+    background: #ffffff !important;
+}
+
+body[data-theme="light"] #eventCreationModal .modal-header {
+    background: #f3f4f6 !important;
+    border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body[data-theme="light"] #eventCreationModal .close-btn {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+body[data-theme="light"] #eventCreationModal .close-btn:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: rgba(0, 0, 0, 0.8) !important;
+}
+
+body[data-theme="light"] #eventCreationModal .event-form {
+    background: #ffffff !important;
+}
+
+body[data-theme="light"] #eventCreationModal .form-group label {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+body[data-theme="light"] #eventCreationModal .form-input,
+body[data-theme="light"] #eventCreationModal .form-select,
+body[data-theme="light"] #eventCreationModal .form-textarea {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #1a1f2e !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body[data-theme="light"] #eventCreationModal .form-actions {
+    background: #f3f4f6 !important;
+    border-top-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body[data-theme="light"] #eventCreationModal .btn-secondary {
+    color: #1a1f2e !important;
+    border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+body[data-theme="light"] #eventCreationModal .participants-section {
+    background: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 480px) {
+    #eventCreationModal .modal-content {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+    }
+    
+    #eventCreationModal .modal-header {
+        padding: 16px 20px !important;
+    }
+    
+    #eventCreationModal .event-form {
+        padding: 16px !important;
+    }
+    
+    #eventCreationModal .form-actions {
+        padding: 16px !important;
+    }
+}

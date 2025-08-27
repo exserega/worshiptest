@@ -92,7 +92,7 @@ class EventCreationModal {
         }
         
         const modalHTML = `
-            <div class="event-creation-modal" id="eventCreationModal">
+            <div class="event-modal" id="eventCreationModal">
                 <div class="modal-overlay"></div>
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1029,9 +1029,9 @@ class EventCreationModal {
     }
     
     show() {
-        // Показываем модальное окно
+        // Используем стандартный паттерн показа модальных окон
         if (this.modal) {
-            this.modal.style.display = 'block';
+            this.modal.classList.add('show');
             document.body.style.overflow = 'hidden';
         }
     }
