@@ -1,5 +1,5 @@
-// Service Worker v393 - Increase button widths by 15%
-const CACHE_NAME = 'agape-worship-cache-v393';
+// Service Worker v394 - Increase button widths by 10% more and reduce icon spacing
+const CACHE_NAME = 'agape-worship-cache-v394';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
