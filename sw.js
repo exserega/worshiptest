@@ -1,5 +1,5 @@
-// Service Worker v404 - Fix modal show method and add logging
-const CACHE_NAME = 'agape-worship-cache-v404';
+// Service Worker v405 - Complete 1:1 event modal styles from events page
+const CACHE_NAME = 'agape-worship-cache-v405';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -27,7 +27,7 @@ const urlsToCache = [
   './src/modules/integration/eventActionStyles.css',
   './src/modules/events/eventModal.js',
   './styles/event-creation-fixes.css',
-  './styles/event-creation-modal-only.css',
+  './styles/event-creation-modal-complete.css',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются
