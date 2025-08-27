@@ -975,28 +975,37 @@ window.addSetlistToCalendar = async function(setlistId) {
             logger.log('📅 Выбрана дата:', selectedDate, 'для сет-листа:', setlistData.name);
             
             // Проверяем события на выбранную дату
-            const { checkEventsOnDate, getEventsDescription } = await import('./src/modules/integration/eventChecker.js');
-            const events = await checkEventsOnDate(selectedDate);
-            
-            // Показываем информацию о найденных событиях
-            const description = getEventsDescription(events);
-            window.showNotification(`📅 ${description}`, 'info');
-            
-            // Обрабатываем результат
-            if (events.length === 0) {
-                // Нет событий - предлагаем создать новое
-                logger.log('📅 На дату нет событий, предлагаем создать новое');
-                // TODO: handleCreateNewEvent(selectedDate, setlistData);
-            } else if (events.length === 1) {
-                // Одно событие - проверяем, есть ли у него сет-лист
-                const event = events[0];
-                logger.log('📅 Найдено одно событие:', event.name, 'Сет-лист:', event.setlistId ? 'есть' : 'нет');
-                // TODO: handleSingleEvent(event, setlistData);
-            } else {
-                // Несколько событий - показываем выбор
-                logger.log('📅 Найдено несколько событий, показываем выбор');
-                // TODO: handleMultipleEvents(events, selectedDate, setlistData);
+            try {
+                logger.log('📅 Начинаем проверку событий...');
+                const { checkEventsOnDate, getEventsDescription } = await import('./src/modules/integration/eventChecker.js');
+                logger.log('📅 Модуль eventChecker загружен');
+                
+                const events = await checkEventsOnDate(selectedDate);
+                logger.log('📅 Результат проверки:', events);
+                
+                // Показываем информацию о найденных событиях
+                const description = getEventsDescription(events);
+                window.showNotification(`📅 ${description}`, 'info');
+            } catch (error) {
+                logger.error('❌ Ошибка при проверке событий:', error);
+                window.showNotification('❌ Ошибка при проверке событий', 'error');
             }
+            
+                // Обрабатываем результат
+                if (events && events.length === 0) {
+                    // Нет событий - предлагаем создать новое
+                    logger.log('📅 На дату нет событий, предлагаем создать новое');
+                    // TODO: handleCreateNewEvent(selectedDate, setlistData);
+                } else if (events && events.length === 1) {
+                    // Одно событие - проверяем, есть ли у него сет-лист
+                    const event = events[0];
+                    logger.log('📅 Найдено одно событие:', event.name, 'Сет-лист:', event.setlistId ? 'есть' : 'нет');
+                    // TODO: handleSingleEvent(event, setlistData);
+                } else if (events && events.length > 1) {
+                    // Несколько событий - показываем выбор
+                    logger.log('📅 Найдено несколько событий, показываем выбор');
+                    // TODO: handleMultipleEvents(events, selectedDate, setlistData);
+                }
         });
         
     } catch (error) {
