@@ -1,5 +1,5 @@
-// Service Worker v443 - Fix: song layout with number on left, key/bpm stacked on right
-const CACHE_NAME = 'agape-worship-cache-v443';
+// Service Worker v444 - Fix: mobile scroll indicators, alphabetic groups, compact songs
+const CACHE_NAME = 'agape-worship-cache-v444';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

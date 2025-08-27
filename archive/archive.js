@@ -133,10 +133,12 @@ async function loadArchiveData() {
 function renderGroups() {
     elements.groupsList.innerHTML = '';
     
-    // Сортируем группы по алфавиту
-    const sortedGroups = [...archiveGroups].sort((a, b) => 
-        a.name.localeCompare(b.name, 'ru')
-    );
+    // Сортируем группы по алфавиту (убираем эмодзи для сортировки)
+    const sortedGroups = [...archiveGroups].sort((a, b) => {
+        const nameA = a.name.replace(/[^\u0400-\u04FF\w\s]/g, '').trim();
+        const nameB = b.name.replace(/[^\u0400-\u04FF\w\s]/g, '').trim();
+        return nameA.localeCompare(nameB, 'ru');
+    });
     
     // Добавляем группы
     sortedGroups.forEach(group => {
@@ -575,7 +577,27 @@ function setupGroupsScrollArrows() {
     });
     
     // Проверка при скролле
-    scrollContainer.addEventListener('scroll', checkScroll);
+    scrollContainer.addEventListener('scroll', () => {
+        checkScroll();
+        
+        // Для мобильных устройств добавляем классы для индикаторов
+        if (window.innerWidth <= 480) {
+            const scrollLeft = scrollContainer.scrollLeft;
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            
+            if (scrollLeft > 10) {
+                scrollContainer.classList.add('scrolled-left');
+            } else {
+                scrollContainer.classList.remove('scrolled-left');
+            }
+            
+            if (scrollLeft >= maxScroll - 10) {
+                scrollContainer.classList.add('scrolled-right');
+            } else {
+                scrollContainer.classList.remove('scrolled-right');
+            }
+        }
+    });
     
     // Проверка при изменении размера окна
     window.addEventListener('resize', checkScroll);
