@@ -151,6 +151,8 @@
     background: transparent !important;
     color: var(--accent-color, #00b2bc) !important;
     border: 2px solid var(--accent-color, #00b2bc) !important;
+    min-width: 40px !important;
+    padding: 10px !important;
 }
 
 #setlists-panel .calendar-action:hover {
@@ -158,6 +160,11 @@
     color: white !important;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 178, 188, 0.3);
+}
+
+#setlists-panel .calendar-action i {
+    font-size: 1.1rem;
+    margin: 0 !important;
 }
 
 /* Список песен - компактный */
