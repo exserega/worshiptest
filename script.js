@@ -1021,16 +1021,29 @@ window.addSetlistToCalendar = async function(setlistId) {
     async function handleCreateNewEvent(selectedDate, setlistData) {
         logger.log('📅 Открываем создание нового события');
         
-        // Импортируем модальное окно создания события
-        const { openEventCreationModal } = await import('./src/modules/events/eventCreationModal.js');
-        
-        // Открываем модальное окно с предзаполненными данными
-        openEventCreationModal(new Date(selectedDate), async (createdEvent) => {
-            // После успешного создания события добавляем к нему сет-лист
-            if (createdEvent && createdEvent.id) {
-                await updateEventSetlist(createdEvent.id, setlistData.id, setlistData.name);
-            }
-        });
+        try {
+            // Используем тот же подход что и на странице events
+            const { getEventModal } = await import('./src/modules/events/eventModal.js');
+            const modal = getEventModal();
+            
+            // Создаем новый экземпляр для правильной инициализации
+            const EventCreationModal = (await import('./src/modules/events/eventCreationModal.js')).default;
+            const newModal = new EventCreationModal();
+            
+            // Открываем модальное окно с датой
+            newModal.open(new Date(selectedDate), async (eventId) => {
+                logger.log('✅ Событие создано:', eventId);
+                
+                // После создания события добавляем к нему сет-лист
+                if (eventId) {
+                    await updateEventSetlist(eventId, setlistData.id, setlistData.name);
+                }
+            });
+            
+        } catch (error) {
+            logger.error('❌ Ошибка при открытии модального окна:', error);
+            window.showNotification('❌ Ошибка при открытии окна создания события', 'error');
+        }
     }
     
     /**
