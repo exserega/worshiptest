@@ -1,5 +1,5 @@
-// Service Worker v374 - Fix date picker modal display issue
-const CACHE_NAME = 'agape-worship-cache-v374';
+// Service Worker v375 - Minimalist calendar design
+const CACHE_NAME = 'agape-worship-cache-v375';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -21,6 +21,7 @@ const urlsToCache = [
   './styles/variables.css',
   './src/modules/integration/datePickerModal.js',
   './src/modules/integration/integrationStyles.css',
+  './src/modules/integration/calendarStyles.css',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются

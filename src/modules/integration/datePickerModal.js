@@ -14,6 +14,8 @@ class DatePickerModal {
         this.onDateSelected = null;
         this.setlistData = null;
         this.selectedDate = null;
+        this.currentDate = new Date();
+        this.today = new Date();
     }
     
     /**
@@ -31,67 +33,36 @@ class DatePickerModal {
         const modalHTML = `
             <div id="date-picker-modal" class="global-overlay">
                 <div class="overlay-content date-picker-modal">
-                    <div class="overlay-header">
-                        <div class="header-info">
-                            <i class="fas fa-calendar-plus"></i>
-                            <div>
-                                <h3>Добавить в календарь</h3>
-                                <p>Выберите дату для события</p>
-                            </div>
-                        </div>
-                        <button class="overlay-close-btn" aria-label="Закрыть">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
+                    <button class="modal-close-btn" aria-label="Закрыть">
+                        <i class="fas fa-times"></i>
+                    </button>
                     
-                    <div class="overlay-body">
-                        <div class="setlist-info">
-                            <div class="info-icon">
-                                <i class="fas fa-music"></i>
-                            </div>
-                            <div class="info-content">
-                                <span class="setlist-name-label">Сет-лист</span>
-                                <span id="modal-setlist-name" class="setlist-name"></span>
-                            </div>
+                    <h2 class="modal-title">Добавить список песен</h2>
+                    
+                    <div class="setlist-name-display" id="modal-setlist-name"></div>
+                    
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="calendar-nav-btn" id="prevMonth">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h3 class="calendar-month" id="calendarMonth"></h3>
+                            <button class="calendar-nav-btn" id="nextMonth">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
                         </div>
                         
-                        <div class="date-section">
-                            <div class="date-selection">
-                                <label for="event-date-input" class="date-label">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>Дата события</span>
-                                </label>
-                                <input 
-                                    type="date" 
-                                    id="event-date-input" 
-                                    class="date-input"
-                                    min="${this.getTodayDate()}"
-                                >
-                            </div>
-                            
-                            <div class="quick-dates">
-                                <button class="quick-date-btn" data-days="0">
-                                    <i class="fas fa-calendar-day"></i>
-                                    <span>Сегодня</span>
-                                </button>
-                                <button class="quick-date-btn" data-days="1">
-                                    <i class="fas fa-calendar-plus"></i>
-                                    <span>Завтра</span>
-                                </button>
-                                <button class="quick-date-btn" data-days="7">
-                                    <i class="fas fa-calendar-week"></i>
-                                    <span>Через неделю</span>
-                                </button>
-                            </div>
+                        <div class="calendar-weekdays">
+                            <div class="weekday">Пн</div>
+                            <div class="weekday">Вт</div>
+                            <div class="weekday">Ср</div>
+                            <div class="weekday">Чт</div>
+                            <div class="weekday">Пт</div>
+                            <div class="weekday">Сб</div>
+                            <div class="weekday">Вс</div>
                         </div>
-                    </div>
-                    
-                    <div class="overlay-footer">
-                        <button class="btn-secondary cancel-btn">Отмена</button>
-                        <button class="btn-primary continue-btn" disabled>
-                            <span>Далее</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
+                        
+                        <div class="calendar-days" id="calendarDays"></div>
                     </div>
                 </div>
             </div>
@@ -115,15 +86,13 @@ class DatePickerModal {
      */
     attachEventListeners() {
         const modal = this.modal;
-        const closeBtn = modal.querySelector('.overlay-close-btn');
-        const cancelBtn = modal.querySelector('.cancel-btn');
-        const continueBtn = modal.querySelector('.continue-btn');
-        const dateInput = modal.querySelector('#event-date-input');
+        const closeBtn = modal.querySelector('.modal-close-btn');
+        const prevMonthBtn = modal.querySelector('#prevMonth');
+        const nextMonthBtn = modal.querySelector('#nextMonth');
         const overlay = modal;
         
         // Закрытие модального окна
         closeBtn.addEventListener('click', () => this.close());
-        cancelBtn.addEventListener('click', () => this.close());
         
         // Закрытие по клику на оверлей
         overlay.addEventListener('click', (e) => {
@@ -132,31 +101,15 @@ class DatePickerModal {
             }
         });
         
-        // Обработка изменения даты
-        dateInput.addEventListener('change', (e) => {
-            this.selectedDate = e.target.value;
-            continueBtn.disabled = !this.selectedDate;
+        // Навигация по месяцам
+        prevMonthBtn.addEventListener('click', () => {
+            this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+            this.renderCalendar();
         });
         
-        // Кнопка "Далее"
-        continueBtn.addEventListener('click', () => {
-            if (this.selectedDate && this.onDateSelected) {
-                this.onDateSelected(this.selectedDate, this.setlistData);
-                this.close();
-            }
-        });
-        
-        // Быстрый выбор даты
-        const quickDateBtns = modal.querySelectorAll('.quick-date-btn');
-        quickDateBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const daysToAdd = parseInt(btn.dataset.days);
-                const date = new Date();
-                date.setDate(date.getDate() + daysToAdd);
-                
-                dateInput.value = date.toISOString().split('T')[0];
-                dateInput.dispatchEvent(new Event('change'));
-            });
+        nextMonthBtn.addEventListener('click', () => {
+            this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+            this.renderCalendar();
         });
         
         // Закрытие по Escape
@@ -165,6 +118,103 @@ class DatePickerModal {
                 this.close();
             }
         };
+    }
+    
+    /**
+     * Отрисовка календаря
+     */
+    renderCalendar() {
+        const year = this.currentDate.getFullYear();
+        const month = this.currentDate.getMonth();
+        
+        // Обновляем заголовок месяца
+        const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 
+                          'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+        const monthTitle = this.modal.querySelector('#calendarMonth');
+        monthTitle.textContent = `${monthNames[month]} ${year}`;
+        
+        // Очищаем дни
+        const calendarDays = this.modal.querySelector('#calendarDays');
+        calendarDays.innerHTML = '';
+        
+        // Первый день месяца
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        
+        // День недели первого дня (0 = воскресенье)
+        let startDay = firstDay.getDay();
+        // Преобразуем в понедельник = 0
+        startDay = startDay === 0 ? 6 : startDay - 1;
+        
+        // Добавляем пустые ячейки до первого дня
+        for (let i = 0; i < startDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day empty';
+            calendarDays.appendChild(emptyDay);
+        }
+        
+        // Добавляем дни месяца
+        for (let day = 1; day <= lastDay.getDate(); day++) {
+            const dayEl = document.createElement('div');
+            dayEl.className = 'calendar-day';
+            dayEl.textContent = day;
+            
+            const date = new Date(year, month, day);
+            
+            // Проверяем, является ли день сегодняшним
+            if (this.isToday(date)) {
+                dayEl.classList.add('today');
+            }
+            
+            // Проверяем, является ли дата прошедшей
+            if (this.isPastDate(date)) {
+                dayEl.classList.add('past');
+            } else {
+                // Добавляем обработчик клика только для будущих дат
+                dayEl.addEventListener('click', () => this.selectDate(date));
+            }
+            
+            calendarDays.appendChild(dayEl);
+        }
+    }
+    
+    /**
+     * Проверка, является ли дата сегодняшней
+     */
+    isToday(date) {
+        const today = this.today;
+        return date.getDate() === today.getDate() &&
+               date.getMonth() === today.getMonth() &&
+               date.getFullYear() === today.getFullYear();
+    }
+    
+    /**
+     * Проверка, является ли дата прошедшей
+     */
+    isPastDate(date) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return date < today;
+    }
+    
+    /**
+     * Выбор даты
+     */
+    selectDate(date) {
+        this.selectedDate = date;
+        
+        // Форматируем дату для передачи
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        
+        // Вызываем callback и закрываем модальное окно
+        if (this.onDateSelected) {
+            this.onDateSelected(formattedDate, this.setlistData);
+        }
+        
+        this.close();
     }
     
     /**
@@ -189,12 +239,11 @@ class DatePickerModal {
             setlistNameEl.textContent = setlistData.name || 'Без названия';
         }
         
-        // Сбрасываем поля
-        const dateInput = this.modal.querySelector('#event-date-input');
-        const continueBtn = this.modal.querySelector('.continue-btn');
+        // Сбрасываем текущую дату на сегодня
+        this.currentDate = new Date();
         
-        dateInput.value = '';
-        continueBtn.disabled = true;
+        // Отрисовываем календарь
+        this.renderCalendar();
         
         // Показываем модальное окно
         this.modal.classList.add('show');
