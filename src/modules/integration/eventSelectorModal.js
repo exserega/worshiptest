@@ -94,6 +94,10 @@ class EventSelectorModal {
             });
             
             const hasSetlist = event.setlistId ? 'has-setlist' : 'no-setlist';
+            const setlistInfo = event.setlistId 
+                ? `<span class="event-setlist"><i class="fas fa-music"></i> Есть сет-лист</span>`
+                : `<span class="event-no-setlist"><i class="fas fa-music"></i> Нет сет-листа</span>`;
+            
             const actionText = event.setlistId ? 'Заменить' : 'Добавить';
             const setlistIcon = event.setlistId 
                 ? '<i class="fas fa-exchange-alt"></i>'
@@ -103,10 +107,15 @@ class EventSelectorModal {
                 <div class="event-card ${hasSetlist}" data-event-id="${event.id}">
                     <div class="event-time">${time}</div>
                     <div class="event-info">
-                        <div class="event-name">${event.name || 'Без названия'}</div>
-                        <div class="event-meta">
-                            ${event.leaderName || 'Ведущий не указан'}
-                            ${event.setlistId ? ' • Есть сет-лист' : ''}
+                        <h4 class="event-name">${event.name || 'Без названия'}</h4>
+                        <div class="event-details">
+                            <span class="event-leader">
+                                <i class="fas fa-user"></i> ${event.leaderName || 'Не указан'}
+                            </span>
+                            ${setlistInfo}
+                            <span class="event-participants">
+                                <i class="fas fa-users"></i> ${event.participantCount || 0}
+                            </span>
                         </div>
                     </div>
                     <button class="event-select-btn" data-event-id="${event.id}" data-action="select-event">

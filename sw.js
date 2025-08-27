@@ -1,5 +1,5 @@
-// Service Worker v415 - Compact event selector with direct setlist update
-const CACHE_NAME = 'agape-worship-cache-v415';
+// Service Worker v416 - Restored event info and added create button in selector
+const CACHE_NAME = 'agape-worship-cache-v416';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
