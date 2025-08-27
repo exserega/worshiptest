@@ -1,5 +1,5 @@
-// Service Worker v395 - Calendar button borderless with larger icon
-const CACHE_NAME = 'agape-worship-cache-v395';
+// Service Worker v396 - Complete redesign of action buttons with minimalist style
+const CACHE_NAME = 'agape-worship-cache-v396';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

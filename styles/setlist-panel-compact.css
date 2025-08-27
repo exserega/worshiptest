@@ -119,68 +119,87 @@
     font-size: 0.8rem !important;
 }
 
-/* Кнопки действий - компактные */
+/* Кнопки действий - минималистичный редизайн */
 #setlists-panel .action-buttons {
     display: flex !important;
     flex-direction: row !important;
-    gap: 3px !important;
+    gap: 8px !important;
     flex-wrap: nowrap !important;
     overflow-x: hidden !important;
     width: 100% !important;
+    padding: 0 4px !important;
 }
 
 #setlists-panel .action-btn {
-    padding: 6px 8px !important;
-    min-height: 30px !important;
-    font-size: 0.75rem !important;
-    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    min-height: 36px !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    border-radius: 8px !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    gap: 2px !important;
+    gap: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
 }
 
 #setlists-panel .action-btn i {
-    font-size: 0.7rem !important;
-    margin-right: 2px !important;
+    font-size: 0.85rem !important;
+    margin-right: 0 !important;
 }
 
 #setlists-panel .primary-action {
-    background: var(--primary-color) !important;
-    color: var(--color-button-text) !important;
-    border: 1px solid var(--primary-color) !important;
-    flex: 0 0 auto !important;
-    max-width: 114px !important;
+    background: var(--accent-color) !important;
+    color: white !important;
+    border: none !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    box-shadow: 0 2px 4px rgba(0, 178, 188, 0.2) !important;
+}
+
+#setlists-panel .primary-action:hover {
+    background: var(--accent-color-hover) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0, 178, 188, 0.3) !important;
 }
 
 #setlists-panel .secondary-action {
-    background: transparent !important;
-    color: var(--primary-color) !important;
-    border-color: var(--primary-color) !important;
-    flex: 0 0 auto !important;
-    max-width: 139px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-color) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+#setlists-panel .secondary-action:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-1px) !important;
 }
 
 #setlists-panel .calendar-action {
-    background: transparent !important;
+    background: rgba(0, 178, 188, 0.1) !important;
     color: var(--accent-color, #00b2bc) !important;
     border: none !important;
-    min-width: 42px !important;
-    width: 42px !important;
-    height: 30px !important;
+    min-width: 44px !important;
+    width: 44px !important;
+    height: 36px !important;
     padding: 0 !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     transition: all 0.2s ease !important;
-    flex: 0 0 42px !important;
+    flex: 0 0 44px !important;
 }
 
 #setlists-panel .calendar-action:hover {
-    background: rgba(0, 178, 188, 0.15) !important;
+    background: rgba(0, 178, 188, 0.2) !important;
     color: var(--accent-color, #00b2bc) !important;
-    transform: scale(1.05);
+    transform: translateY(-1px) !important;
 }
 
 #setlists-panel .calendar-action:active {
@@ -188,7 +207,7 @@
 }
 
 #setlists-panel .calendar-action i {
-    font-size: 1.2rem !important;
+    font-size: 1.1rem !important;
     margin: 0 !important;
 }
 
@@ -236,6 +255,11 @@ body[data-theme="dark"] #setlists-panel .create-btn-modern {
 
 body[data-theme="light"] #setlists-panel .create-btn-modern {
     color: #ffffff !important;
+}
+
+/* Переменные для hover эффектов */
+:root {
+    --accent-color-hover: #009ca5;
 }
 
 /* Адаптация для очень маленьких экранов */
