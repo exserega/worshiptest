@@ -993,7 +993,11 @@ window.addSetlistToCalendar = async function(setlistId) {
                 if (events.length === 0) {
                     // Нет событий - предлагаем создать новое
                     logger.log('📅 На дату нет событий, предлагаем создать новое');
-                    await handleCreateNewEvent(selectedDate, setlistData);
+                    
+                    // Небольшая задержка чтобы закрылось модальное окно выбора даты
+                    setTimeout(async () => {
+                        await handleCreateNewEvent(selectedDate, setlistData);
+                    }, 300);
                 } else if (events.length === 1) {
                     // Одно событие - показываем выбор действия
                     const event = events[0];

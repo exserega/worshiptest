@@ -1,5 +1,5 @@
-// Service Worker v411 - Add preselected setlist to event creation modal
-const CACHE_NAME = 'agape-worship-cache-v411';
+// Service Worker v412 - Fix event creation modal opening after date selection
+const CACHE_NAME = 'agape-worship-cache-v412';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
