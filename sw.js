@@ -1,5 +1,5 @@
-// Service Worker v382 - Add debug logging for event date checking
-const CACHE_NAME = 'agape-worship-cache-v382';
+// Service Worker v383 - Enhanced debug logging for event checking
+const CACHE_NAME = 'agape-worship-cache-v383';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

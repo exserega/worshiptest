@@ -18,6 +18,8 @@ export async function checkEventsOnDate(dateString) {
         
         // Получаем текущий филиал пользователя
         const branchId = getCurrentBranchId();
+        logger.log('🏢 Текущий филиал:', branchId);
+        
         if (!branchId) {
             logger.warn('❌ Филиал пользователя не найден');
             return [];
@@ -40,6 +42,11 @@ export async function checkEventsOnDate(dateString) {
         const snapshot = await query.get();
         
         logger.log(`📊 Получено ${snapshot.size} событий из базы для филиала ${branchId}`);
+        
+        if (snapshot.empty) {
+            logger.warn('⚠️ В базе нет событий для этого филиала');
+            return [];
+        }
         
         const events = [];
         snapshot.forEach(doc => {
