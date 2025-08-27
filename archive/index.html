@@ -32,34 +32,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     
-    <!-- Инициализация Firebase -->
-    <script>
-        // Инициализируем Firebase до загрузки модулей
-        if (!window.firebase.apps.length) {
-            const firebaseConfig = {
-                apiKey: "AIzaSyBdReqK7n6QxKFm_o9g6Ejrj7JDSu6PJIc",
-                authDomain: "agape-worship-app.firebaseapp.com",
-                projectId: "agape-worship-app",
-                storageBucket: "agape-worship-app.appspot.com",
-                messagingSenderId: "639974006584",
-                appId: "1:639974006584:web:19e7e78c8103a09cf87595"
-            };
-            window.firebase.initializeApp(firebaseConfig);
-            console.log('✅ Firebase инициализирован для архива');
-            
-            // Включаем persistence для Firestore
-            const db = window.firebase.firestore();
-            db.enablePersistence({ synchronizeTabs: true })
-                .then(() => console.log('✅ Firestore persistence enabled'))
-                .catch((err) => {
-                    if (err.code === 'failed-precondition') {
-                        console.warn('⚠️ Firestore persistence failed: Multiple tabs open');
-                    } else if (err.code === 'unimplemented') {
-                        console.warn('⚠️ Firestore persistence not available');
-                    }
-                });
-        }
-    </script>
+    <!-- Firebase init module -->
+    <script type="module" src="../firebase-init.js"></script>
 </head>
 <body>
     <div class="archive-page-container">

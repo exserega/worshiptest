@@ -3,10 +3,8 @@
  */
 
 import logger from '../src/utils/logger.js';
+import { db } from '../firebase-init.js';
 import { getCurrentUser, initAuthGate } from '../src/modules/auth/authCheck.js';
-
-// Получаем ссылки на сервисы Firebase (уже инициализирован в HTML)
-const db = window.firebase.firestore();
 
 // Глобальные переменные
 let currentUser = null;
@@ -583,26 +581,4 @@ function debounce(func, wait) {
 }
 
 // Запуск при загрузке страницы
-document.addEventListener('DOMContentLoaded', async () => {
-    // Ждем инициализации Firebase
-    if (window.firebase && window.firebase.auth) {
-        // Ждем пока Firebase Auth определит состояние пользователя
-        const auth = window.firebase.auth();
-        
-        // Используем промис для ожидания первого вызова onAuthStateChanged
-        await new Promise((resolve) => {
-            const unsubscribe = auth.onAuthStateChanged((user) => {
-                // Отписываемся после первого вызова
-                unsubscribe();
-                resolve();
-            });
-        });
-        
-        // Небольшая задержка для стабильности
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        initializePage();
-    } else {
-        logger.error('❌ Firebase not initialized');
-    }
-});
+document.addEventListener('DOMContentLoaded', initializePage);

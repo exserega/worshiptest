@@ -1,5 +1,5 @@
-// Service Worker v437 - Fix: wait for Firebase Auth state before checking authorization
-const CACHE_NAME = 'agape-worship-cache-v437';
+// Service Worker v438 - Fix: use standard Firebase init approach like main page
+const CACHE_NAME = 'agape-worship-cache-v438';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
