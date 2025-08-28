@@ -7,9 +7,11 @@ import { db } from '../firebase-init.js';
 import { getCurrentUser, initAuthGate } from '../src/modules/auth/authCheck.js';
 import { 
     loadArchiveSetlists, 
-    deleteArchiveSetlist 
+    createArchiveSetlist,
+    updateArchiveSetlist,
+    deleteArchiveSetlist,
+    addSongToArchiveSetlist
 } from '../src/modules/archive/archiveApi.js';
-import { ArchiveSetlistModal } from '../src/modules/archive/archiveSetlistModal.js';
 
 // Глобальные переменные
 let currentUser = null;
@@ -29,6 +31,18 @@ const elements = {
     createBtn: null,
     addGroupBtn: null,
     sortButtons: null
+};
+
+// Глобальные переменные для синхронизации создания сет-листа
+window.currentCreatedSetlistId = null;
+window.currentCreatedSetlistName = null;
+window.addedSongsToCurrentSetlist = new Map();
+
+// Адаптер для работы с архивными сет-листами
+window.archiveAdapter = {
+    async addSongToSetlist(setlistId, songData) {
+        return await addSongToArchiveSetlist(setlistId, songData);
+    }
 };
 
 /**
@@ -60,9 +74,6 @@ async function initializePage() {
         
         // Инициализация DOM элементов
         initializeElements();
-        
-        // Инициализируем модальное окно
-        window.archiveSetlistModal.init();
         
         // Загрузка данных
         await loadArchiveData();
@@ -400,14 +411,7 @@ function setupEventHandlers() {
     
     // Создание сет-листа
     elements.createBtn.addEventListener('click', () => {
-        window.archiveSetlistModal.open({
-            groups: archiveGroups,
-            onSave: async (setlistId) => {
-                // Перезагружаем данные
-                await loadArchiveData();
-                showNotification('Сет-лист успешно создан');
-            }
-        });
+        openCreateSetlistModal();
     });
     
     // Добавление группы
@@ -538,22 +542,36 @@ window.addToGroup = function(setlistId) {
 /**
  * Редактирование сет-листа
  */
-window.editSetlist = function(setlistId) {
+window.editSetlist = async function(setlistId) {
     const setlist = archiveSetlists.find(s => s.id === setlistId);
     if (!setlist) {
         showError('Сет-лист не найден');
         return;
     }
     
-    window.archiveSetlistModal.open({
-        setlist: setlist,
-        groups: archiveGroups,
-        onSave: async () => {
-            // Перезагружаем данные
-            await loadArchiveData();
-            showNotification('Сет-лист успешно обновлен');
+    try {
+        // Динамически импортируем модуль songsOverlay
+        const { initializeSongsOverlay } = await import('../src/modules/songs/songsOverlay.js');
+        
+        // Инициализируем оверлей если еще не инициализирован
+        await initializeSongsOverlay();
+        
+        // Устанавливаем режим работы с архивом
+        window.activeOverlayMode = 'archive-edit';
+        window.activeSetlistId = setlistId;
+        window.activeSetlistName = setlist.name;
+        window.isArchiveMode = true;
+        
+        // Открываем оверлей
+        const songsOverlay = document.getElementById('songs-overlay');
+        if (songsOverlay) {
+            songsOverlay.classList.add('show');
         }
-    });
+        
+    } catch (error) {
+        logger.error('Error opening songs overlay for edit:', error);
+        showError('Ошибка при открытии редактора');
+    }
 };
 
 /**
@@ -702,5 +720,253 @@ function debounce(func, wait) {
     };
 }
 
+/**
+ * Открытие модального окна создания сет-листа
+ */
+function openCreateSetlistModal() {
+    const modal = document.getElementById('create-setlist-modal');
+    const input = document.getElementById('new-setlist-name-input');
+    const charCount = document.getElementById('name-char-count');
+    
+    if (modal && input) {
+        modal.classList.add('show');
+        input.value = '';
+        input.focus();
+        if (charCount) charCount.textContent = '0';
+    }
+}
+
+/**
+ * Закрытие модального окна создания
+ */
+function closeCreateSetlistModal() {
+    const modal = document.getElementById('create-setlist-modal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+/**
+ * Обработка создания сет-листа
+ */
+async function handleCreateSetlist() {
+    const input = document.getElementById('new-setlist-name-input');
+    const createBtn = document.getElementById('create-setlist-button');
+    const name = input?.value.trim();
+    
+    if (!name) {
+        showNotification('Название сет-листа не может быть пустым');
+        return;
+    }
+    
+    try {
+        createBtn.disabled = true;
+        createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Создание...</span>';
+        
+        // Создаем архивный сет-лист
+        const setlistId = await createArchiveSetlist({
+            name: name,
+            songs: [],
+            groupIds: [],
+            notes: '',
+            tags: []
+        });
+        
+        // Сохраняем для синхронизации
+        window.currentCreatedSetlistId = setlistId;
+        window.currentCreatedSetlistName = name;
+        
+        // Закрываем модальное окно
+        closeCreateSetlistModal();
+        
+        // Обновляем название в модальном окне подтверждения
+        const createdNameSpan = document.getElementById('created-setlist-name');
+        if (createdNameSpan) {
+            createdNameSpan.textContent = name;
+        }
+        
+        // Показываем модальное окно подтверждения
+        const confirmModal = document.getElementById('add-songs-confirm-modal');
+        if (confirmModal) {
+            confirmModal.classList.add('show');
+        }
+        
+        // Перезагружаем список
+        await loadArchiveData();
+        
+    } catch (error) {
+        logger.error('Error creating archive setlist:', error);
+        showError(error.message || 'Ошибка при создании сет-листа');
+    } finally {
+        createBtn.disabled = false;
+        createBtn.innerHTML = '<i class="fas fa-arrow-right"></i><span>Продолжить</span>';
+    }
+}
+
+/**
+ * Обработчики для модальных окон
+ */
+function setupModalHandlers() {
+    // Кнопка создания
+    const createBtn = document.getElementById('create-setlist-button');
+    if (createBtn) {
+        createBtn.addEventListener('click', handleCreateSetlist);
+    }
+    
+    // Enter в поле ввода
+    const nameInput = document.getElementById('new-setlist-name-input');
+    if (nameInput) {
+        nameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleCreateSetlist();
+            }
+        });
+        
+        // Счетчик символов
+        nameInput.addEventListener('input', (e) => {
+            const charCount = document.getElementById('name-char-count');
+            if (charCount) {
+                charCount.textContent = e.target.value.length;
+            }
+        });
+    }
+    
+    // Кнопка отмены
+    const cancelBtn = document.getElementById('cancel-create-setlist');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeCreateSetlistModal);
+    }
+    
+    // Кнопка закрытия
+    const closeBtn = document.getElementById('close-create-modal');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeCreateSetlistModal);
+    }
+    
+    // Клик вне модального окна
+    const modal = document.getElementById('create-setlist-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeCreateSetlistModal();
+            }
+        });
+    }
+    
+    // Обработчики для модального окна подтверждения
+    setupConfirmModalHandlers();
+}
+
+/**
+ * Обработчики для модального окна подтверждения
+ */
+function setupConfirmModalHandlers() {
+    // Кнопка "Добавить песни"
+    const startAddBtn = document.getElementById('start-add-songs');
+    if (startAddBtn) {
+        startAddBtn.addEventListener('click', async () => {
+            // Закрываем модальное окно подтверждения
+            const confirmModal = document.getElementById('add-songs-confirm-modal');
+            if (confirmModal) {
+                confirmModal.classList.remove('show');
+            }
+            
+            // Открываем оверлей добавления песен
+            await startAddingSongsToArchive();
+        });
+    }
+    
+    // Кнопка "Пока нет"
+    const skipBtn = document.getElementById('skip-add-songs');
+    if (skipBtn) {
+        skipBtn.addEventListener('click', () => {
+            const confirmModal = document.getElementById('add-songs-confirm-modal');
+            if (confirmModal) {
+                confirmModal.classList.remove('show');
+            }
+        });
+    }
+    
+    // Кнопка закрытия
+    const closeConfirmBtn = document.getElementById('close-confirm-modal');
+    if (closeConfirmBtn) {
+        closeConfirmBtn.addEventListener('click', () => {
+            const confirmModal = document.getElementById('add-songs-confirm-modal');
+            if (confirmModal) {
+                confirmModal.classList.remove('show');
+            }
+        });
+    }
+}
+
+/**
+ * Запуск оверлея добавления песен для архива
+ */
+async function startAddingSongsToArchive() {
+    try {
+        // Динамически импортируем модуль songsOverlay
+        const { initializeSongsOverlay } = await import('../src/modules/songs/songsOverlay.js');
+        
+        // Инициализируем оверлей если еще не инициализирован
+        await initializeSongsOverlay();
+        
+        // Устанавливаем режим работы с архивом
+        window.activeOverlayMode = 'archive';
+        window.activeSetlistId = window.currentCreatedSetlistId;
+        window.activeSetlistName = window.currentCreatedSetlistName;
+        window.isArchiveMode = true;
+        
+        // Переопределяем функцию для архивного режима
+        const originalOpenSetlistSelector = window.openSetlistSelector;
+        window.openSetlistSelector = async function(song, selectedKey) {
+            // Добавляем песню напрямую в текущий архивный сет-лист
+            try {
+                await addSongToArchiveSetlist(window.activeSetlistId, {
+                    id: song.id,
+                    preferredKey: selectedKey
+                });
+                
+                // Обновляем счетчик
+                window.addedSongsToCurrentSetlist.set(song.id, selectedKey);
+                
+                // Показываем уведомление
+                showNotification(`Песня "${song.name}" добавлена в архивный сет-лист`);
+                
+                // Обновляем UI если есть счетчик
+                const countElement = document.querySelector('.added-songs-count');
+                if (countElement) {
+                    countElement.textContent = window.addedSongsToCurrentSetlist.size;
+                }
+                
+            } catch (error) {
+                logger.error('Error adding song to archive:', error);
+                showError('Ошибка при добавлении песни');
+            }
+        };
+        
+        // Открываем оверлей
+        const songsOverlay = document.getElementById('songs-overlay');
+        if (songsOverlay) {
+            songsOverlay.classList.add('show');
+        }
+        
+        // Восстанавливаем оригинальную функцию при закрытии
+        const closeButton = document.querySelector('.songs-close-btn');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => {
+                window.openSetlistSelector = originalOpenSetlistSelector;
+                window.isArchiveMode = false;
+            }, { once: true });
+        }
+        
+    } catch (error) {
+        logger.error('Error starting songs overlay:', error);
+        showError('Ошибка при открытии списка песен');
+    }
+}
+
 // Запуск при загрузке страницы
-document.addEventListener('DOMContentLoaded', initializePage);
+document.addEventListener('DOMContentLoaded', () => {
+    initializePage();
+    setupModalHandlers();
+});

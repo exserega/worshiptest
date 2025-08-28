@@ -178,12 +178,29 @@ export async function loadArchiveSetlists(branchId) {
  */
 export async function addSongToArchiveSetlist(setlistId, songData) {
     try {
+        // Получаем текущий сет-лист
+        const doc = await db.collection('archive_setlists').doc(setlistId).get();
+        if (!doc.exists) {
+            throw new Error('Архивный сет-лист не найден');
+        }
+        
+        const data = doc.data();
+        const currentSongs = data.songs || [];
+        
+        // Определяем order для новой песни
+        const maxOrder = currentSongs.reduce((max, song) => 
+            Math.max(max, song.order || 0), 0);
+        
+        // Добавляем песню
+        currentSongs.push({
+            songId: songData.songId || songData.id,
+            order: maxOrder + 1,
+            preferredKey: songData.preferredKey || songData.key || null
+        });
+        
+        // Обновляем документ
         await db.collection('archive_setlists').doc(setlistId).update({
-            songs: FieldValue.arrayUnion({
-                songId: songData.songId,
-                order: songData.order || 0,
-                preferredKey: songData.preferredKey || null
-            }),
+            songs: currentSongs,
             updatedAt: Timestamp.now()
         });
         

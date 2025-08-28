@@ -1,5 +1,5 @@
-// Service Worker v464 - Add: archive setlists CRUD functionality
-const CACHE_NAME = 'agape-worship-cache-v464';
+// Service Worker v465 - Add: standard create setlist UI for archive
+const CACHE_NAME = 'agape-worship-cache-v465';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
