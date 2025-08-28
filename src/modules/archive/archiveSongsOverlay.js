@@ -25,6 +25,7 @@ class ArchiveSongsOverlay {
      * Инициализация оверлея
      */
     async init() {
+        logger.log('🚀 Starting ArchiveSongsOverlay initialization...');
         this.createHTML();
         this.attachEventListeners();
         await this.loadSongs();
@@ -168,6 +169,14 @@ class ArchiveSongsOverlay {
         this.searchResults = document.getElementById('archive-search-results');
         this.addedCount = document.getElementById('archive-added-songs-count');
         this.addedBadge = document.getElementById('archive-added-badge');
+        
+        logger.log('📋 DOM elements initialized:', {
+            overlay: !!this.overlay,
+            keyModal: !!this.keyModal,
+            searchInput: !!this.searchInput,
+            finishBtn: !!document.getElementById('finish-archive-adding'),
+            closeBtn: !!document.getElementById('close-archive-songs')
+        });
     }
 
     /**
@@ -175,8 +184,26 @@ class ArchiveSongsOverlay {
      */
     attachEventListeners() {
         // Закрытие оверлея
-        document.getElementById('close-archive-songs').addEventListener('click', async () => await this.close());
-        document.getElementById('finish-archive-adding').addEventListener('click', async () => await this.close());
+        const closeBtn = document.getElementById('close-archive-songs');
+        const finishBtn = document.getElementById('finish-archive-adding');
+        
+        logger.log('🔗 Attaching event listeners...');
+        logger.log('Close button found:', !!closeBtn);
+        logger.log('Finish button found:', !!finishBtn);
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', async () => {
+                logger.log('❌ Close button clicked');
+                await this.close();
+            });
+        }
+        
+        if (finishBtn) {
+            finishBtn.addEventListener('click', async () => {
+                logger.log('✅ Finish button clicked');
+                await this.close();
+            });
+        }
 
         // Поиск
         this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
@@ -757,6 +784,9 @@ class ArchiveSongsOverlay {
      * Открытие оверлея
      */
     async open(setlistId, setlistName, mode = 'add') {
+        logger.log('📂 Opening archive songs overlay:', { setlistId, setlistName, mode });
+        
+        this.setlistId = setlistId;  // Исправляем: используем this.setlistId вместо this.targetSetlistId
         this.targetSetlistId = setlistId;
         this.targetSetlistName = setlistName;
         this.mode = mode;

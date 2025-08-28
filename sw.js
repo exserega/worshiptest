@@ -1,5 +1,5 @@
-// Service Worker v491 - Add detailed logging for debugging card updates
-const CACHE_NAME = 'agape-worship-cache-v491';
+// Service Worker v492 - Fix setlistId assignment and add more debug logs
+const CACHE_NAME = 'agape-worship-cache-v492';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
