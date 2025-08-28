@@ -1,5 +1,5 @@
-// Service Worker v456 - Fix: thinner arrows with animation, correct position, show/hide logic
-const CACHE_NAME = 'agape-worship-cache-v456';
+// Service Worker v457 - Fix: arrows vertical position from 14px to 20px
+const CACHE_NAME = 'agape-worship-cache-v457';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
