@@ -137,6 +137,70 @@ async function loadArchiveData() {
     }
 }
 
+// Делаем функцию доступной глобально для оверлея
+window.loadArchiveData = loadArchiveData;
+
+/**
+ * Обновление конкретной карточки сет-листа
+ */
+async function updateSetlistCard(setlistId) {
+    try {
+        // Загружаем обновленный сет-лист из базы
+        const updatedSetlist = await loadArchiveSetlists(currentUser.branchId);
+        const setlist = updatedSetlist.find(s => s.id === setlistId);
+        
+        if (!setlist) {
+            logger.error('Setlist not found:', setlistId);
+            return;
+        }
+        
+        // Обновляем данные в массиве
+        const index = archiveSetlists.findIndex(s => s.id === setlistId);
+        if (index !== -1) {
+            archiveSetlists[index] = setlist;
+        }
+        
+        // Находим карточку на странице
+        const cardElement = document.querySelector(`[data-setlist-id="${setlistId}"]`);
+        if (!cardElement) {
+            logger.error('Card element not found:', setlistId);
+            return;
+        }
+        
+        // Проверяем, была ли карточка развернута
+        const wasExpanded = cardElement.classList.contains('expanded');
+        const songsContainer = cardElement.querySelector(`#songs-${setlistId}`);
+        const wasLoaded = songsContainer?.dataset.loaded === 'true';
+        
+        // Создаем новую карточку
+        const newCard = createSetlistCard(setlist);
+        
+        // Сохраняем развернутое состояние
+        if (wasExpanded) {
+            newCard.classList.add('expanded');
+        }
+        
+        // Заменяем старую карточку новой
+        cardElement.parentNode.replaceChild(newCard, cardElement);
+        
+        // Если песни были загружены, перезагружаем их
+        if (wasExpanded && wasLoaded) {
+            const newSongsContainer = newCard.querySelector(`#songs-${setlistId}`);
+            if (newSongsContainer) {
+                await loadSetlistSongs(setlistId, newSongsContainer);
+                newSongsContainer.dataset.loaded = 'true';
+            }
+        }
+        
+        logger.log('✅ Setlist card updated:', setlistId);
+    } catch (error) {
+        logger.error('Error updating setlist card:', error);
+    }
+}
+
+// Делаем функцию доступной глобально
+window.updateSetlistCard = updateSetlistCard;
+
 /**
  * Отрисовка групп
  */

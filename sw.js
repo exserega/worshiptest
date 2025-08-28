@@ -1,5 +1,5 @@
-// Service Worker v487 - Fix: correct button positioning on setlist cards
-const CACHE_NAME = 'agape-worship-cache-v487';
+// Service Worker v488 - Fix: edit button color and dynamic setlist update
+const CACHE_NAME = 'agape-worship-cache-v488';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

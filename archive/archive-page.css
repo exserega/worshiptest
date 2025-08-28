@@ -1095,9 +1095,9 @@ textarea.form-control {
     position: absolute;
     top: 10px;
     right: 48px; /* 32px (ширина кнопки удаления) + 10px (отступ) + 6px (gap) */
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    color: #6366f1;
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     width: 32px;
     height: 32px;
     border-radius: 8px;
@@ -1115,14 +1115,13 @@ textarea.form-control {
 }
 
 .edit-btn-corner:hover {
-    background: rgba(99, 102, 241, 0.2);
-    border-color: rgba(99, 102, 241, 0.5);
+    background: var(--hover-color);
     transform: scale(1.05);
 }
 
 .edit-btn-corner i {
     font-size: 14px;
-    color: #6366f1 !important;
+    color: var(--text-color) !important;
 }
 
 /* Кнопка удаления */

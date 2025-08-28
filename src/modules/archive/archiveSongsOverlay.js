@@ -821,9 +821,9 @@ class ArchiveSongsOverlay {
         this.addedSongs.clear();
         this.updateCounters();
         
-        // Перезагрузка архива
-        if (window.loadArchiveData) {
-            window.loadArchiveData();
+        // Обновляем конкретную карточку сет-листа, если она развернута
+        if (this.setlistId && window.updateSetlistCard) {
+            await window.updateSetlistCard(this.setlistId);
         }
     }
 }
