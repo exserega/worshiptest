@@ -584,7 +584,7 @@ function setupGroupsScrollArrows() {
         if (window.innerWidth <= 480) {
             const scrollLeft = scrollContainer.scrollLeft;
             const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            const section = scrollContainer.closest('.groups-section');
+            const section = scrollContainer.closest('.archive-groups-section');
             
             if (scrollLeft > 10) {
                 section.classList.add('scrolled-left');
@@ -601,10 +601,42 @@ function setupGroupsScrollArrows() {
     });
     
     // Проверка при изменении размера окна
-    window.addEventListener('resize', checkScroll);
+    window.addEventListener('resize', () => {
+        checkScroll();
+        // Проверяем стрелочки при изменении размера
+        if (window.innerWidth <= 480) {
+            const scrollLeft = scrollContainer.scrollLeft;
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            const section = scrollContainer.closest('.archive-groups-section');
+            
+            if (scrollLeft > 10) {
+                section.classList.add('scrolled-left');
+            } else {
+                section.classList.remove('scrolled-left');
+            }
+            
+            if (scrollLeft >= maxScroll - 10) {
+                section.classList.add('scrolled-right');
+            } else {
+                section.classList.remove('scrolled-right');
+            }
+        }
+    });
     
     // Начальная проверка
-    setTimeout(checkScroll, 100);
+    setTimeout(() => {
+        checkScroll();
+        // Начальная проверка стрелочек
+        if (window.innerWidth <= 480) {
+            const section = scrollContainer.closest('.archive-groups-section');
+            section.classList.remove('scrolled-left');
+            if (scrollContainer.scrollWidth > scrollContainer.clientWidth) {
+                section.classList.remove('scrolled-right');
+            } else {
+                section.classList.add('scrolled-right');
+            }
+        }
+    }, 100);
 }
 
 /**

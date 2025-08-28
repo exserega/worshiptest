@@ -1,5 +1,5 @@
-// Service Worker v454 - Fix: arrow icons with cyan color, gap between key/bpm
-const CACHE_NAME = 'agape-worship-cache-v454';
+// Service Worker v455 - Fix: arrow visibility with higher z-index and correct selectors
+const CACHE_NAME = 'agape-worship-cache-v455';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
