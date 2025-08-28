@@ -1,5 +1,5 @@
-// Service Worker v452 - Fix: aligned height for key/bpm with reduced padding
-const CACHE_NAME = 'agape-worship-cache-v452';
+// Service Worker v453 - Fix: balanced padding for key/bpm, square key shape
+const CACHE_NAME = 'agape-worship-cache-v453';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
