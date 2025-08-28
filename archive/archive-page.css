@@ -601,25 +601,30 @@ body {
     flex-shrink: 0;
 }
 
-.song-key {
-    background: var(--bg-secondary, #0f172a) !important;
+.song-details .song-key,
+.song-item .song-key {
+    background-color: #0f172a !important;
+    background: #0f172a !important;
     padding: 1px 6px !important;
     border-radius: 3px !important;
     font-weight: 600 !important;
-    color: var(--text-secondary, #9ca3af) !important;
+    color: #9ca3af !important;
     font-size: 0.7rem !important;
-    border: 1px solid var(--border-color, #374151) !important;
+    border: 1px solid #374151 !important;
     display: inline-block !important;
 }
 
-.song-bpm {
-    background: var(--bg-secondary, #0f172a) !important;
+.song-details .song-bpm,
+.song-item .song-bpm {
+    background-color: #0f172a !important;
+    background: #0f172a !important;
     padding: 1px 6px !important;
     border-radius: 3px !important;
-    color: var(--text-secondary, #9ca3af) !important;
+    color: #9ca3af !important;
     font-size: 0.6rem !important;
-    border: 1px solid var(--border-color, #374151) !important;
+    border: 1px solid #374151 !important;
     text-align: right !important;
+    display: inline-block !important;
 }
 
 /* Состояния загрузки */

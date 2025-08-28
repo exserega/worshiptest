@@ -1,5 +1,5 @@
-// Service Worker v450 - Fix: use bg-secondary for key/bpm contrast
-const CACHE_NAME = 'agape-worship-cache-v450';
+// Service Worker v451 - Force: hardcoded dark bg for key/bpm with higher specificity
+const CACHE_NAME = 'agape-worship-cache-v451';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
