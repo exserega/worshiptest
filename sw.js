@@ -1,5 +1,5 @@
-// Service Worker v447 - Fix: force key styling, wrapper arrows, closer spacing
-const CACHE_NAME = 'agape-worship-cache-v447';
+// Service Worker v448 - Fix: darker bg for key/bpm, single scroll, arrow position
+const CACHE_NAME = 'agape-worship-cache-v448';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

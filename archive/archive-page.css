@@ -9,6 +9,11 @@
     overflow: hidden;
 }
 
+/* Скрываем скролл для body */
+body {
+    overflow: hidden !important;
+}
+
 /* Верхняя панель */
 .archive-top-bar {
     display: flex;
@@ -270,7 +275,7 @@
     .groups-scroll-wrapper::after {
         content: '▸';
         position: absolute;
-        right: 5px;
+        right: 1px;
         top: 50%;
         transform: translateY(-50%);
         font-size: 0.8rem;
@@ -283,7 +288,7 @@
     .groups-scroll-wrapper.scrolled-left::before {
         content: '◂';
         position: absolute;
-        left: 5px;
+        left: 1px;
         top: 50%;
         transform: translateY(-50%);
         font-size: 0.8rem;
@@ -588,7 +593,7 @@
 }
 
 .song-key {
-    background: var(--bg-tertiary, #1a1f2e) !important;
+    background: var(--bg-secondary, #111827) !important;
     padding: 1px 6px !important;
     border-radius: 3px !important;
     font-weight: 600 !important;
@@ -599,13 +604,13 @@
 }
 
 .song-bpm {
-    background: var(--bg-tertiary, #1a1f2e);
-    padding: 1px 6px;
-    border-radius: 3px;
-    color: var(--text-secondary, #9ca3af);
-    font-size: 0.6rem;
-    border: 1px solid var(--border-color, #374151);
-    text-align: right;
+    background: var(--bg-secondary, #111827) !important;
+    padding: 1px 6px !important;
+    border-radius: 3px !important;
+    color: var(--text-secondary, #9ca3af) !important;
+    font-size: 0.6rem !important;
+    border: 1px solid var(--border-color, #374151) !important;
+    text-align: right !important;
 }
 
 /* Состояния загрузки */
