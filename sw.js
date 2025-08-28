@@ -1,5 +1,5 @@
-// Service Worker v488 - Fix: edit button color and dynamic setlist update
-const CACHE_NAME = 'agape-worship-cache-v488';
+// Service Worker v489 - Fix: async close method in songs overlay
+const CACHE_NAME = 'agape-worship-cache-v489';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

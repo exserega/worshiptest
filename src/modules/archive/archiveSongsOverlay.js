@@ -175,8 +175,8 @@ class ArchiveSongsOverlay {
      */
     attachEventListeners() {
         // Закрытие оверлея
-        document.getElementById('close-archive-songs').addEventListener('click', () => this.close());
-        document.getElementById('finish-archive-adding').addEventListener('click', () => this.close());
+        document.getElementById('close-archive-songs').addEventListener('click', async () => await this.close());
+        document.getElementById('finish-archive-adding').addEventListener('click', async () => await this.close());
 
         // Поиск
         this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
@@ -805,7 +805,7 @@ class ArchiveSongsOverlay {
     /**
      * Закрытие оверлея
      */
-    close() {
+    async close() {
         this.overlay.classList.remove('show');
         this.keyModal.classList.remove('show');
         
