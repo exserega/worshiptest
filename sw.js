@@ -1,5 +1,5 @@
-// Service Worker v474 - Fix: correct import paths and include all song fields
-const CACHE_NAME = 'agape-worship-cache-v474';
+// Service Worker v475 - Fix: compact mobile-friendly text display
+const CACHE_NAME = 'agape-worship-cache-v475';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
