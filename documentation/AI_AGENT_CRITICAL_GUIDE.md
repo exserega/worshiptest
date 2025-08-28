@@ -12,6 +12,9 @@
 ## 🎯 ЦЕЛЬ ДОКУМЕНТА
 Дать новому AI агенту **ПОЛНОЕ** понимание проекта за 5 минут, избежав всех известных проблем.
 
+## 📚 СВЯЗАННАЯ ДОКУМЕНТАЦИЯ
+- [UI_VISUAL_PROBLEMS_GUIDE.md](./UI_VISUAL_PROBLEMS_GUIDE.md) - Решение визуальных проблем UI (кнопки, контраст, мобильная адаптация)
+
 ## 🏗️ АРХИТЕКТУРА (КРИТИЧНО!)
 
 ```
@@ -29,6 +32,9 @@
 │   ├── songs/ - оверлей песен и репертуара
 │   ├── events/ - события/служения с участниками
 │   ├── integration/ - интеграция сет-листов с событиями (NEW!)
+│   ├── archive/ - архивная система сет-листов (NEW!)
+│   │   ├── archiveApi.js - API для работы с archive_setlists
+│   │   └── archiveSongsOverlay.js - оверлей добавления песен
 │   ├── permissions/ - централизованные проверки прав доступа
 │   └── logger.js - условное логирование
 │
@@ -301,7 +307,7 @@ archive_setlists/ (NEW!)
 ├── groupIds: []
 ├── branchId
 ├── createdBy: uid
-├── createdByName: имя пользователя
+├── createdByName: имя пользователя // Отображается в карточке
 ├── createdAt: Timestamp
 ├── updatedAt: Timestamp
 ├── isArchived: true
