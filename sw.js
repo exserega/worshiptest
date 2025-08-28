@@ -1,5 +1,5 @@
-// Service Worker v478 - Fix: use theme colors for buttons
-const CACHE_NAME = 'agape-worship-cache-v478';
+// Service Worker v479 - Fix: compact filter buttons on one line
+const CACHE_NAME = 'agape-worship-cache-v479';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

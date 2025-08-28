@@ -1185,20 +1185,59 @@ textarea.form-control {
 
 
 
-/* Стили для кнопки фильтра */
-.filter-btn {
-    padding: 8px 16px;
+/* Контейнер для фильтров - всегда одна строка */
+.search-filters {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Селект категорий - занимает доступное место */
+.filter-select {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 10px;
     background: var(--container-background-color);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--text-color);
-    font-size: 0.875rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.filter-select:hover {
+    border-color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 10%, var(--container-background-color));
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Стили для кнопки фильтра */
+.filter-btn {
+    flex-shrink: 0;
+    padding: 6px 10px;
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
+    white-space: nowrap;
 }
 
 .filter-btn:hover {
@@ -1216,9 +1255,11 @@ textarea.form-control {
     background: color-mix(in srgb, var(--primary-color) 20%, var(--container-background-color));
     color: var(--primary-color);
     border-radius: 10px;
-    padding: 2px 6px;
-    font-size: 0.75rem;
+    padding: 1px 4px;
+    font-size: 0.7rem;
     font-weight: 600;
+    min-width: 18px;
+    text-align: center;
 }
 
 /* Компактные карточки песен */
@@ -1461,5 +1502,22 @@ pre.song-text {
     .song-content {
         max-width: 100%;
         padding: 0;
+    }
+    
+    /* Еще более компактные фильтры на мобильных */
+    .filter-select,
+    .filter-btn {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .search-filters {
+        gap: 6px;
+    }
+    
+    .added-count-badge {
+        padding: 0 3px;
+        font-size: 0.65rem;
+        min-width: 16px;
     }
 }
