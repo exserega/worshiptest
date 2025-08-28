@@ -1,5 +1,5 @@
-// Service Worker v465 - Add: standard create setlist UI for archive
-const CACHE_NAME = 'agape-worship-cache-v465';
+// Service Worker v466 - Add: dedicated archive songs overlay
+const CACHE_NAME = 'agape-worship-cache-v466';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

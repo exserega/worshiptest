@@ -1130,3 +1130,179 @@ textarea.form-control {
         border-radius: 0;
     }
 }
+
+/* Уведомления */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    z-index: 10000;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.notification.success i {
+    color: #10b981;
+}
+
+.notification.error {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.notification.error i {
+    color: #ef4444;
+}
+
+/* Стили для оверлея песен архива */
+.song-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.song-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.song-card.added {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.song-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.song-title {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.added-indicator {
+    color: #10b981;
+    font-size: 1.25rem;
+}
+
+.song-card-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.song-category {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.song-bpm {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.btn-add-song {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-add-song:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.song-card.added .btn-add-song {
+    background: #10b981;
+}
+
+/* Сетка тональностей */
+.keys-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.key-option {
+    padding: 1rem;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.key-option:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.key-option.selected {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.song-preview-section {
+    margin-top: 2rem;
+}
+
+.song-text-preview {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.song-text-preview pre {
+    margin: 0;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    color: var(--text-primary);
+}

@@ -550,60 +550,11 @@ window.editSetlist = async function(setlistId) {
     }
     
     try {
-        // Используем существующий songs overlay
-        await import('../ui.js');
-        await import('../script.js');
+        // Импортируем и используем специальный оверлей для архива
+        const { openArchiveSongsOverlay } = await import('../src/modules/archive/archiveSongsOverlay.js');
         
-        // Устанавливаем режим работы с архивом
-        window.activeOverlayMode = 'archive-edit';
-        window.activeSetlistId = setlistId;
-        window.activeSetlistName = setlist.name;
-        window.isArchiveMode = true;
-        
-        // Переопределяем функцию для архивного режима
-        const originalOpenSetlistSelector = window.openSetlistSelector;
-        window.openSetlistSelector = async function(song, selectedKey) {
-            try {
-                await addSongToArchiveSetlist(setlistId, {
-                    id: song.id,
-                    preferredKey: selectedKey
-                });
-                
-                showNotification(`Песня "${song.name}" добавлена в архивный сет-лист`);
-                
-                // Перезагружаем данные
-                await loadArchiveData();
-                
-            } catch (error) {
-                logger.error('Error adding song to archive:', error);
-                showError('Ошибка при добавлении песни');
-            }
-        };
-        
-        // Открываем overlay добавления песен
-        const addSongsOverlay = document.getElementById('add-songs-overlay');
-        if (addSongsOverlay) {
-            addSongsOverlay.classList.add('show');
-            
-            // Обновляем заголовок для архива
-            const headerTitle = addSongsOverlay.querySelector('.header-title h3');
-            if (headerTitle) {
-                headerTitle.textContent = `Редактировать "${setlist.name}"`;
-            }
-        } else {
-            showError('Оверлей добавления песен не найден');
-        }
-        
-        // Восстанавливаем оригинальную функцию при закрытии
-        setTimeout(() => {
-            const closeButton = document.querySelector('.close-overlay-btn');
-            if (closeButton) {
-                closeButton.addEventListener('click', () => {
-                    window.openSetlistSelector = originalOpenSetlistSelector;
-                    window.isArchiveMode = false;
-                }, { once: true });
-            }
-        }, 500);
+        // Открываем оверлей в режиме редактирования
+        await openArchiveSongsOverlay(setlistId, setlist.name, 'edit');
         
     } catch (error) {
         logger.error('Error opening songs overlay for edit:', error);
@@ -657,9 +608,23 @@ function showError(message) {
 /**
  * Показать уведомление
  */
-function showNotification(message) {
-    // Временно используем alert, потом заменим на красивые уведомления
-    alert(message);
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 /**
@@ -941,69 +906,15 @@ function setupConfirmModalHandlers() {
  */
 async function startAddingSongsToArchive() {
     try {
-        // Используем существующий songs overlay из главной страницы
-        // Динамически загружаем необходимые модули
-        await import('../ui.js');
-        await import('../script.js');
+        // Импортируем и используем специальный оверлей для архива
+        const { openArchiveSongsOverlay } = await import('../src/modules/archive/archiveSongsOverlay.js');
         
-        // Устанавливаем режим работы с архивом
-        window.activeOverlayMode = 'archive';
-        window.activeSetlistId = window.currentCreatedSetlistId;
-        window.activeSetlistName = window.currentCreatedSetlistName;
-        window.isArchiveMode = true;
-        
-        // Переопределяем функцию для архивного режима
-        const originalOpenSetlistSelector = window.openSetlistSelector;
-        window.openSetlistSelector = async function(song, selectedKey) {
-            // Добавляем песню напрямую в текущий архивный сет-лист
-            try {
-                await addSongToArchiveSetlist(window.activeSetlistId, {
-                    id: song.id,
-                    preferredKey: selectedKey
-                });
-                
-                // Обновляем счетчик
-                window.addedSongsToCurrentSetlist.set(song.id, selectedKey);
-                
-                // Показываем уведомление
-                showNotification(`Песня "${song.name}" добавлена в архивный сет-лист`);
-                
-                // Обновляем UI если есть счетчик
-                const countElement = document.querySelector('.added-songs-count');
-                if (countElement) {
-                    countElement.textContent = window.addedSongsToCurrentSetlist.size;
-                }
-                
-            } catch (error) {
-                logger.error('Error adding song to archive:', error);
-                showError('Ошибка при добавлении песни');
-            }
-        };
-        
-        // Открываем overlay добавления песен
-        const addSongsOverlay = document.getElementById('add-songs-overlay');
-        if (addSongsOverlay) {
-            addSongsOverlay.classList.add('show');
-            
-            // Обновляем заголовок для архива
-            const headerTitle = addSongsOverlay.querySelector('.header-title h3');
-            if (headerTitle) {
-                headerTitle.textContent = `Добавить песни в "${window.currentCreatedSetlistName}"`;
-            }
-        } else {
-            showError('Оверлей добавления песен не найден');
-        }
-        
-        // Восстанавливаем оригинальную функцию при закрытии
-        setTimeout(() => {
-            const closeButton = document.querySelector('.close-overlay-btn');
-            if (closeButton) {
-                closeButton.addEventListener('click', () => {
-                    window.openSetlistSelector = originalOpenSetlistSelector;
-                    window.isArchiveMode = false;
-                }, { once: true });
-            }
-        }, 500);
+        // Открываем оверлей в режиме добавления
+        await openArchiveSongsOverlay(
+            window.currentCreatedSetlistId, 
+            window.currentCreatedSetlistName,
+            'add'
+        );
         
     } catch (error) {
         logger.error('Error starting songs overlay:', error);
