@@ -1509,15 +1509,52 @@ pre.song-text {
     .filter-btn {
         padding: 5px 8px;
         font-size: 0.75rem;
+        height: 36px !important;
+        flex: none !important;
     }
     
     .search-filters {
         gap: 6px;
+        flex-direction: row !important;
+        align-items: center !important;
     }
     
     .added-count-badge {
         padding: 0 3px;
         font-size: 0.65rem;
         min-width: 16px;
+    }
+}
+
+/* Специальные стили для очень маленьких экранов */
+@media (max-width: 480px) {
+    .search-filters {
+        gap: 4px;
+        flex-direction: row !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+    }
+    
+    .filter-select {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        max-width: 60%;
+        padding: 4px 6px !important;
+        font-size: 0.7rem !important;
+        height: 32px !important;
+    }
+    
+    .filter-btn {
+        flex: 0 0 auto !important;
+        padding: 4px 8px !important;
+        font-size: 0.7rem !important;
+        height: 32px !important;
+        min-width: fit-content !important;
+    }
+    
+    .added-count-badge {
+        padding: 0 2px;
+        font-size: 0.6rem;
+        min-width: 14px;
     }
 }

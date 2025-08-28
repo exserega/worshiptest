@@ -1,5 +1,5 @@
-// Service Worker v479 - Fix: compact filter buttons on one line
-const CACHE_NAME = 'agape-worship-cache-v479';
+// Service Worker v480 - Fix: force filters to stay in one row on mobile
+const CACHE_NAME = 'agape-worship-cache-v480';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
