@@ -551,10 +551,7 @@ window.editSetlist = async function(setlistId) {
     
     try {
         // Динамически импортируем модуль songsOverlay
-        const { initializeSongsOverlay } = await import('../src/modules/songs/songsOverlay.js');
-        
-        // Инициализируем оверлей если еще не инициализирован
-        await initializeSongsOverlay();
+        const { openSongsOverlay } = await import('../src/modules/songs/songsOverlay.js');
         
         // Устанавливаем режим работы с архивом
         window.activeOverlayMode = 'archive-edit';
@@ -563,10 +560,7 @@ window.editSetlist = async function(setlistId) {
         window.isArchiveMode = true;
         
         // Открываем оверлей
-        const songsOverlay = document.getElementById('songs-overlay');
-        if (songsOverlay) {
-            songsOverlay.classList.add('show');
-        }
+        openSongsOverlay();
         
     } catch (error) {
         logger.error('Error opening songs overlay for edit:', error);
@@ -905,10 +899,7 @@ function setupConfirmModalHandlers() {
 async function startAddingSongsToArchive() {
     try {
         // Динамически импортируем модуль songsOverlay
-        const { initializeSongsOverlay } = await import('../src/modules/songs/songsOverlay.js');
-        
-        // Инициализируем оверлей если еще не инициализирован
-        await initializeSongsOverlay();
+        const { openSongsOverlay } = await import('../src/modules/songs/songsOverlay.js');
         
         // Устанавливаем режим работы с архивом
         window.activeOverlayMode = 'archive';
@@ -945,10 +936,7 @@ async function startAddingSongsToArchive() {
         };
         
         // Открываем оверлей
-        const songsOverlay = document.getElementById('songs-overlay');
-        if (songsOverlay) {
-            songsOverlay.classList.add('show');
-        }
+        openSongsOverlay();
         
         // Восстанавливаем оригинальную функцию при закрытии
         const closeButton = document.querySelector('.songs-close-btn');
