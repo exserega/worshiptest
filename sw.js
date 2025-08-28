@@ -1,5 +1,5 @@
-// Service Worker v499 - Fix name styling and dynamic update
-const CACHE_NAME = 'agape-worship-cache-v499';
+// Service Worker v500 - Simplify setlist creation flow
+const CACHE_NAME = 'agape-worship-cache-v500';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

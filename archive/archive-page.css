@@ -1341,6 +1341,64 @@ textarea.form-control {
     text-decoration: underline;
 }
 
+/* Упрощенное модальное окно создания сет-листа */
+.create-setlist-simple {
+    max-width: 400px !important;
+    padding: 0 !important;
+}
+
+.simple-modal-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.simple-modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.simple-modal-header .overlay-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.simple-modal-body {
+    padding: 30px 20px;
+}
+
+.simple-modal-body .modern-input {
+    width: 100%;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.simple-modal-footer {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.simple-modal-footer button {
+    flex: 1;
+    padding: 10px;
+    min-height: 44px;
+}
+
+/* Исправляем цвет текста кнопки отмены */
+.btn-modern.secondary {
+    color: var(--text-color) !important;
+}
+
+.btn-modern.secondary span {
+    color: var(--text-color) !important;
+}
+
 .added-count-badge {
     background: color-mix(in srgb, var(--primary-color) 20%, var(--container-background-color));
     color: var(--primary-color);

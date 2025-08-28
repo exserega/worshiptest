@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="../styles/overlays.css">
     
     <!-- Стили страницы архива -->
-    <link rel="stylesheet" href="archive-page.css?v=499">
+    <link rel="stylesheet" href="archive-page.css?v=500">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -136,47 +136,31 @@
     <script type="module" src="archive.js"></script>
     <!-- Модальные окна создания сет-листа -->
     <div id="create-setlist-modal" class="global-overlay">
-        <div class="overlay-content create-setlist-content">
-            <div class="overlay-header">
-                <div class="header-info">
-                    <i class="fas fa-plus-circle"></i>
-                    <div>
-                        <h3>Создать архивный сет-лист</h3>
-                        <p>Шаг 1 из 2: Название</p>
-                    </div>
-                </div>
+        <div class="overlay-content create-setlist-simple">
+            <div class="simple-modal-header">
+                <h3>Введите название сет-листа</h3>
                 <button id="close-create-modal" class="overlay-close-btn">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div class="overlay-body">
-                <div class="input-section">
-                    <label for="new-setlist-name-input" class="modern-label">
-                        <i class="fas fa-list"></i>
-                        Название сет-листа
-                    </label>
-                    <input 
-                        type="text" 
-                        id="new-setlist-name-input" 
-                        class="modern-input"
-                        placeholder="Например: Рождество 2024, Пасхальное служение..."
-                        maxlength="50"
-                    >
-                    <div class="input-hint">
-                        <span id="name-char-count">0</span>/50 символов
-                    </div>
-                </div>
+            <div class="simple-modal-body">
+                <input 
+                    type="text" 
+                    id="new-setlist-name-input" 
+                    class="modern-input"
+                    placeholder="Название сет-листа"
+                    maxlength="50"
+                    autocomplete="off"
+                >
             </div>
             
-            <div class="overlay-footer">
+            <div class="simple-modal-footer">
                 <button id="cancel-create-setlist" class="btn-modern secondary">
-                    <i class="fas fa-times"></i>
                     <span>Отмена</span>
                 </button>
                 <button id="create-setlist-button" class="btn-modern primary">
-                    <i class="fas fa-arrow-right"></i>
-                    <span>Продолжить</span>
+                    <span>Далее</span>
                 </button>
             </div>
         </div>

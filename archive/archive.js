@@ -893,27 +893,18 @@ async function handleCreateSetlist() {
         // Закрываем модальное окно
         closeCreateSetlistModal();
         
-        // Обновляем название в модальном окне подтверждения
-        const createdNameSpan = document.getElementById('created-setlist-name');
-        if (createdNameSpan) {
-            createdNameSpan.textContent = name;
-        }
-        
-        // Показываем модальное окно подтверждения
-        const confirmModal = document.getElementById('add-songs-confirm-modal');
-        if (confirmModal) {
-            confirmModal.classList.add('show');
-        }
-        
         // Перезагружаем список
         await loadArchiveData();
+        
+        // Сразу открываем оверлей добавления песен
+        await startAddingSongsToArchive();
         
     } catch (error) {
         logger.error('Error creating archive setlist:', error);
         showError(error.message || 'Ошибка при создании сет-листа');
     } finally {
         createBtn.disabled = false;
-        createBtn.innerHTML = '<i class="fas fa-arrow-right"></i><span>Продолжить</span>';
+        createBtn.innerHTML = '<span>Далее</span>';
     }
 }
 
