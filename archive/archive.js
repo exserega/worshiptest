@@ -99,9 +99,14 @@ async function loadArchiveData() {
     
     try {
         // Загружаем архивные сет-листы
+        logger.log(`🔍 Loading archive setlists for branch: ${currentUser.branchId}`);
         archiveSetlists = await loadArchiveSetlists(currentUser.branchId);
         
         logger.log(`📚 Loaded ${archiveSetlists.length} archive setlists`);
+        
+        if (archiveSetlists.length === 0) {
+            logger.log('ℹ️ No archive setlists found. Collection might be empty.');
+        }
         
         // Загрузка групп (пока моковые данные)
         archiveGroups = [

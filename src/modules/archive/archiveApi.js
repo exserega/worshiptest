@@ -149,10 +149,9 @@ export async function copyToArchive(activeSetlistId, groupIds = []) {
  */
 export async function loadArchiveSetlists(branchId) {
     try {
-        // Временно убираем orderBy чтобы не требовался составной индекс
-        // TODO: Добавить индекс в Firebase Console для оптимальной работы
         const snapshot = await db.collection('archive_setlists')
             .where('branchId', '==', branchId)
+            .orderBy('updatedAt', 'desc')
             .get();
         
         const setlists = [];
@@ -161,13 +160,6 @@ export async function loadArchiveSetlists(branchId) {
                 id: doc.id,
                 ...doc.data()
             });
-        });
-        
-        // Сортируем в памяти после загрузки
-        setlists.sort((a, b) => {
-            const aTime = a.updatedAt?.toMillis ? a.updatedAt.toMillis() : 0;
-            const bTime = b.updatedAt?.toMillis ? b.updatedAt.toMillis() : 0;
-            return bTime - aTime; // desc
         });
         
         logger.log(`📚 Loaded ${setlists.length} archive setlists`);
