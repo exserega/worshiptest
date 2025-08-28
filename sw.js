@@ -1,5 +1,5 @@
-// Service Worker v497 - Unify create and edit mode UI in songs overlay
-const CACHE_NAME = 'agape-worship-cache-v497';
+// Service Worker v498 - Add inline setlist name editing in overlay
+const CACHE_NAME = 'agape-worship-cache-v498';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

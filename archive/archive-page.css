@@ -1328,6 +1328,19 @@ textarea.form-control {
     transition: all 0.2s ease;
 }
 
+/* Стиль для редактируемого названия сет-листа */
+.editable-setlist-name {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+}
+
+.editable-setlist-name:hover {
+    opacity: 0.8;
+}
+
 .added-count-badge {
     background: color-mix(in srgb, var(--primary-color) 20%, var(--container-background-color));
     color: var(--primary-color);

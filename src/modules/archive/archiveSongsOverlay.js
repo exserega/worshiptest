@@ -794,7 +794,13 @@ class ArchiveSongsOverlay {
         // Обновляем заголовок - теперь всегда показываем название сет-листа
         const headerTitle = document.querySelector('#archive-songs-overlay .header-title h3');
         if (mode === 'edit') {
-            headerTitle.textContent = `Редактировать "${setlistName}"`;
+            headerTitle.innerHTML = `Редактировать "<span class="editable-setlist-name" style="cursor: pointer; text-decoration: underline; text-decoration-style: dotted;">${setlistName}</span>"`;
+            
+            // Добавляем обработчик клика для редактирования названия
+            const editableSpan = headerTitle.querySelector('.editable-setlist-name');
+            if (editableSpan) {
+                editableSpan.addEventListener('click', () => this.editSetlistName());
+            }
         } else {
             headerTitle.textContent = `Добавить песни в "${setlistName}"`;
         }
@@ -842,6 +848,50 @@ class ArchiveSongsOverlay {
             }
         } catch (error) {
             logger.error('Error loading existing songs:', error);
+        }
+    }
+
+    /**
+     * Редактирование названия сет-листа
+     */
+    async editSetlistName() {
+        const currentName = this.targetSetlistName;
+        const newName = prompt('Введите новое название сет-листа:', currentName);
+        
+        if (newName && newName.trim() && newName !== currentName) {
+            try {
+                logger.log('📝 Updating setlist name:', { old: currentName, new: newName });
+                
+                // Обновляем название в Firebase
+                await db.collection('archive_setlists').doc(this.setlistId).update({
+                    name: newName.trim()
+                });
+                
+                // Обновляем локальные переменные
+                this.targetSetlistName = newName.trim();
+                
+                // Обновляем заголовок
+                const headerTitle = document.querySelector('#archive-songs-overlay .header-title h3');
+                headerTitle.innerHTML = `Редактировать "<span class="editable-setlist-name" style="cursor: pointer; text-decoration: underline; text-decoration-style: dotted;">${newName.trim()}</span>"`;
+                
+                // Перепривязываем обработчик
+                const editableSpan = headerTitle.querySelector('.editable-setlist-name');
+                if (editableSpan) {
+                    editableSpan.addEventListener('click', () => this.editSetlistName());
+                }
+                
+                logger.log('✅ Setlist name updated successfully');
+                
+                // Показываем уведомление
+                if (window.showNotification) {
+                    window.showNotification('Название сет-листа обновлено', 'success');
+                }
+            } catch (error) {
+                logger.error('Error updating setlist name:', error);
+                if (window.showNotification) {
+                    window.showNotification('Ошибка при обновлении названия', 'error');
+                }
+            }
         }
     }
 
