@@ -1,5 +1,5 @@
-// Service Worker v493 - Fix edit button visibility rules
-const CACHE_NAME = 'agape-worship-cache-v493';
+// Service Worker v494 - Fix active filter button badge visibility
+const CACHE_NAME = 'agape-worship-cache-v494';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

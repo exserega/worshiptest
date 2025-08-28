@@ -1305,6 +1305,13 @@ textarea.form-control {
     color: white;
 }
 
+/* Когда кнопка активна, счетчик должен быть виден */
+.filter-btn.active .added-count-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .added-count-badge {
     background: color-mix(in srgb, var(--primary-color) 20%, var(--container-background-color));
     color: var(--primary-color);
