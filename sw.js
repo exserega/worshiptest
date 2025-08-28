@@ -1,5 +1,5 @@
-// Service Worker v485 - Fix: search highlight with proper class and color-mix
-const CACHE_NAME = 'agape-worship-cache-v485';
+// Service Worker v486 - Fix: clear search button and delete button styles
+const CACHE_NAME = 'agape-worship-cache-v486';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

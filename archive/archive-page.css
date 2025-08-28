@@ -1093,25 +1093,36 @@ textarea.form-control {
 /* Кнопка удаления */
 .delete-btn-corner {
     position: absolute;
-    top: 1rem;
-    right: 3.5rem;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem;
+    top: 10px;
+    left: 10px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    width: 32px;
+    height: 32px;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     transition: all 0.2s ease;
     opacity: 0;
 }
 
+.setlist-card:hover .delete-btn-corner,
 .archive-setlist-card:hover .delete-btn-corner {
     opacity: 1;
 }
 
 .delete-btn-corner:hover {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: scale(1.05);
+}
+
+.delete-btn-corner i {
+    font-size: 14px;
+    color: #ef4444 !important;
 }
 
 /* Мобильная адаптация модального окна */
@@ -1359,29 +1370,35 @@ textarea.form-control {
     transform: translateY(0);
 }
 
-/* Кнопка удаления (корзина) */
+/* Кнопка удаления (корзина) - квадратная */
 .song-action-btn.remove {
-    background-color: transparent;
-    border-color: var(--danger-color);
+    background: rgba(239, 68, 68, 0.1) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    min-width: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
 }
 
 .song-action-btn.remove:hover {
-    background-color: var(--danger-color);
-    transform: translateY(-1px);
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    transform: scale(1.05) !important;
 }
 
 .song-action-btn.remove:active {
-    transform: translateY(0);
+    transform: scale(0.95) !important;
 }
 
 /* Иконка удаления - явно прописываем цвета */
 .song-action-btn.remove i {
-    color: var(--danger-color) !important;
-    font-size: 14px;
+    color: #ef4444 !important;
+    font-size: 14px !important;
 }
 
 .song-action-btn.remove:hover i {
-    color: white !important;
+    color: #ef4444 !important;
 }
 
 /* Стили для селекта тональности */
@@ -1436,6 +1453,29 @@ mark.search-highlight {
     padding: 2px 4px !important;
     border-radius: 3px !important;
     font-weight: 700 !important;
+}
+
+/* Кнопка очистки поиска - светлая иконка */
+.clear-search-btn {
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-color) !important;
+    cursor: pointer !important;
+    padding: 8px !important;
+    position: absolute !important;
+    right: 10px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.2s ease !important;
+}
+
+.clear-search-btn:hover {
+    opacity: 1 !important;
+}
+
+.clear-search-btn i {
+    color: var(--text-color) !important;
 }
 
 /* Стили для контекста поиска */
