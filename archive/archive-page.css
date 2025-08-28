@@ -1,5 +1,13 @@
 /* Стили страницы архива - современный минималистичный дизайн */
 
+/* Скрываем скролл для html и body */
+html, body {
+    height: 100%;
+    overflow: hidden !important;
+    margin: 0;
+    padding: 0;
+}
+
 /* Основной контейнер */
 .archive-page-container {
     display: flex;
@@ -7,11 +15,11 @@
     height: 100vh;
     background: var(--bg-primary, #111827);
     overflow: hidden;
-}
-
-/* Скрываем скролл для body */
-body {
-    overflow: hidden !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 /* Верхняя панель */
@@ -407,12 +415,22 @@ body {
     color: white !important;
 }
 
+/* Фиксированная шапка (все до контента) */
+.archive-header {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+}
+
 /* Контент архива */
 .archive-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 1rem;
     background: var(--bg-primary, #111827);
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
 }
 
 .setlists-container {
