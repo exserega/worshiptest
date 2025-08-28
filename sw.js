@@ -1,5 +1,5 @@
-// Service Worker v453 - Fix: balanced padding for key/bpm, square key shape
-const CACHE_NAME = 'agape-worship-cache-v453';
+// Service Worker v454 - Fix: arrow icons with cyan color, gap between key/bpm
+const CACHE_NAME = 'agape-worship-cache-v454';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

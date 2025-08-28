@@ -277,34 +277,32 @@ body {
     }
     
     .groups-section::after {
-        content: '▸';
+        content: '→';
         position: absolute;
-        right: 0;
+        right: 2px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 0.7rem;
-        color: var(--text-secondary, #9ca3af);
-        opacity: 0.6;
+        font-size: 1rem;
+        color: rgba(34, 211, 238, 0.7);
+        opacity: 0.8;
         pointer-events: none;
         transition: opacity 0.2s;
         z-index: 10;
-        background: var(--bg-primary, #111827);
-        padding: 0 2px;
+        font-weight: 300;
     }
     
     .groups-section.scrolled-left::before {
-        content: '◂';
+        content: '←';
         position: absolute;
-        left: 0;
+        left: 2px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 0.7rem;
-        color: var(--text-secondary, #9ca3af);
-        opacity: 0.6;
+        font-size: 1rem;
+        color: rgba(34, 211, 238, 0.7);
+        opacity: 0.8;
         pointer-events: none;
         z-index: 10;
-        background: var(--bg-primary, #111827);
-        padding: 0 2px;
+        font-weight: 300;
     }
     
     .groups-section.scrolled-right::after {
@@ -595,7 +593,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 1px;
+    gap: 3px;
     font-size: 0.65rem;
     color: var(--text-secondary, #9ca3af);
     flex-shrink: 0;
