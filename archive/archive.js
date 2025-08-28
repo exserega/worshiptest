@@ -5,6 +5,11 @@
 import logger from '../src/utils/logger.js';
 import { db } from '../firebase-init.js';
 import { getCurrentUser, initAuthGate } from '../src/modules/auth/authCheck.js';
+import { 
+    loadArchiveSetlists, 
+    deleteArchiveSetlist 
+} from '../src/modules/archive/archiveApi.js';
+import { ArchiveSetlistModal } from '../src/modules/archive/archiveSetlistModal.js';
 
 // Глобальные переменные
 let currentUser = null;
@@ -56,6 +61,9 @@ async function initializePage() {
         // Инициализация DOM элементов
         initializeElements();
         
+        // Инициализируем модальное окно
+        window.archiveSetlistModal.init();
+        
         // Загрузка данных
         await loadArchiveData();
         
@@ -90,24 +98,8 @@ async function loadArchiveData() {
     showLoading(true);
     
     try {
-        // Пока используем обычные сет-листы для демонстрации
-        // TODO: Переключиться на archive_setlists когда будет создана коллекция
-        const snapshot = await db.collection('worship_setlists')
-            .where('branchId', '==', currentUser.branchId)
-            .get();
-        
-        archiveSetlists = [];
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            logger.log('Setlist structure:', doc.id, data);
-            if (data.songs && data.songs.length > 0) {
-                logger.log('First song structure:', data.songs[0]);
-            }
-            archiveSetlists.push({
-                id: doc.id,
-                ...data
-            });
-        });
+        // Загружаем архивные сет-листы
+        archiveSetlists = await loadArchiveSetlists(currentUser.branchId);
         
         logger.log(`📚 Loaded ${archiveSetlists.length} archive setlists`);
         
@@ -276,6 +268,10 @@ function createSetlistCard(setlist) {
             <i class="fas fa-edit"></i>
         </button>
         
+        <button class="delete-btn-corner" title="Удалить" onclick="deleteSetlist('${setlist.id}')">
+            <i class="fas fa-trash"></i>
+        </button>
+        
         <div class="setlist-actions">
             <div class="setlist-actions-row">
                 <button class="action-btn" data-action="calendar">
@@ -399,8 +395,14 @@ function setupEventHandlers() {
     
     // Создание сет-листа
     elements.createBtn.addEventListener('click', () => {
-        // TODO: Открыть модальное окно создания
-        alert('Создание архивного сет-листа - в разработке');
+        window.archiveSetlistModal.open({
+            groups: archiveGroups,
+            onSave: async (setlistId) => {
+                // Перезагружаем данные
+                await loadArchiveData();
+                showNotification('Сет-лист успешно создан');
+            }
+        });
     });
     
     // Добавление группы
@@ -532,9 +534,49 @@ window.addToGroup = function(setlistId) {
  * Редактирование сет-листа
  */
 window.editSetlist = function(setlistId) {
-    // TODO: Открыть модальное окно редактирования
-    logger.log('Edit setlist:', setlistId);
-    alert('Редактирование сет-листа - в разработке');
+    const setlist = archiveSetlists.find(s => s.id === setlistId);
+    if (!setlist) {
+        showError('Сет-лист не найден');
+        return;
+    }
+    
+    window.archiveSetlistModal.open({
+        setlist: setlist,
+        groups: archiveGroups,
+        onSave: async () => {
+            // Перезагружаем данные
+            await loadArchiveData();
+            showNotification('Сет-лист успешно обновлен');
+        }
+    });
+};
+
+/**
+ * Удаление сет-листа
+ */
+window.deleteSetlist = async function(setlistId) {
+    const setlist = archiveSetlists.find(s => s.id === setlistId);
+    if (!setlist) {
+        showError('Сет-лист не найден');
+        return;
+    }
+    
+    const confirmDelete = confirm(`Вы уверены, что хотите удалить сет-лист "${setlist.name}"?`);
+    if (!confirmDelete) return;
+    
+    try {
+        showLoading(true);
+        await deleteArchiveSetlist(setlistId);
+        
+        // Перезагружаем данные
+        await loadArchiveData();
+        showNotification('Сет-лист успешно удален');
+    } catch (error) {
+        logger.error('Error deleting setlist:', error);
+        showError(error.message || 'Ошибка при удалении сет-листа');
+    } finally {
+        showLoading(false);
+    }
 };
 
 /**
@@ -549,6 +591,14 @@ function showLoading(show) {
  */
 function showError(message) {
     // TODO: Использовать существующую систему уведомлений
+    alert(message);
+}
+
+/**
+ * Показать уведомление
+ */
+function showNotification(message) {
+    // Временно используем alert, потом заменим на красивые уведомления
     alert(message);
 }
 
