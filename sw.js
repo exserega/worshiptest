@@ -1,5 +1,5 @@
-// Service Worker v458 - Fix: equal arrow sizes with Arial font, 1.1rem
-const CACHE_NAME = 'agape-worship-cache-v458';
+// Service Worker v459 - Fix: use triangle symbols for equal arrow sizes
+const CACHE_NAME = 'agape-worship-cache-v459';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
