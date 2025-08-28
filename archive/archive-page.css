@@ -272,33 +272,42 @@ body {
         position: relative;
     }
     
-    .groups-scroll-wrapper::after {
+    .groups-section {
+        position: relative;
+    }
+    
+    .groups-section::after {
         content: '▸';
         position: absolute;
-        right: 1px;
+        right: 0;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         color: var(--text-secondary, #9ca3af);
-        opacity: 0.4;
+        opacity: 0.6;
         pointer-events: none;
         transition: opacity 0.2s;
+        z-index: 10;
+        background: var(--bg-primary, #111827);
+        padding: 0 2px;
     }
     
-    .groups-scroll-wrapper.scrolled-left::before {
+    .groups-section.scrolled-left::before {
         content: '◂';
         position: absolute;
-        left: 1px;
+        left: 0;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         color: var(--text-secondary, #9ca3af);
-        opacity: 0.4;
+        opacity: 0.6;
         pointer-events: none;
-        z-index: 1;
+        z-index: 10;
+        background: var(--bg-primary, #111827);
+        padding: 0 2px;
     }
     
-    .groups-scroll-wrapper.scrolled-right::after {
+    .groups-section.scrolled-right::after {
         opacity: 0;
     }
 }
@@ -593,7 +602,7 @@ body {
 }
 
 .song-key {
-    background: var(--bg-secondary, #111827) !important;
+    background: var(--bg-tertiary, #1a1f2e) !important;
     padding: 1px 6px !important;
     border-radius: 3px !important;
     font-weight: 600 !important;
@@ -604,7 +613,7 @@ body {
 }
 
 .song-bpm {
-    background: var(--bg-secondary, #111827) !important;
+    background: var(--bg-tertiary, #1a1f2e) !important;
     padding: 1px 6px !important;
     border-radius: 3px !important;
     color: var(--text-secondary, #9ca3af) !important;

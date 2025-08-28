@@ -584,18 +584,18 @@ function setupGroupsScrollArrows() {
         if (window.innerWidth <= 480) {
             const scrollLeft = scrollContainer.scrollLeft;
             const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            const wrapper = scrollContainer.parentElement;
+            const section = scrollContainer.closest('.groups-section');
             
             if (scrollLeft > 10) {
-                wrapper.classList.add('scrolled-left');
+                section.classList.add('scrolled-left');
             } else {
-                wrapper.classList.remove('scrolled-left');
+                section.classList.remove('scrolled-left');
             }
             
             if (scrollLeft >= maxScroll - 10) {
-                wrapper.classList.add('scrolled-right');
+                section.classList.add('scrolled-right');
             } else {
-                wrapper.classList.remove('scrolled-right');
+                section.classList.remove('scrolled-right');
             }
         }
     });

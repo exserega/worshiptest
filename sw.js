@@ -1,5 +1,5 @@
-// Service Worker v448 - Fix: darker bg for key/bpm, single scroll, arrow position
-const CACHE_NAME = 'agape-worship-cache-v448';
+// Service Worker v449 - Fix: restore bg-tertiary, mobile arrows in corner
+const CACHE_NAME = 'agape-worship-cache-v449';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
