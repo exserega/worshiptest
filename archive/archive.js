@@ -550,8 +550,9 @@ window.editSetlist = async function(setlistId) {
     }
     
     try {
-        // Динамически импортируем модуль songsOverlay
-        const { openSongsOverlay } = await import('../src/modules/songs/songsOverlay.js');
+        // Используем существующий songs overlay
+        await import('../ui.js');
+        await import('../script.js');
         
         // Устанавливаем режим работы с архивом
         window.activeOverlayMode = 'archive-edit';
@@ -559,8 +560,50 @@ window.editSetlist = async function(setlistId) {
         window.activeSetlistName = setlist.name;
         window.isArchiveMode = true;
         
-        // Открываем оверлей
-        openSongsOverlay();
+        // Переопределяем функцию для архивного режима
+        const originalOpenSetlistSelector = window.openSetlistSelector;
+        window.openSetlistSelector = async function(song, selectedKey) {
+            try {
+                await addSongToArchiveSetlist(setlistId, {
+                    id: song.id,
+                    preferredKey: selectedKey
+                });
+                
+                showNotification(`Песня "${song.name}" добавлена в архивный сет-лист`);
+                
+                // Перезагружаем данные
+                await loadArchiveData();
+                
+            } catch (error) {
+                logger.error('Error adding song to archive:', error);
+                showError('Ошибка при добавлении песни');
+            }
+        };
+        
+        // Открываем overlay добавления песен
+        const addSongsOverlay = document.getElementById('add-songs-overlay');
+        if (addSongsOverlay) {
+            addSongsOverlay.classList.add('show');
+            
+            // Обновляем заголовок для архива
+            const headerTitle = addSongsOverlay.querySelector('.header-title h3');
+            if (headerTitle) {
+                headerTitle.textContent = `Редактировать "${setlist.name}"`;
+            }
+        } else {
+            showError('Оверлей добавления песен не найден');
+        }
+        
+        // Восстанавливаем оригинальную функцию при закрытии
+        setTimeout(() => {
+            const closeButton = document.querySelector('.close-overlay-btn');
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    window.openSetlistSelector = originalOpenSetlistSelector;
+                    window.isArchiveMode = false;
+                }, { once: true });
+            }
+        }, 500);
         
     } catch (error) {
         logger.error('Error opening songs overlay for edit:', error);
@@ -898,8 +941,10 @@ function setupConfirmModalHandlers() {
  */
 async function startAddingSongsToArchive() {
     try {
-        // Динамически импортируем модуль songsOverlay
-        const { openSongsOverlay } = await import('../src/modules/songs/songsOverlay.js');
+        // Используем существующий songs overlay из главной страницы
+        // Динамически загружаем необходимые модули
+        await import('../ui.js');
+        await import('../script.js');
         
         // Устанавливаем режим работы с архивом
         window.activeOverlayMode = 'archive';
@@ -935,17 +980,30 @@ async function startAddingSongsToArchive() {
             }
         };
         
-        // Открываем оверлей
-        openSongsOverlay();
+        // Открываем overlay добавления песен
+        const addSongsOverlay = document.getElementById('add-songs-overlay');
+        if (addSongsOverlay) {
+            addSongsOverlay.classList.add('show');
+            
+            // Обновляем заголовок для архива
+            const headerTitle = addSongsOverlay.querySelector('.header-title h3');
+            if (headerTitle) {
+                headerTitle.textContent = `Добавить песни в "${window.currentCreatedSetlistName}"`;
+            }
+        } else {
+            showError('Оверлей добавления песен не найден');
+        }
         
         // Восстанавливаем оригинальную функцию при закрытии
-        const closeButton = document.querySelector('.songs-close-btn');
-        if (closeButton) {
-            closeButton.addEventListener('click', () => {
-                window.openSetlistSelector = originalOpenSetlistSelector;
-                window.isArchiveMode = false;
-            }, { once: true });
-        }
+        setTimeout(() => {
+            const closeButton = document.querySelector('.close-overlay-btn');
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    window.openSetlistSelector = originalOpenSetlistSelector;
+                    window.isArchiveMode = false;
+                }, { once: true });
+            }
+        }, 500);
         
     } catch (error) {
         logger.error('Error starting songs overlay:', error);
