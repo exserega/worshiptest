@@ -1,5 +1,5 @@
-// Service Worker v494 - Fix active filter button badge visibility
-const CACHE_NAME = 'agape-worship-cache-v494';
+// Service Worker v495 - Fix active button text contrast with dark colors
+const CACHE_NAME = 'agape-worship-cache-v495';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
