@@ -1,5 +1,5 @@
-// Service Worker v451 - Force: hardcoded dark bg for key/bpm with higher specificity
-const CACHE_NAME = 'agape-worship-cache-v451';
+// Service Worker v452 - Fix: aligned height for key/bpm with reduced padding
+const CACHE_NAME = 'agape-worship-cache-v452';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
