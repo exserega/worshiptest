@@ -1,5 +1,5 @@
-// Service Worker v467 - Fix: exact copy of main page songs overlay design
-const CACHE_NAME = 'agape-worship-cache-v467';
+// Service Worker v468 - Fix: archive songs overlay technical improvements
+const CACHE_NAME = 'agape-worship-cache-v468';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

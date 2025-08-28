@@ -1183,6 +1183,161 @@ textarea.form-control {
     font-weight: 600;
 }
 
+/* Стили для кнопок фильтра */
+.filter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.filter-categories {
+    display: flex;
+    gap: 0.5rem;
+    flex: 1;
+    overflow-x: auto;
+}
+
+.category-filter {
+    padding: 0.5rem 1rem;
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    color: var(--text-color);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.category-filter:hover {
+    border-color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 10%, var(--container-background-color));
+}
+
+.category-filter.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.show-added-btn {
+    position: relative;
+}
+
+.show-added-btn .added-count {
+    background: var(--primary-color);
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+/* Компактные карточки песен */
+.song-card-compact {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--container-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    gap: 1rem;
+    transition: all 0.2s ease;
+}
+
+.song-card-compact:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.song-card-compact.added {
+    background: color-mix(in srgb, var(--primary-color) 8%, var(--container-background-color));
+    border-color: var(--primary-color);
+}
+
+.song-number {
+    min-width: 30px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.song-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.song-info .song-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 2px;
+}
+
+.song-info .song-category-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.song-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.song-meta .song-key-badge {
+    background: color-mix(in srgb, var(--primary-color) 15%, var(--container-background-color));
+    color: var(--primary-color);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.song-meta .song-bpm {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.song-action-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.song-action-btn.add {
+    background: var(--primary-color);
+    color: white;
+}
+
+.song-action-btn.add:hover {
+    background: color-mix(in srgb, var(--primary-color) 85%, black);
+    transform: scale(1.1);
+}
+
+.song-action-btn.remove {
+    background: var(--error-color);
+    color: white;
+}
+
+.song-action-btn.remove:hover {
+    background: color-mix(in srgb, var(--error-color) 85%, black);
+    transform: scale(1.1);
+}
+
 /* Стили для селекта тональности */
 .add-to-setlist-btn {
     padding: 8px 16px;

@@ -88,13 +88,31 @@ class ArchiveSongsOverlay {
                                     </div>
                                 </div>
                                 <div class="search-filters">
-                                    <select id="archive-category-filter" class="filter-select">
-                                        <option value="">Все категории</option>
-                                    </select>
-                                    <button id="archive-show-added" class="filter-btn">
-                                        <span>Добавленные</span>
-                                        <span id="archive-added-badge" class="added-count-badge" style="display: none;">0</span>
-                                    </button>
+                                    <div class="filter-row">
+                                        <div class="filter-categories">
+                                            <button class="category-filter active" data-category="all">
+                                                <i class="fas fa-music"></i>
+                                                <span>Все песни</span>
+                                            </button>
+                                            <button class="category-filter" data-category="worship">
+                                                <i class="fas fa-hands"></i>
+                                                <span>Поклонение</span>
+                                            </button>
+                                            <button class="category-filter" data-category="glorifying">
+                                                <i class="fas fa-crown"></i>
+                                                <span>Прославление</span>
+                                            </button>
+                                            <button class="category-filter" data-category="gift">
+                                                <i class="fas fa-gift"></i>
+                                                <span>Дар</span>
+                                            </button>
+                                        </div>
+                                        <button id="archive-show-added" class="btn-modern secondary show-added-btn">
+                                            <i class="fas fa-list"></i>
+                                            <span>Добавлено</span>
+                                            <span class="added-count" id="archive-added-badge">0</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -159,7 +177,7 @@ class ArchiveSongsOverlay {
         this.overlay = document.getElementById('archive-songs-overlay');
         this.keyModal = document.getElementById('archive-key-modal');
         this.searchInput = document.getElementById('archive-song-search');
-        this.categoryFilter = document.getElementById('archive-category-filter');
+        // Удаляем ссылку на старый селект
         this.songsGrid = document.getElementById('archive-songs-grid');
         this.searchResults = document.getElementById('archive-search-results');
         this.addedCount = document.getElementById('archive-added-songs-count');
@@ -181,10 +199,19 @@ class ArchiveSongsOverlay {
             this.handleSearch('');
         });
 
-        // Фильтр категорий
-        this.categoryFilter.addEventListener('change', (e) => {
-            this.selectedCategory = e.target.value;
-            this.filterSongs();
+        // Фильтр категорий - кнопки
+        document.querySelectorAll('.category-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Убираем активность со всех кнопок
+                document.querySelectorAll('.category-filter').forEach(b => b.classList.remove('active'));
+                // Добавляем активность на текущую
+                btn.classList.add('active');
+                
+                // Устанавливаем выбранную категорию
+                const category = btn.dataset.category;
+                this.selectedCategory = category === 'all' ? '' : category;
+                this.filterSongs();
+            });
         });
 
         // Кнопка "Добавленные"
@@ -286,13 +313,7 @@ class ArchiveSongsOverlay {
             }
         });
 
-        // Добавляем категории в селект
-        categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            this.categoryFilter.appendChild(option);
-        });
+        // Категории теперь определены статически через кнопки
     }
 
     /**
@@ -399,38 +420,43 @@ class ArchiveSongsOverlay {
             return;
         }
 
-        const songsHTML = this.filteredSongs.map(song => {
+        const songsHTML = this.filteredSongs.map((song, index) => {
             const isAdded = this.addedSongs.has(song.id);
             const addedKey = this.addedSongs.get(song.id);
             return `
-                <div class="song-card ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
-                    <div class="song-card-header">
-                        <h4 class="song-title">${song.name}</h4>
-                        <span class="song-category">${song.category}</span>
-                        <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
-                            <i class="fas fa-${isAdded ? 'check' : 'plus'}"></i>
-                            <span>${isAdded ? 'Добавлено' : 'Добавить'}</span>
-                        </button>
+                <div class="song-card-compact ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
+                    <div class="song-number">${index + 1}</div>
+                    <div class="song-info">
+                        <div class="song-title">${song.name}</div>
+                        <div class="song-category-label">${song.category}</div>
                     </div>
-                    ${isAdded && addedKey ? `
-                        <div class="song-key-display">
-                            Тональность: <span class="song-key-badge">${addedKey}</span>
-                        </div>
-                    ` : ''}
+                    <div class="song-meta">
+                        ${addedKey ? `<span class="song-key-badge">${addedKey}</span>` : ''}
+                        ${song.bpm ? `<span class="song-bpm">${song.bpm} BPM</span>` : ''}
+                    </div>
+                    <button class="song-action-btn ${isAdded ? 'remove' : 'add'}" data-song-id="${song.id}">
+                        <i class="fas fa-${isAdded ? 'trash' : 'plus'}"></i>
+                    </button>
                 </div>
             `;
         }).join('');
 
         this.songsGrid.innerHTML = songsHTML;
 
-        // Обработчики кликов на кнопки добавления
-        this.songsGrid.querySelectorAll('.song-add-btn').forEach(btn => {
+        // Обработчики кликов на кнопки действий
+        this.songsGrid.querySelectorAll('.song-action-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const songId = btn.dataset.songId;
                 const song = this.songs.find(s => s.id === songId);
                 if (song) {
-                    this.selectSong(song);
+                    if (btn.classList.contains('remove')) {
+                        // Удаляем песню
+                        this.removeSongFromSetlist(songId);
+                    } else {
+                        // Добавляем песню
+                        this.selectSong(song);
+                    }
                 }
             });
         });
@@ -439,15 +465,27 @@ class ArchiveSongsOverlay {
     /**
      * Выбор песни
      */
-    selectSong(song) {
-        this.selectedSong = song;
-        
-        // Если у песни только одна тональность, добавляем сразу
-        if (song.keys.length === 1) {
-            this.confirmAddSong(song.keys[0]);
-        } else {
-            // Показываем модальное окно выбора тональности
-            this.showKeySelectionModal(song);
+    async selectSong(song) {
+        // Загружаем полные данные песни, включая текст
+        try {
+            const { getSongById } = await import('../../api/index.js');
+            const fullSongData = await getSongById(song.id);
+            
+            if (fullSongData) {
+                this.selectedSong = fullSongData;
+                
+                // Если у песни только одна тональность, добавляем сразу
+                if (fullSongData.keys.length === 1) {
+                    this.confirmAddSong(fullSongData.keys[0]);
+                } else {
+                    // Показываем модальное окно выбора тональности
+                    this.showKeySelectionModal(fullSongData);
+                }
+            } else {
+                logger.error('Не удалось загрузить данные песни');
+            }
+        } catch (error) {
+            logger.error('Ошибка при загрузке песни:', error);
         }
     }
 
@@ -563,6 +601,38 @@ class ArchiveSongsOverlay {
     }
 
     /**
+     * Удаление песни из сет-листа
+     */
+    async removeSongFromSetlist(songId) {
+        try {
+            // Если есть targetSetlistId, сразу удаляем из БД
+            if (this.targetSetlistId && this.mode === 'edit') {
+                await removeSongFromArchiveSetlist(this.targetSetlistId, songId);
+            }
+            
+            // Удаляем из локального состояния
+            this.addedSongs.delete(songId);
+            
+            // Обновляем счетчики
+            this.updateAddedSongsCount();
+            
+            // Если показываем только добавленные и больше нет песен, показываем все
+            if (this.showAddedOnly && this.addedSongs.size === 0) {
+                this.showAddedOnly = false;
+                document.getElementById('archive-show-added').classList.remove('active');
+            }
+            
+            // Перерисовываем
+            this.filterSongs();
+            
+            this.showNotification('Песня удалена', 'success');
+        } catch (error) {
+            logger.error('Ошибка удаления песни:', error);
+            this.showNotification('Ошибка удаления песни', 'error');
+        }
+    }
+
+    /**
      * Открытие оверлея
      */
     async open(setlistId, setlistName, mode = 'add') {
@@ -621,7 +691,9 @@ class ArchiveSongsOverlay {
         // Очистка состояния
         this.searchInput.value = '';
         this.selectedCategory = '';
-        this.categoryFilter.value = '';
+        // Сбрасываем выбор категории на "Все песни"
+        document.querySelectorAll('.category-filter').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-category="all"]').classList.add('active');
         this.showAddedOnly = false;
         document.getElementById('archive-show-added').classList.remove('active');
         this.searchResults.style.display = 'none';
