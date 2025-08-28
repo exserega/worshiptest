@@ -90,9 +90,10 @@ class ArchiveSongsOverlay {
                                 <div class="search-filters">
                                     <select id="archive-category-filter" class="filter-select">
                                         <option value="">Все категории</option>
-                                        <option value="worship">Поклонение</option>
-                                        <option value="glorifying">Прославление</option>
-                                        <option value="gift">Дар</option>
+                                        <option value="Быстрые (вертикаль)">Быстрые (вертикаль)</option>
+                                        <option value="Быстрые (горизонталь)">Быстрые (горизонталь)</option>
+                                        <option value="Поклонение (вертикаль)">Поклонение (вертикаль)</option>
+                                        <option value="Поклонение (горизонталь)">Поклонение (горизонталь)</option>
                                     </select>
                                     <button id="archive-show-added" class="filter-btn">
                                         <span>Добавленные</span>
@@ -362,8 +363,8 @@ class ArchiveSongsOverlay {
                 return false;
             }
 
-            // Фильтр по категории
-            if (this.selectedCategory && song.category !== this.selectedCategory) {
+            // Фильтр по категории (sheet)
+            if (this.selectedCategory && song.sheet !== this.selectedCategory) {
                 return false;
             }
 
@@ -400,7 +401,7 @@ class ArchiveSongsOverlay {
                     <div class="song-number">${index + 1}</div>
                     <div class="song-info">
                         <div class="song-title">${song.name}</div>
-                        <div class="song-category-label">${song.category}</div>
+                        <div class="song-category-label">${song.sheet || ''}</div>
                     </div>
                     <div class="song-meta">
                         ${addedKey ? `<span class="song-key-badge">${addedKey}</span>` : ''}
@@ -446,19 +447,8 @@ class ArchiveSongsOverlay {
             if (fullSongData) {
                 this.selectedSong = fullSongData;
                 
-                // Проверяем наличие тональностей
-                const keys = fullSongData.keys || [];
-                
-                if (keys.length === 0) {
-                    // Если тональностей нет, добавляем без выбора
-                    this.confirmAddSong(null);
-                } else if (keys.length === 1) {
-                    // Если только одна тональность, добавляем сразу
-                    this.confirmAddSong(keys[0]);
-                } else {
-                    // Показываем модальное окно выбора тональности
-                    this.showKeySelectionModal(fullSongData);
-                }
+                // Всегда показываем модальное окно для выбора тональности
+                this.showKeySelectionModal(fullSongData);
             } else {
                 logger.error('Не удалось загрузить данные песни');
             }
@@ -503,9 +493,30 @@ class ArchiveSongsOverlay {
         `;
 
         // Обработчик изменения тональности
-        keySelect.addEventListener('change', () => {
-            // Здесь можно добавить транспонирование если нужно
-            logger.log('Selected key:', keySelect.value);
+        keySelect.addEventListener('change', async () => {
+            const newKey = keySelect.value;
+            if (newKey && song.keys && song.keys.includes(newKey)) {
+                // Транспонируем текст песни
+                try {
+                    const { transposeSong } = await import('../../utils/transpose.js');
+                    const transposedText = transposeSong(song.text, song.keys[0], newKey);
+                    
+                    // Форматируем транспонированный текст
+                    let formattedText = transposedText || 'Текст песни недоступен';
+                    if (formattedText && formattedText !== 'Текст песни недоступен') {
+                        formattedText = formattedText.replace(/([A-G][#b]?m?(?:maj|min|dim|aug|sus|add)?[0-9]*)/g, '<span class="chord">$1</span>');
+                        formattedText = formattedText.replace(/\n/g, '<br>');
+                    }
+                    
+                    songDisplay.innerHTML = `
+                        <div class="song-content">
+                            <div class="song-text">${formattedText}</div>
+                        </div>
+                    `;
+                } catch (error) {
+                    logger.error('Ошибка транспонирования:', error);
+                }
+            }
         });
 
         // Показываем модальное окно
@@ -582,6 +593,24 @@ class ArchiveSongsOverlay {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 3000);
+    }
+
+    /**
+     * Обновление счетчиков добавленных песен
+     */
+    updateAddedSongsCount() {
+        const count = this.addedSongs.size;
+        
+        // Обновляем счетчик в заголовке
+        if (this.addedCount) {
+            this.addedCount.textContent = count;
+        }
+        
+        // Обновляем счетчик на кнопке
+        if (this.addedBadge) {
+            this.addedBadge.textContent = count;
+            this.addedBadge.style.display = count > 0 ? 'inline-block' : 'none';
+        }
     }
 
     /**

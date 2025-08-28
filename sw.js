@@ -1,5 +1,5 @@
-// Service Worker v470 - Fix: archive songs overlay runtime errors
-const CACHE_NAME = 'agape-worship-cache-v470';
+// Service Worker v471 - Fix: archive songs overlay improvements
+const CACHE_NAME = 'agape-worship-cache-v471';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
