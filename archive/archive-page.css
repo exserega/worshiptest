@@ -1431,12 +1431,12 @@ textarea.form-control {
 /* Подсветка совпадений в поиске */
 .search-highlight,
 mark.search-highlight {
-    background: var(--primary-color) !important;
-    color: var(--button-text-color) !important;
+    background: #22d3ee !important;
+    color: #111827 !important;
     padding: 2px 4px !important;
     border-radius: 3px !important;
     font-weight: 600 !important;
-    box-shadow: 0 1px 3px color-mix(in srgb, var(--primary-color) 25%, transparent) !important;
+    box-shadow: 0 1px 3px rgba(34, 211, 238, 0.25) !important;
 }
 
 /* Стили для контекста поиска */
