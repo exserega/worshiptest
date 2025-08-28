@@ -147,30 +147,7 @@
     color: #ffffff !important;
 }
 
-/* Светлая тема */
-[data-theme="light"] .form-input,
-[data-theme="light"] .form-select,
-[data-theme="light"] .form-textarea {
-    background: #f9fafb;
-    border-color: #e5e7eb;
-    color: #111827;
-}
 
-[data-theme="light"] .form-input:focus,
-[data-theme="light"] .form-select:focus,
-[data-theme="light"] .form-textarea:focus {
-    border-color: var(--accent-color);
-}
-
-[data-theme="light"] .btn-secondary {
-    background: #f3f4f6;
-    color: #374151 !important;
-}
-
-[data-theme="light"] .btn-secondary:hover {
-    background: #e5e7eb;
-    color: #1f2937 !important;
-}
 
 /* Селектор участников */
 .participants-selector {

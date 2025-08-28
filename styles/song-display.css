@@ -46,11 +46,7 @@
     vertical-align: baseline; /* Выравнивание по базовой линии */
     transition: color 0.3s ease, background-color 0.3s ease;
 }
-/* Стили аккордов в светлой теме */
-body[data-theme="light"] #song-content .chord {
-    color: var(--secondary-color);
-    background-color: color-mix(in srgb, var(--accent-color) 5%, transparent);
-}
+
 
 /* СТАРЫЕ СТИЛИ ДВУХКОЛОНОЧНОГО РЕЖИМА - ОТКЛЮЧЕНЫ */
 /* #song-content.split-columns pre { column-count: 2; column-gap: 30px; position: relative;}
