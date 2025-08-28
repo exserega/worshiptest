@@ -1,5 +1,5 @@
-// Service Worker v492 - Fix setlistId assignment and add more debug logs
-const CACHE_NAME = 'agape-worship-cache-v492';
+// Service Worker v493 - Fix edit button visibility rules
+const CACHE_NAME = 'agape-worship-cache-v493';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

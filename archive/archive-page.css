@@ -1109,9 +1109,15 @@ textarea.form-control {
     opacity: 0;
 }
 
-.setlist-card:hover .edit-btn-corner,
-.archive-setlist-card:hover .edit-btn-corner {
+/* Кнопка редактирования видна только когда карточка развернута */
+.archive-setlist-card.expanded .edit-btn-corner {
     opacity: 1;
+}
+
+/* Убеждаемся что кнопка редактирования скрыта когда карточка свернута */
+.archive-setlist-card:not(.expanded) .edit-btn-corner {
+    opacity: 0 !important;
+    pointer-events: none;
 }
 
 .edit-btn-corner:hover {
