@@ -145,23 +145,31 @@ window.loadArchiveData = loadArchiveData;
  */
 async function updateSetlistCard(setlistId) {
     try {
+        logger.log('🔄 Updating setlist card:', setlistId);
+        
         // Загружаем обновленный сет-лист из базы
-        const updatedSetlist = await loadArchiveSetlists(currentUser.branchId);
-        const setlist = updatedSetlist.find(s => s.id === setlistId);
+        const updatedSetlists = await loadArchiveSetlists(currentUser.branchId);
+        const setlist = updatedSetlists.find(s => s.id === setlistId);
         
         if (!setlist) {
             logger.error('Setlist not found:', setlistId);
             return;
         }
         
-        // Обновляем данные в массиве
+        logger.log('📋 Updated setlist data:', setlist);
+        
+        // Обновляем данные в глобальном массиве
         const index = archiveSetlists.findIndex(s => s.id === setlistId);
         if (index !== -1) {
             archiveSetlists[index] = setlist;
+            logger.log('✅ Global array updated at index:', index);
+        } else {
+            logger.error('Setlist not found in global array');
+            return;
         }
         
         // Находим карточку на странице
-        const cardElement = document.querySelector(`[data-setlist-id="${setlistId}"]`);
+        const cardElement = document.querySelector(`.archive-setlist-card[data-setlist-id="${setlistId}"]`);
         if (!cardElement) {
             logger.error('Card element not found:', setlistId);
             return;
@@ -170,29 +178,25 @@ async function updateSetlistCard(setlistId) {
         // Проверяем, была ли карточка развернута
         const wasExpanded = cardElement.classList.contains('expanded');
         const songsContainer = cardElement.querySelector(`#songs-${setlistId}`);
-        const wasLoaded = songsContainer?.dataset.loaded === 'true';
         
-        // Создаем новую карточку
-        const newCard = createSetlistCard(setlist);
-        
-        // Сохраняем развернутое состояние
-        if (wasExpanded) {
-            newCard.classList.add('expanded');
+        // Если карточка развернута, просто обновляем список песен
+        if (wasExpanded && songsContainer) {
+            logger.log('🎵 Updating songs in expanded card');
+            // Сбрасываем флаг загрузки, чтобы песни перезагрузились
+            delete songsContainer.dataset.loaded;
+            // Загружаем песни заново
+            await loadSetlistSongs(setlistId, songsContainer);
+            songsContainer.dataset.loaded = 'true';
         }
         
-        // Заменяем старую карточку новой
-        cardElement.parentNode.replaceChild(newCard, cardElement);
-        
-        // Если песни были загружены, перезагружаем их
-        if (wasExpanded && wasLoaded) {
-            const newSongsContainer = newCard.querySelector(`#songs-${setlistId}`);
-            if (newSongsContainer) {
-                await loadSetlistSongs(setlistId, newSongsContainer);
-                newSongsContainer.dataset.loaded = 'true';
-            }
+        // Обновляем метаданные карточки (количество песен)
+        const songCountElement = cardElement.querySelector('.setlist-meta .meta-item:first-child');
+        if (songCountElement) {
+            const songCount = setlist.songs?.length || 0;
+            songCountElement.innerHTML = `<i class="fas fa-music"></i> ${songCount} песен`;
         }
         
-        logger.log('✅ Setlist card updated:', setlistId);
+        logger.log('✅ Setlist card updated successfully');
     } catch (error) {
         logger.error('Error updating setlist card:', error);
     }
@@ -505,14 +509,16 @@ async function loadSetlistSongs(setlistId, container) {
         
         // Находим сет-лист
         const setlist = archiveSetlists.find(s => s.id === setlistId);
-        logger.log('Loading songs for setlist:', setlistId, setlist);
+        logger.log('🎵 Loading songs for setlist:', setlistId);
+        logger.log('📋 Current setlist data from array:', setlist);
         
         if (!setlist || !setlist.songs || setlist.songs.length === 0) {
             container.innerHTML = '<div class="no-songs">Нет песен в сет-листе</div>';
+            logger.log('ℹ️ No songs found in setlist');
             return;
         }
         
-        logger.log('Setlist songs:', setlist.songs);
+        logger.log('🎵 Found songs:', setlist.songs.length, 'songs');
         
         // Сортируем песни по полю order
         const sortedSongs = [...setlist.songs].sort((a, b) => (a.order || 0) - (b.order || 0));

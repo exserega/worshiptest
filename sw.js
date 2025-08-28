@@ -1,5 +1,5 @@
-// Service Worker v489 - Fix: async close method in songs overlay
-const CACHE_NAME = 'agape-worship-cache-v489';
+// Service Worker v490 - Fix: dynamic card update for archive setlists
+const CACHE_NAME = 'agape-worship-cache-v490';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
