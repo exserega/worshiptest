@@ -1,5 +1,5 @@
-// Service Worker v490 - Fix: dynamic card update for archive setlists
-const CACHE_NAME = 'agape-worship-cache-v490';
+// Service Worker v491 - Add detailed logging for debugging card updates
+const CACHE_NAME = 'agape-worship-cache-v491';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

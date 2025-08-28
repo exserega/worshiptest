@@ -145,58 +145,90 @@ window.loadArchiveData = loadArchiveData;
  */
 async function updateSetlistCard(setlistId) {
     try {
-        logger.log('🔄 Updating setlist card:', setlistId);
+        logger.log('🔄 Starting updateSetlistCard for:', setlistId);
         
         // Загружаем обновленный сет-лист из базы
+        logger.log('📥 Loading updated setlists from Firebase...');
         const updatedSetlists = await loadArchiveSetlists(currentUser.branchId);
+        logger.log('📋 Loaded setlists count:', updatedSetlists.length);
+        
         const setlist = updatedSetlists.find(s => s.id === setlistId);
         
         if (!setlist) {
-            logger.error('Setlist not found:', setlistId);
+            logger.error('❌ Setlist not found in Firebase:', setlistId);
             return;
         }
         
-        logger.log('📋 Updated setlist data:', setlist);
+        logger.log('📋 Found updated setlist:', {
+            id: setlist.id,
+            name: setlist.name,
+            songsCount: setlist.songs?.length || 0,
+            songs: setlist.songs
+        });
         
         // Обновляем данные в глобальном массиве
         const index = archiveSetlists.findIndex(s => s.id === setlistId);
         if (index !== -1) {
+            const oldSongsCount = archiveSetlists[index].songs?.length || 0;
             archiveSetlists[index] = setlist;
             logger.log('✅ Global array updated at index:', index);
+            logger.log(`📊 Songs count: ${oldSongsCount} → ${setlist.songs?.length || 0}`);
         } else {
-            logger.error('Setlist not found in global array');
+            logger.error('❌ Setlist not found in global array');
             return;
         }
         
         // Находим карточку на странице
+        logger.log('🔍 Looking for card element...');
         const cardElement = document.querySelector(`.archive-setlist-card[data-setlist-id="${setlistId}"]`);
         if (!cardElement) {
-            logger.error('Card element not found:', setlistId);
+            logger.error('❌ Card element not found with selector:', `.archive-setlist-card[data-setlist-id="${setlistId}"]`);
+            // Попробуем найти все карточки для отладки
+            const allCards = document.querySelectorAll('.archive-setlist-card');
+            logger.log('📋 Found cards on page:', allCards.length);
+            allCards.forEach(card => {
+                logger.log('Card ID:', card.dataset.setlistId);
+            });
             return;
         }
+        logger.log('✅ Card element found');
         
         // Проверяем, была ли карточка развернута
         const wasExpanded = cardElement.classList.contains('expanded');
         const songsContainer = cardElement.querySelector(`#songs-${setlistId}`);
         
         // Если карточка развернута, просто обновляем список песен
+        logger.log('📊 Card state - expanded:', wasExpanded, 'songsContainer exists:', !!songsContainer);
+        
         if (wasExpanded && songsContainer) {
-            logger.log('🎵 Updating songs in expanded card');
+            logger.log('🎵 Card is expanded, updating songs list...');
+            logger.log('Old loaded state:', songsContainer.dataset.loaded);
+            
             // Сбрасываем флаг загрузки, чтобы песни перезагрузились
             delete songsContainer.dataset.loaded;
+            
             // Загружаем песни заново
+            logger.log('🔄 Reloading songs...');
             await loadSetlistSongs(setlistId, songsContainer);
             songsContainer.dataset.loaded = 'true';
+            logger.log('✅ Songs reloaded');
+        } else {
+            logger.log('ℹ️ Card is not expanded or no songs container, skipping songs update');
         }
         
         // Обновляем метаданные карточки (количество песен)
+        logger.log('🔄 Updating card metadata...');
         const songCountElement = cardElement.querySelector('.setlist-meta .meta-item:first-child');
         if (songCountElement) {
             const songCount = setlist.songs?.length || 0;
+            const oldText = songCountElement.textContent;
             songCountElement.innerHTML = `<i class="fas fa-music"></i> ${songCount} песен`;
+            logger.log(`📊 Updated song count: "${oldText}" → "${songCount} песен"`);
+        } else {
+            logger.error('❌ Song count element not found');
         }
         
-        logger.log('✅ Setlist card updated successfully');
+        logger.log('✅ Setlist card update completed');
     } catch (error) {
         logger.error('Error updating setlist card:', error);
     }

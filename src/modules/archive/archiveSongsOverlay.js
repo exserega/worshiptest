@@ -806,6 +806,9 @@ class ArchiveSongsOverlay {
      * Закрытие оверлея
      */
     async close() {
+        logger.log('🚪 Closing songs overlay...');
+        logger.log('Current setlist ID:', this.setlistId);
+        
         this.overlay.classList.remove('show');
         this.keyModal.classList.remove('show');
         
@@ -822,9 +825,19 @@ class ArchiveSongsOverlay {
         this.updateCounters();
         
         // Обновляем конкретную карточку сет-листа, если она развернута
-        if (this.setlistId && window.updateSetlistCard) {
-            await window.updateSetlistCard(this.setlistId);
+        if (this.setlistId) {
+            logger.log('🔄 Attempting to update setlist card:', this.setlistId);
+            if (window.updateSetlistCard) {
+                logger.log('✅ updateSetlistCard function found, calling it...');
+                await window.updateSetlistCard(this.setlistId);
+            } else {
+                logger.error('❌ window.updateSetlistCard function not found!');
+            }
+        } else {
+            logger.log('ℹ️ No setlistId, skipping card update');
         }
+        
+        logger.log('✅ Songs overlay closed');
     }
 }
 
