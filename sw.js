@@ -1,5 +1,5 @@
-// Service Worker v459 - Fix: use triangle symbols for equal arrow sizes
-const CACHE_NAME = 'agape-worship-cache-v459';
+// Service Worker v460 - Fix: long arrows with line, raised 4px to 24px
+const CACHE_NAME = 'agape-worship-cache-v460';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
