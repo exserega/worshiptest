@@ -1,5 +1,5 @@
-// Service Worker v476 - Fix: UI improvements and auto-close modal
-const CACHE_NAME = 'agape-worship-cache-v476';
+// Service Worker v477 - Fix: explicit button colors
+const CACHE_NAME = 'agape-worship-cache-v477';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

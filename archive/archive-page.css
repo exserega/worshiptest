@@ -1291,9 +1291,8 @@ textarea.form-control {
 .song-action-btn {
     width: 32px;
     height: 32px;
-    border: 1px solid var(--border-color);
+    border: 1px solid;
     border-radius: 6px;
-    background: var(--container-background-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1301,35 +1300,44 @@ textarea.form-control {
     transition: all 0.2s ease;
 }
 
+/* Кнопка добавления (плюсик) */
 .song-action-btn.add {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
+    background-color: #22c55e;
+    border-color: #22c55e;
+    color: white;
 }
 
 .song-action-btn.add:hover {
-    background: var(--primary-color);
-    color: white;
+    background-color: #16a34a;
+    border-color: #16a34a;
     transform: translateY(-1px);
 }
 
+.song-action-btn.add:active {
+    transform: translateY(0);
+}
+
+/* Кнопка удаления (корзина) */
 .song-action-btn.remove {
-    border-color: var(--error-color);
-    color: var(--error-color);
+    background-color: transparent;
+    border-color: #ef4444;
+    color: #ef4444;
 }
 
 .song-action-btn.remove:hover {
-    background: var(--error-color);
+    background-color: #ef4444;
     color: white;
     transform: translateY(-1px);
 }
 
-/* Светлая иконка для кнопки удаления */
-.song-action-btn.remove i {
-    color: var(--error-color);
+.song-action-btn.remove:active {
+    transform: translateY(0);
 }
 
-.song-action-btn.remove:hover i {
-    color: white;
+/* Иконки всегда наследуют цвет от родителя */
+.song-action-btn i {
+    font-size: 14px;
+    color: inherit;
 }
 
 /* Стили для селекта тональности */
