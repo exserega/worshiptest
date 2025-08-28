@@ -1171,138 +1171,64 @@ textarea.form-control {
     color: #ef4444;
 }
 
-/* Стили для оверлея песен архива */
-.song-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.song-card:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.song-card.added {
-    border-color: #10b981;
-    background: rgba(16, 185, 129, 0.05);
-}
-
-.song-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.5rem;
-}
-
-.song-title {
-    margin: 0;
-    font-size: 1rem;
-    color: var(--text-primary);
-}
-
-.added-indicator {
-    color: #10b981;
-    font-size: 1.25rem;
-}
-
-.song-card-meta {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
+/* Дополнительные стили для оверлея архива */
+.header-subtitle {
     font-size: 0.875rem;
     color: var(--text-secondary);
+    padding: 0 16px 8px;
 }
 
-.song-category {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+.header-subtitle .setlist-name {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
-.song-bpm {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.btn-add-song {
-    width: 100%;
-    padding: 0.5rem 1rem;
+/* Стили для селекта тональности */
+.add-to-setlist-btn {
+    padding: 8px 16px;
     background: var(--primary-color);
     color: white;
     border: none;
     border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    gap: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.btn-add-song:hover {
-    opacity: 0.9;
+.add-to-setlist-btn:hover {
+    background: color-mix(in srgb, var(--primary-color) 85%, black);
     transform: translateY(-1px);
 }
 
-.song-card.added .btn-add-song {
-    background: #10b981;
-}
-
-/* Сетка тональностей */
-.keys-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 0.75rem;
-    margin-top: 1rem;
-}
-
-.key-option {
-    padding: 1rem;
-    background: var(--bg-tertiary);
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.key-option:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-}
-
-.key-option.selected {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
-}
-
-.song-preview-section {
-    margin-top: 2rem;
-}
-
-.song-text-preview {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1.5rem;
-    max-height: 300px;
+/* Стили для отображения песни */
+.song-display {
+    flex: 1;
     overflow-y: auto;
+    padding: 24px;
+    background: var(--background-color);
 }
 
-.song-text-preview pre {
-    margin: 0;
+.song-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.song-text {
     font-family: 'Consolas', 'Monaco', monospace;
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-color);
     white-space: pre-wrap;
-    color: var(--text-primary);
+}
+
+.song-text .chord {
+    color: var(--primary-color);
+    font-weight: 700;
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    padding: 1px 4px;
+    border-radius: 3px;
 }

@@ -61,9 +61,7 @@ class ArchiveSongsOverlay {
                             </div>
                         </div>
                         <div class="header-subtitle">
-                            <span>в архивный сет-лист "</span>
-                            <span id="archive-target-setlist-name" class="setlist-name"></span>
-                            <span>"</span>
+                            <span>в сет-лист "</span><span id="archive-target-setlist-name" class="setlist-name"></span><span>"</span>
                         </div>
                     </div>
                     
@@ -113,44 +111,42 @@ class ArchiveSongsOverlay {
                 </div>
             </div>
 
-            <!-- Модальное окно выбора тональности -->
+            <!-- Полноэкранный preview с выбором тональности -->
             <div id="archive-key-modal" class="global-fullscreen-overlay">
                 <div class="fullscreen-content song-preview-content">
+                    <!-- Профессиональная шапка -->
                     <div class="song-preview-header">
+                        <!-- Строка с заголовком и закрытием -->
                         <div class="header-top">
                             <button id="close-archive-key-modal" class="overlay-close-btn">
                                 <i class="fas fa-times"></i>
                             </button>
                             <div class="header-title">
-                                <h3 id="archive-key-song-name">Выберите тональность</h3>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="song-preview-body">
-                        <div class="key-selection-section">
-                            <h4>Доступные тональности:</h4>
-                            <div id="archive-keys-grid" class="keys-grid">
-                                <!-- Тональности будут добавлены динамически -->
+                                <h3 id="archive-key-song-name">Выберите тональность для песни "Название песни"</h3>
                             </div>
                         </div>
                         
-                        <div class="song-preview-section">
-                            <div id="archive-song-preview" class="song-text-preview">
-                                <!-- Превью песни -->
+                        <!-- Контролы с выбором тональности -->
+                        <div class="header-controls">
+                            <div class="tonality-controls-wrapper">
+                                <span class="tonality-label">Тональность:</span>
+                                <select id="archive-key-select" class="key-select-modern">
+                                    <!-- Опции будут добавлены динамически -->
+                                </select>
                             </div>
+                            <button id="confirm-archive-key" class="add-to-setlist-btn">
+                                <i class="fas fa-plus"></i>
+                                <span>Добавить в сет-лист</span>
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="song-preview-footer">
-                        <button id="cancel-archive-key" class="btn-modern secondary">
-                            <i class="fas fa-times"></i>
-                            <span>Отмена</span>
-                        </button>
-                        <button id="confirm-archive-key" class="btn-modern primary">
-                            <i class="fas fa-plus"></i>
-                            <span>Добавить в сет-лист</span>
-                        </button>
+                    <!-- Тело preview -->
+                    <div class="song-display" id="archive-song-display">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Загрузка песни...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -203,12 +199,12 @@ class ArchiveSongsOverlay {
             this.keyModal.classList.remove('show');
         });
 
-        document.getElementById('cancel-archive-key').addEventListener('click', () => {
-            this.keyModal.classList.remove('show');
-        });
-
         document.getElementById('confirm-archive-key').addEventListener('click', () => {
-            this.confirmAddSong();
+            const keySelect = document.getElementById('archive-key-select');
+            const selectedKey = keySelect.value;
+            if (selectedKey) {
+                this.confirmAddSong(selectedKey);
+            }
         });
 
         // Клик вне результатов поиска
@@ -405,34 +401,33 @@ class ArchiveSongsOverlay {
 
         const songsHTML = this.filteredSongs.map(song => {
             const isAdded = this.addedSongs.has(song.id);
+            const addedKey = this.addedSongs.get(song.id);
             return `
                 <div class="song-card ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
                     <div class="song-card-header">
                         <h4 class="song-title">${song.name}</h4>
-                        ${isAdded ? '<span class="added-indicator"><i class="fas fa-check"></i></span>' : ''}
-                    </div>
-                    <div class="song-card-meta">
                         <span class="song-category">${song.category}</span>
-                        ${song.bpm ? `<span class="song-bpm">${song.bpm} BPM</span>` : ''}
-                    </div>
-                    <div class="song-card-actions">
-                        <button class="btn-add-song" data-song-id="${song.id}">
+                        <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
                             <i class="fas fa-${isAdded ? 'check' : 'plus'}"></i>
                             <span>${isAdded ? 'Добавлено' : 'Добавить'}</span>
                         </button>
                     </div>
+                    ${isAdded && addedKey ? `
+                        <div class="song-key-display">
+                            Тональность: <span class="song-key-badge">${addedKey}</span>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         }).join('');
 
         this.songsGrid.innerHTML = songsHTML;
 
-        // Обработчики кликов на карточки
-        this.songsGrid.querySelectorAll('.song-card').forEach(card => {
-            const addBtn = card.querySelector('.btn-add-song');
-            addBtn.addEventListener('click', (e) => {
+        // Обработчики кликов на кнопки добавления
+        this.songsGrid.querySelectorAll('.song-add-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const songId = card.dataset.songId;
+                const songId = btn.dataset.songId;
                 const song = this.songs.find(s => s.id === songId);
                 if (song) {
                     this.selectSong(song);
@@ -464,44 +459,38 @@ class ArchiveSongsOverlay {
         document.getElementById('archive-key-song-name').textContent = 
             `Выберите тональность для песни "${song.name}"`;
 
-        // Генерируем кнопки тональностей
-        const keysGrid = document.getElementById('archive-keys-grid');
-        keysGrid.innerHTML = song.keys.map(key => `
-            <button class="key-option" data-key="${key}">
-                ${key}
-            </button>
+        // Заполняем селект тональностей
+        const keySelect = document.getElementById('archive-key-select');
+        keySelect.innerHTML = song.keys.map(key => `
+            <option value="${key}">${key}</option>
         `).join('');
 
-        // Показываем превью песни
-        const preview = document.getElementById('archive-song-preview');
-        preview.innerHTML = `<pre>${song.text || 'Текст песни недоступен'}</pre>`;
-
-        // Обработчики выбора тональности
-        let selectedKey = null;
-        keysGrid.querySelectorAll('.key-option').forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Убираем выделение с других
-                keysGrid.querySelectorAll('.key-option').forEach(b => b.classList.remove('selected'));
-                // Выделяем текущую
-                btn.classList.add('selected');
-                selectedKey = btn.dataset.key;
-            });
-        });
-
-        // Выбираем первую тональность по умолчанию
-        const firstKey = keysGrid.querySelector('.key-option');
-        if (firstKey) {
-            firstKey.click();
+        // Показываем текст песни
+        const songDisplay = document.getElementById('archive-song-display');
+        
+        // Форматируем текст песни
+        let formattedText = song.text || 'Текст песни недоступен';
+        
+        // Применяем базовое форматирование как на главной странице
+        if (formattedText && formattedText !== 'Текст песни недоступен') {
+            // Оборачиваем аккорды в span для стилизации
+            formattedText = formattedText.replace(/([A-G][#b]?m?(?:maj|min|dim|aug|sus|add)?[0-9]*)/g, '<span class="chord">$1</span>');
+            
+            // Добавляем переносы строк
+            formattedText = formattedText.replace(/\n/g, '<br>');
         }
+        
+        songDisplay.innerHTML = `
+            <div class="song-content">
+                <div class="song-text">${formattedText}</div>
+            </div>
+        `;
 
-        // Обновляем обработчик подтверждения
-        const confirmBtn = document.getElementById('confirm-archive-key');
-        confirmBtn.onclick = () => {
-            if (selectedKey) {
-                this.confirmAddSong(selectedKey);
-                this.keyModal.classList.remove('show');
-            }
-        };
+        // Обработчик изменения тональности
+        keySelect.addEventListener('change', () => {
+            // Здесь можно добавить транспонирование если нужно
+            logger.log('Selected key:', keySelect.value);
+        });
 
         // Показываем модальное окно
         this.keyModal.classList.add('show');
