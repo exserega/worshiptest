@@ -4,8 +4,8 @@
 
 import logger from '../../utils/logger.js';
 import { db } from '../../../firebase-init.js';
-import { getCurrentUser } from '../auth/authCheck.js';
-import { hasLimitedAccess, isUserGuest } from '../permissions/permissions.js';
+import { getCurrentUser, isUserGuest } from '../auth/authCheck.js';
+import { hasLimitedAccess } from '../permissions/permissions.js';
 
 const Timestamp = window.firebase.firestore.Timestamp;
 const FieldValue = window.firebase.firestore.FieldValue;
