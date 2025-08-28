@@ -1,5 +1,5 @@
-// Service Worker v460 - Fix: long arrows with line, raised 4px to 24px
-const CACHE_NAME = 'agape-worship-cache-v460';
+// Service Worker v461 - Fix: arrows raised 3px more from 24px to 27px
+const CACHE_NAME = 'agape-worship-cache-v461';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
