@@ -1183,60 +1183,42 @@ textarea.form-control {
     font-weight: 600;
 }
 
-/* Стили для кнопок фильтра */
-.filter-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-}
 
-.filter-categories {
-    display: flex;
-    gap: 0.5rem;
-    flex: 1;
-    overflow-x: auto;
-}
 
-.category-filter {
-    padding: 0.5rem 1rem;
+/* Стили для кнопки фильтра */
+.filter-btn {
+    padding: 8px 16px;
     background: var(--container-background-color);
     border: 1px solid var(--border-color);
-    border-radius: 20px;
+    border-radius: 8px;
     color: var(--text-color);
     font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    white-space: nowrap;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 6px;
 }
 
-.category-filter:hover {
+.filter-btn:hover {
     border-color: var(--primary-color);
     background: color-mix(in srgb, var(--primary-color) 10%, var(--container-background-color));
 }
 
-.category-filter.active {
+.filter-btn.active {
     background: var(--primary-color);
     border-color: var(--primary-color);
     color: white;
 }
 
-.show-added-btn {
-    position: relative;
-}
-
-.show-added-btn .added-count {
-    background: var(--primary-color);
-    color: white;
+.added-count-badge {
+    background: color-mix(in srgb, var(--primary-color) 20%, var(--container-background-color));
+    color: var(--primary-color);
     border-radius: 10px;
     padding: 2px 6px;
     font-size: 0.75rem;
     font-weight: 600;
-    margin-left: 0.5rem;
 }
 
 /* Компактные карточки песен */
@@ -1357,6 +1339,39 @@ textarea.form-control {
 .add-to-setlist-btn:hover {
     background: color-mix(in srgb, var(--primary-color) 85%, black);
     transform: translateY(-1px);
+}
+
+/* Стили для search dropdown */
+.search-result-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.search-result-item:hover {
+    background: var(--hover-color);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item .song-name {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+/* Подсветка совпадений в поиске */
+.search-highlight,
+mark.search-highlight {
+    background: var(--primary-color);
+    color: white;
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-weight: 600;
 }
 
 /* Стили для отображения песни */
