@@ -795,7 +795,33 @@ class ArchiveSongsOverlay {
         document.querySelector('#archive-songs-overlay .header-title h3').textContent = 
             mode === 'edit' ? `Редактировать "${setlistName}"` : 'Добавить песни';
         
-        document.getElementById('archive-target-setlist-name').textContent = setlistName;
+        // Обновляем подзаголовок и скрываем элементы для режима редактирования
+        if (mode === 'edit') {
+            // Скрываем подзаголовок "в сет-лист"
+            const subtitleElement = document.querySelector('#archive-songs-overlay .header-subtitle');
+            if (subtitleElement) {
+                subtitleElement.style.display = 'none';
+            }
+            
+            // Скрываем счетчик песен рядом с кнопкой Готово
+            const counterElement = document.querySelector('#archive-songs-overlay .added-counter');
+            if (counterElement) {
+                counterElement.style.display = 'none';
+            }
+        } else {
+            // Показываем элементы для режима добавления
+            const subtitleElement = document.querySelector('#archive-songs-overlay .header-subtitle');
+            if (subtitleElement) {
+                subtitleElement.style.display = 'block';
+            }
+            
+            const counterElement = document.querySelector('#archive-songs-overlay .added-counter');
+            if (counterElement) {
+                counterElement.style.display = 'flex';
+            }
+            
+            document.getElementById('archive-target-setlist-name').textContent = setlistName;
+        }
 
         // Загружаем существующие песни если режим редактирования
         if (mode === 'edit') {

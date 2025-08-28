@@ -1319,6 +1319,15 @@ textarea.form-control {
     color: #111827 !important;
 }
 
+/* Более компактный вид шапки в режиме редактирования */
+#archive-songs-overlay .header-subtitle {
+    transition: all 0.2s ease;
+}
+
+#archive-songs-overlay .added-counter {
+    transition: all 0.2s ease;
+}
+
 .added-count-badge {
     background: color-mix(in srgb, var(--primary-color) 20%, var(--container-background-color));
     color: var(--primary-color);
