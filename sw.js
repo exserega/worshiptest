@@ -1,5 +1,5 @@
-// Service Worker v473 - Add: proper song text display with chords and transposition
-const CACHE_NAME = 'agape-worship-cache-v473';
+// Service Worker v474 - Fix: correct import paths and include all song fields
+const CACHE_NAME = 'agape-worship-cache-v474';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -233,9 +233,16 @@ class ArchiveSongsOverlay {
                     id: doc.id,
                     name: data.name || doc.id,
                     category: data.sheet || 'Без категории',
+                    sheet: data.sheet,
                     keys: this.parseKeys(data),
                     defaultKey: data.defaultKey || 'C',
                     text: data.text || '',
+                    'Текст и аккорды': data['Текст и аккорды'] || '',
+                    lyrics: data.lyrics || '',
+                    'Оригинальная тональность': data['Оригинальная тональность'],
+                    'Тональность': data['Тональность'],
+                    originalKey: data.originalKey,
+                    key: data.key,
                     bpm: data.BPM || data.bpm || ''
                 });
             });
@@ -466,13 +473,13 @@ class ArchiveSongsOverlay {
             
             // Если тональности разные, транспонируем
             if (fromKey !== toKey) {
-                const { getTransposition, transposeLyrics } = await import('../js/core/transposition.js');
+                const { getTransposition, transposeLyrics } = await import('../../js/core/transposition.js');
                 const transposition = getTransposition(fromKey, toKey);
                 displayLyrics = transposeLyrics(displayLyrics, transposition, toKey);
             }
             
             // Обрабатываем текст (сокращаем пробелы в строках с аккордами)
-            const { processLyrics, highlightChords } = await import('../js/core/transposition.js');
+            const { processLyrics, highlightChords } = await import('../../js/core/transposition.js');
             displayLyrics = processLyrics(displayLyrics);
             displayLyrics = highlightChords(displayLyrics);
             
@@ -537,6 +544,15 @@ class ArchiveSongsOverlay {
         
         // Получаем текст песни из правильного поля
         const originalLyrics = song['Текст и аккорды'] || song.lyrics || song.text || '';
+        
+        logger.log('Song data:', {
+            name: song.name,
+            hasTextAndChords: !!song['Текст и аккорды'],
+            hasLyrics: !!song.lyrics,
+            hasText: !!song.text,
+            keys: song.keys,
+            originalKey: song['Оригинальная тональность'] || song['Тональность'] || song.originalKey || song.key
+        });
         
         if (!originalLyrics) {
             songDisplay.innerHTML = `
