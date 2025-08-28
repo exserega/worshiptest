@@ -5,7 +5,7 @@
 
 import logger from '../../utils/logger.js';
 import { db } from '../../../firebase-init.js';
-import { addSongToArchiveSetlist } from './archiveApi.js';
+import { addSongToArchiveSetlist, removeSongFromArchiveSetlist } from './archiveApi.js';
 
 class ArchiveSongsOverlay {
     constructor() {
@@ -518,7 +518,13 @@ class ArchiveSongsOverlay {
     async confirmAddSong(selectedKey = null) {
         if (!this.selectedSong) return;
 
-        const key = selectedKey || this.selectedSong.defaultKey || this.selectedSong.keys[0];
+        // Определяем тональность
+        let key = selectedKey;
+        if (!key && this.selectedSong.defaultKey) {
+            key = this.selectedSong.defaultKey;
+        } else if (!key && this.selectedSong.keys && this.selectedSong.keys.length > 0) {
+            key = this.selectedSong.keys[0];
+        }
 
         try {
             // Добавляем песню в архивный сет-лист
