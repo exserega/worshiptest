@@ -1,5 +1,5 @@
-// Service Worker v481 - Fix: equal width filter buttons with better height
-const CACHE_NAME = 'agape-worship-cache-v481';
+// Service Worker v482 - Add: search by lyrics content and fix highlight color
+const CACHE_NAME = 'agape-worship-cache-v482';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

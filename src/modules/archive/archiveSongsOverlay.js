@@ -321,20 +321,49 @@ class ArchiveSongsOverlay {
      * Показ результатов поиска в dropdown
      */
     showSearchResults() {
-        const results = this.songs.filter(song => 
-            song.name.toLowerCase().includes(this.searchTerm)
-        ).slice(0, 10); // Максимум 10 результатов
+        const results = this.songs.filter(song => {
+            // Поиск по названию
+            if (song.name.toLowerCase().includes(this.searchTerm)) {
+                return true;
+            }
+            
+            // Поиск по тексту песни
+            const lyrics = song['Текст и аккорды'] || song.lyrics || song.text || '';
+            if (lyrics.toLowerCase().includes(this.searchTerm)) {
+                return true;
+            }
+            
+            return false;
+        }).slice(0, 10); // Максимум 10 результатов
 
         if (results.length === 0) {
             this.searchResults.style.display = 'none';
             return;
         }
 
-        const resultsHTML = results.map(song => `
-            <div class="search-result-item" data-song-id="${song.id}">
-                <div class="song-name">${this.highlightMatch(song.name, this.searchTerm)}</div>
-            </div>
-        `).join('');
+        const resultsHTML = results.map(song => {
+            // Проверяем где нашли совпадение
+            const isInTitle = song.name.toLowerCase().includes(this.searchTerm);
+            const lyrics = song['Текст и аккорды'] || song.lyrics || song.text || '';
+            const isInLyrics = lyrics.toLowerCase().includes(this.searchTerm);
+            
+            let contextText = '';
+            if (!isInTitle && isInLyrics) {
+                // Показываем фрагмент текста где найдено совпадение
+                const lowerLyrics = lyrics.toLowerCase();
+                const matchIndex = lowerLyrics.indexOf(this.searchTerm);
+                const start = Math.max(0, matchIndex - 20);
+                const end = Math.min(lyrics.length, matchIndex + this.searchTerm.length + 20);
+                contextText = '...' + lyrics.substring(start, end) + '...';
+            }
+            
+            return `
+                <div class="search-result-item" data-song-id="${song.id}">
+                    <div class="song-name">${this.highlightMatch(song.name, isInTitle ? this.searchTerm : '')}</div>
+                    ${contextText ? `<div class="search-context">${this.highlightMatch(contextText, this.searchTerm)}</div>` : ''}
+                </div>
+            `;
+        }).join('');
 
         this.searchResults.querySelector('.search-results-container').innerHTML = resultsHTML;
         this.searchResults.style.display = 'block';
@@ -365,9 +394,15 @@ class ArchiveSongsOverlay {
      */
     filterSongs() {
         this.filteredSongs = this.songs.filter(song => {
-            // Фильтр по поиску
-            if (this.searchTerm && !song.name.toLowerCase().includes(this.searchTerm)) {
-                return false;
+            // Фильтр по поиску (название или текст)
+            if (this.searchTerm) {
+                const nameMatch = song.name.toLowerCase().includes(this.searchTerm);
+                const lyrics = song['Текст и аккорды'] || song.lyrics || song.text || '';
+                const lyricsMatch = lyrics.toLowerCase().includes(this.searchTerm);
+                
+                if (!nameMatch && !lyricsMatch) {
+                    return false;
+                }
             }
 
             // Фильтр по категории (sheet)
