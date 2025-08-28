@@ -321,45 +321,45 @@ class ArchiveSongsOverlay {
      * Показ результатов поиска в dropdown
      */
     showSearchResults() {
-        const results = this.songs.filter(song => {
-            // Поиск по названию
-            if (song.name.toLowerCase().includes(this.searchTerm)) {
-                return true;
-            }
-            
-            // Поиск по тексту песни
+        // Разделяем результаты по типу совпадения
+        const titleMatches = [];
+        const lyricsMatches = [];
+        
+        this.songs.forEach(song => {
+            const nameLower = song.name.toLowerCase();
             const lyrics = song['Текст и аккорды'] || song.lyrics || song.text || '';
-            if (lyrics.toLowerCase().includes(this.searchTerm)) {
-                return true;
-            }
+            const lyricsLower = lyrics.toLowerCase();
             
-            return false;
-        }).slice(0, 10); // Максимум 10 результатов
+            if (nameLower.includes(this.searchTerm)) {
+                titleMatches.push({song, matchType: 'title'});
+            } else if (lyricsLower.includes(this.searchTerm)) {
+                lyricsMatches.push({song, matchType: 'lyrics', lyrics});
+            }
+        });
+        
+        // Объединяем результаты: сначала совпадения по названию, потом по тексту
+        const results = [...titleMatches, ...lyricsMatches].slice(0, 10);
 
         if (results.length === 0) {
             this.searchResults.style.display = 'none';
             return;
         }
 
-        const resultsHTML = results.map(song => {
-            // Проверяем где нашли совпадение
-            const isInTitle = song.name.toLowerCase().includes(this.searchTerm);
-            const lyrics = song['Текст и аккорды'] || song.lyrics || song.text || '';
-            const isInLyrics = lyrics.toLowerCase().includes(this.searchTerm);
-            
+        const resultsHTML = results.map(({song, matchType, lyrics}) => {
             let contextText = '';
-            if (!isInTitle && isInLyrics) {
+            
+            if (matchType === 'lyrics' && lyrics) {
                 // Показываем фрагмент текста где найдено совпадение
                 const lowerLyrics = lyrics.toLowerCase();
                 const matchIndex = lowerLyrics.indexOf(this.searchTerm);
-                const start = Math.max(0, matchIndex - 20);
-                const end = Math.min(lyrics.length, matchIndex + this.searchTerm.length + 20);
-                contextText = '...' + lyrics.substring(start, end) + '...';
+                const start = Math.max(0, matchIndex - 30);
+                const end = Math.min(lyrics.length, matchIndex + this.searchTerm.length + 30);
+                contextText = (start > 0 ? '...' : '') + lyrics.substring(start, end) + (end < lyrics.length ? '...' : '');
             }
             
             return `
                 <div class="search-result-item" data-song-id="${song.id}">
-                    <div class="song-name">${this.highlightMatch(song.name, isInTitle ? this.searchTerm : '')}</div>
+                    <div class="song-name">${song.name}</div>
                     ${contextText ? `<div class="search-context">${this.highlightMatch(contextText, this.searchTerm)}</div>` : ''}
                 </div>
             `;

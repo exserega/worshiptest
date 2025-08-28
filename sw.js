@@ -1,5 +1,5 @@
-// Service Worker v482 - Add: search by lyrics content and fix highlight color
-const CACHE_NAME = 'agape-worship-cache-v482';
+// Service Worker v483 - Fix: search results priority and highlight styling
+const CACHE_NAME = 'agape-worship-cache-v483';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
