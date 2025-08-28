@@ -514,93 +514,9 @@
     color: #9ca3af;
 }
 
-/* Светлая тема - специфичные цвета */
-[data-theme="light"] .songs-overlay-content {
-    background: var(--container-background-color);
-}
 
-[data-theme="light"] .songs-overlay-header {
-    border-bottom-color: rgba(0, 0, 0, 0.1);
-}
 
-[data-theme="light"] .songs-overlay-title {
-    color: #111827;
-}
 
-[data-theme="light"] .songs-overlay-close:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .songs-overlay-close:hover .close-icon::before,
-[data-theme="light"] .songs-overlay-close:hover .close-icon::after {
-    background-color: #111827; /* Более темный при наведении */
-}
-
-[data-theme="light"] .songs-category-filters {
-    border-bottom-color: rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="light"] .category-chip {
-    background: #f3f4f6;
-    color: #374151 !important;
-}
-
-[data-theme="light"] .category-chip:hover {
-    background: #e5e7eb;
-    color: #111827 !important;
-}
-
-[data-theme="light"] .category-chip.active {
-    background: var(--accent-color);
-    color: #ffffff !important;
-}
-
-[data-theme="light"] .song-item {
-    background: #f3f4f6;
-}
-
-[data-theme="light"] .song-item:hover {
-    background: #e5e7eb;
-}
-
-[data-theme="light"] .song-name {
-    color: #111827;
-}
-
-[data-theme="light"] .song-key {
-    background: #f3f4f6;
-    color: #374151;
-    border: 1px solid #e5e7eb;
-}
-
-[data-theme="light"] .song-bpm {
-    background: #f3f4f6;
-    color: #6b7280;
-    border: 1px solid #e5e7eb;
-}
-
-/* Контейнер фильтров в светлой теме */
-[data-theme="light"] .songs-filters-container {
-    border-bottom-color: #e5e7eb;
-}
-
-[data-theme="light"] .no-songs-message {
-    color: #6b7280;
-}
-
-/* Кнопка удаления для светлой темы */
-[data-theme="light"] .song-delete-btn {
-    color: #dc2626 !important;
-}
-
-[data-theme="light"] .song-delete-btn:hover {
-    background: rgba(239, 68, 68, 0.08);
-    color: #b91c1c !important;
-}
-
-[data-theme="light"] .song-delete-btn i {
-    color: inherit !important;
-}
 
 /* Адаптивные стили для мобильных устройств */
 @media (max-width: 480px) {

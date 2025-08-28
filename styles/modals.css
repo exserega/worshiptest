@@ -206,11 +206,7 @@
      color: var(--button-text-color) !important;
      opacity: 1;
 }
-body[data-theme="light"] #copy-text-button.copied {
-     background-color: var(--secondary-color) !important;
-     border-color: var(--secondary-color) !important;
-     color: var(--color-button-text) !important;
-}
+
 
 /* --- SONG EDITOR STYLES --- */
 
@@ -840,26 +836,7 @@ body[data-theme="light"] #copy-text-button.copied {
     color: var(--error-color, #dc2626);
 }
 
-/* Адаптация под светлую тему */
-[data-theme="light"] .song-info-compact {
-    background: #f8f9fa;
-}
 
-[data-theme="light"] .setlist-item {
-    background: #ffffff;
-}
-
-[data-theme="light"] .compact-input {
-    background: #ffffff;
-}
-
-[data-theme="light"] .setlist-item:hover {
-    background: #f3f4f6;
-}
-
-[data-theme="light"] .setlist-item.selected {
-    background: rgba(99, 102, 241, 0.05);
-}
 
 /* Мобильная адаптация */
 @media (max-width: 768px) {
@@ -880,10 +857,3 @@ body[data-theme="light"] #copy-text-button.copied {
     }
 }
 
-/* === Light Theme Overrides for Setlist Selector === */
-/* Адаптация блока тональности для светлой темы - используем те же переменные, которые автоматически меняются */
-body[data-theme="light"] .song-details .song-key #adding-song-key {
-    color: var(--text-color); /* В светлой теме это будет темный текст */
-    background: var(--hover-color); /* В светлой теме это будет светло-серый фон */
-    border-color: var(--border-color); /* В светлой теме это будет светлая рамка */
-}
