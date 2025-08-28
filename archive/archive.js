@@ -12,6 +12,7 @@ import {
     deleteArchiveSetlist,
     addSongToArchiveSetlist
 } from '../src/modules/archive/archiveApi.js';
+import archiveGroupsManager from '../src/modules/archive/archiveGroupsManager.js';
 
 // Глобальные переменные
 let currentUser = null;
@@ -78,6 +79,13 @@ async function initializePage() {
         // Загрузка данных
         await loadArchiveData();
         
+        // Инициализация менеджера групп
+        await archiveGroupsManager.init((groups) => {
+            archiveGroups = groups;
+            renderGroups();
+            applyFiltersAndSort();
+        });
+        
         // Настройка обработчиков событий
         setupEventHandlers();
         
@@ -118,16 +126,6 @@ async function loadArchiveData() {
         if (archiveSetlists.length === 0) {
             logger.log('ℹ️ No archive setlists found. Collection might be empty.');
         }
-        
-        // Загрузка групп (пока моковые данные)
-        archiveGroups = [
-            { id: 'christmas', name: '🎄 Рождество', color: '#ff6b6b', count: 0 },
-            { id: 'easter', name: '🐣 Пасха', color: '#ffd93d', count: 0 },
-            { id: 'worship', name: '🙏 Поклонение', color: '#6bcf7f', count: 0 }
-        ];
-        
-        renderGroups();
-        applyFiltersAndSort();
         
     } catch (error) {
         logger.error('Error loading archive data:', error);
@@ -265,10 +263,26 @@ function renderGroups() {
         const chip = document.createElement('button');
         chip.className = 'group-chip';
         chip.dataset.groupId = group.id;
-        chip.innerHTML = `
-            ${group.name}
-            <span class="group-count">${group.count}</span>
-        `;
+        
+        // Создаем элементы отдельно для лучшего контроля
+        const iconSpan = document.createElement('span');
+        iconSpan.textContent = group.icon || '📁';
+        iconSpan.style.marginRight = '4px';
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = group.name;
+        
+        const countSpan = document.createElement('span');
+        countSpan.className = 'group-count';
+        countSpan.textContent = group.setlistCount || 0;
+        
+        chip.appendChild(iconSpan);
+        chip.appendChild(nameSpan);
+        chip.appendChild(countSpan);
+        
+        // Добавляем стиль с цветом группы
+        chip.style.borderColor = group.color || '#22d3ee';
+        
         elements.groupsList.appendChild(chip);
     });
 }
@@ -283,7 +297,7 @@ function applyFiltersAndSort() {
     // Фильтр по группе
     if (selectedGroupId) {
         filteredSetlists = filteredSetlists.filter(setlist => 
-            setlist.groups && setlist.groups.includes(selectedGroupId)
+            setlist.groupIds && setlist.groupIds.includes(selectedGroupId)
         );
     }
     
@@ -342,6 +356,35 @@ function renderSetlists() {
 }
 
 /**
+ * Рендеринг групп сет-листа
+ */
+function renderSetlistGroups(setlist) {
+    if (!setlist.groupIds || setlist.groupIds.length === 0) {
+        return '';
+    }
+    
+    const groupTags = setlist.groupIds.map(groupId => {
+        const group = archiveGroups.find(g => g.id === groupId);
+        if (!group) return '';
+        
+        return `
+            <span class="setlist-group-tag" style="border-color: ${group.color}; background: ${group.color}20;">
+                <span>${group.icon || '📁'}</span>
+                <span>${group.name}</span>
+            </span>
+        `;
+    }).filter(tag => tag).join('');
+    
+    if (!groupTags) return '';
+    
+    return `
+        <div class="setlist-groups">
+            ${groupTags}
+        </div>
+    `;
+}
+
+/**
  * Создание карточки сет-листа
  */
 function createSetlistCard(setlist) {
@@ -389,6 +432,8 @@ function createSetlistCard(setlist) {
                 Использований: ${usageCount}
             </div>
         </div>
+        
+        ${renderSetlistGroups(setlist)}
         
         <button class="edit-btn-corner" title="Редактировать">
             <i class="fas fa-edit"></i>
@@ -524,11 +569,7 @@ function setupEventHandlers() {
         openCreateSetlistModal();
     });
     
-    // Добавление группы
-    elements.addGroupBtn.addEventListener('click', () => {
-        // TODO: Открыть модальное окно создания группы
-        alert('Создание группы - в разработке');
-    });
+
     
     // Список групп
     const listGroupsBtn = document.getElementById('list-groups-btn');
@@ -645,10 +686,22 @@ window.addToCalendar = function(setlistId) {
 /**
  * Добавление в группу
  */
+let currentEditingSetlistId = null;
+
 window.addToGroup = function(setlistId) {
-    // TODO: Открыть модальное окно выбора группы
-    logger.log('Add to group:', setlistId);
-    alert('Добавление в группу - в разработке');
+    const setlist = archiveSetlists.find(s => s.id === setlistId);
+    if (!setlist) return;
+    
+    currentEditingSetlistId = setlistId;
+    
+    // Обновляем название сет-листа в модальном окне
+    const nameSpan = document.getElementById('setlist-groups-name');
+    if (nameSpan) {
+        nameSpan.textContent = setlist.name;
+    }
+    
+    // Показываем модальное окно
+    openSetlistGroupsModal(setlist);
 };
 
 /**
@@ -989,6 +1042,15 @@ function setupConfirmModalHandlers() {
             if (confirmModal) {
                 confirmModal.classList.remove('show');
             }
+            
+            // Предлагаем добавить в группы
+            if (window.currentCreatedSetlistId && archiveGroups.length > 0) {
+                setTimeout(() => {
+                    if (confirm('Хотите добавить сет-лист в группы?')) {
+                        window.addToGroup(window.currentCreatedSetlistId);
+                    }
+                }, 300);
+            }
         });
     }
     
@@ -1023,6 +1085,151 @@ async function startAddingSongsToArchive() {
         logger.error('Error starting songs overlay:', error);
         showError('Ошибка при открытии списка песен');
     }
+}
+
+/**
+ * Открытие модального окна выбора групп для сет-листа
+ */
+function openSetlistGroupsModal(setlist) {
+    const modal = document.getElementById('setlist-groups-modal');
+    const container = document.getElementById('groups-checkbox-list');
+    
+    if (!container || !modal) return;
+    
+    // Очищаем контейнер
+    container.innerHTML = '';
+    
+    if (archiveGroups.length === 0) {
+        container.innerHTML = `
+            <div class="groups-checkbox-empty">
+                <p>Нет доступных групп</p>
+                <p>Создайте группы для организации сет-листов</p>
+            </div>
+        `;
+    } else {
+        // Создаем чекбоксы для каждой группы
+        archiveGroups.forEach(group => {
+            const isChecked = setlist.groupIds && setlist.groupIds.includes(group.id);
+            
+            const item = document.createElement('label');
+            item.className = 'group-checkbox-item';
+            item.innerHTML = `
+                <input type="checkbox" 
+                    value="${group.id}" 
+                    ${isChecked ? 'checked' : ''}
+                    id="group-check-${group.id}"
+                >
+                <div class="group-checkbox-icon" style="background-color: ${group.color};">
+                    ${group.icon || '📁'}
+                </div>
+                <div class="group-checkbox-info">
+                    <div class="group-checkbox-name">${escapeHtml(group.name)}</div>
+                </div>
+            `;
+            
+            container.appendChild(item);
+        });
+    }
+    
+    // Показываем модальное окно
+    modal.classList.add('show');
+    
+    // Настраиваем обработчики
+    setupSetlistGroupsModalHandlers();
+}
+
+/**
+ * Настройка обработчиков для модального окна групп сет-листа
+ */
+function setupSetlistGroupsModalHandlers() {
+    const modal = document.getElementById('setlist-groups-modal');
+    const closeBtn = document.getElementById('setlist-groups-close');
+    const cancelBtn = document.getElementById('setlist-groups-cancel');
+    const saveBtn = document.getElementById('setlist-groups-save');
+    
+    // Обработчики закрытия
+    const closeModal = () => {
+        modal.classList.remove('show');
+        currentEditingSetlistId = null;
+    };
+    
+    closeBtn?.addEventListener('click', closeModal, { once: true });
+    cancelBtn?.addEventListener('click', closeModal, { once: true });
+    
+    // Закрытие по клику на оверлей
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    }, { once: true });
+    
+    // Сохранение изменений
+    saveBtn?.addEventListener('click', async () => {
+        await saveSetlistGroups();
+        closeModal();
+    }, { once: true });
+}
+
+/**
+ * Сохранение выбранных групп для сет-листа
+ */
+async function saveSetlistGroups() {
+    if (!currentEditingSetlistId) return;
+    
+    const container = document.getElementById('groups-checkbox-list');
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+    
+    const selectedGroupIds = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+    
+    try {
+        // Получаем текущий сет-лист
+        const setlist = archiveSetlists.find(s => s.id === currentEditingSetlistId);
+        if (!setlist) return;
+        
+        const currentGroupIds = setlist.groupIds || [];
+        
+        // Определяем какие группы добавить и какие удалить
+        const groupsToAdd = selectedGroupIds.filter(id => !currentGroupIds.includes(id));
+        const groupsToRemove = currentGroupIds.filter(id => !selectedGroupIds.includes(id));
+        
+        // Импортируем функции для работы с группами
+        const { addSetlistToGroups, removeSetlistFromGroups } = 
+            await import('../src/modules/archive/archiveGroupsApi.js');
+        
+        // Применяем изменения
+        if (groupsToAdd.length > 0) {
+            await addSetlistToGroups(currentEditingSetlistId, groupsToAdd);
+        }
+        
+        if (groupsToRemove.length > 0) {
+            await removeSetlistFromGroups(currentEditingSetlistId, groupsToRemove);
+        }
+        
+        // Обновляем локальные данные
+        setlist.groupIds = selectedGroupIds;
+        
+        // Перерисовываем карточку
+        updateSetlistCard(currentEditingSetlistId, setlist);
+        
+        // Обновляем счетчики групп
+        await archiveGroupsManager.loadGroups();
+        
+        logger.log('✅ Setlist groups updated');
+    } catch (error) {
+        logger.error('Error saving setlist groups:', error);
+        alert('Ошибка при сохранении групп');
+    }
+}
+
+/**
+ * Экранирование HTML
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 // Запуск при загрузке страницы

@@ -386,9 +386,9 @@ html, body {
     flex-shrink: 0;
     padding: 6px 12px;
     background: var(--bg-tertiary, #1a1f2e);
-    border: 1px solid var(--border-color, #374151);
+    border: 2px solid var(--border-color, #374151);
     border-radius: 20px;
-    color: var(--text-secondary, #9ca3af) !important;
+    color: var(--text-primary, #e5e7eb) !important;
     font-size: 0.875rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -396,18 +396,23 @@ html, body {
     align-items: center;
     gap: 6px;
     white-space: nowrap;
+    position: relative;
 }
 
 .group-chip:hover {
-    background: rgba(34, 211, 238, 0.1);
-    border-color: var(--primary-color, #22d3ee);
-    color: var(--primary-color, #22d3ee) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .group-chip.active {
     background: var(--primary-color, #22d3ee);
     border-color: var(--primary-color, #22d3ee);
-    color: white !important;
+    color: #111827 !important;
+}
+
+.group-chip.active .group-count {
+    background: rgba(17, 24, 39, 0.15) !important;
+    color: #111827 !important;
 }
 
 .group-count {
@@ -518,6 +523,32 @@ html, body {
     font-size: 0.875rem;
     max-width: 300px;
     line-height: 1.5;
+}
+
+/* Группы в карточке сет-листа */
+.setlist-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 0 16px;
+}
+
+.setlist-group-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 14px;
+    border: 1px solid;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.setlist-group-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Карточка сет-листа */

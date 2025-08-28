@@ -26,7 +26,8 @@
     <link rel="stylesheet" href="../styles/overlays.css">
     
     <!-- Стили страницы архива -->
-    <link rel="stylesheet" href="archive-page.css?v=500">
+    <link rel="stylesheet" href="archive-page.css?v=501">
+    <link rel="stylesheet" href="archive-groups-modal.css?v=501">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -208,6 +209,107 @@
     </div>
 
     <!-- Оверлей добавления песен будет создан динамически модулем archiveSongsOverlay.js -->
+
+    <!-- Модальное окно создания/редактирования группы -->
+    <div id="group-modal" class="group-modal-overlay">
+        <div class="group-modal-content">
+            <div class="group-modal-header">
+                <h3 id="group-modal-title">Новая группа</h3>
+                <button class="group-modal-close" id="group-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="group-modal-body">
+                <div class="group-form-group">
+                    <label class="group-form-label">Название группы</label>
+                    <input 
+                        type="text" 
+                        id="group-name-input" 
+                        class="group-form-input"
+                        placeholder="Например: Рождественские песни"
+                        maxlength="50"
+                    >
+                </div>
+                
+                <div class="group-form-group">
+                    <label class="group-form-label">Цвет группы</label>
+                    <div class="color-picker-grid" id="color-picker">
+                        <!-- Цвета будут добавлены динамически -->
+                    </div>
+                </div>
+                
+                <div class="group-form-group">
+                    <label class="group-form-label">Иконка группы</label>
+                    <div class="icon-picker-grid" id="icon-picker">
+                        <!-- Иконки будут добавлены динамически -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="group-modal-footer">
+                <button class="btn-modern secondary" id="group-modal-cancel">
+                    <span>Отмена</span>
+                </button>
+                <button class="btn-modern primary" id="group-modal-save">
+                    <span>Сохранить</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно списка всех групп -->
+    <div id="groups-list-modal" class="group-modal-overlay">
+        <div class="group-modal-content groups-list-modal">
+            <div class="group-modal-header">
+                <h3>Все группы</h3>
+                <button class="group-modal-close" id="groups-list-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="groups-list-container" id="groups-list-container">
+                <!-- Список групп или пустое состояние будет добавлено динамически -->
+            </div>
+            
+            <div class="group-modal-footer">
+                <button class="btn-modern primary" id="create-group-from-list">
+                    <i class="fas fa-plus"></i>
+                    <span>Создать группу</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно выбора групп для сет-листа -->
+    <div id="setlist-groups-modal" class="group-modal-overlay">
+        <div class="group-modal-content">
+            <div class="group-modal-header">
+                <h3>Добавить в группы</h3>
+                <button class="group-modal-close" id="setlist-groups-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="group-modal-body">
+                <p class="setlist-groups-info">
+                    Выберите группы для сет-листа "<span id="setlist-groups-name"></span>"
+                </p>
+                <div class="groups-checkbox-list" id="groups-checkbox-list">
+                    <!-- Чекбоксы групп будут добавлены динамически -->
+                </div>
+            </div>
+            
+            <div class="group-modal-footer">
+                <button class="btn-modern secondary" id="setlist-groups-cancel">
+                    <span>Отмена</span>
+                </button>
+                <button class="btn-modern primary" id="setlist-groups-save">
+                    <span>Сохранить</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

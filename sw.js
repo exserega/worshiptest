@@ -1,5 +1,5 @@
-// Service Worker v500 - Simplify setlist creation flow
-const CACHE_NAME = 'agape-worship-cache-v500';
+// Service Worker v501 - Archive groups management system
+const CACHE_NAME = 'agape-worship-cache-v501';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

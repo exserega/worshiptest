@@ -6,6 +6,7 @@ import logger from '../../utils/logger.js';
 import { db } from '../../../firebase-init.js';
 import { getCurrentUser, isUserGuest } from '../auth/authCheck.js';
 import { hasLimitedAccess } from '../permissions/permissions.js';
+import { addSetlistToGroups, removeSetlistFromGroups, updateGroupSetlistCount } from './archiveGroupsApi.js';
 
 const Timestamp = window.firebase.firestore.Timestamp;
 const FieldValue = window.firebase.firestore.FieldValue;
@@ -47,6 +48,13 @@ export async function createArchiveSetlist(setlistData) {
         
         const docRef = await db.collection('archive_setlists').add(newSetlist);
         logger.log('✅ Archive setlist created:', docRef.id);
+        
+        // Обновляем счетчики групп
+        if (newSetlist.groupIds && newSetlist.groupIds.length > 0) {
+            for (const groupId of newSetlist.groupIds) {
+                await updateGroupSetlistCount(groupId, 1);
+            }
+        }
         
         return docRef.id;
     } catch (error) {
@@ -101,6 +109,16 @@ export async function deleteArchiveSetlist(setlistId) {
     }
     
     try {
+        // Получаем сет-лист для обновления счетчиков групп
+        const doc = await db.collection('archive_setlists').doc(setlistId).get();
+        if (doc.exists) {
+            const groupIds = doc.data().groupIds || [];
+            // Обновляем счетчики групп
+            for (const groupId of groupIds) {
+                await updateGroupSetlistCount(groupId, -1);
+            }
+        }
+        
         await db.collection('archive_setlists').doc(setlistId).delete();
         logger.log('✅ Archive setlist deleted:', setlistId);
     } catch (error) {
