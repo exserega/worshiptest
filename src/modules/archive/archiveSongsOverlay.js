@@ -794,7 +794,7 @@ class ArchiveSongsOverlay {
         // Обновляем заголовок - теперь всегда показываем название сет-листа
         const headerTitle = document.querySelector('#archive-songs-overlay .header-title h3');
         if (mode === 'edit') {
-            headerTitle.innerHTML = `Редактировать "<span class="editable-setlist-name" style="cursor: pointer; text-decoration: underline; text-decoration-style: dotted;">${setlistName}</span>"`;
+            headerTitle.innerHTML = `Редактировать "<span class="editable-setlist-name" style="cursor: pointer; color: var(--primary-color);">${setlistName}</span>"`;
             
             // Добавляем обработчик клика для редактирования названия
             const editableSpan = headerTitle.querySelector('.editable-setlist-name');
@@ -872,7 +872,7 @@ class ArchiveSongsOverlay {
                 
                 // Обновляем заголовок
                 const headerTitle = document.querySelector('#archive-songs-overlay .header-title h3');
-                headerTitle.innerHTML = `Редактировать "<span class="editable-setlist-name" style="cursor: pointer; text-decoration: underline; text-decoration-style: dotted;">${newName.trim()}</span>"`;
+                headerTitle.innerHTML = `Редактировать "<span class="editable-setlist-name" style="cursor: pointer; color: var(--primary-color);">${newName.trim()}</span>"`;
                 
                 // Перепривязываем обработчик
                 const editableSpan = headerTitle.querySelector('.editable-setlist-name');

@@ -1331,14 +1331,14 @@ textarea.form-control {
 /* Стиль для редактируемого названия сет-листа */
 .editable-setlist-name {
     cursor: pointer;
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 3px;
-    transition: opacity 0.2s ease;
+    color: var(--primary-color) !important;
+    transition: all 0.2s ease;
+    font-weight: 600;
 }
 
 .editable-setlist-name:hover {
     opacity: 0.8;
+    text-decoration: underline;
 }
 
 .added-count-badge {

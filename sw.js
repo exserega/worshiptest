@@ -1,5 +1,5 @@
-// Service Worker v498 - Add inline setlist name editing in overlay
-const CACHE_NAME = 'agape-worship-cache-v498';
+// Service Worker v499 - Fix name styling and dynamic update
+const CACHE_NAME = 'agape-worship-cache-v499';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

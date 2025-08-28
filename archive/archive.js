@@ -216,8 +216,18 @@ async function updateSetlistCard(setlistId) {
             logger.log('ℹ️ Card is not expanded or no songs container, skipping songs update');
         }
         
-        // Обновляем метаданные карточки (количество песен)
+        // Обновляем метаданные карточки
         logger.log('🔄 Updating card metadata...');
+        
+        // Обновляем название сет-листа
+        const nameElement = cardElement.querySelector('.setlist-name');
+        if (nameElement && setlist.name) {
+            const oldName = nameElement.textContent;
+            nameElement.textContent = setlist.name;
+            logger.log(`📝 Updated setlist name: "${oldName}" → "${setlist.name}"`);
+        }
+        
+        // Обновляем количество песен
         const songCountElement = cardElement.querySelector('.setlist-meta .meta-item:first-child');
         if (songCountElement) {
             const songCount = setlist.songs?.length || 0;
