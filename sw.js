@@ -1,5 +1,5 @@
-// Service Worker v475 - Fix: compact mobile-friendly text display
-const CACHE_NAME = 'agape-worship-cache-v475';
+// Service Worker v476 - Fix: UI improvements and auto-close modal
+const CACHE_NAME = 'agape-worship-cache-v476';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

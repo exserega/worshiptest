@@ -1289,10 +1289,11 @@ textarea.form-control {
 }
 
 .song-action-btn {
-    width: 36px;
-    height: 36px;
-    border: none;
-    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--container-background-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1301,23 +1302,34 @@ textarea.form-control {
 }
 
 .song-action-btn.add {
-    background: var(--primary-color);
-    color: white;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .song-action-btn.add:hover {
-    background: color-mix(in srgb, var(--primary-color) 85%, black);
-    transform: scale(1.1);
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
 }
 
 .song-action-btn.remove {
-    background: var(--error-color);
-    color: white;
+    border-color: var(--error-color);
+    color: var(--error-color);
 }
 
 .song-action-btn.remove:hover {
-    background: color-mix(in srgb, var(--error-color) 85%, black);
-    transform: scale(1.1);
+    background: var(--error-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Светлая иконка для кнопки удаления */
+.song-action-btn.remove i {
+    color: var(--error-color);
+}
+
+.song-action-btn.remove:hover i {
+    color: white;
 }
 
 /* Стили для селекта тональности */

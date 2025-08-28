@@ -504,8 +504,9 @@ class ArchiveSongsOverlay {
      */
     showKeySelectionModal(song) {
         // Обновляем заголовок
+        const songName = song.name || song.title || 'Без названия';
         document.getElementById('archive-key-song-name').textContent = 
-            `Выберите тональность для песни "${song.name}"`;
+            `Выберите тональность для песни "${songName}"`;
 
         // Заполняем селект тональностей
         const keySelect = document.getElementById('archive-key-select');
@@ -624,6 +625,9 @@ class ArchiveSongsOverlay {
 
             // Показываем уведомление
             this.showNotification(`Песня "${this.selectedSong.name}" добавлена`);
+            
+            // Закрываем модальное окно выбора тональности
+            this.keyModal.classList.remove('show');
 
         } catch (error) {
             logger.error('Error adding song to archive:', error);
