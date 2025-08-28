@@ -224,7 +224,7 @@ function createSetlistCard(setlist) {
     card.dataset.setlistId = setlist.id;
     
     const songCount = setlist.songs?.length || 0;
-    const creatorName = setlist.creatorName || 'Неизвестно';
+    const creatorName = setlist.createdByName || setlist.creatorName || 'Неизвестно';
     const usageCount = setlist.usageCount || 0;
     
     // Форматирование даты

@@ -37,6 +37,7 @@ export async function createArchiveSetlist(setlistData) {
             groupIds: setlistData.groupIds || [],
             branchId: currentUser.branchId,
             createdBy: currentUser.uid,
+            createdByName: currentUser.name || currentUser.email || 'Неизвестный',
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now(),
             isArchived: true,

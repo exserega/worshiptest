@@ -295,6 +295,19 @@ import { Timestamp } from 'firebase/firestore'; // v9!
 ## 📊 СТРУКТУРА БД FIRESTORE
 
 ```
+archive_setlists/ (NEW!)
+├── name
+├── songs: [{songId, order, preferredKey}]
+├── groupIds: []
+├── branchId
+├── createdBy: uid
+├── createdByName: имя пользователя
+├── createdAt: Timestamp
+├── updatedAt: Timestamp
+├── isArchived: true
+├── notes
+└── tags: []
+
 users/
 ├── uid
 ├── email
