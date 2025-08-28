@@ -1,5 +1,5 @@
-// Service Worker v463 - Add: filters toggle button with collapsible sections
-const CACHE_NAME = 'agape-worship-cache-v463';
+// Service Worker v464 - Add: archive setlists CRUD functionality
+const CACHE_NAME = 'agape-worship-cache-v464';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

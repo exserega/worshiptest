@@ -1,6 +1,14 @@
 # Firebase Firestore Indexes
 
-## Необходимые индексы для корректной работы приложения
+## Необходимые индексы
+
+### archive_setlists
+```
+Collection: archive_setlists
+Fields indexed:
+- branchId (Ascending)
+- updatedAt (Descending)
+``` для корректной работы приложения
 
 ### 1. Индекс для сетлистов с филиалами
 
