@@ -467,9 +467,24 @@ class ArchiveSongsOverlay {
 
         // Заполняем селект тональностей
         const keySelect = document.getElementById('archive-key-select');
-        keySelect.innerHTML = song.keys.map(key => `
-            <option value="${key}">${key}</option>
-        `).join('');
+        const keys = song.keys || [];
+        
+        if (keys.length > 0) {
+            keySelect.innerHTML = keys.map(key => `
+                <option value="${key}">${key}</option>
+            `).join('');
+        } else {
+            // Если нет тональностей, добавляем базовые
+            keySelect.innerHTML = `
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+            `;
+        }
 
         // Показываем текст песни
         const songDisplay = document.getElementById('archive-song-display');
@@ -495,11 +510,12 @@ class ArchiveSongsOverlay {
         // Обработчик изменения тональности
         keySelect.addEventListener('change', async () => {
             const newKey = keySelect.value;
-            if (newKey && song.keys && song.keys.includes(newKey)) {
+            if (newKey && keys.length > 0) {
                 // Транспонируем текст песни
                 try {
                     const { transposeSong } = await import('../../utils/transpose.js');
-                    const transposedText = transposeSong(song.text, song.keys[0], newKey);
+                    const originalKey = song.defaultKey || keys[0] || 'C';
+                    const transposedText = transposeSong(song.text, originalKey, newKey);
                     
                     // Форматируем транспонированный текст
                     let formattedText = transposedText || 'Текст песни недоступен';
