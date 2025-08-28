@@ -1302,14 +1302,15 @@ textarea.form-control {
 
 /* Кнопка добавления (плюсик) */
 .song-action-btn.add {
-    background-color: #22c55e;
-    border-color: #22c55e;
-    color: white;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--button-text-color);
 }
 
 .song-action-btn.add:hover {
-    background-color: #16a34a;
-    border-color: #16a34a;
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--button-text-color);
     transform: translateY(-1px);
 }
 
@@ -1320,13 +1321,11 @@ textarea.form-control {
 /* Кнопка удаления (корзина) */
 .song-action-btn.remove {
     background-color: transparent;
-    border-color: #ef4444;
-    color: #ef4444;
+    border-color: var(--danger-color);
 }
 
 .song-action-btn.remove:hover {
-    background-color: #ef4444;
-    color: white;
+    background-color: var(--danger-color);
     transform: translateY(-1px);
 }
 
@@ -1334,10 +1333,14 @@ textarea.form-control {
     transform: translateY(0);
 }
 
-/* Иконки всегда наследуют цвет от родителя */
-.song-action-btn i {
+/* Иконка удаления - явно прописываем цвета */
+.song-action-btn.remove i {
+    color: var(--danger-color) !important;
     font-size: 14px;
-    color: inherit;
+}
+
+.song-action-btn.remove:hover i {
+    color: white !important;
 }
 
 /* Стили для селекта тональности */

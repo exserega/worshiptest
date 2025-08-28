@@ -1,5 +1,5 @@
-// Service Worker v477 - Fix: explicit button colors
-const CACHE_NAME = 'agape-worship-cache-v477';
+// Service Worker v478 - Fix: use theme colors for buttons
+const CACHE_NAME = 'agape-worship-cache-v478';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
