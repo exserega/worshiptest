@@ -1,5 +1,5 @@
-// Service Worker v462 - Fix: single scroll with fixed header structure
-const CACHE_NAME = 'agape-worship-cache-v462';
+// Service Worker v463 - Add: filters toggle button with collapsible sections
+const CACHE_NAME = 'agape-worship-cache-v463';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

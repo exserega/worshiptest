@@ -91,11 +91,15 @@ html, body {
     padding: 1rem 1.5rem;
     background: var(--bg-secondary, #1f2937);
     border-bottom: 1px solid var(--border-color, #374151);
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .search-container {
     position: relative;
     width: 100%;
+    flex: 1;
 }
 
 .search-icon {
@@ -127,6 +131,52 @@ html, body {
 
 .search-input::placeholder {
     color: var(--text-secondary, #9ca3af);
+}
+
+/* Кнопка фильтров */
+.filter-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 8px;
+    color: var(--text-secondary, #9ca3af) !important;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.filter-toggle-btn i {
+    font-size: 0.875rem;
+    color: inherit !important;
+}
+
+.filter-toggle-btn:hover {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: var(--primary-color, #22d3ee);
+    color: var(--primary-color, #22d3ee) !important;
+}
+
+.filter-toggle-btn.active {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white !important;
+}
+
+/* Контейнер фильтров */
+.archive-filters-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.archive-filters-wrapper.expanded {
+    max-height: 300px;
+    transition: max-height 0.3s ease-in;
 }
 
 /* Секция групп */

@@ -79,6 +79,8 @@ function initializeElements() {
     elements.createBtn = document.getElementById('create-archive-setlist');
     elements.addGroupBtn = document.getElementById('add-group-btn');
     elements.sortButtons = document.querySelectorAll('.sort-btn');
+    elements.filterToggle = document.getElementById('filter-toggle');
+    elements.filtersWrapper = document.getElementById('filters-wrapper');
 }
 
 /**
@@ -372,6 +374,18 @@ function setupEventHandlers() {
     
     // Настройка стрелок скролла для групп
     setupGroupsScrollArrows();
+    
+    // Кнопка фильтров
+    elements.filterToggle.addEventListener('click', () => {
+        elements.filterToggle.classList.toggle('active');
+        elements.filtersWrapper.classList.toggle('expanded');
+        
+        // Если фильтры скрыты при первом открытии, показываем их
+        if (elements.filtersWrapper.classList.contains('expanded') && 
+            !elements.filtersWrapper.hasAttribute('data-initialized')) {
+            elements.filtersWrapper.setAttribute('data-initialized', 'true');
+        }
+    });
     
     // Сортировка
     elements.sortButtons.forEach(btn => {
