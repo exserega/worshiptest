@@ -579,63 +579,42 @@ function setupGroupsScrollArrows() {
     // Проверка при скролле
     scrollContainer.addEventListener('scroll', () => {
         checkScroll();
-        
-        // Для мобильных устройств добавляем классы для индикаторов
-        if (window.innerWidth <= 480) {
-            const scrollLeft = scrollContainer.scrollLeft;
-            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            const section = scrollContainer.closest('.archive-groups-section');
-            
-            if (scrollLeft > 10) {
-                section.classList.add('scrolled-left');
-            } else {
-                section.classList.remove('scrolled-left');
-            }
-            
-            if (scrollLeft >= maxScroll - 10) {
-                section.classList.add('scrolled-right');
-            } else {
-                section.classList.remove('scrolled-right');
-            }
-        }
+        updateMobileArrows();
     });
     
     // Проверка при изменении размера окна
     window.addEventListener('resize', () => {
         checkScroll();
-        // Проверяем стрелочки при изменении размера
+        updateMobileArrows();
+    });
+    
+    // Функция для обновления стрелочек на мобильных
+    function updateMobileArrows() {
         if (window.innerWidth <= 480) {
             const scrollLeft = scrollContainer.scrollLeft;
             const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
             const section = scrollContainer.closest('.archive-groups-section');
             
-            if (scrollLeft > 10) {
+            // Левая стрелочка - показываем если можно скролить влево
+            if (scrollLeft > 5) {
                 section.classList.add('scrolled-left');
             } else {
                 section.classList.remove('scrolled-left');
             }
             
-            if (scrollLeft >= maxScroll - 10) {
+            // Правая стрелочка - скрываем если достигли конца
+            if (scrollLeft >= maxScroll - 5) {
                 section.classList.add('scrolled-right');
             } else {
                 section.classList.remove('scrolled-right');
             }
         }
-    });
+    }
     
     // Начальная проверка
     setTimeout(() => {
         checkScroll();
-        // Начальная проверка стрелочек
-        if (window.innerWidth <= 480) {
-            const section = scrollContainer.closest('.archive-groups-section');
-            section.classList.remove('scrolled-left');
-            if (scrollContainer.scrollWidth > scrollContainer.clientWidth) {
-                section.classList.remove('scrolled-right');
-            } else {
-                section.classList.add('scrolled-right');
-            }
-        }
+        updateMobileArrows();
     }, 100);
 }
 

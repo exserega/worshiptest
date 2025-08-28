@@ -1,5 +1,5 @@
-// Service Worker v455 - Fix: arrow visibility with higher z-index and correct selectors
-const CACHE_NAME = 'agape-worship-cache-v455';
+// Service Worker v456 - Fix: thinner arrows with animation, correct position, show/hide logic
+const CACHE_NAME = 'agape-worship-cache-v456';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

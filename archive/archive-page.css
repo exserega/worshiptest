@@ -279,36 +279,46 @@ body {
     .archive-groups-section::after {
         content: '→';
         position: absolute;
-        right: 5px;
-        top: 60%;
-        transform: translateY(-50%);
-        font-size: 1.2rem;
-        color: rgba(34, 211, 238, 0.9);
+        right: 8px;
+        bottom: 14px;
+        font-size: 1rem;
+        color: rgba(34, 211, 238, 0.8);
         opacity: 1;
         pointer-events: none;
-        transition: opacity 0.2s;
+        transition: opacity 0.3s;
         z-index: 100;
-        font-weight: 300;
-        text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        font-weight: 200;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        animation: arrowPulseRight 1.5s ease-in-out infinite;
     }
     
     .archive-groups-section.scrolled-left::before {
         content: '←';
         position: absolute;
-        left: 5px;
-        top: 60%;
-        transform: translateY(-50%);
-        font-size: 1.2rem;
-        color: rgba(34, 211, 238, 0.9);
+        left: 8px;
+        bottom: 14px;
+        font-size: 1rem;
+        color: rgba(34, 211, 238, 0.8);
         opacity: 1;
         pointer-events: none;
         z-index: 100;
-        font-weight: 300;
-        text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        font-weight: 200;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        animation: arrowPulseLeft 1.5s ease-in-out infinite;
     }
     
     .archive-groups-section.scrolled-right::after {
         opacity: 0;
+    }
+    
+    @keyframes arrowPulseRight {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(3px); }
+    }
+    
+    @keyframes arrowPulseLeft {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(-3px); }
     }
 }
 
