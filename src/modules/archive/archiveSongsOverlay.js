@@ -386,7 +386,7 @@ class ArchiveSongsOverlay {
      */
     highlightMatch(text, term) {
         const regex = new RegExp(`(${term})`, 'gi');
-        return text.replace(regex, '<mark>$1</mark>');
+        return text.replace(regex, '<mark class="search-highlight">$1</mark>');
     }
 
     /**

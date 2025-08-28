@@ -1,5 +1,5 @@
-// Service Worker v484 - Fix: explicit cyan color for search highlight
-const CACHE_NAME = 'agape-worship-cache-v484';
+// Service Worker v485 - Fix: search highlight with proper class and color-mix
+const CACHE_NAME = 'agape-worship-cache-v485';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
