@@ -280,12 +280,12 @@ function createSetlistCard(setlist) {
             </div>
         </div>
         
-        <button class="delete-btn-corner" title="Удалить" onclick="deleteSetlist('${setlist.id}')">
-            <i class="fas fa-trash"></i>
-        </button>
-        
         <button class="edit-btn-corner" title="Редактировать">
             <i class="fas fa-edit"></i>
+        </button>
+        
+        <button class="delete-btn-corner" title="Удалить" onclick="deleteSetlist('${setlist.id}')">
+            <i class="fas fa-trash"></i>
         </button>
         
         <div class="setlist-actions">

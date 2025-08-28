@@ -1,5 +1,5 @@
-// Service Worker v486 - Fix: clear search button and delete button styles
-const CACHE_NAME = 'agape-worship-cache-v486';
+// Service Worker v487 - Fix: correct button positioning on setlist cards
+const CACHE_NAME = 'agape-worship-cache-v487';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
