@@ -791,36 +791,23 @@ class ArchiveSongsOverlay {
         this.targetSetlistName = setlistName;
         this.mode = mode;
 
-        // Обновляем заголовок
-        document.querySelector('#archive-songs-overlay .header-title h3').textContent = 
-            mode === 'edit' ? `Редактировать "${setlistName}"` : 'Добавить песни';
-        
-        // Обновляем подзаголовок и скрываем элементы для режима редактирования
+        // Обновляем заголовок - теперь всегда показываем название сет-листа
+        const headerTitle = document.querySelector('#archive-songs-overlay .header-title h3');
         if (mode === 'edit') {
-            // Скрываем подзаголовок "в сет-лист"
-            const subtitleElement = document.querySelector('#archive-songs-overlay .header-subtitle');
-            if (subtitleElement) {
-                subtitleElement.style.display = 'none';
-            }
-            
-            // Скрываем счетчик песен рядом с кнопкой Готово
-            const counterElement = document.querySelector('#archive-songs-overlay .added-counter');
-            if (counterElement) {
-                counterElement.style.display = 'none';
-            }
+            headerTitle.textContent = `Редактировать "${setlistName}"`;
         } else {
-            // Показываем элементы для режима добавления
-            const subtitleElement = document.querySelector('#archive-songs-overlay .header-subtitle');
-            if (subtitleElement) {
-                subtitleElement.style.display = 'block';
-            }
-            
-            const counterElement = document.querySelector('#archive-songs-overlay .added-counter');
-            if (counterElement) {
-                counterElement.style.display = 'flex';
-            }
-            
-            document.getElementById('archive-target-setlist-name').textContent = setlistName;
+            headerTitle.textContent = `Добавить песни в "${setlistName}"`;
+        }
+        
+        // Всегда скрываем подзаголовок и счетчик для единообразия
+        const subtitleElement = document.querySelector('#archive-songs-overlay .header-subtitle');
+        if (subtitleElement) {
+            subtitleElement.style.display = 'none';
+        }
+        
+        const counterElement = document.querySelector('#archive-songs-overlay .added-counter');
+        if (counterElement) {
+            counterElement.style.display = 'none';
         }
 
         // Загружаем существующие песни если режим редактирования
