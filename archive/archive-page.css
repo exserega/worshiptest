@@ -1529,32 +1529,35 @@ pre.song-text {
 /* Специальные стили для очень маленьких экранов */
 @media (max-width: 480px) {
     .search-filters {
-        gap: 4px;
+        gap: 6px;
         flex-direction: row !important;
-        align-items: center !important;
+        align-items: stretch !important;
         flex-wrap: nowrap !important;
     }
     
     .filter-select {
-        flex: 1 1 auto !important;
+        flex: 1 1 50% !important;
         min-width: 0 !important;
-        max-width: 60%;
-        padding: 4px 6px !important;
-        font-size: 0.7rem !important;
-        height: 32px !important;
+        max-width: 50%;
+        padding: 8px 12px !important;
+        font-size: 0.75rem !important;
+        height: 44px !important;
+        text-align: center;
     }
     
     .filter-btn {
-        flex: 0 0 auto !important;
-        padding: 4px 8px !important;
-        font-size: 0.7rem !important;
-        height: 32px !important;
-        min-width: fit-content !important;
+        flex: 1 1 50% !important;
+        min-width: 0 !important;
+        max-width: 50%;
+        padding: 8px 12px !important;
+        font-size: 0.75rem !important;
+        height: 44px !important;
+        justify-content: center;
     }
     
     .added-count-badge {
-        padding: 0 2px;
-        font-size: 0.6rem;
-        min-width: 14px;
+        padding: 0 3px;
+        font-size: 0.65rem;
+        min-width: 16px;
     }
 }
