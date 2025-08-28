@@ -1393,12 +1393,24 @@ mark.search-highlight {
     line-height: 1.8;
     color: var(--text-color);
     white-space: pre-wrap;
+    margin: 0;
 }
 
+/* Стиль для аккордов */
 .song-text .chord {
     color: var(--primary-color);
     font-weight: 700;
     background: color-mix(in srgb, var(--primary-color) 10%, transparent);
     padding: 1px 4px;
     border-radius: 3px;
+}
+
+/* Стиль для pre тега */
+pre.song-text {
+    font-family: 'Consolas', 'Monaco', monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    margin: 0;
+    padding: 0;
 }

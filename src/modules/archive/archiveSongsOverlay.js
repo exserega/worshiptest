@@ -458,6 +458,41 @@ class ArchiveSongsOverlay {
     }
 
     /**
+     * Отображение текста песни в заданной тональности
+     */
+    async displaySongInKey(container, lyrics, fromKey, toKey) {
+        try {
+            let displayLyrics = lyrics;
+            
+            // Если тональности разные, транспонируем
+            if (fromKey !== toKey) {
+                const { getTransposition, transposeLyrics } = await import('../js/core/transposition.js');
+                const transposition = getTransposition(fromKey, toKey);
+                displayLyrics = transposeLyrics(displayLyrics, transposition, toKey);
+            }
+            
+            // Обрабатываем текст (сокращаем пробелы в строках с аккордами)
+            const { processLyrics, highlightChords } = await import('../js/core/transposition.js');
+            displayLyrics = processLyrics(displayLyrics);
+            displayLyrics = highlightChords(displayLyrics);
+            
+            // Отображаем
+            container.innerHTML = `
+                <div class="song-content">
+                    <pre class="song-text">${displayLyrics}</pre>
+                </div>
+            `;
+        } catch (error) {
+            logger.error('Ошибка отображения песни:', error);
+            container.innerHTML = `
+                <div class="song-content">
+                    <div class="song-text">Ошибка отображения текста песни</div>
+                </div>
+            `;
+        }
+    }
+
+    /**
      * Показ модального окна выбора тональности
      */
     showKeySelectionModal(song) {
@@ -474,64 +509,66 @@ class ArchiveSongsOverlay {
                 <option value="${key}">${key}</option>
             `).join('');
         } else {
-            // Если нет тональностей, добавляем базовые
+            // Если нет тональностей, добавляем полный список
             keySelect.innerHTML = `
                 <option value="C">C</option>
+                <option value="C#">C#</option>
+                <option value="Db">Db</option>
                 <option value="D">D</option>
+                <option value="D#">D#</option>
+                <option value="Eb">Eb</option>
                 <option value="E">E</option>
                 <option value="F">F</option>
+                <option value="F#">F#</option>
+                <option value="Gb">Gb</option>
                 <option value="G">G</option>
+                <option value="G#">G#</option>
+                <option value="Ab">Ab</option>
                 <option value="A">A</option>
+                <option value="A#">A#</option>
+                <option value="Bb">Bb</option>
                 <option value="B">B</option>
+                <option value="H">H</option>
             `;
         }
 
         // Показываем текст песни
         const songDisplay = document.getElementById('archive-song-display');
         
-        // Форматируем текст песни
-        let formattedText = song.text || 'Текст песни недоступен';
+        // Получаем текст песни из правильного поля
+        const originalLyrics = song['Текст и аккорды'] || song.lyrics || song.text || '';
         
-        // Применяем базовое форматирование как на главной странице
-        if (formattedText && formattedText !== 'Текст песни недоступен') {
-            // Оборачиваем аккорды в span для стилизации
-            formattedText = formattedText.replace(/([A-G][#b]?m?(?:maj|min|dim|aug|sus|add)?[0-9]*)/g, '<span class="chord">$1</span>');
+        if (!originalLyrics) {
+            songDisplay.innerHTML = `
+                <div class="song-content">
+                    <div class="song-text">Текст песни недоступен</div>
+                </div>
+            `;
+        } else {
+            // Получаем исходную тональность
+            const originalKey = song['Оригинальная тональность'] || 
+                               song['Тональность'] || 
+                               song.originalKey || 
+                               song.key || 
+                               song.defaultKey ||
+                               (keys.length > 0 ? keys[0] : 'C');
             
-            // Добавляем переносы строк
-            formattedText = formattedText.replace(/\n/g, '<br>');
+            // Показываем текст в исходной тональности
+            this.displaySongInKey(songDisplay, originalLyrics, originalKey, originalKey);
         }
-        
-        songDisplay.innerHTML = `
-            <div class="song-content">
-                <div class="song-text">${formattedText}</div>
-            </div>
-        `;
 
         // Обработчик изменения тональности
-        keySelect.addEventListener('change', async () => {
+        keySelect.addEventListener('change', () => {
             const newKey = keySelect.value;
-            if (newKey && keys.length > 0) {
-                // Транспонируем текст песни
-                try {
-                    const { transposeSong } = await import('../../utils/transpose.js');
-                    const originalKey = song.defaultKey || keys[0] || 'C';
-                    const transposedText = transposeSong(song.text, originalKey, newKey);
-                    
-                    // Форматируем транспонированный текст
-                    let formattedText = transposedText || 'Текст песни недоступен';
-                    if (formattedText && formattedText !== 'Текст песни недоступен') {
-                        formattedText = formattedText.replace(/([A-G][#b]?m?(?:maj|min|dim|aug|sus|add)?[0-9]*)/g, '<span class="chord">$1</span>');
-                        formattedText = formattedText.replace(/\n/g, '<br>');
-                    }
-                    
-                    songDisplay.innerHTML = `
-                        <div class="song-content">
-                            <div class="song-text">${formattedText}</div>
-                        </div>
-                    `;
-                } catch (error) {
-                    logger.error('Ошибка транспонирования:', error);
-                }
+            if (newKey && originalLyrics) {
+                const originalKey = song['Оригинальная тональность'] || 
+                                   song['Тональность'] || 
+                                   song.originalKey || 
+                                   song.key || 
+                                   song.defaultKey ||
+                                   (keys.length > 0 ? keys[0] : 'C');
+                
+                this.displaySongInKey(songDisplay, originalLyrics, originalKey, newKey);
             }
         });
 

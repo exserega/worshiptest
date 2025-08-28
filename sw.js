@@ -1,5 +1,5 @@
-// Service Worker v472 - Fix: archive songs overlay keys error
-const CACHE_NAME = 'agape-worship-cache-v472';
+// Service Worker v473 - Add: proper song text display with chords and transposition
+const CACHE_NAME = 'agape-worship-cache-v473';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
