@@ -1,5 +1,5 @@
-// Service Worker v449 - Fix: restore bg-tertiary, mobile arrows in corner
-const CACHE_NAME = 'agape-worship-cache-v449';
+// Service Worker v450 - Fix: use bg-secondary for key/bpm contrast
+const CACHE_NAME = 'agape-worship-cache-v450';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
