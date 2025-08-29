@@ -429,6 +429,8 @@ window.handleSetlistSelect = function(setlist) {
     window.state.setCurrentSetlistId(setlist.id);
     // ИСПРАВЛЕНО: Используем правильную функцию для установки названия
     window.state.setCurrentSetlistName(setlist.name);
+    // Сохраняем выбранный сет-лист для других функций
+    window.selectedSetlist = setlist;
     ui.displaySelectedSetlist(setlist, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
 };
 

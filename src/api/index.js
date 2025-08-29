@@ -498,11 +498,28 @@ export async function createSetlist(name) {
             }
         }
         
+        // Получаем данные пользователя для createdByName
+        let createdByName = 'Unknown';
+        if (currentUser) {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                createdByName = userData.name || userData.displayName || userData.email?.split('@')[0] || 'Unknown';
+            }
+        }
+        
         const docRef = await addDoc(setlistsCollection, {
             name: name.trim(),
             songs: [],
             branchId: branchId, // Привязываем к выбранному филиалу
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            createdBy: currentUser?.uid || 'anonymous',
+            createdByName: createdByName,
+            isArchived: false,
+            notes: '',
+            tags: [],
+            groupIds: []
         });
         
         console.log(`✅ Сетлист "${name}" создан с ID: ${docRef.id} для филиала: ${branchId || 'общий'}`);

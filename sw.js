@@ -1,5 +1,5 @@
-// Service Worker v540 - Add save to archive functionality
-const CACHE_NAME = 'agape-worship-cache-v540';
+// Service Worker v541 - Fix selectedSetlist and add missing fields
+const CACHE_NAME = 'agape-worship-cache-v541';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
