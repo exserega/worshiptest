@@ -884,9 +884,21 @@ window.addToCalendar = async function(setlistId) {
                 } else if (events.length === 1) {
                     // Одно событие - показываем выбор действия
                     const event = events[0];
+                    // Добавляем форматирование времени
+                    if (event.date) {
+                        const eventDate = event.date.toDate ? event.date.toDate() : new Date(event.date);
+                        event.time = eventDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                    }
                     await handleSingleEvent(event, setlistData, selectedDate);
                 } else {
                     // Несколько событий - показываем выбор
+                    // Добавляем форматирование времени для всех событий
+                    events.forEach(event => {
+                        if (event.date) {
+                            const eventDate = event.date.toDate ? event.date.toDate() : new Date(event.date);
+                            event.time = eventDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                        }
+                    });
                     await handleMultipleEvents(events, selectedDate, setlistData);
                 }
             } catch (error) {

@@ -903,10 +903,17 @@ html, body {
     background: #374151 !important;
     color: #e5e7eb !important;
     border: 1px solid #4b5563 !important;
+    border-radius: 8px !important;
+    padding: 12px 24px !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
 }
 
 #event-action-modal .action-button:hover {
     background: #4b5563 !important;
+    transform: translateY(-1px) !important;
 }
 
 #event-action-modal .action-button.primary {
