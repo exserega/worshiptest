@@ -1,5 +1,5 @@
-// Service Worker v536 - Fix event time and button styles
-const CACHE_NAME = 'agape-worship-cache-v536';
+// Service Worker v537 - Add support for archive setlists in events
+const CACHE_NAME = 'agape-worship-cache-v537';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

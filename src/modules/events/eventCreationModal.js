@@ -7,6 +7,7 @@ import logger from '../../utils/logger.js';
 import { createEvent, updateEvent } from './eventsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
 import { db } from '../../utils/firebase-v8-adapter.js';
+import { getAllSetlists } from '../../utils/setlistUtils.js';
 
 class EventCreationModal {
     constructor() {
@@ -282,23 +283,10 @@ class EventCreationModal {
             // Инициализируем поле выбора ведущего
             this.initLeaderSelector();
             
-            // Загружаем сетлисты
-            const setlistsSnapshot = await db.collection('worship_setlists')
-                .where('branchId', '==', user.branchId)
-                .get();
+            // Загружаем сетлисты из обеих коллекций
+            const setlists = await getAllSetlists(user.branchId);
             
             const setlistSelect = document.getElementById('eventSetlist');
-            const setlists = [];
-            setlistsSnapshot.forEach(doc => {
-                const setlist = doc.data();
-                setlists.push({
-                    id: doc.id,
-                    name: setlist.name || 'Без названия'
-                });
-            });
-            
-            // Сортируем в памяти
-            setlists.sort((a, b) => a.name.localeCompare(b.name));
             
             // Добавляем в селект
             setlists.forEach(setlist => {

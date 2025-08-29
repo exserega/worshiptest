@@ -6,6 +6,7 @@
 import logger from '../../utils/logger.js';
 import { db } from '../../utils/firebase-v8-adapter.js';
 import { auth } from '../../../firebase-init.js';
+import { getSetlistById, getSetlistSongCount } from '../../utils/setlistUtils.js';
 
 // Firebase v8 Timestamp
 const Timestamp = window.firebase.firestore.Timestamp;
@@ -207,11 +208,7 @@ export async function createEvent(eventData) {
         // Получаем количество песен в сетлисте
         let songCount = 0;
         if (eventData.setlistId) {
-            const setlistDoc = await db.collection('worship_setlists').doc(eventData.setlistId).get();
-            if (setlistDoc.exists) {
-                const setlistData = setlistDoc.data();
-                songCount = setlistData.songs ? setlistData.songs.length : 0;
-            }
+            songCount = await getSetlistSongCount(eventData.setlistId);
         }
         
         // Получаем имя лидера
@@ -255,11 +252,7 @@ export async function updateEvent(eventId, updates) {
         // Получаем количество песен в сетлисте
         let songCount = 0;
         if (updates.setlistId) {
-            const setlistDoc = await db.collection('worship_setlists').doc(updates.setlistId).get();
-            if (setlistDoc.exists) {
-                const setlistData = setlistDoc.data();
-                songCount = setlistData.songs ? setlistData.songs.length : 0;
-            }
+            songCount = await getSetlistSongCount(updates.setlistId);
         }
         
         // Получаем имя лидера
@@ -332,11 +325,7 @@ export async function updateEventSetlistApi(eventId, setlistId, setlistName) {
         // Получаем количество песен в сетлисте
         let songCount = 0;
         if (setlistId) {
-            const setlistDoc = await db.collection('worship_setlists').doc(setlistId).get();
-            if (setlistDoc.exists) {
-                const setlistData = setlistDoc.data();
-                songCount = setlistData.songs ? setlistData.songs.length : 0;
-            }
+            songCount = await getSetlistSongCount(setlistId);
         }
         
         // Обновляем событие
