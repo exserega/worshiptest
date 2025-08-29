@@ -1,5 +1,5 @@
-// Service Worker v512 - Fix dynamic updates after creation and deletion
-const CACHE_NAME = 'agape-worship-cache-v512';
+// Service Worker v513 - Fix loadArchiveData to properly reload all data
+const CACHE_NAME = 'agape-worship-cache-v513';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
