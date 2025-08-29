@@ -1,5 +1,5 @@
-// Service Worker v527 - Fix song names in player
-const CACHE_NAME = 'agape-worship-cache-v527';
+// Service Worker v528 - Better fix for song names
+const CACHE_NAME = 'agape-worship-cache-v528';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

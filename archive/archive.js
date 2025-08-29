@@ -1621,11 +1621,19 @@ async function launchArchivePlayer(setlistId) {
                 if (!song) return null;
                 
                 // Добавляем preferredKey из сет-листа и нормализуем название
-                return {
+                // Важно: устанавливаем name ДО spread, чтобы не перезаписать существующее значение
+                const songData = {
+                    name: song.name || song.title || song.Name || song.Title || songRef.songId || 'Без названия',
                     ...song,
-                    name: song.name || song.title || song.Name || song.Title || 'Без названия',
                     preferredKey: songRef.preferredKey || song['Оригинальная тональность'] || 'C'
                 };
+                
+                // Убеждаемся что name точно есть
+                if (!songData.name) {
+                    songData.name = songRef.songId || 'Без названия';
+                }
+                
+                return songData;
             })
             .filter(song => song !== null);
             
@@ -1645,7 +1653,7 @@ async function launchArchivePlayer(setlistId) {
         
         console.log('✅ Плеер открыт для архивного сет-листа:', setlistId);
         console.log('📋 Передано песен:', songs.length);
-        console.log('🎵 Первая песня:', songs[0]?.name || 'Нет названия');
+        console.log('🎵 Первая песня:', songs[0]);
         
     } catch (error) {
         console.error('❌ Ошибка загрузки/открытия плеера:', error);
