@@ -171,24 +171,26 @@
 
 /* Модальное окно списка всех групп */
 .groups-list-modal {
-    max-width: 600px;
+    max-width: 480px;
 }
 
 .groups-list-container {
-    max-height: 400px;
+    max-height: 60vh;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 .group-list-item {
     display: flex;
     align-items: center;
-    padding: 1rem;
+    padding: 0.75rem;
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
 }
 
 .group-list-item:last-child {
@@ -196,51 +198,69 @@
 }
 
 .group-list-item:hover {
+    background: var(--hover-bg);
     transform: translateX(2px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.group-list-item.active {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: var(--primary-color);
+}
+
 .group-list-icon {
-    width: 48px;
-    height: 48px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-right: 1rem;
+    border-radius: 6px;
+    margin-right: 0.75rem;
     flex-shrink: 0;
 }
 
 .group-list-info {
     flex: 1;
     min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .group-list-name {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.9375rem;
+    font-weight: 500;
     color: var(--text-primary);
-    margin-bottom: 0.25rem;
 }
 
 .group-list-count {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
 }
 
 .group-list-actions {
     display: flex;
-    gap: 0.5rem;
-    margin-left: 1rem;
+    gap: 0.25rem;
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.group-list-item:hover .group-list-actions {
+    opacity: 1;
 }
 
 .group-edit-btn,
 .group-delete-btn {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -250,6 +270,7 @@
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 0.875rem;
 }
 
 .group-edit-btn:hover {

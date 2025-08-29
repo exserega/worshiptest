@@ -242,6 +242,29 @@ async function updateSetlistCard(setlistId) {
 window.updateSetlistCard = updateSetlistCard;
 
 /**
+ * Выбор группы (доступно глобально для архивного менеджера)
+ */
+window.selectGroup = function(groupId) {
+    // Снимаем выделение с предыдущей группы
+    document.querySelectorAll('.group-chip').forEach(chip => {
+        chip.classList.remove('active');
+    });
+    
+    // Выделяем новую группу
+    const selectedChip = document.querySelector(`.group-chip[data-group-id="${groupId}"]`);
+    if (selectedChip) {
+        selectedChip.classList.add('active');
+    }
+    
+    // Обновляем глобальную переменную
+    selectedGroupId = groupId;
+    window.selectedGroupId = groupId;
+    
+    // Применяем фильтры
+    applyFiltersAndSort();
+};
+
+/**
  * Отрисовка групп
  */
 function renderGroups() {

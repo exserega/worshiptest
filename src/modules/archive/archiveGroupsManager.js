@@ -302,29 +302,52 @@ class ArchiveGroupsManager {
             return;
         }
         
-        container.innerHTML = this.groups.map(group => `
-            <div class="group-list-item" data-group-id="${group.id}">
-                <div class="group-list-icon">
-                    ${group.icon || '📁'}
-                </div>
-                <div class="group-list-info">
-                    <div class="group-list-name">${this.escapeHtml(group.name)}</div>
-                    <div class="group-list-count">${group.setlistCount || 0} сет-листов</div>
-                </div>
-                <div class="group-list-actions">
-                    <button class="group-edit-btn" data-group-id="${group.id}" title="Редактировать">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="group-delete-btn" data-group-id="${group.id}" title="Удалить">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `).join('');
+        // Сортируем группы по алфавиту
+        const sortedGroups = [...this.groups].sort((a, b) => 
+            a.name.localeCompare(b.name, 'ru')
+        );
         
-        // Добавляем обработчики
+        // Получаем текущую выбранную группу из archive.js
+        const selectedGroupId = window.selectedGroupId || null;
+        
+        container.innerHTML = sortedGroups.map(group => {
+            const isActive = group.id === selectedGroupId;
+            return `
+                <div class="group-list-item ${isActive ? 'active' : ''}" data-group-id="${group.id}">
+                    <div class="group-list-icon">
+                        ${group.icon || '📁'}
+                    </div>
+                    <div class="group-list-info">
+                        <div class="group-list-name">${this.escapeHtml(group.name)}</div>
+                        <div class="group-list-count">${group.setlistCount || 0}</div>
+                    </div>
+                    <div class="group-list-actions">
+                        <button class="group-edit-btn" data-group-id="${group.id}" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="group-delete-btn" data-group-id="${group.id}" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // Добавляем обработчик клика на саму группу
+        container.querySelectorAll('.group-list-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Если клик не по кнопкам действий
+                if (!e.target.closest('.group-list-actions')) {
+                    const groupId = item.dataset.groupId;
+                    this.selectGroupFromList(groupId);
+                }
+            });
+        });
+        
+        // Добавляем обработчики для кнопок
         container.querySelectorAll('.group-edit-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const groupId = btn.dataset.groupId;
                 this.closeListModal();
                 this.openEditModal(groupId);
@@ -332,7 +355,8 @@ class ArchiveGroupsManager {
         });
         
         container.querySelectorAll('.group-delete-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const groupId = btn.dataset.groupId;
                 this.deleteGroup(groupId);
             });
@@ -405,6 +429,43 @@ class ArchiveGroupsManager {
         if (n1 > 1 && n1 < 5) return form2;
         if (n1 === 1) return form1;
         return form5;
+    }
+    
+    /**
+     * Выбор группы из списка
+     */
+    selectGroupFromList(groupId) {
+        // Закрываем модальное окно
+        this.closeListModal();
+        
+        // Делаем группу активной в горизонтальном списке
+        if (window.selectGroup) {
+            window.selectGroup(groupId);
+        }
+        
+        // Прокручиваем к выбранной группе
+        setTimeout(() => {
+            const groupChip = document.querySelector(`.group-chip[data-group-id="${groupId}"]`);
+            if (groupChip) {
+                const scrollContainer = document.getElementById('groups-scroll-container');
+                if (scrollContainer) {
+                    // Прокручиваем контейнер так, чтобы группа была видна
+                    const containerRect = scrollContainer.getBoundingClientRect();
+                    const chipRect = groupChip.getBoundingClientRect();
+                    
+                    // Если элемент не полностью виден
+                    if (chipRect.left < containerRect.left || chipRect.right > containerRect.right) {
+                        groupChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                }
+                
+                // Добавляем визуальный эффект выделения
+                groupChip.classList.add('pulse');
+                setTimeout(() => {
+                    groupChip.classList.remove('pulse');
+                }, 1000);
+            }
+        }, 100);
     }
     
     /**

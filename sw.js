@@ -1,5 +1,5 @@
-// Service Worker v504 - Fix new setlist creation and improve group management
-const CACHE_NAME = 'agape-worship-cache-v504';
+// Service Worker v505 - Improve groups list modal with selection functionality
+const CACHE_NAME = 'agape-worship-cache-v505';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
