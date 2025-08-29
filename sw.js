@@ -1,5 +1,5 @@
-// Service Worker v525 - Fix player data loading and styles
-const CACHE_NAME = 'agape-worship-cache-v525';
+// Service Worker v526 - Fix button colors and add calendar integration
+const CACHE_NAME = 'agape-worship-cache-v526';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

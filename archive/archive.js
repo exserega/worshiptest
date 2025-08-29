@@ -832,10 +832,25 @@ window.viewSetlist = function(setlistId) {
 /**
  * Добавление в календарь
  */
-window.addToCalendar = function(setlistId) {
-    // TODO: Использовать существующий datePickerModal
-    logger.log('Add to calendar:', setlistId);
-    alert('Добавление в календарь - в разработке');
+window.addToCalendar = async function(setlistId) {
+    console.log('📅 Добавление в календарь сет-листа:', setlistId);
+    
+    try {
+        // Динамически импортируем модуль событий
+        const { openEventsOverlay } = await import('../src/modules/events/eventsOverlay.js');
+        
+        // Сохраняем ID сет-листа для использования в eventsOverlay
+        window.selectedArchiveSetlistId = setlistId;
+        
+        // Открываем оверлей событий
+        await openEventsOverlay();
+        
+        console.log('✅ Оверлей событий открыт');
+        
+    } catch (error) {
+        console.error('❌ Ошибка открытия календаря:', error);
+        alert('Ошибка при открытии календаря');
+    }
 };
 
 /**
