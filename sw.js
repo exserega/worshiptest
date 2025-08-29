@@ -1,5 +1,5 @@
-// Service Worker v533 - Fix button styles and notification function
-const CACHE_NAME = 'agape-worship-cache-v533';
+// Service Worker v534 - Fix event action modal visibility
+const CACHE_NAME = 'agape-worship-cache-v534';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
