@@ -830,6 +830,27 @@ html, body {
     color: white !important;
 }
 
+/* Кнопка запуска просмотра */
+.action-btn.launch-player-btn {
+    background: var(--accent-color, #22d3ee);
+    color: white !important;
+    border-color: var(--accent-color, #22d3ee);
+    font-weight: 600;
+    width: 100%;
+    flex: none;
+    box-shadow: 0 2px 8px rgba(34, 211, 238, 0.3);
+}
+
+.action-btn.launch-player-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(34, 211, 238, 0.4);
+}
+
+.action-btn.launch-player-btn i {
+    font-size: 1rem;
+    color: white !important;
+}
+
 .action-btn.view-btn {
     padding: 10px 16px;
     font-size: 0.9rem;

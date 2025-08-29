@@ -593,6 +593,12 @@ function createSetlistCard(setlist) {
         
         <div class="setlist-actions">
             <div class="setlist-actions-row">
+                <button class="action-btn launch-player-btn" data-action="player" onclick="launchArchivePlayer('${setlist.id}')">
+                    <i class="fas fa-play"></i>
+                    Запустить просмотр
+                </button>
+            </div>
+            <div class="setlist-actions-row">
                 <button class="action-btn" data-action="calendar">
                     <i class="fas fa-calendar-plus"></i>
                     В календарь
@@ -790,7 +796,11 @@ async function loadSetlistSongs(setlistId, container) {
             const bpm = song?.BPM || song?.bpm || '-';
             
             return `
-                <div class="song-item">
+                <div class="archive-song-item song-item" 
+                     data-song-id="${songId}"
+                     data-key="${key}"
+                     data-tempo="${bpm}"
+                     data-time-signature="${song?.timeSignature || '4/4'}">
                     <span class="song-number">${index + 1}.</span>
                     <span class="song-name">${songName}</span>
                     <div class="song-details">
@@ -802,6 +812,7 @@ async function loadSetlistSongs(setlistId, container) {
         }).join('');
         
         container.innerHTML = songsHtml;
+        container.dataset.loaded = 'true';
         
     } catch (error) {
         logger.error('Ошибка загрузки песен:', error);
@@ -1552,6 +1563,60 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
+/**
+ * Запуск плеера для архивного сет-листа
+ */
+async function launchArchivePlayer(setlistId) {
+    console.log('🎬 Запуск плеера для сет-листа:', setlistId);
+    
+    const setlist = archiveSetlists.find(s => s.id === setlistId);
+    if (!setlist) {
+        alert('Сет-лист не найден');
+        return;
+    }
+    
+    // Загружаем песни, если они еще не загружены
+    const songsContainer = document.querySelector(`#songs-${setlistId}`);
+    if (songsContainer && !songsContainer.dataset.loaded) {
+        await loadSetlistSongs(setlistId, songsContainer);
+    }
+    
+    // Получаем песни из контейнера
+    const songElements = songsContainer.querySelectorAll('.archive-song-item');
+    const songs = Array.from(songElements).map(el => ({
+        id: el.dataset.songId,
+        name: el.querySelector('.song-name').textContent,
+        key: el.dataset.key || 'C',
+        tempo: el.dataset.tempo || '120',
+        time_signature: el.dataset.timeSignature || '4/4'
+    }));
+    
+    if (songs.length === 0) {
+        alert('В сет-листе нет песен');
+        return;
+    }
+    
+    try {
+        // Скрываем скролл на основной странице
+        document.body.style.overflow = 'hidden';
+        
+        // Динамически импортируем модуль плеера
+        const { openEventPlayer } = await import('../src/modules/events/eventPlayer.js');
+        
+        // Открываем плеер с песнями (null вместо eventId)
+        await openEventPlayer(null, songs, 0);
+        
+        console.log('✅ Плеер открыт');
+    } catch (error) {
+        console.error('❌ Ошибка открытия плеера:', error);
+        alert('Ошибка при открытии плеера');
+        document.body.style.overflow = '';
+    }
+}
+
+// Экспорт функции
+window.launchArchivePlayer = launchArchivePlayer;
 
 // Запуск при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
