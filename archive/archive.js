@@ -159,14 +159,9 @@ window.loadArchiveData = loadArchiveData;
 async function loadBranchUsers() {
     try {
         const { db } = await import('../firebase-init.js');
-        
-        logger.log('Loading users for branch:', currentUser.branchId);
-        
         const usersSnapshot = await db.collection('users')
             .where('branchId', '==', currentUser.branchId)
             .get();
-        
-        logger.log('Users found in branch:', usersSnapshot.size);
         
         branchUsers = [];
         const userIds = new Set();
@@ -179,21 +174,17 @@ async function loadBranchUsers() {
             }
         });
         
-        logger.log('Unique creators found:', userIds.size);
-        
         // Загружаем информацию о пользователях
         usersSnapshot.forEach(doc => {
             const userData = doc.data();
             if (userIds.has(doc.id)) {
                 branchUsers.push({
                     id: doc.id,
-                    name: userData.displayName || userData.email || 'Неизвестный',
+                    name: userData.name || userData.displayName || userData.email?.split('@')[0] || 'Неизвестный',
                     setlistCount: archiveSetlists.filter(s => s.createdBy === doc.id).length
                 });
             }
         });
-        
-        logger.log('Branch users with setlists:', branchUsers);
         
         // Сортируем по алфавиту
         branchUsers.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
@@ -392,7 +383,6 @@ function renderSortButtons() {
     
     // Сохраняем базовые кнопки
     const baseButtons = `
-        <button class="sort-btn ${currentSort === 'name' ? 'active' : ''}" data-sort="name">А-Я</button>
         <button class="sort-btn ${currentSort === 'date' ? 'active' : ''}" data-sort="date">Новые</button>
         <button class="sort-btn ${currentSort === 'date-old' ? 'active' : ''}" data-sort="date-old">Старые</button>
         <button class="sort-btn ${currentSort === 'popular' ? 'active' : ''}" data-sort="popular">Популярные</button>
@@ -413,9 +403,19 @@ function renderSortButtons() {
     // Добавляем обработчики
     elements.sortButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            elements.sortButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentSort = btn.dataset.sort;
+            const sortType = btn.dataset.sort;
+            
+            // Если кликнули на активную кнопку - сбрасываем на алфавит
+            if (btn.classList.contains('active')) {
+                elements.sortButtons.forEach(b => b.classList.remove('active'));
+                currentSort = 'name';
+            } else {
+                // Иначе активируем выбранную сортировку
+                elements.sortButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSort = sortType;
+            }
+            
             applyFiltersAndSort();
         });
     });
@@ -1061,7 +1061,6 @@ function openSortsListModal() {
     
     // Формируем список сортировок
     const sorts = [
-        { id: 'name', name: 'По алфавиту (А-Я)', icon: '🔤' },
         { id: 'date', name: 'Новые', icon: '📅' },
         { id: 'date-old', name: 'Старые', icon: '📆' },
         { id: 'popular', name: 'Популярные', icon: '⭐' }
@@ -1090,8 +1089,13 @@ function openSortsListModal() {
         item.addEventListener('click', () => {
             const sortId = item.dataset.sort;
             
-            // Обновляем активную сортировку
-            currentSort = sortId;
+            // Если кликнули на активную сортировку - сбрасываем на алфавит
+            if (currentSort === sortId) {
+                currentSort = 'name';
+            } else {
+                // Иначе применяем выбранную сортировку
+                currentSort = sortId;
+            }
             
             // Обновляем кнопки
             renderSortButtons();
@@ -1102,13 +1106,15 @@ function openSortsListModal() {
             // Закрываем модальное окно
             modal.classList.remove('show');
             
-            // Прокручиваем к выбранной сортировке
-            setTimeout(() => {
-                const sortBtn = document.querySelector(`.sort-btn[data-sort="${sortId}"]`);
-                if (sortBtn && elements.sortsContainer) {
-                    sortBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-            }, 100);
+            // Прокручиваем к выбранной сортировке, если она активна
+            if (currentSort !== 'name') {
+                setTimeout(() => {
+                    const sortBtn = document.querySelector(`.sort-btn[data-sort="${sortId}"]`);
+                    if (sortBtn && elements.sortsContainer) {
+                        sortBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                }, 100);
+            }
         });
     });
     
