@@ -1,5 +1,5 @@
-// Service Worker v508 - Update documentation and add logging for setlistCount debugging
-const CACHE_NAME = 'agape-worship-cache-v508';
+// Service Worker v509 - Implement reliable setlistCount system
+const CACHE_NAME = 'agape-worship-cache-v509';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

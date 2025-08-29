@@ -11,6 +11,14 @@ const Timestamp = window.firebase.firestore.Timestamp;
 const FieldValue = window.firebase.firestore.FieldValue;
 
 /**
+ * Получает текущий branchId пользователя
+ */
+async function getCurrentBranchId() {
+    const user = await getCurrentUser();
+    return user?.branchId || 'main';
+}
+
+/**
  * Создает новую группу архива
  * @param {Object} groupData - Данные группы
  * @returns {Promise<string>} ID созданной группы
@@ -88,6 +96,33 @@ export async function updateArchiveGroup(groupId, updates) {
 }
 
 /**
+ * Пересчитывает счетчики для всех групп в филиале
+ * Полезно для исправления неправильных значений
+ * @returns {Promise<void>}
+ */
+export async function recalculateAllGroupCounts() {
+    try {
+        const user = await getCurrentUser();
+        if (!user) throw new Error('Пользователь не авторизован');
+        
+        const groupsSnapshot = await db.collection('archive_groups')
+            .where('branchId', '==', user.branchId)
+            .get();
+        
+        const updatePromises = [];
+        groupsSnapshot.forEach(doc => {
+            updatePromises.push(recalculateGroupSetlistCount(doc.id));
+        });
+        
+        await Promise.all(updatePromises);
+        logger.log('✅ Recalculated counts for all groups');
+    } catch (error) {
+        logger.error('❌ Error recalculating all group counts:', error);
+        throw error;
+    }
+}
+
+/**
  * Удаляет группу архива
  * @param {string} groupId - ID группы
  * @returns {Promise<void>}
@@ -160,31 +195,41 @@ export async function loadArchiveGroups(branchId) {
 }
 
 /**
- * Обновляет счетчик сет-листов в группе
+ * Пересчитывает количество сет-листов в группе
+ * Это надежный метод, который считает реальное количество сет-листов
+ * @param {string} groupId - ID группы
+ * @returns {Promise<void>}
+ */
+export async function recalculateGroupSetlistCount(groupId) {
+    try {
+        // Считаем сколько сет-листов реально содержат эту группу
+        const snapshot = await db.collection('archive_setlists')
+            .where('groupIds', 'array-contains', groupId)
+            .where('branchId', '==', await getCurrentBranchId())
+            .get();
+        
+        const actualCount = snapshot.size;
+        
+        // Обновляем счетчик на реальное значение
+        await db.collection('archive_groups').doc(groupId).update({
+            setlistCount: actualCount,
+            updatedAt: Timestamp.now()
+        });
+    } catch (error) {
+        logger.error('❌ Error recalculating group setlist count:', error);
+    }
+}
+
+/**
+ * Обновляет счетчик сет-листов в группе (устаревший метод)
+ * @deprecated Используйте recalculateGroupSetlistCount для надежности
  * @param {string} groupId - ID группы
  * @param {number} delta - Изменение количества (+1 или -1)
  * @returns {Promise<void>}
  */
 export async function updateGroupSetlistCount(groupId, delta) {
-    try {
-        // Получаем текущее значение для логирования
-        const groupDoc = await db.collection('archive_groups').doc(groupId).get();
-        const currentCount = groupDoc.exists ? (groupDoc.data().setlistCount || 0) : 0;
-        const newCount = currentCount + delta;
-        
-        logger.log(`📊 Updating setlist count for group ${groupId}: ${currentCount} → ${newCount} (${delta > 0 ? '+' : ''}${delta})`);
-        logger.log(`📍 Called from:`, new Error().stack.split('\n')[2]);
-        
-        await db.collection('archive_groups').doc(groupId).update({
-            setlistCount: FieldValue.increment(delta),
-            updatedAt: Timestamp.now()
-        });
-        
-        logger.log(`✅ Updated setlist count for group ${groupId}: ${delta > 0 ? '+' : ''}${delta}`);
-    } catch (error) {
-        logger.error('❌ Error updating group setlist count:', error);
-        // Не бросаем ошибку, так как это не критично
-    }
+    // Вместо инкремента делаем полный пересчет для надежности
+    await recalculateGroupSetlistCount(groupId);
 }
 
 /**
@@ -195,8 +240,6 @@ export async function updateGroupSetlistCount(groupId, delta) {
  */
 export async function addSetlistToGroups(setlistId, groupIds) {
     try {
-        logger.log('🔵 addSetlistToGroups called for setlist:', setlistId, 'groups:', groupIds);
-        
         // Получаем текущие группы сет-листа
         const setlistDoc = await db.collection('archive_setlists').doc(setlistId).get();
         if (!setlistDoc.exists) {
@@ -204,8 +247,6 @@ export async function addSetlistToGroups(setlistId, groupIds) {
         }
         
         const currentGroupIds = setlistDoc.data().groupIds || [];
-        logger.log('📌 Current groups:', currentGroupIds, 'New groups to add:', groupIds);
-        
         const newGroupIds = [...new Set([...currentGroupIds, ...groupIds])];
         
         // Обновляем сет-лист
@@ -216,13 +257,9 @@ export async function addSetlistToGroups(setlistId, groupIds) {
         
         // Обновляем счетчики групп
         const addedGroups = groupIds.filter(id => !currentGroupIds.includes(id));
-        logger.log('🔺 Actually adding to groups (not duplicates):', addedGroups);
-        
         for (const groupId of addedGroups) {
             await updateGroupSetlistCount(groupId, 1);
         }
-        
-        logger.log('✅ Setlist added to groups:', groupIds);
     } catch (error) {
         logger.error('❌ Error adding setlist to groups:', error);
         throw error;
