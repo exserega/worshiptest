@@ -1,25 +1,36 @@
 /* Компактные стили для фильтров архива */
 
+/* Обертка для кнопки добавления группы */
+.add-group-wrapper {
+    padding: 8px 12px;
+    background: var(--bg-secondary, #1f2937);
+    border-bottom: 1px solid var(--border-color, #374151);
+}
+
 /* Общие стили для строк фильтров */
 .archive-filter-row {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
+    gap: 7px;
+    padding: 7px 14px;
     background: var(--bg-secondary, #1f2937);
 }
 
 .archive-filter-row.groups {
+    padding-top: 0;
+}
+
+.archive-filter-row.sorts {
     border-bottom: 1px solid var(--border-color, #374151);
 }
 
 /* Кнопка списка (слева от прокрутки) */
 .list-btn {
-    width: 28px;
-    height: 28px;
+    width: 32px;  /* было 28px (+14%) */
+    height: 32px; /* было 28px (+14%) */
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
-    border-radius: 6px;
+    border-radius: 7px;
     color: var(--text-secondary, #9ca3af) !important;
     cursor: pointer;
     display: flex;
@@ -28,7 +39,7 @@
     transition: all 0.2s ease;
     flex-shrink: 0;
     padding: 0;
-    font-size: 0.75rem;
+    font-size: 0.875rem; /* было 0.75rem (+17%) */
 }
 
 .list-btn:hover {
@@ -70,11 +81,11 @@
 
 /* Стрелки прокрутки */
 .scroll-arrow {
-    width: 20px;
-    height: 20px;
+    width: 23px;  /* было 20px (+15%) */
+    height: 23px; /* было 20px (+15%) */
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
-    border-radius: 4px;
+    border-radius: 5px;
     color: var(--text-secondary, #9ca3af);
     cursor: pointer;
     display: flex;
@@ -83,7 +94,7 @@
     transition: all 0.2s ease;
     flex-shrink: 0;
     padding: 0;
-    font-size: 0.5rem;
+    font-size: 0.575rem; /* было 0.5rem (+15%) */
 }
 
 .scroll-arrow:hover:not(:disabled) {
@@ -99,18 +110,18 @@
 
 /* Кнопка добавления группы */
 .add-group-btn {
-    height: 28px;
-    padding: 0 10px;
+    height: 32px; /* было 28px (+14%) */
+    padding: 0 12px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
-    border-radius: 6px;
+    border-radius: 7px;
     color: var(--text-secondary, #9ca3af) !important;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    font-size: 0.75rem;
+    font-size: 0.875rem; /* было 0.75rem (+17%) */
     white-space: nowrap;
 }
 
@@ -126,16 +137,16 @@
 
 /* Чипы групп */
 .group-chip {
-    height: 28px;
-    padding: 0 10px;
+    height: 32px; /* было 28px (+14%) */
+    padding: 0 12px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 16px;
-    font-size: 0.75rem;
+    font-size: 0.875rem; /* было 0.75rem (+17%) */
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     transition: all 0.2s ease;
     white-space: nowrap;
 }
@@ -158,25 +169,25 @@
 }
 
 .group-icon {
-    font-size: 0.875rem;
+    font-size: 1rem; /* было 0.875rem (+14%) */
 }
 
 .group-count {
-    font-size: 0.625rem;
+    font-size: 0.72rem; /* было 0.625rem (+15%) */
     background: var(--bg-quaternary, #0f172a);
-    padding: 1px 5px;
+    padding: 2px 6px;
     border-radius: 10px;
     color: var(--text-secondary, #9ca3af);
 }
 
 /* Кнопки сортировки */
 .sort-btn {
-    height: 28px;
-    padding: 0 10px;
+    height: 32px; /* было 28px (+14%) */
+    padding: 0 12px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
-    border-radius: 6px;
-    font-size: 0.75rem;
+    border-radius: 7px;
+    font-size: 0.875rem; /* было 0.75rem (+17%) */
     font-weight: 500;
     color: var(--text-secondary, #9ca3af);
     cursor: pointer;
@@ -218,27 +229,31 @@
 
 /* Адаптация для мобильных */
 @media (max-width: 768px) {
+    .add-group-wrapper {
+        padding: 6px 10px;
+    }
+    
     .archive-filter-row {
-        padding: 4px 8px;
+        padding: 5px 10px;
     }
     
     .list-btn {
-        width: 24px;
-        height: 24px;
-        font-size: 0.625rem;
+        width: 28px;  /* было 24px (+17%) */
+        height: 28px; /* было 24px (+17%) */
+        font-size: 0.75rem; /* было 0.625rem (+20%) */
     }
     
     .scroll-arrow {
-        width: 18px;
-        height: 18px;
-        font-size: 0.45rem;
+        width: 21px;  /* было 18px (+17%) */
+        height: 21px; /* было 18px (+17%) */
+        font-size: 0.52rem; /* было 0.45rem (+16%) */
     }
     
     .group-chip,
     .sort-btn,
     .add-group-btn {
-        height: 24px;
-        font-size: 0.7rem;
-        padding: 0 8px;
+        height: 28px; /* было 24px (+17%) */
+        font-size: 0.8rem; /* было 0.7rem (+14%) */
+        padding: 0 9px;
     }
 }

@@ -1,5 +1,5 @@
-// Service Worker v518 - Fix scrolling selectors for new filter structure
-const CACHE_NAME = 'agape-worship-cache-v518';
+// Service Worker v519 - Move add group button and increase sizes by 15%
+const CACHE_NAME = 'agape-worship-cache-v519';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
