@@ -255,6 +255,7 @@
 .group-delete-btn {
     width: 32px;
     height: 32px;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -263,15 +264,29 @@
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.875rem;
-    /* Критически важно: светлые иконки на темном фоне */
+    flex-shrink: 0;
+}
+
+/* Кнопка редактирования - нейтральная */
+.group-edit-btn {
     color: var(--text-secondary) !important;
 }
 
-/* Убеждаемся, что иконки внутри кнопок наследуют цвет */
+/* Кнопка удаления - красная как в карточках */
+.group-delete-btn {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444 !important;
+}
+
+/* Убеждаемся, что иконки внутри кнопок наследуют цвет и центрированы */
 .group-edit-btn i,
 .group-delete-btn i {
     color: inherit !important;
+    font-size: 0.875rem;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
 }
 
 .group-edit-btn:hover {
@@ -281,9 +296,9 @@
 }
 
 .group-delete-btn:hover {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: #ef4444;
-    color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: scale(1.05);
 }
 
 /* Пустое состояние списка групп */

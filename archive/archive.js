@@ -592,8 +592,7 @@ function setupEventHandlers() {
     
     if (listGroupsBtn) {
         listGroupsBtn.addEventListener('click', () => {
-            // TODO: Открыть вертикальный список групп
-            alert('Список групп - в разработке');
+            archiveGroupsManager.openListModal();
         });
     }
 }

@@ -1,5 +1,5 @@
-// Service Worker v506 - Fix icon visibility in group list buttons
-const CACHE_NAME = 'agape-worship-cache-v506';
+// Service Worker v507 - Fix icon centering and delete button styling
+const CACHE_NAME = 'agape-worship-cache-v507';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
