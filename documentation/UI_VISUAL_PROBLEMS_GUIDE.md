@@ -10,9 +10,15 @@
 ```css
 /* ПРАВИЛЬНО: Кнопка с видимой иконкой */
 .icon-button {
+    /* Размеры */
+    width: 36px;
+    height: 36px;
+    padding: 0;  /* КРИТИЧНО для центрирования */
+    
     /* Темный фон */
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
+    border-radius: 8px;
     
     /* КРИТИЧЕСКИ ВАЖНО: Светлая иконка с !important */
     color: var(--text-secondary) !important;
@@ -21,12 +27,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    /* Сохранение формы */
+    flex-shrink: 0;
 }
 
-/* ОБЯЗАТЕЛЬНО: Иконки наследуют цвет */
+/* ОБЯЗАТЕЛЬНО: Иконки наследуют цвет и правильно центрированы */
 .icon-button i,
 .icon-button svg {
     color: inherit !important;
+    font-size: 0.875rem;
+    line-height: 1;  /* Убирает лишнее пространство */
+    margin: 0;
+    padding: 0;
+}
+
+/* Кнопка удаления - всегда красная */
+.icon-button.delete {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444 !important;
 }
 ```
 

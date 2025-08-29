@@ -1,5 +1,5 @@
-// Service Worker v507 - Fix icon centering and delete button styling
-const CACHE_NAME = 'agape-worship-cache-v507';
+// Service Worker v508 - Update documentation and add logging for setlistCount debugging
+const CACHE_NAME = 'agape-worship-cache-v508';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

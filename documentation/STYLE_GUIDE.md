@@ -207,6 +207,7 @@ function getInstrumentOrder(instrument) {
     /* Размеры и форма */
     width: 36px;
     height: 36px;
+    padding: 0;  /* ВАЖНО: убирает дефолтные отступы */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -222,12 +223,17 @@ function getInstrumentOrder(instrument) {
     /* Прочее */
     cursor: pointer;
     transition: all 0.2s ease;
+    flex-shrink: 0;  /* Сохраняет квадратную форму */
 }
 
-/* ОБЯЗАТЕЛЬНО: Иконки внутри наследуют цвет */
+/* ОБЯЗАТЕЛЬНО: Иконки внутри наследуют цвет и центрированы */
 .icon-btn i,
 .icon-btn svg {
     color: inherit !important;
+    font-size: 0.875rem;  /* Контролируемый размер */
+    line-height: 1;       /* Убирает лишнее пространство */
+    margin: 0;            /* Нет внешних отступов */
+    padding: 0;           /* Нет внутренних отступов */
 }
 ```
 
@@ -237,6 +243,9 @@ function getInstrumentOrder(instrument) {
 3. ✅ Используйте `!important` для цвета, чтобы переопределить стили FontAwesome
 4. ✅ Добавьте `color: inherit !important` для вложенных иконок
 5. ✅ Центрирование: `display: flex; align-items: center; justify-content: center;`
+6. ✅ Обязательно: `padding: 0` для кнопки
+7. ✅ Для иконок: `line-height: 1; margin: 0; padding: 0;`
+8. ✅ Добавьте `flex-shrink: 0` чтобы кнопка оставалась квадратной
 
 ### 🎨 Состояния кнопок:
 
@@ -255,11 +264,17 @@ function getInstrumentOrder(instrument) {
     color: white !important;
 }
 
-/* Кнопка удаления */
-.icon-btn.delete:hover {
+/* Кнопка удаления - красная по умолчанию */
+.icon-btn.delete {
     background: rgba(239, 68, 68, 0.1);
-    border-color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
     color: #ef4444 !important;
+}
+
+.icon-btn.delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: scale(1.05);
 }
 ```
 

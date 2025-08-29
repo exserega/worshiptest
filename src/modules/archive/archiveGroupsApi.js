@@ -167,10 +167,19 @@ export async function loadArchiveGroups(branchId) {
  */
 export async function updateGroupSetlistCount(groupId, delta) {
     try {
+        // Получаем текущее значение для логирования
+        const groupDoc = await db.collection('archive_groups').doc(groupId).get();
+        const currentCount = groupDoc.exists ? (groupDoc.data().setlistCount || 0) : 0;
+        const newCount = currentCount + delta;
+        
+        logger.log(`📊 Updating setlist count for group ${groupId}: ${currentCount} → ${newCount} (${delta > 0 ? '+' : ''}${delta})`);
+        logger.log(`📍 Called from:`, new Error().stack.split('\n')[2]);
+        
         await db.collection('archive_groups').doc(groupId).update({
             setlistCount: FieldValue.increment(delta),
             updatedAt: Timestamp.now()
         });
+        
         logger.log(`✅ Updated setlist count for group ${groupId}: ${delta > 0 ? '+' : ''}${delta}`);
     } catch (error) {
         logger.error('❌ Error updating group setlist count:', error);
@@ -186,6 +195,8 @@ export async function updateGroupSetlistCount(groupId, delta) {
  */
 export async function addSetlistToGroups(setlistId, groupIds) {
     try {
+        logger.log('🔵 addSetlistToGroups called for setlist:', setlistId, 'groups:', groupIds);
+        
         // Получаем текущие группы сет-листа
         const setlistDoc = await db.collection('archive_setlists').doc(setlistId).get();
         if (!setlistDoc.exists) {
@@ -193,6 +204,8 @@ export async function addSetlistToGroups(setlistId, groupIds) {
         }
         
         const currentGroupIds = setlistDoc.data().groupIds || [];
+        logger.log('📌 Current groups:', currentGroupIds, 'New groups to add:', groupIds);
+        
         const newGroupIds = [...new Set([...currentGroupIds, ...groupIds])];
         
         // Обновляем сет-лист
@@ -203,6 +216,8 @@ export async function addSetlistToGroups(setlistId, groupIds) {
         
         // Обновляем счетчики групп
         const addedGroups = groupIds.filter(id => !currentGroupIds.includes(id));
+        logger.log('🔺 Actually adding to groups (not duplicates):', addedGroups);
+        
         for (const groupId of addedGroups) {
             await updateGroupSetlistCount(groupId, 1);
         }

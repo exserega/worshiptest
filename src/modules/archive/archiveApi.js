@@ -48,9 +48,11 @@ export async function createArchiveSetlist(setlistData) {
         
         const docRef = await db.collection('archive_setlists').add(newSetlist);
         logger.log('✅ Archive setlist created:', docRef.id);
+        logger.log('📋 With groupIds:', newSetlist.groupIds);
         
         // Обновляем счетчики групп
         if (newSetlist.groupIds && newSetlist.groupIds.length > 0) {
+            logger.log('🔄 Updating group counts from createArchiveSetlist for groups:', newSetlist.groupIds);
             for (const groupId of newSetlist.groupIds) {
                 await updateGroupSetlistCount(groupId, 1);
             }
