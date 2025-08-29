@@ -1,5 +1,5 @@
-// Service Worker v543 - Fix archive modal overlay display
-const CACHE_NAME = 'agape-worship-cache-v543';
+// Service Worker v544 - Improve archive modal visual design
+const CACHE_NAME = 'agape-worship-cache-v544';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -2,6 +2,95 @@
  * Стили для модального окна сохранения в архив
  */
 
+/* Overlay контейнер */
+.overlay-content.archive-save-modal {
+    max-width: 500px !important;
+    width: 90% !important;
+    max-height: 85vh;
+    background: var(--bg-primary, #0f172a) !important;
+    border-radius: 16px !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Заголовок модального окна */
+.archive-save-modal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color, #374151);
+    flex-shrink: 0;
+}
+
+.archive-save-modal .modal-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-primary, #e5e7eb);
+}
+
+.archive-save-modal .close-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary, #9ca3af);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.archive-save-modal .close-btn:hover {
+    background: var(--bg-tertiary, #374151);
+    color: var(--text-primary, #e5e7eb);
+}
+
+.archive-save-modal .modal-body {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.archive-save-modal .modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-color, #374151);
+    flex-shrink: 0;
+    background: var(--bg-primary, #0f172a);
+}
+
+/* Кнопки в футере */
+.archive-save-modal .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.archive-save-modal .btn-secondary {
+    background: var(--bg-tertiary, #374151);
+    color: var(--text-primary, #e5e7eb);
+}
+
+.archive-save-modal .btn-secondary:hover {
+    background: var(--bg-hover, #4b5563);
+}
+
+.archive-save-modal .btn-primary {
+    background: var(--primary-color, #22d3ee);
+    color: var(--bg-primary, #0f172a);
+}
+
+.archive-save-modal .btn-primary:hover {
+    background: var(--primary-hover, #06b6d4);
+}
+
 /* Информация о сет-листе */
 .save-info {
     background: var(--bg-secondary);
@@ -29,12 +118,14 @@
 
 /* Выбор групп */
 .groups-selection {
-    max-height: 300px;
+    max-height: 200px;
+    min-height: 120px;
     overflow-y: auto;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 12px;
     background: var(--bg-secondary);
+    margin-top: 8px;
 }
 
 .groups-selection .loading {
@@ -82,13 +173,31 @@
     color: var(--text-primary);
 }
 
+/* Форма */
+.archive-save-modal .form-group {
+    margin-bottom: 20px;
+}
+
+.archive-save-modal .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary, #e5e7eb);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
 /* Комментарий */
 #archive-comment {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
+    width: 100%;
+    background: var(--bg-secondary, #1e293b);
+    border: 1px solid var(--border-color, #374151);
+    color: var(--text-primary, #e5e7eb);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.95rem;
     resize: vertical;
     min-height: 80px;
+    font-family: inherit;
 }
 
 #archive-comment:focus {
