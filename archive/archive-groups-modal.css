@@ -31,7 +31,7 @@
     max-width: 480px;
     width: 100%;
     max-height: 90vh;
-    overflow: hidden;
+    overflow-y: auto;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
     transform: translateY(20px);
     transition: transform 0.3s ease;
@@ -57,20 +57,29 @@
 }
 
 .group-modal-close {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.5rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary) !important;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     cursor: pointer;
-    padding: 0.25rem;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .group-modal-close:hover {
-    color: var(--text-primary);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+    color: #ef4444 !important;
+}
+
+.group-modal-close i {
+    color: inherit !important;
+    font-size: 16px;
 }
 
 .group-modal-body {
@@ -112,43 +121,7 @@
     box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
 }
 
-/* Выбор цвета группы */
-.color-picker-grid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
 
-.color-option {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.color-option:hover {
-    transform: scale(1.1);
-}
-
-.color-option.selected {
-    border-color: var(--text-primary);
-}
-
-.color-option.selected::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 1.25rem;
-    font-weight: bold;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-}
 
 /* Выбор иконки группы */
 .icon-picker-grid {
@@ -234,6 +207,8 @@
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     margin-right: 1rem;
     flex-shrink: 0;
@@ -314,14 +289,7 @@
     color: var(--text-secondary);
 }
 
-/* Дополнительные стили для group-chip с поддержкой цветов */
-.group-chip[style*="border-color"]:hover {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-}
 
-.group-chip[style*="border-color"]:not(.active):hover {
-    background: rgba(34, 211, 238, 0.05);
-}
 
 /* Информация о сет-листе */
 .setlist-groups-info {
@@ -377,6 +345,8 @@
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     margin-right: 0.75rem;
 }

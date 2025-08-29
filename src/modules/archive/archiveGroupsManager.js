@@ -11,25 +11,7 @@ import {
 } from './archiveGroupsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
 
-// Предустановленные цвета для групп
-const GROUP_COLORS = [
-    '#ef4444', // red
-    '#f97316', // orange
-    '#f59e0b', // amber
-    '#eab308', // yellow
-    '#84cc16', // lime
-    '#22c55e', // green
-    '#10b981', // emerald
-    '#14b8a6', // teal
-    '#06b6d4', // cyan
-    '#0ea5e9', // sky
-    '#3b82f6', // blue
-    '#6366f1', // indigo
-    '#8b5cf6', // violet
-    '#a855f7', // purple
-    '#d946ef', // fuchsia
-    '#ec4899', // pink
-];
+
 
 // Предустановленные иконки для групп
 const GROUP_ICONS = [
@@ -46,7 +28,6 @@ class ArchiveGroupsManager {
     constructor() {
         this.currentUser = null;
         this.groups = [];
-        this.selectedColor = GROUP_COLORS[0];
         this.selectedIcon = GROUP_ICONS[0];
         this.editingGroupId = null;
         this.onGroupsChange = null; // Callback для обновления UI
@@ -59,7 +40,6 @@ class ArchiveGroupsManager {
         this.currentUser = getCurrentUser();
         this.onGroupsChange = onGroupsChange;
         this.setupEventListeners();
-        this.initializeColorPicker();
         this.initializeIconPicker();
         await this.loadGroups();
     }
@@ -137,38 +117,7 @@ class ArchiveGroupsManager {
         });
     }
     
-    /**
-     * Инициализация выбора цвета
-     */
-    initializeColorPicker() {
-        const colorPicker = document.getElementById('color-picker');
-        if (!colorPicker) return;
-        
-        colorPicker.innerHTML = '';
-        
-        GROUP_COLORS.forEach(color => {
-            const colorOption = document.createElement('div');
-            colorOption.className = 'color-option';
-            colorOption.style.backgroundColor = color;
-            colorOption.dataset.color = color;
-            
-            if (color === this.selectedColor) {
-                colorOption.classList.add('selected');
-            }
-            
-            colorOption.addEventListener('click', () => {
-                // Убираем выделение с предыдущего
-                colorPicker.querySelectorAll('.color-option').forEach(opt => 
-                    opt.classList.remove('selected')
-                );
-                // Выделяем текущий
-                colorOption.classList.add('selected');
-                this.selectedColor = color;
-            });
-            
-            colorPicker.appendChild(colorOption);
-        });
-    }
+
     
     /**
      * Инициализация выбора иконки
@@ -216,12 +165,10 @@ class ArchiveGroupsManager {
         titleEl.textContent = 'Новая группа';
         nameInput.value = '';
         
-        // Сбрасываем выбранные значения
-        this.selectedColor = GROUP_COLORS[0];
+        // Сбрасываем выбранную иконку
         this.selectedIcon = GROUP_ICONS[0];
         
         // Обновляем UI выбора
-        this.updateColorSelection();
         this.updateIconSelection();
         
         modal.classList.add('show');
@@ -244,33 +191,17 @@ class ArchiveGroupsManager {
         titleEl.textContent = 'Редактировать группу';
         nameInput.value = group.name;
         
-        // Устанавливаем текущие значения
-        this.selectedColor = group.color || GROUP_COLORS[0];
+        // Устанавливаем текущую иконку
         this.selectedIcon = group.icon || GROUP_ICONS[0];
         
         // Обновляем UI выбора
-        this.updateColorSelection();
         this.updateIconSelection();
         
         modal.classList.add('show');
         nameInput.focus();
     }
     
-    /**
-     * Обновление выделения цвета
-     */
-    updateColorSelection() {
-        const colorPicker = document.getElementById('color-picker');
-        if (!colorPicker) return;
-        
-        colorPicker.querySelectorAll('.color-option').forEach(opt => {
-            if (opt.dataset.color === this.selectedColor) {
-                opt.classList.add('selected');
-            } else {
-                opt.classList.remove('selected');
-            }
-        });
-    }
+
     
     /**
      * Обновление выделения иконки
@@ -312,7 +243,6 @@ class ArchiveGroupsManager {
         try {
             const groupData = {
                 name,
-                color: this.selectedColor,
                 icon: this.selectedIcon
             };
             
@@ -374,7 +304,7 @@ class ArchiveGroupsManager {
         
         container.innerHTML = this.groups.map(group => `
             <div class="group-list-item" data-group-id="${group.id}">
-                <div class="group-list-icon" style="background-color: ${group.color};">
+                <div class="group-list-icon">
                     ${group.icon || '📁'}
                 </div>
                 <div class="group-list-info">

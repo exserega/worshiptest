@@ -1,5 +1,5 @@
-// Service Worker v502 - Fix duplicate Firebase loading and add groups init
-const CACHE_NAME = 'agape-worship-cache-v502';
+// Service Worker v503 - Remove group colors and fix modal UI issues
+const CACHE_NAME = 'agape-worship-cache-v503';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

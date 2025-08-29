@@ -280,9 +280,6 @@ function renderGroups() {
         chip.appendChild(nameSpan);
         chip.appendChild(countSpan);
         
-        // Добавляем стиль с цветом группы
-        chip.style.borderColor = group.color || '#22d3ee';
-        
         elements.groupsList.appendChild(chip);
     });
 }
@@ -368,7 +365,7 @@ function renderSetlistGroups(setlist) {
         if (!group) return '';
         
         return `
-            <span class="setlist-group-tag" style="border-color: ${group.color}; background: ${group.color}20;">
+            <span class="setlist-group-tag">
                 <span>${group.icon || '📁'}</span>
                 <span>${group.name}</span>
             </span>
@@ -1119,7 +1116,7 @@ function openSetlistGroupsModal(setlist) {
                     ${isChecked ? 'checked' : ''}
                     id="group-check-${group.id}"
                 >
-                <div class="group-checkbox-icon" style="background-color: ${group.color};">
+                <div class="group-checkbox-icon">
                     ${group.icon || '📁'}
                 </div>
                 <div class="group-checkbox-info">

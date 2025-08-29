@@ -33,7 +33,6 @@ export async function createArchiveGroup(groupData) {
     try {
         const newGroup = {
             name: groupData.name || 'Новая группа',
-            color: groupData.color || '#22d3ee',
             icon: groupData.icon || '📁',
             branchId: currentUser.branchId,
             createdBy: currentUser.uid,
