@@ -429,8 +429,6 @@ window.handleSetlistSelect = function(setlist) {
     window.state.setCurrentSetlistId(setlist.id);
     // ИСПРАВЛЕНО: Используем правильную функцию для установки названия
     window.state.setCurrentSetlistName(setlist.name);
-    // Сохраняем выбранный сет-лист для других функций
-    window.selectedSetlist = setlist;
     ui.displaySelectedSetlist(setlist, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
 };
 
@@ -1124,12 +1122,16 @@ document.addEventListener('DOMContentLoaded', () => {
         saveToArchiveBtn.addEventListener('click', async () => {
             logger.log('📦 Клик по кнопке "Сохранить в архив"');
             
-            // Получаем текущий выбранный сет-лист
-            const selectedSetlist = window.selectedSetlist;
-            if (!selectedSetlist) {
+            // Получаем текущий выбранный сет-лист из state (как в кнопке календаря)
+            const currentSetlistId = window.state?.currentSetlistId;
+            const currentSetlist = window.state?.setlists?.find(s => s.id === currentSetlistId);
+            
+            if (!currentSetlist) {
                 window.showNotification('Сначала выберите сет-лист', 'warning');
                 return;
             }
+            
+            logger.log('📦 Текущий сет-лист:', currentSetlist);
             
             try {
                 // Динамически импортируем модуль
@@ -1137,7 +1139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const modal = getArchiveSaveModal();
                 
                 // Открываем модальное окно
-                modal.open(selectedSetlist, (archiveId) => {
+                modal.open(currentSetlist, (archiveId) => {
                     window.showNotification('✅ Сет-лист сохранен в архив', 'success');
                     logger.log('✅ Сет-лист сохранен в архив с ID:', archiveId);
                 });
