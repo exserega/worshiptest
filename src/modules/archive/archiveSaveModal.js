@@ -23,9 +23,8 @@ class ArchiveSaveModal {
 
     createModal() {
         const modalHTML = `
-            <div id="archive-save-modal" class="modal" style="display: none;">
-                <div class="modal-overlay"></div>
-                <div class="modal-content">
+            <div id="archive-save-modal" class="global-overlay" style="display: none;">
+                <div class="overlay-content archive-save-modal">
                     <div class="modal-header">
                         <h2>Сохранить в архив</h2>
                         <button class="close-btn" data-action="close">
@@ -80,7 +79,13 @@ class ArchiveSaveModal {
         // Закрытие модального окна
         this.modal.querySelector('[data-action="close"]').addEventListener('click', () => this.close());
         this.modal.querySelector('[data-action="cancel"]').addEventListener('click', () => this.close());
-        this.modal.querySelector('.modal-overlay').addEventListener('click', () => this.close());
+        
+        // Закрытие по клику на фон
+        this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal) {
+                this.close();
+            }
+        });
 
         // Сохранение
         this.modal.querySelector('[data-action="save"]').addEventListener('click', () => this.save());
@@ -157,13 +162,19 @@ class ArchiveSaveModal {
         document.getElementById('archive-comment').value = '';
 
         // Показываем модальное окно
-        this.modal.style.display = 'block';
+        this.modal.style.display = 'flex';
+        setTimeout(() => {
+            this.modal.classList.add('show');
+        }, 10);
         document.body.style.overflow = 'hidden';
     }
 
     close() {
-        this.modal.style.display = 'none';
-        document.body.style.overflow = '';
+        this.modal.classList.remove('show');
+        setTimeout(() => {
+            this.modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 300);
     }
 
     async save() {

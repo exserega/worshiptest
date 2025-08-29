@@ -1,5 +1,5 @@
-// Service Worker v542 - Fix archive button to use state
-const CACHE_NAME = 'agape-worship-cache-v542';
+// Service Worker v543 - Fix archive modal overlay display
+const CACHE_NAME = 'agape-worship-cache-v543';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
