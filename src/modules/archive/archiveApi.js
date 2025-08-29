@@ -107,15 +107,23 @@ export async function deleteArchiveSetlist(setlistId) {
     try {
         // Получаем сет-лист для обновления счетчиков групп
         const doc = await db.collection('archive_setlists').doc(setlistId).get();
-        if (doc.exists) {
-            const groupIds = doc.data().groupIds || [];
-            // Обновляем счетчики групп
-            for (const groupId of groupIds) {
-                await updateGroupSetlistCount(groupId, -1);
-            }
+        if (!doc.exists) {
+            throw new Error('Сет-лист не найден');
         }
         
+        const groupIds = doc.data().groupIds || [];
+        
+        // Удаляем сет-лист
         await db.collection('archive_setlists').doc(setlistId).delete();
+        
+        // Обновляем счетчики групп параллельно для скорости
+        if (groupIds.length > 0) {
+            const updatePromises = groupIds.map(groupId => 
+                updateGroupSetlistCount(groupId, -1)
+            );
+            await Promise.all(updatePromises);
+        }
+        
         logger.log('✅ Archive setlist deleted:', setlistId);
     } catch (error) {
         logger.error('❌ Error deleting archive setlist:', error);

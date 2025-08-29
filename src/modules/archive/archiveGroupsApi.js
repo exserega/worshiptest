@@ -95,32 +95,7 @@ export async function updateArchiveGroup(groupId, updates) {
     }
 }
 
-/**
- * Пересчитывает счетчики для всех групп в филиале
- * Полезно для исправления неправильных значений
- * @returns {Promise<void>}
- */
-export async function recalculateAllGroupCounts() {
-    try {
-        const user = await getCurrentUser();
-        if (!user) throw new Error('Пользователь не авторизован');
-        
-        const groupsSnapshot = await db.collection('archive_groups')
-            .where('branchId', '==', user.branchId)
-            .get();
-        
-        const updatePromises = [];
-        groupsSnapshot.forEach(doc => {
-            updatePromises.push(recalculateGroupSetlistCount(doc.id));
-        });
-        
-        await Promise.all(updatePromises);
-        logger.log('✅ Recalculated counts for all groups');
-    } catch (error) {
-        logger.error('❌ Error recalculating all group counts:', error);
-        throw error;
-    }
-}
+
 
 /**
  * Удаляет группу архива
@@ -195,41 +170,21 @@ export async function loadArchiveGroups(branchId) {
 }
 
 /**
- * Пересчитывает количество сет-листов в группе
- * Это надежный метод, который считает реальное количество сет-листов
- * @param {string} groupId - ID группы
- * @returns {Promise<void>}
- */
-export async function recalculateGroupSetlistCount(groupId) {
-    try {
-        // Считаем сколько сет-листов реально содержат эту группу
-        const snapshot = await db.collection('archive_setlists')
-            .where('groupIds', 'array-contains', groupId)
-            .where('branchId', '==', await getCurrentBranchId())
-            .get();
-        
-        const actualCount = snapshot.size;
-        
-        // Обновляем счетчик на реальное значение
-        await db.collection('archive_groups').doc(groupId).update({
-            setlistCount: actualCount,
-            updatedAt: Timestamp.now()
-        });
-    } catch (error) {
-        logger.error('❌ Error recalculating group setlist count:', error);
-    }
-}
-
-/**
- * Обновляет счетчик сет-листов в группе (устаревший метод)
- * @deprecated Используйте recalculateGroupSetlistCount для надежности
+ * Обновляет счетчик сет-листов в группе
+ * Быстрый метод с использованием инкремента
  * @param {string} groupId - ID группы
  * @param {number} delta - Изменение количества (+1 или -1)
  * @returns {Promise<void>}
  */
 export async function updateGroupSetlistCount(groupId, delta) {
-    // Вместо инкремента делаем полный пересчет для надежности
-    await recalculateGroupSetlistCount(groupId);
+    try {
+        await db.collection('archive_groups').doc(groupId).update({
+            setlistCount: FieldValue.increment(delta),
+            updatedAt: Timestamp.now()
+        });
+    } catch (error) {
+        logger.error('❌ Error updating group setlist count:', error);
+    }
 }
 
 /**
@@ -255,10 +210,13 @@ export async function addSetlistToGroups(setlistId, groupIds) {
             updatedAt: Timestamp.now()
         });
         
-        // Обновляем счетчики групп
+        // Обновляем счетчики групп параллельно
         const addedGroups = groupIds.filter(id => !currentGroupIds.includes(id));
-        for (const groupId of addedGroups) {
-            await updateGroupSetlistCount(groupId, 1);
+        if (addedGroups.length > 0) {
+            const updatePromises = addedGroups.map(groupId => 
+                updateGroupSetlistCount(groupId, 1)
+            );
+            await Promise.all(updatePromises);
         }
     } catch (error) {
         logger.error('❌ Error adding setlist to groups:', error);
@@ -289,10 +247,13 @@ export async function removeSetlistFromGroups(setlistId, groupIds) {
             updatedAt: Timestamp.now()
         });
         
-        // Обновляем счетчики групп
+        // Обновляем счетчики групп параллельно
         const removedGroups = groupIds.filter(id => currentGroupIds.includes(id));
-        for (const groupId of removedGroups) {
-            await updateGroupSetlistCount(groupId, -1);
+        if (removedGroups.length > 0) {
+            const updatePromises = removedGroups.map(groupId => 
+                updateGroupSetlistCount(groupId, -1)
+            );
+            await Promise.all(updatePromises);
         }
         
         logger.log('✅ Setlist removed from groups:', groupIds);
