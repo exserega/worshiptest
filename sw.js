@@ -1,5 +1,5 @@
-// Service Worker v501 - Archive groups management system
-const CACHE_NAME = 'agape-worship-cache-v501';
+// Service Worker v502 - Fix duplicate Firebase loading and add groups init
+const CACHE_NAME = 'agape-worship-cache-v502';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
