@@ -50,7 +50,6 @@ export async function getAllSetlists(branchId) {
         // Получаем из worship_setlists
         const worshipSnapshot = await db.collection('worship_setlists')
             .where('branchId', '==', branchId)
-            .orderBy('name')
             .get();
             
         worshipSnapshot.forEach(doc => {
@@ -64,7 +63,6 @@ export async function getAllSetlists(branchId) {
         // Получаем из archive_setlists
         const archiveSnapshot = await db.collection('archive_setlists')
             .where('branchId', '==', branchId)
-            .orderBy('name')
             .get();
             
         archiveSnapshot.forEach(doc => {
@@ -96,4 +94,36 @@ export async function getSetlistSongCount(setlistId) {
     if (!result) return 0;
     
     return result.data.songs ? result.data.songs.length : 0;
+}
+
+/**
+ * Получить только worship сет-листы для выбора (без архивных)
+ * @param {string} branchId - ID филиала
+ * @returns {Promise<Array>} - Массив сет-листов
+ */
+export async function getWorshipSetlists(branchId) {
+    try {
+        const setlists = [];
+        
+        // Получаем только из worship_setlists
+        const worshipSnapshot = await db.collection('worship_setlists')
+            .where('branchId', '==', branchId)
+            .get();
+            
+        worshipSnapshot.forEach(doc => {
+            setlists.push({
+                id: doc.id,
+                ...doc.data(),
+                source: 'worship'
+            });
+        });
+        
+        // Сортируем по имени
+        setlists.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+        
+        return setlists;
+    } catch (error) {
+        console.error('Error getting worship setlists:', error);
+        return [];
+    }
 }

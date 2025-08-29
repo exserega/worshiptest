@@ -342,17 +342,36 @@ function displayEvent() {
 }
 
 /**
+ * Получить сет-лист из любой коллекции
+ */
+async function getSetlistFromAnyCollection(setlistId) {
+    // Сначала проверяем в worship_setlists
+    let setlistDoc = await db.collection('worship_setlists').doc(setlistId).get();
+    if (setlistDoc.exists) {
+        return setlistDoc;
+    }
+    
+    // Если не нашли, проверяем в archive_setlists
+    setlistDoc = await db.collection('archive_setlists').doc(setlistId).get();
+    if (setlistDoc.exists) {
+        return setlistDoc;
+    }
+    
+    return null;
+}
+
+/**
  * Загрузка песен
  */
 async function loadSongs() {
     console.log('🎵 Загрузка песен для сетлиста:', eventData.setlistId);
     
     try {
-        // Получаем сетлист
-        const setlistDoc = await db.collection('worship_setlists').doc(eventData.setlistId).get();
+        // Получаем сетлист из любой коллекции
+        const setlistDoc = await getSetlistFromAnyCollection(eventData.setlistId);
         
-        if (!setlistDoc.exists) {
-            console.warn('⚠️ Сетлист не найден');
+        if (!setlistDoc) {
+            console.warn('⚠️ Сетлист не найден ни в одной коллекции');
             return;
         }
         

@@ -7,7 +7,7 @@ import logger from '../../utils/logger.js';
 import { createEvent, updateEvent } from './eventsApi.js';
 import { getCurrentUser } from '../auth/authCheck.js';
 import { db } from '../../utils/firebase-v8-adapter.js';
-import { getAllSetlists } from '../../utils/setlistUtils.js';
+import { getAllSetlists, getWorshipSetlists } from '../../utils/setlistUtils.js';
 
 class EventCreationModal {
     constructor() {
@@ -283,8 +283,25 @@ class EventCreationModal {
             // Инициализируем поле выбора ведущего
             this.initLeaderSelector();
             
-            // Загружаем сетлисты из обеих коллекций
-            const setlists = await getAllSetlists(user.branchId);
+            // Загружаем сетлисты 
+            // Если есть предвыбранный архивный сет-лист, загружаем все
+            // Иначе только worship_setlists
+            let setlists = [];
+            if (this.preselectedSetlistId) {
+                // Проверяем, является ли предвыбранный сет-лист архивным
+                const { getSetlistById } = await import('../../utils/setlistUtils.js');
+                const preselectedSetlist = await getSetlistById(this.preselectedSetlistId);
+                if (preselectedSetlist && preselectedSetlist.source === 'archive_setlists') {
+                    // Если архивный, загружаем все сет-листы
+                    setlists = await getAllSetlists(user.branchId);
+                } else {
+                    // Если не архивный, загружаем только worship
+                    setlists = await getWorshipSetlists(user.branchId);
+                }
+            } else {
+                // По умолчанию загружаем только worship
+                setlists = await getWorshipSetlists(user.branchId);
+            }
             
             const setlistSelect = document.getElementById('eventSetlist');
             
