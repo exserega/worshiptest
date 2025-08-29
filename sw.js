@@ -1,5 +1,5 @@
-// Service Worker v509 - Implement reliable setlistCount system
-const CACHE_NAME = 'agape-worship-cache-v509';
+// Service Worker v510 - Fix duplicate function declaration
+const CACHE_NAME = 'agape-worship-cache-v510';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
