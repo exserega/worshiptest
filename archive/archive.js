@@ -159,19 +159,27 @@ window.loadArchiveData = loadArchiveData;
 async function loadBranchUsers() {
     try {
         const { db } = await import('../firebase-init.js');
+        
+        logger.log('Loading users for branch:', currentUser.branchId);
+        
         const usersSnapshot = await db.collection('users')
             .where('branchId', '==', currentUser.branchId)
             .get();
+        
+        logger.log('Users found in branch:', usersSnapshot.size);
         
         branchUsers = [];
         const userIds = new Set();
         
         // Собираем уникальных создателей из сет-листов
         archiveSetlists.forEach(setlist => {
-            if (setlist.createdBy?.uid) {
-                userIds.add(setlist.createdBy.uid);
+            if (setlist.createdBy) {
+                // createdBy - это строка с uid, а не объект
+                userIds.add(setlist.createdBy);
             }
         });
+        
+        logger.log('Unique creators found:', userIds.size);
         
         // Загружаем информацию о пользователях
         usersSnapshot.forEach(doc => {
@@ -180,10 +188,12 @@ async function loadBranchUsers() {
                 branchUsers.push({
                     id: doc.id,
                     name: userData.displayName || userData.email || 'Неизвестный',
-                    setlistCount: archiveSetlists.filter(s => s.createdBy?.uid === doc.id).length
+                    setlistCount: archiveSetlists.filter(s => s.createdBy === doc.id).length
                 });
             }
         });
+        
+        logger.log('Branch users with setlists:', branchUsers);
         
         // Сортируем по алфавиту
         branchUsers.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
@@ -440,7 +450,7 @@ function applyFiltersAndSort() {
     if (currentSort.startsWith('user-')) {
         // Сортировка по пользователю
         const userId = currentSort.replace('user-', '');
-        filteredSetlists = filteredSetlists.filter(s => s.createdBy?.uid === userId);
+        filteredSetlists = filteredSetlists.filter(s => s.createdBy === userId);
         filteredSetlists.sort((a, b) => {
             const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
             const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;

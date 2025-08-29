@@ -1,5 +1,5 @@
-// Service Worker v521 - Sort users alphabetically in filters
-const CACHE_NAME = 'agape-worship-cache-v521';
+// Service Worker v522 - Fix user loading for archive filters
+const CACHE_NAME = 'agape-worship-cache-v522';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
