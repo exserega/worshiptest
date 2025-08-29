@@ -104,6 +104,12 @@ async function initializePage() {
 function initializeElements() {
     elements.searchInput = document.getElementById('archive-search');
     elements.groupsList = document.getElementById('groups-list');
+    
+    // Перемещаем кнопку добавления группы в начало списка
+    const addGroupBtn = document.getElementById('add-group-btn');
+    if (addGroupBtn && elements.groupsList) {
+        elements.groupsList.insertBefore(addGroupBtn, elements.groupsList.firstChild);
+    }
     elements.setlistsContainer = document.getElementById('archive-setlists');
     elements.emptyState = document.getElementById('empty-state');
     elements.loadingIndicator = document.getElementById('loading-indicator');
@@ -339,7 +345,14 @@ window.selectGroup = function(groupId) {
  * Отрисовка групп
  */
 function renderGroups() {
+    // Сохраняем кнопку добавления группы
+    const addGroupBtn = document.getElementById('add-group-btn');
     elements.groupsList.innerHTML = '';
+    
+    // Возвращаем кнопку добавления группы в начало
+    if (addGroupBtn) {
+        elements.groupsList.appendChild(addGroupBtn);
+    }
     
     // Сортируем группы по алфавиту (убираем эмодзи для сортировки)
     const sortedGroups = [...archiveGroups].sort((a, b) => {

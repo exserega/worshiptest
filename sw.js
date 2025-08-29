@@ -1,5 +1,5 @@
-// Service Worker v516 - Add advanced sorting system with user filters
-const CACHE_NAME = 'agape-worship-cache-v516';
+// Service Worker v517 - Compact filter design with dual rows
+const CACHE_NAME = 'agape-worship-cache-v517';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

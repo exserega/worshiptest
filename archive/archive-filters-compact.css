@@ -1,0 +1,244 @@
+/* Компактные стили для фильтров архива */
+
+/* Общие стили для строк фильтров */
+.archive-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-secondary, #1f2937);
+}
+
+.archive-filter-row.groups {
+    border-bottom: 1px solid var(--border-color, #374151);
+}
+
+/* Кнопка списка (слева от прокрутки) */
+.list-btn {
+    width: 28px;
+    height: 28px;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 6px;
+    color: var(--text-secondary, #9ca3af) !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    padding: 0;
+    font-size: 0.75rem;
+}
+
+.list-btn:hover {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white !important;
+}
+
+/* Обертка для прокрутки */
+.scroll-wrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 4px;
+    overflow: hidden;
+}
+
+/* Контейнер прокрутки */
+.scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex: 1;
+}
+
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Контейнер для элементов */
+.filter-items {
+    display: flex;
+    gap: 6px;
+    padding: 2px;
+    white-space: nowrap;
+}
+
+/* Стрелки прокрутки */
+.scroll-arrow {
+    width: 20px;
+    height: 20px;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 4px;
+    color: var(--text-secondary, #9ca3af);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    padding: 0;
+    font-size: 0.5rem;
+}
+
+.scroll-arrow:hover:not(:disabled) {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white;
+}
+
+.scroll-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Кнопка добавления группы */
+.add-group-btn {
+    height: 28px;
+    padding: 0 10px;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 6px;
+    color: var(--text-secondary, #9ca3af) !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.add-group-btn:hover {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white !important;
+}
+
+.add-group-btn span {
+    font-weight: 500;
+}
+
+/* Чипы групп */
+.group-chip {
+    height: 28px;
+    padding: 0 10px;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 16px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.group-chip:hover {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: var(--primary-color, #22d3ee);
+    transform: translateY(-1px);
+}
+
+.group-chip.active {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white;
+}
+
+.group-chip.active .group-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.group-icon {
+    font-size: 0.875rem;
+}
+
+.group-count {
+    font-size: 0.625rem;
+    background: var(--bg-quaternary, #0f172a);
+    padding: 1px 5px;
+    border-radius: 10px;
+    color: var(--text-secondary, #9ca3af);
+}
+
+/* Кнопки сортировки */
+.sort-btn {
+    height: 28px;
+    padding: 0 10px;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary, #9ca3af);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.sort-btn:hover {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: var(--primary-color, #22d3ee);
+    color: var(--primary-color, #22d3ee);
+}
+
+.sort-btn.active {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white;
+}
+
+/* Скрываем старые стили */
+.archive-groups-section,
+.archive-sort-section {
+    display: block !important;
+}
+
+.groups-header,
+.sort-header,
+.groups-label,
+.sort-label,
+.list-groups-label {
+    display: none !important;
+}
+
+/* Уменьшаем отступы wrapper */
+.archive-filters-wrapper {
+    padding: 0 !important;
+    margin-bottom: 8px;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    .archive-filter-row {
+        padding: 4px 8px;
+    }
+    
+    .list-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.625rem;
+    }
+    
+    .scroll-arrow {
+        width: 18px;
+        height: 18px;
+        font-size: 0.45rem;
+    }
+    
+    .group-chip,
+    .sort-btn,
+    .add-group-btn {
+        height: 24px;
+        font-size: 0.7rem;
+        padding: 0 8px;
+    }
+}
