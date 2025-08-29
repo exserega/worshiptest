@@ -849,23 +849,117 @@ window.addToCalendar = async function(setlistId) {
             return;
         }
         
-        // Динамически импортируем модуль создания событий
-        const { getEventModal } = await import('../src/modules/events/eventModal.js');
+        // Динамически импортируем модуль выбора даты
+        const { getDatePickerModal } = await import('../src/modules/integration/datePickerModal.js');
+        const datePickerModal = getDatePickerModal();
         
-        // Открываем модальное окно создания события с предустановленным сет-листом
-        const modal = getEventModal();
-        modal.openForCreate((newEvent) => {
-            console.log('✅ Событие создано:', newEvent);
-            alert('Событие успешно создано!');
-        }, setlistId); // Передаем ID сет-листа
+        // Подготавливаем данные сет-листа для передачи
+        const setlistData = {
+            id: setlist.id,
+            name: setlist.name,
+            songs: setlist.songs || []
+        };
         
-        console.log('✅ Модальное окно создания события открыто');
+        // Открываем модальное окно выбора даты
+        datePickerModal.open(setlistData, async (selectedDate, setlistData) => {
+            console.log('📅 Выбрана дата:', selectedDate, 'для сет-листа:', setlistData.name);
+            
+            let events = [];
+            
+            // Проверяем события на выбранную дату
+            try {
+                const { checkEventsOnDate, getEventsDescription } = await import('../src/modules/integration/eventChecker.js');
+                
+                events = await checkEventsOnDate(selectedDate);
+                console.log('📅 Результат проверки:', events);
+                
+                // Показываем информацию о найденных событиях
+                const description = getEventsDescription(events);
+                showTemporaryNotification(`📅 ${description}`);
+                
+                // Обрабатываем результат
+                if (events.length === 0) {
+                    // Нет событий - создаем новое
+                    await handleCreateNewEvent(selectedDate, setlistData);
+                } else if (events.length === 1) {
+                    // Одно событие - показываем выбор действия
+                    const event = events[0];
+                    await handleSingleEvent(event, setlistData, selectedDate);
+                } else {
+                    // Несколько событий - показываем выбор
+                    await handleMultipleEvents(events, selectedDate, setlistData);
+                }
+            } catch (error) {
+                console.error('❌ Ошибка при проверке событий:', error);
+                alert('Ошибка при проверке событий');
+            }
+        });
         
     } catch (error) {
         console.error('❌ Ошибка открытия календаря:', error);
         alert('Ошибка при открытии календаря: ' + error.message);
     }
 };
+
+/**
+ * Обработка создания нового события
+ */
+async function handleCreateNewEvent(selectedDate, setlistData) {
+    console.log('📅 Открываем создание нового события для даты:', selectedDate);
+    
+    try {
+        const EventCreationModal = (await import('../src/modules/events/eventCreationModal.js')).default;
+        const newModal = new EventCreationModal();
+        
+        // Открываем модальное окно с датой и предвыбранным сет-листом
+        newModal.open(new Date(selectedDate), async (eventId) => {
+            console.log('✅ Событие создано:', eventId);
+            showTemporaryNotification('✅ Событие успешно создано!');
+        }, setlistData.id);
+        
+    } catch (error) {
+        console.error('❌ Ошибка при открытии модального окна:', error);
+        alert('Ошибка при открытии окна создания события');
+    }
+}
+
+/**
+ * Обработка случая с одним событием
+ */
+async function handleSingleEvent(event, setlistData, selectedDate) {
+    const { getEventActionModal } = await import('../src/modules/integration/eventActionModal.js');
+    const actionModal = getEventActionModal();
+    
+    actionModal.show(event, setlistData, async (action) => {
+        if (action === 'replace') {
+            // Заменяем сет-лист
+            const { updateEventSetlist } = await import('../src/modules/events/eventsApi.js');
+            await updateEventSetlist(event.id, setlistData.id);
+            showTemporaryNotification('✅ Сет-лист события обновлен');
+        } else if (action === 'create') {
+            // Создаем новое событие
+            await handleCreateNewEvent(selectedDate, setlistData);
+        }
+    });
+}
+
+/**
+ * Обработка случая с несколькими событиями
+ */
+async function handleMultipleEvents(events, selectedDate, setlistData) {
+    const { getEventSelectorModal } = await import('../src/modules/integration/eventSelectorModal.js');
+    const selectorModal = getEventSelectorModal();
+    
+    selectorModal.show(events, selectedDate, async (selectedEvent) => {
+        if (selectedEvent) {
+            // Выбрано конкретное событие
+            await handleSingleEvent(selectedEvent, setlistData, selectedDate);
+        } else {
+            // Создать новое событие
+            await handleCreateNewEvent(selectedDate, setlistData);
+        }
+    });
+}
 
 /**
  * Добавление в группу
