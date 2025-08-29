@@ -1,5 +1,5 @@
-// Service Worker v530 - Full calendar integration with date picker
-const CACHE_NAME = 'agape-worship-cache-v530';
+// Service Worker v531 - Fix calendar modal styles paths
+const CACHE_NAME = 'agape-worship-cache-v531';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
