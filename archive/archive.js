@@ -1576,28 +1576,48 @@ async function launchArchivePlayer(setlistId) {
         return;
     }
     
-    // Загружаем песни, если они еще не загружены
-    const songsContainer = document.querySelector(`#songs-${setlistId}`);
-    if (songsContainer && !songsContainer.dataset.loaded) {
-        await loadSetlistSongs(setlistId, songsContainer);
-    }
-    
-    // Получаем песни из контейнера
-    const songElements = songsContainer.querySelectorAll('.archive-song-item');
-    const songs = Array.from(songElements).map(el => ({
-        id: el.dataset.songId,
-        name: el.querySelector('.song-name').textContent,
-        key: el.dataset.key || 'C',
-        tempo: el.dataset.tempo || '120',
-        time_signature: el.dataset.timeSignature || '4/4'
-    }));
-    
-    if (songs.length === 0) {
-        alert('В сет-листе нет песен');
-        return;
-    }
-    
+    // Загружаем полные данные песен для плеера
     try {
+        const sortedSongs = [...setlist.songs].sort((a, b) => (a.order || 0) - (b.order || 0));
+        const songIds = sortedSongs
+            .map(s => s.songId)
+            .filter(id => id);
+            
+        if (songIds.length === 0) {
+            alert('В сет-листе нет песен');
+            return;
+        }
+        
+        // Загружаем полные данные песен из Firestore
+        const { db } = await import('../firebase-init.js');
+        const songsSnapshot = await db.collection('songs')
+            .where(window.firebase.firestore.FieldPath.documentId(), 'in', songIds)
+            .get();
+        
+        const songsMap = new Map();
+        songsSnapshot.forEach(doc => {
+            songsMap.set(doc.id, { id: doc.id, ...doc.data() });
+        });
+        
+        // Формируем массив песен с полными данными для плеера
+        const songs = sortedSongs
+            .map(songRef => {
+                const song = songsMap.get(songRef.songId);
+                if (!song) return null;
+                
+                // Добавляем preferredKey из сет-листа
+                return {
+                    ...song,
+                    preferredKey: songRef.preferredKey || song['Оригинальная тональность'] || 'C'
+                };
+            })
+            .filter(song => song !== null);
+            
+        if (songs.length === 0) {
+            alert('Не удалось загрузить песни');
+            return;
+        }
+        
         // Скрываем скролл на основной странице
         document.body.style.overflow = 'hidden';
         
@@ -1607,9 +1627,11 @@ async function launchArchivePlayer(setlistId) {
         // Открываем плеер с песнями (null вместо eventId)
         await openEventPlayer(null, songs, 0);
         
-        console.log('✅ Плеер открыт');
+        console.log('✅ Плеер открыт для архивного сет-листа:', setlistId);
+        console.log('📋 Передано песен:', songs.length);
+        
     } catch (error) {
-        console.error('❌ Ошибка открытия плеера:', error);
+        console.error('❌ Ошибка загрузки/открытия плеера:', error);
         alert('Ошибка при открытии плеера');
         document.body.style.overflow = '';
     }

@@ -1,5 +1,5 @@
-// Service Worker v524 - Add setlist viewer button to archive
-const CACHE_NAME = 'agape-worship-cache-v524';
+// Service Worker v525 - Fix player data loading and styles
+const CACHE_NAME = 'agape-worship-cache-v525';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
