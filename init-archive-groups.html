@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инициализация групп архива - Agape Worship</title>
+    
+    <!-- Firebase v8 SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #111827;
+            color: #e5e7eb;
+        }
+        h1 {
+            color: #22d3ee;
+            text-align: center;
+        }
+        .info {
+            background: #1f2937;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid #374151;
+        }
+        .info h2 {
+            color: #22d3ee;
+            margin-top: 0;
+        }
+        .console {
+            background: #0f172a;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #374151;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            background: #22d3ee;
+            color: #111827;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .secondary {
+            background: #374151;
+            color: #e5e7eb;
+        }
+        .error {
+            color: #ef4444;
+        }
+        .success {
+            color: #10b981;
+        }
+        .warning {
+            color: #f59e0b;
+        }
+        code {
+            background: #374151;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Инициализация групп архива</h1>
+    
+    <div class="info">
+        <h2>Что делает этот скрипт:</h2>
+        <ul>
+            <li>Создает коллекцию <code>archive_groups</code> в Firestore</li>
+            <li>Добавляет 6 примеров групп с иконками и цветами:
+                <ul>
+                    <li>🎄 Рождественские</li>
+                    <li>🐣 Пасхальные</li>
+                    <li>🙏 Поклонение</li>
+                    <li>🎸 Молодежные</li>
+                    <li>🌈 Детские</li>
+                    <li>🎉 Особые события</li>
+                </ul>
+            </li>
+            <li>Привязывает группы к вашему филиалу</li>
+            <li>Проверяет дубликаты перед созданием</li>
+        </ul>
+        
+        <h2>Перед запуском:</h2>
+        <ol>
+            <li>Убедитесь, что вы авторизованы в системе</li>
+            <li>У вас должен быть выбран филиал</li>
+            <li>У вас должны быть права на создание (не guest/pending статус)</li>
+            <li>Создайте индекс Firestore по ссылке из консоли ошибок</li>
+        </ol>
+    </div>
+    
+    <div class="buttons">
+        <button id="run-init" onclick="runInitialization()">🚀 Запустить инициализацию</button>
+        <button class="secondary" onclick="window.location.href='/archive/'">← Вернуться в архив</button>
+    </div>
+    
+    <h3>Консоль:</h3>
+    <div class="console" id="console">Ожидание загрузки...</div>
+    
+    <!-- Firebase init -->
+    <script type="module" src="./firebase-init.js"></script>
+    
+    <script type="module">
+        import { initAuthGate, getCurrentUser } from './src/modules/auth/authCheck.js';
+        import { db } from './firebase-init.js';
+        
+        const Timestamp = window.firebase.firestore.Timestamp;
+        
+        // Перехватываем console.log для отображения в UI
+        const consoleDiv = document.getElementById('console');
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function addToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'warning' ? 'warning' : type === 'success' ? 'success' : '';
+            consoleDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+        
+        // Начальные группы для создания
+        const initialGroups = [
+            {
+                name: 'Рождественские',
+                color: '#ef4444',
+                icon: '🎄',
+            },
+            {
+                name: 'Пасхальные',
+                color: '#f59e0b',
+                icon: '🐣',
+            },
+            {
+                name: 'Поклонение',
+                color: '#22c55e',
+                icon: '🙏',
+            },
+            {
+                name: 'Молодежные',
+                color: '#3b82f6',
+                icon: '🎸',
+            },
+            {
+                name: 'Детские',
+                color: '#a855f7',
+                icon: '🌈',
+            },
+            {
+                name: 'Особые события',
+                color: '#ec4899',
+                icon: '🎉',
+            }
+        ];
+        
+        // Проверяем авторизацию при загрузке
+        window.addEventListener('load', async () => {
+            consoleDiv.innerHTML = '';
+            addToConsole('Проверка авторизации...');
+            
+            const authPassed = await initAuthGate({
+                requireAuth: true,
+                requireBranch: true,
+                requireAdmin: false
+            });
+            
+            if (!authPassed) {
+                addToConsole('Требуется авторизация и выбранный филиал', 'error');
+                document.getElementById('run-init').disabled = true;
+            } else {
+                const user = getCurrentUser();
+                addToConsole('Готово к инициализации', 'success');
+                addToConsole(`Пользователь: ${user.email}`);
+                addToConsole(`Филиал: ${user.branchId}`);
+                addToConsole(`Роль: ${user.role}`);
+                
+                if (user.status === 'pending' || user.role === 'guest') {
+                    addToConsole('У вас недостаточно прав для создания групп', 'warning');
+                    document.getElementById('run-init').disabled = true;
+                }
+            }
+        });
+        
+        window.runInitialization = async function() {
+            const btn = document.getElementById('run-init');
+            btn.disabled = true;
+            btn.textContent = '⏳ Выполняется...';
+            
+            try {
+                addToConsole('\n🚀 Начинаем инициализацию групп архива...');
+                
+                const user = getCurrentUser();
+                if (!user || !user.branchId) {
+                    throw new Error('Пользователь не авторизован или не выбран филиал');
+                }
+                
+                // Проверяем существующие группы
+                const existingGroups = await db.collection('archive_groups')
+                    .where('branchId', '==', user.branchId)
+                    .get();
+                
+                if (!existingGroups.empty) {
+                    addToConsole(`В филиале уже есть ${existingGroups.size} групп`, 'warning');
+                    const confirm = window.confirm('В вашем филиале уже есть группы. Добавить дополнительные примеры?');
+                    if (!confirm) {
+                        addToConsole('Отменено пользователем', 'warning');
+                        btn.textContent = '🚀 Запустить инициализацию';
+                        btn.disabled = false;
+                        return;
+                    }
+                }
+                
+                // Создаем группы
+                let created = 0;
+                for (const groupData of initialGroups) {
+                    try {
+                        // Проверяем, нет ли уже группы с таким именем
+                        const existing = await db.collection('archive_groups')
+                            .where('branchId', '==', user.branchId)
+                            .where('name', '==', groupData.name)
+                            .get();
+                        
+                        if (!existing.empty) {
+                            addToConsole(`Группа "${groupData.name}" уже существует, пропускаем`, 'warning');
+                            continue;
+                        }
+                        
+                        const docRef = await db.collection('archive_groups').add({
+                            ...groupData,
+                            branchId: user.branchId,
+                            createdBy: user.uid,
+                            createdAt: Timestamp.now(),
+                            updatedAt: Timestamp.now(),
+                            setlistCount: 0
+                        });
+                        
+                        addToConsole(`✅ Создана группа "${groupData.icon} ${groupData.name}" с ID: ${docRef.id}`, 'success');
+                        created++;
+                    } catch (error) {
+                        addToConsole(`Ошибка при создании группы "${groupData.name}": ${error.message}`, 'error');
+                    }
+                }
+                
+                addToConsole(`\n🎉 Инициализация завершена! Создано групп: ${created}`, 'success');
+                
+                if (created > 0) {
+                    alert(`Успешно создано ${created} групп для архива!`);
+                    setTimeout(() => {
+                        window.location.href = '/archive/';
+                    }, 2000);
+                }
+                
+            } catch (error) {
+                addToConsole(`Ошибка инициализации: ${error.message}`, 'error');
+                alert('Ошибка при создании групп: ' + error.message);
+            } finally {
+                btn.textContent = '✅ Готово';
+                setTimeout(() => {
+                    btn.textContent = '🚀 Запустить инициализацию';
+                    btn.disabled = false;
+                }, 3000);
+            }
+        };
+    </script>
+</body>
+</html>
