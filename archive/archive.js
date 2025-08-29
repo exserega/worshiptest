@@ -1026,7 +1026,9 @@ function setupGroupsScrollArrows() {
         if (window.innerWidth <= 480) {
             const scrollLeft = scrollContainer.scrollLeft;
             const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            const section = scrollContainer.closest('.archive-groups-section');
+            const section = scrollContainer.closest('.archive-filter-row');
+            
+            if (!section) return;
             
             // Левая стрелочка - показываем если можно скролить влево
             if (scrollLeft > 5) {

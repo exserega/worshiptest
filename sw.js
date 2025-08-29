@@ -1,5 +1,5 @@
-// Service Worker v517 - Compact filter design with dual rows
-const CACHE_NAME = 'agape-worship-cache-v517';
+// Service Worker v518 - Fix scrolling selectors for new filter structure
+const CACHE_NAME = 'agape-worship-cache-v518';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
