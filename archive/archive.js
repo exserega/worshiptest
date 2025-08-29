@@ -185,8 +185,8 @@ async function loadBranchUsers() {
             }
         });
         
-        // Сортируем по количеству сет-листов
-        branchUsers.sort((a, b) => b.setlistCount - a.setlistCount);
+        // Сортируем по алфавиту
+        branchUsers.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
         
         // Обновляем кнопки сортировки
         renderSortButtons();

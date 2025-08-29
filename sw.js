@@ -1,5 +1,5 @@
-// Service Worker v520 - Fix add group button width and border positioning
-const CACHE_NAME = 'agape-worship-cache-v520';
+// Service Worker v521 - Sort users alphabetically in filters
+const CACHE_NAME = 'agape-worship-cache-v521';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
