@@ -3,13 +3,13 @@
  */
 
 import logger from '../../utils/logger.js';
+import { getCurrentUser } from '../auth/authCheck.js';
 import { 
     createArchiveGroup, 
     updateArchiveGroup, 
     deleteArchiveGroup,
     loadArchiveGroups 
 } from './archiveGroupsApi.js';
-import { getCurrentUser } from '../auth/authCheck.js';
 
 
 
@@ -49,9 +49,12 @@ class ArchiveGroupsManager {
      */
     async loadGroups() {
         try {
+            // Обновляем текущего пользователя
+            this.currentUser = await getCurrentUser();
+            
             if (!this.currentUser?.branchId) {
                 logger.error('No branch ID for loading groups');
-                return;
+                return [];
             }
             
             this.groups = await loadArchiveGroups(this.currentUser.branchId);
@@ -60,8 +63,11 @@ class ArchiveGroupsManager {
             if (this.onGroupsChange) {
                 this.onGroupsChange(this.groups);
             }
+            return this.groups;
         } catch (error) {
             logger.error('Error loading groups:', error);
+            this.groups = [];
+            return [];
         }
     }
     

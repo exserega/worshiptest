@@ -1,5 +1,5 @@
-// Service Worker v513 - Fix loadArchiveData to properly reload all data
-const CACHE_NAME = 'agape-worship-cache-v513';
+// Service Worker v514 - Fix getCurrentUser error in archiveGroupsManager
+const CACHE_NAME = 'agape-worship-cache-v514';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
