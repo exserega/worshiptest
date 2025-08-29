@@ -1243,6 +1243,14 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
             logger.log('📅 Кнопка "В календарь" скрыта - недостаточно прав');
         }
     }
+    
+    // Показываем/скрываем кнопку "Сохранить в архив"
+    const saveToArchiveBtn = document.getElementById('save-to-archive-btn');
+    if (saveToArchiveBtn) {
+        // Показываем для всех авторизованных пользователей
+        saveToArchiveBtn.style.display = 'flex';
+        logger.log('📦 Кнопка "Сохранить в архив" показана');
+    }
 
     // Обновляем счетчик песен в новом блоке управления
     const songsCount = setlist.songs ? setlist.songs.length : 0;

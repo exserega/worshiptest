@@ -1114,3 +1114,36 @@ window.addSetlistToCalendar = async function(setlistId) {
 };
 
 // ОБРАБОТЧИКИ ПАНЕЛЕЙ ТЕПЕРЬ В event-handlers.js - МОДУЛЬНО И ПРАВИЛЬНО!
+
+// Обработчик для кнопки "Сохранить в архив"
+document.addEventListener('DOMContentLoaded', () => {
+    const saveToArchiveBtn = document.getElementById('save-to-archive-btn');
+    if (saveToArchiveBtn) {
+        saveToArchiveBtn.addEventListener('click', async () => {
+            logger.log('📦 Клик по кнопке "Сохранить в архив"');
+            
+            // Получаем текущий выбранный сет-лист
+            const selectedSetlist = window.selectedSetlist;
+            if (!selectedSetlist) {
+                window.showNotification('Сначала выберите сет-лист', 'warning');
+                return;
+            }
+            
+            try {
+                // Динамически импортируем модуль
+                const { getArchiveSaveModal } = await import('./src/modules/archive/archiveSaveModal.js');
+                const modal = getArchiveSaveModal();
+                
+                // Открываем модальное окно
+                modal.open(selectedSetlist, (archiveId) => {
+                    window.showNotification('✅ Сет-лист сохранен в архив', 'success');
+                    logger.log('✅ Сет-лист сохранен в архив с ID:', archiveId);
+                });
+                
+            } catch (error) {
+                logger.error('❌ Ошибка при открытии модального окна:', error);
+                window.showNotification('Ошибка при сохранении в архив', 'error');
+            }
+        });
+    }
+});

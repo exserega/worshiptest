@@ -1,5 +1,5 @@
-// Service Worker v539 - Fix updateEventSetlist function name
-const CACHE_NAME = 'agape-worship-cache-v539';
+// Service Worker v540 - Add save to archive functionality
+const CACHE_NAME = 'agape-worship-cache-v540';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
