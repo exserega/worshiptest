@@ -1,5 +1,5 @@
-// Service Worker v511 - Optimize setlistCount system and fix deletion
-const CACHE_NAME = 'agape-worship-cache-v511';
+// Service Worker v512 - Fix dynamic updates after creation and deletion
+const CACHE_NAME = 'agape-worship-cache-v512';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

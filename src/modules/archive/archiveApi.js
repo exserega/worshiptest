@@ -118,10 +118,15 @@ export async function deleteArchiveSetlist(setlistId) {
         
         // Обновляем счетчики групп параллельно для скорости
         if (groupIds.length > 0) {
-            const updatePromises = groupIds.map(groupId => 
-                updateGroupSetlistCount(groupId, -1)
-            );
-            await Promise.all(updatePromises);
+            try {
+                const updatePromises = groupIds.map(groupId => 
+                    updateGroupSetlistCount(groupId, -1)
+                );
+                await Promise.all(updatePromises);
+            } catch (updateError) {
+                // Логируем ошибку, но не прерываем удаление
+                logger.error('Error updating group counts:', updateError);
+            }
         }
         
         logger.log('✅ Archive setlist deleted:', setlistId);

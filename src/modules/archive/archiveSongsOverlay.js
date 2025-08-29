@@ -917,17 +917,26 @@ class ArchiveSongsOverlay {
         this.addedSongs.clear();
         this.updateCounters();
         
-        // Обновляем конкретную карточку сет-листа, если она развернута
+        // Обновляем список или конкретную карточку
         if (this.setlistId) {
             logger.log('🔄 Attempting to update setlist card:', this.setlistId);
-            if (window.updateSetlistCard) {
-                logger.log('✅ updateSetlistCard function found, calling it...');
+            
+            // Проверяем, был ли это только что созданный сет-лист
+            const isNewSetlist = window.currentCreatedSetlistId === this.setlistId;
+            
+            if (isNewSetlist && window.loadArchiveData) {
+                logger.log('🆕 This is a newly created setlist, reloading all data...');
+                await window.loadArchiveData();
+                // Очищаем флаг нового сет-листа
+                window.currentCreatedSetlistId = null;
+            } else if (window.updateSetlistCard) {
+                logger.log('✅ Updating existing setlist card...');
                 await window.updateSetlistCard(this.setlistId);
             } else {
-                logger.error('❌ window.updateSetlistCard function not found!');
+                logger.error('❌ No update functions found!');
             }
         } else {
-            logger.log('ℹ️ No setlistId, skipping card update');
+            logger.log('ℹ️ No setlistId, skipping update');
         }
         
         logger.log('✅ Songs overlay closed');
