@@ -920,15 +920,12 @@ class ArchiveSongsOverlay {
         // Всегда обновляем весь список при закрытии оверлея
         // Это гарантирует, что новые сет-листы появятся
         if (window.loadArchiveData) {
-            logger.log('🔄 Reloading archive data...');
             await window.loadArchiveData();
             
             // Очищаем флаг нового сет-листа если он есть
             if (window.currentCreatedSetlistId === this.setlistId) {
                 window.currentCreatedSetlistId = null;
             }
-        } else {
-            logger.error('❌ window.loadArchiveData not found!');
         }
         
         logger.log('✅ Songs overlay closed');

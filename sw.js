@@ -1,5 +1,5 @@
-// Service Worker v514 - Fix getCurrentUser error in archiveGroupsManager
-const CACHE_NAME = 'agape-worship-cache-v514';
+// Service Worker v515 - Fix setlist card size and remove debug logs
+const CACHE_NAME = 'agape-worship-cache-v515';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

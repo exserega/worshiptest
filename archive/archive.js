@@ -117,28 +117,20 @@ async function loadArchiveData() {
     showLoading(true);
     
     try {
-        logger.log('🔄 Starting full archive data reload...');
-        
         // Загружаем группы
-        logger.log('📁 Loading groups...');
         archiveGroups = await archiveGroupsManager.loadGroups();
-        logger.log(`✅ Loaded ${archiveGroups.length} groups`);
         
         // Отрисовываем группы
         renderGroups();
         
         // Загружаем архивные сет-листы
-        logger.log(`🔍 Loading archive setlists for branch: ${currentUser.branchId}`);
         archiveSetlists = await loadArchiveSetlists(currentUser.branchId);
-        logger.log(`📚 Loaded ${archiveSetlists.length} archive setlists`);
         
         // Применяем фильтры и сортировку
         applyFiltersAndSort();
         
         // Обновляем состояние пустого списка
         updateEmptyState();
-        
-        logger.log('✅ Archive data reload completed');
         
     } catch (error) {
         logger.error('Error loading archive data:', error);
@@ -160,7 +152,7 @@ function updateEmptyState() {
         elements.setlistsContainer.style.display = 'none';
     } else {
         elements.emptyState.style.display = 'none';
-        elements.setlistsContainer.style.display = 'grid';
+        elements.setlistsContainer.style.display = '';
     }
 }
 
@@ -783,15 +775,11 @@ window.deleteSetlist = async function(setlistId) {
     
     try {
         showLoading(true);
-        logger.log('🗑️ Starting deletion of setlist:', setlistId);
         
         await deleteArchiveSetlist(setlistId);
-        logger.log('✅ Setlist deleted from database');
         
         // Перезагружаем данные
-        logger.log('🔄 Reloading archive data after deletion...');
         await loadArchiveData();
-        logger.log('✅ Archive data reloaded');
         
         showNotification('Сет-лист успешно удален');
     } catch (error) {
