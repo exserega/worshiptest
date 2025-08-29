@@ -201,8 +201,8 @@ html, body {
 }
 
 .add-group-btn {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 6px;
@@ -216,7 +216,7 @@ html, body {
 }
 
 .add-group-btn i {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,15 +236,15 @@ html, body {
 }
 
 .list-groups-btn {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 6px;
     color: var(--text-secondary, #9ca3af) !important;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
     justify-content: center;

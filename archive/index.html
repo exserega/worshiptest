@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="archive-page.css?v=504">
     <link rel="stylesheet" href="archive-groups-modal.css?v=504">
     <link rel="stylesheet" href="archive-animations.css?v=504">
+    <link rel="stylesheet" href="archive-sorts.css?v=515">
     
     <!-- Firebase init module -->
     <script type="module" src="../firebase-init.js"></script>
@@ -98,12 +99,28 @@
         
         <!-- Сортировка -->
         <div class="archive-sort-section">
-            <span class="sort-label">Сортировка:</span>
-            <div class="sort-buttons">
-                <button class="sort-btn active" data-sort="name">А-Я</button>
-                <button class="sort-btn" data-sort="date">Новые</button>
-                <button class="sort-btn" data-sort="date-old">Старые</button>
-                <button class="sort-btn" data-sort="popular">Популярные</button>
+            <div class="sort-header">
+                <span class="sort-label">Сортировка:</span>
+                <button class="list-sorts-btn" id="list-sorts-btn" title="Все сортировки">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+            <div class="sorts-scroll-wrapper">
+                <button class="sorts-scroll-arrow left" id="sorts-scroll-left">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="sorts-scroll-container" id="sorts-scroll-container">
+                    <div class="sort-buttons" id="sort-buttons">
+                        <button class="sort-btn active" data-sort="name">А-Я</button>
+                        <button class="sort-btn" data-sort="date">Новые</button>
+                        <button class="sort-btn" data-sort="date-old">Старые</button>
+                        <button class="sort-btn" data-sort="popular">Популярные</button>
+                        <!-- Динамически добавляемые сортировки по пользователям -->
+                    </div>
+                </div>
+                <button class="sorts-scroll-arrow right" id="sorts-scroll-right">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
         </div>
@@ -266,6 +283,22 @@
                     <i class="fas fa-plus"></i>
                     <span>Создать группу</span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно списка всех сортировок -->
+    <div id="sorts-list-modal" class="group-modal-overlay">
+        <div class="group-modal-content sorts-list-modal">
+            <div class="group-modal-header">
+                <h3>Все сортировки</h3>
+                <button class="group-modal-close" id="sorts-list-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="sorts-list-container" id="sorts-list-container">
+                <!-- Список сортировок будет добавлен динамически -->
             </div>
         </div>
     </div>

@@ -21,6 +21,7 @@ let filteredSetlists = [];
 let archiveGroups = [];
 let selectedGroupId = null; // null означает показать все
 let currentSort = 'name';
+let branchUsers = []; // Пользователи филиала для сортировки
 
 // DOM элементы
 const elements = {
@@ -31,7 +32,10 @@ const elements = {
     loadingIndicator: null,
     createBtn: null,
     addGroupBtn: null,
-    sortButtons: null
+    sortButtons: null,
+    sortsContainer: null,
+    sortButtonsContainer: null,
+    listSortsBtn: null
 };
 
 // Глобальные переменные для синхронизации создания сет-листа
@@ -106,6 +110,9 @@ function initializeElements() {
     elements.createBtn = document.getElementById('create-archive-setlist');
     elements.addGroupBtn = document.getElementById('add-group-btn');
     elements.sortButtons = document.querySelectorAll('.sort-btn');
+    elements.sortsContainer = document.getElementById('sorts-scroll-container');
+    elements.sortButtonsContainer = document.getElementById('sort-buttons');
+    elements.listSortsBtn = document.getElementById('list-sorts-btn');
     elements.filterToggle = document.getElementById('filter-toggle');
     elements.filtersWrapper = document.getElementById('filters-wrapper');
 }
@@ -126,6 +133,9 @@ async function loadArchiveData() {
         // Загружаем архивные сет-листы
         archiveSetlists = await loadArchiveSetlists(currentUser.branchId);
         
+        // Загружаем пользователей филиала
+        await loadBranchUsers();
+        
         // Применяем фильтры и сортировку
         applyFiltersAndSort();
         
@@ -142,6 +152,49 @@ async function loadArchiveData() {
 
 // Делаем функцию доступной глобально для оверлея
 window.loadArchiveData = loadArchiveData;
+
+/**
+ * Загрузка пользователей филиала
+ */
+async function loadBranchUsers() {
+    try {
+        const { db } = await import('../firebase-init.js');
+        const usersSnapshot = await db.collection('users')
+            .where('branchId', '==', currentUser.branchId)
+            .get();
+        
+        branchUsers = [];
+        const userIds = new Set();
+        
+        // Собираем уникальных создателей из сет-листов
+        archiveSetlists.forEach(setlist => {
+            if (setlist.createdBy?.uid) {
+                userIds.add(setlist.createdBy.uid);
+            }
+        });
+        
+        // Загружаем информацию о пользователях
+        usersSnapshot.forEach(doc => {
+            const userData = doc.data();
+            if (userIds.has(doc.id)) {
+                branchUsers.push({
+                    id: doc.id,
+                    name: userData.displayName || userData.email || 'Неизвестный',
+                    setlistCount: archiveSetlists.filter(s => s.createdBy?.uid === doc.id).length
+                });
+            }
+        });
+        
+        // Сортируем по количеству сет-листов
+        branchUsers.sort((a, b) => b.setlistCount - a.setlistCount);
+        
+        // Обновляем кнопки сортировки
+        renderSortButtons();
+        
+    } catch (error) {
+        logger.error('Error loading branch users:', error);
+    }
+}
 
 /**
  * Обновление состояния пустого списка
@@ -322,6 +375,46 @@ function renderGroups() {
 }
 
 /**
+ * Отрисовка кнопок сортировки
+ */
+function renderSortButtons() {
+    if (!elements.sortButtonsContainer) return;
+    
+    // Сохраняем базовые кнопки
+    const baseButtons = `
+        <button class="sort-btn ${currentSort === 'name' ? 'active' : ''}" data-sort="name">А-Я</button>
+        <button class="sort-btn ${currentSort === 'date' ? 'active' : ''}" data-sort="date">Новые</button>
+        <button class="sort-btn ${currentSort === 'date-old' ? 'active' : ''}" data-sort="date-old">Старые</button>
+        <button class="sort-btn ${currentSort === 'popular' ? 'active' : ''}" data-sort="popular">Популярные</button>
+    `;
+    
+    // Добавляем кнопки для пользователей
+    const userButtons = branchUsers.map(user => 
+        `<button class="sort-btn ${currentSort === `user-${user.id}` ? 'active' : ''}" 
+                 data-sort="user-${user.id}" 
+                 title="${user.name} (${user.setlistCount})">${user.name}</button>`
+    ).join('');
+    
+    elements.sortButtonsContainer.innerHTML = baseButtons + userButtons;
+    
+    // Обновляем ссылку на кнопки
+    elements.sortButtons = document.querySelectorAll('.sort-btn');
+    
+    // Добавляем обработчики
+    elements.sortButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            elements.sortButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSort = btn.dataset.sort;
+            applyFiltersAndSort();
+        });
+    });
+    
+    // Настраиваем скролл для сортировок
+    setupSortsScrollArrows();
+}
+
+/**
  * Применение фильтров и сортировки
  */
 function applyFiltersAndSort() {
@@ -344,27 +437,38 @@ function applyFiltersAndSort() {
     }
     
     // Сортировка
-    switch (currentSort) {
-        case 'name':
-            filteredSetlists.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
-            break;
-        case 'date':
-            filteredSetlists.sort((a, b) => {
-                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-                return timeB - timeA; // Новые первыми
-            });
-            break;
-        case 'date-old':
-            filteredSetlists.sort((a, b) => {
-                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-                return timeA - timeB; // Старые первыми
-            });
-            break;
-        case 'popular':
-            filteredSetlists.sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0));
-            break;
+    if (currentSort.startsWith('user-')) {
+        // Сортировка по пользователю
+        const userId = currentSort.replace('user-', '');
+        filteredSetlists = filteredSetlists.filter(s => s.createdBy?.uid === userId);
+        filteredSetlists.sort((a, b) => {
+            const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+            const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+            return timeB - timeA; // Новые первыми
+        });
+    } else {
+        switch (currentSort) {
+            case 'name':
+                filteredSetlists.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+                break;
+            case 'date':
+                filteredSetlists.sort((a, b) => {
+                    const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+                    const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+                    return timeB - timeA; // Новые первыми
+                });
+                break;
+            case 'date-old':
+                filteredSetlists.sort((a, b) => {
+                    const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+                    const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+                    return timeA - timeB; // Старые первыми
+                });
+                break;
+            case 'popular':
+                filteredSetlists.sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0));
+                break;
+        }
     }
     
     renderSetlists();
@@ -588,16 +692,6 @@ function setupEventHandlers() {
         }
     });
     
-    // Сортировка
-    elements.sortButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            elements.sortButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentSort = btn.dataset.sort;
-            applyFiltersAndSort();
-        });
-    });
-    
     // Создание сет-листа
     elements.createBtn.addEventListener('click', () => {
         openCreateSetlistModal();
@@ -611,6 +705,13 @@ function setupEventHandlers() {
     if (listGroupsBtn) {
         listGroupsBtn.addEventListener('click', () => {
             archiveGroupsManager.openListModal();
+        });
+    }
+    
+    // Список сортировок
+    if (elements.listSortsBtn) {
+        elements.listSortsBtn.addEventListener('click', () => {
+            openSortsListModal();
         });
     }
 }
@@ -828,6 +929,36 @@ function showNotification(message, type = 'success') {
 }
 
 /**
+ * Настройка стрелок скролла для сортировок
+ */
+function setupSortsScrollArrows() {
+    const container = document.getElementById('sorts-scroll-container');
+    const leftArrow = document.getElementById('sorts-scroll-left');
+    const rightArrow = document.getElementById('sorts-scroll-right');
+    
+    if (!container || !leftArrow || !rightArrow) return;
+    
+    function updateArrows() {
+        leftArrow.disabled = container.scrollLeft <= 0;
+        rightArrow.disabled = container.scrollLeft >= 
+            container.scrollWidth - container.clientWidth - 5;
+    }
+    
+    leftArrow.addEventListener('click', () => {
+        container.scrollBy({ left: -150, behavior: 'smooth' });
+        setTimeout(updateArrows, 300);
+    });
+    
+    rightArrow.addEventListener('click', () => {
+        container.scrollBy({ left: 150, behavior: 'smooth' });
+        setTimeout(updateArrows, 300);
+    });
+    
+    container.addEventListener('scroll', updateArrows);
+    updateArrows();
+}
+
+/**
  * Настройка стрелок скролла для групп
  */
 function setupGroupsScrollArrows() {
@@ -905,6 +1036,85 @@ function setupGroupsScrollArrows() {
         checkScroll();
         updateMobileArrows();
     }, 100);
+}
+
+/**
+ * Открытие модального окна списка сортировок
+ */
+function openSortsListModal() {
+    const modal = document.getElementById('sorts-list-modal');
+    const container = document.getElementById('sorts-list-container');
+    
+    if (!modal || !container) return;
+    
+    // Формируем список сортировок
+    const sorts = [
+        { id: 'name', name: 'По алфавиту (А-Я)', icon: '🔤' },
+        { id: 'date', name: 'Новые', icon: '📅' },
+        { id: 'date-old', name: 'Старые', icon: '📆' },
+        { id: 'popular', name: 'Популярные', icon: '⭐' }
+    ];
+    
+    // Добавляем пользователей
+    branchUsers.forEach(user => {
+        sorts.push({
+            id: `user-${user.id}`,
+            name: `${user.name} (${user.setlistCount})`,
+            icon: '👤'
+        });
+    });
+    
+    // Отрисовываем список
+    container.innerHTML = sorts.map(sort => `
+        <div class="sort-list-item ${currentSort === sort.id ? 'active' : ''}" 
+             data-sort="${sort.id}">
+            <div class="sort-list-icon">${sort.icon}</div>
+            <div class="sort-list-name">${sort.name}</div>
+        </div>
+    `).join('');
+    
+    // Добавляем обработчики
+    container.querySelectorAll('.sort-list-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const sortId = item.dataset.sort;
+            
+            // Обновляем активную сортировку
+            currentSort = sortId;
+            
+            // Обновляем кнопки
+            renderSortButtons();
+            
+            // Применяем сортировку
+            applyFiltersAndSort();
+            
+            // Закрываем модальное окно
+            modal.classList.remove('show');
+            
+            // Прокручиваем к выбранной сортировке
+            setTimeout(() => {
+                const sortBtn = document.querySelector(`.sort-btn[data-sort="${sortId}"]`);
+                if (sortBtn && elements.sortsContainer) {
+                    sortBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }, 100);
+        });
+    });
+    
+    // Показываем модальное окно
+    modal.classList.add('show');
+    
+    // Закрытие по кнопке
+    const closeBtn = document.getElementById('sorts-list-close');
+    if (closeBtn) {
+        closeBtn.onclick = () => modal.classList.remove('show');
+    }
+    
+    // Закрытие по клику вне модального окна
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+        }
+    };
 }
 
 /**

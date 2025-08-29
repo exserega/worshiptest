@@ -1,5 +1,5 @@
-// Service Worker v515 - Fix setlist card size and remove debug logs
-const CACHE_NAME = 'agape-worship-cache-v515';
+// Service Worker v516 - Add advanced sorting system with user filters
+const CACHE_NAME = 'agape-worship-cache-v516';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
