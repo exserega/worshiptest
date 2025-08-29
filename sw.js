@@ -1,5 +1,5 @@
-// Service Worker v505 - Improve groups list modal with selection functionality
-const CACHE_NAME = 'agape-worship-cache-v505';
+// Service Worker v506 - Fix icon visibility in group list buttons
+const CACHE_NAME = 'agape-worship-cache-v506';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
