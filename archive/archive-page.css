@@ -874,6 +874,52 @@ html, body {
     display: flex !important;
 }
 
+/* Переменные для модального окна событий */
+#event-action-modal {
+    --modal-background: #1a1f2e;
+    --modal-text-color: #e5e7eb;
+    --accent-color: #22d3ee;
+    --text-secondary: #9ca3af;
+    --hover-background: #374151;
+}
+
+/* Фикс фона контента модального окна */
+#event-action-modal .overlay-content {
+    background: #1a1f2e !important;
+}
+
+/* Фикс цвета текста */
+#event-action-modal .modal-title,
+#event-action-modal .event-name,
+#event-action-modal .event-time,
+#event-action-modal .event-setlist,
+#event-action-modal .action-question p,
+#event-action-modal .action-description {
+    color: #e5e7eb !important;
+}
+
+/* Фикс кнопок в модальном окне */
+#event-action-modal .action-button {
+    background: #374151 !important;
+    color: #e5e7eb !important;
+    border: 1px solid #4b5563 !important;
+}
+
+#event-action-modal .action-button:hover {
+    background: #4b5563 !important;
+}
+
+#event-action-modal .action-button.primary {
+    background: #22d3ee !important;
+    color: #0f172a !important;
+    border-color: #22d3ee !important;
+}
+
+#event-action-modal .action-button.primary:hover {
+    background: #06b6d4 !important;
+    border-color: #06b6d4 !important;
+}
+
 /* Индикатор загрузки */
 .loading-indicator {
     position: fixed;

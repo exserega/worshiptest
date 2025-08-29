@@ -1,5 +1,5 @@
-// Service Worker v534 - Fix event action modal visibility
-const CACHE_NAME = 'agape-worship-cache-v534';
+// Service Worker v535 - Fix event action modal transparency
+const CACHE_NAME = 'agape-worship-cache-v535';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
