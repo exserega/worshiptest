@@ -835,21 +835,35 @@ window.viewSetlist = function(setlistId) {
 window.addToCalendar = async function(setlistId) {
     console.log('📅 Добавление в календарь сет-листа:', setlistId);
     
+    const setlist = archiveSetlists.find(s => s.id === setlistId);
+    if (!setlist) {
+        alert('Сет-лист не найден');
+        return;
+    }
+    
     try {
-        // Динамически импортируем модуль событий
-        const { openEventsOverlay } = await import('../src/modules/events/eventsOverlay.js');
+        // Проверяем права на создание событий
+        const { canManageEvents } = await import('../src/modules/permissions/permissions.js');
+        if (!canManageEvents()) {
+            alert('У вас нет прав на создание событий');
+            return;
+        }
         
-        // Сохраняем ID сет-листа для использования в eventsOverlay
-        window.selectedArchiveSetlistId = setlistId;
+        // Динамически импортируем модуль создания событий
+        const { getEventModal } = await import('../src/modules/events/eventModal.js');
         
-        // Открываем оверлей событий
-        await openEventsOverlay();
+        // Открываем модальное окно создания события с предустановленным сет-листом
+        const modal = getEventModal();
+        modal.openForCreate((newEvent) => {
+            console.log('✅ Событие создано:', newEvent);
+            alert('Событие успешно создано!');
+        }, setlistId); // Передаем ID сет-листа
         
-        console.log('✅ Оверлей событий открыт');
+        console.log('✅ Модальное окно создания события открыто');
         
     } catch (error) {
         console.error('❌ Ошибка открытия календаря:', error);
-        alert('Ошибка при открытии календаря');
+        alert('Ошибка при открытии календаря: ' + error.message);
     }
 };
 

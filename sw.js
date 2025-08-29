@@ -1,5 +1,5 @@
-// Service Worker v528 - Better fix for song names
-const CACHE_NAME = 'agape-worship-cache-v528';
+// Service Worker v529 - Fix calendar integration with direct modal
+const CACHE_NAME = 'agape-worship-cache-v529';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
