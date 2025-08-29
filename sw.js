@@ -1,5 +1,5 @@
-// Service Worker v531 - Fix calendar modal styles paths
-const CACHE_NAME = 'agape-worship-cache-v531';
+// Service Worker v532 - Fix calendar modals methods and styles
+const CACHE_NAME = 'agape-worship-cache-v532';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

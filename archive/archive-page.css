@@ -833,22 +833,20 @@ html, body {
 /* Кнопка запуска просмотра */
 .action-btn.launch-player-btn {
     background: var(--accent-color, #22d3ee);
-    color: var(--bg-primary, #0f172a) !important;
+    color: white !important;
     border-color: var(--accent-color, #22d3ee);
     font-weight: 600;
     width: 100%;
     flex: none;
-    box-shadow: 0 2px 8px rgba(34, 211, 238, 0.3);
 }
 
 .action-btn.launch-player-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(34, 211, 238, 0.4);
+    background: var(--accent-hover, #06b6d4);
+    border-color: var(--accent-hover, #06b6d4);
 }
 
 .action-btn.launch-player-btn i {
-    font-size: 1rem;
-    color: var(--bg-primary, #0f172a) !important;
+    color: white !important;
 }
 
 .action-btn.view-btn {

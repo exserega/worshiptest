@@ -930,7 +930,7 @@ async function handleSingleEvent(event, setlistData, selectedDate) {
     const { getEventActionModal } = await import('../src/modules/integration/eventActionModal.js');
     const actionModal = getEventActionModal();
     
-    actionModal.show(event, setlistData, async (action) => {
+    actionModal.open(event, setlistData, async (action) => {
         if (action === 'replace') {
             // Заменяем сет-лист
             const { updateEventSetlist } = await import('../src/modules/events/eventsApi.js');
@@ -950,7 +950,7 @@ async function handleMultipleEvents(events, selectedDate, setlistData) {
     const { getEventSelectorModal } = await import('../src/modules/integration/eventSelectorModal.js');
     const selectorModal = getEventSelectorModal();
     
-    selectorModal.show(events, selectedDate, async (selectedEvent) => {
+    selectorModal.open(events, selectedDate, setlistData, async (selectedEvent) => {
         if (selectedEvent) {
             // Выбрано конкретное событие
             await handleSingleEvent(selectedEvent, setlistData, selectedDate);
