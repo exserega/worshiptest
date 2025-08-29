@@ -180,13 +180,9 @@ async function updateSetlistCard(setlistId) {
         logger.log('🔍 Looking for card element...');
         const cardElement = document.querySelector(`.archive-setlist-card[data-setlist-id="${setlistId}"]`);
         if (!cardElement) {
-            logger.error('❌ Card element not found with selector:', `.archive-setlist-card[data-setlist-id="${setlistId}"]`);
-            // Попробуем найти все карточки для отладки
-            const allCards = document.querySelectorAll('.archive-setlist-card');
-            logger.log('📋 Found cards on page:', allCards.length);
-            allCards.forEach(card => {
-                logger.log('Card ID:', card.dataset.setlistId);
-            });
+            logger.log('ℹ️ Card element not found, it might be a new setlist');
+            // Для нового сет-листа перезагружаем всю страницу
+            await loadArchiveData();
             return;
         }
         logger.log('✅ Card element found');
@@ -447,8 +443,8 @@ function createSetlistCard(setlist) {
                     В календарь
                 </button>
                 <button class="action-btn" data-action="group">
-                    <i class="fas fa-folder-plus"></i>
-                    В группу
+                    <i class="fas fa-folder"></i>
+                    Группы
                 </button>
             </div>
         </div>
@@ -1210,14 +1206,72 @@ async function saveSetlistGroups() {
         // Перерисовываем карточку
         updateSetlistCard(currentEditingSetlistId, setlist);
         
-        // Обновляем счетчики групп
-        await archiveGroupsManager.loadGroups();
-        
-        logger.log('✅ Setlist groups updated');
-    } catch (error) {
-        logger.error('Error saving setlist groups:', error);
-        alert('Ошибка при сохранении групп');
+                    // Обновляем счетчики групп
+            await archiveGroupsManager.loadGroups();
+            
+            logger.log('✅ Setlist groups updated');
+            
+            // Показываем уведомление об успешном сохранении
+            const addedCount = groupsToAdd.length;
+            const removedCount = groupsToRemove.length;
+            let message = 'Изменения сохранены: ';
+            
+            if (addedCount > 0 && removedCount > 0) {
+                message += `добавлено групп: ${addedCount}, удалено: ${removedCount}`;
+            } else if (addedCount > 0) {
+                message += `добавлено групп: ${addedCount}`;
+            } else if (removedCount > 0) {
+                message += `удалено групп: ${removedCount}`;
+            } else {
+                message = 'Изменений нет';
+            }
+            
+            // Показываем временное уведомление
+            showTemporaryNotification(message);
+        } catch (error) {
+            logger.error('Error saving setlist groups:', error);
+            alert('Ошибка при сохранении групп');
+        }
+}
+
+/**
+ * Показ временного уведомления
+ */
+function showTemporaryNotification(message) {
+    // Удаляем предыдущее уведомление, если есть
+    const existingNotification = document.querySelector('.temporary-notification');
+    if (existingNotification) {
+        existingNotification.remove();
     }
+    
+    // Создаем новое уведомление
+    const notification = document.createElement('div');
+    notification.className = 'temporary-notification';
+    notification.textContent = message;
+    
+    // Добавляем стили inline для простоты
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--primary-color);
+        color: #111827;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        animation: slideUp 0.3s ease-out;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Удаляем через 3 секунды
+    setTimeout(() => {
+        notification.style.animation = 'slideDown 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 /**

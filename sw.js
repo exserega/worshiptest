@@ -1,5 +1,5 @@
-// Service Worker v503 - Remove group colors and fix modal UI issues
-const CACHE_NAME = 'agape-worship-cache-v503';
+// Service Worker v504 - Fix new setlist creation and improve group management
+const CACHE_NAME = 'agape-worship-cache-v504';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

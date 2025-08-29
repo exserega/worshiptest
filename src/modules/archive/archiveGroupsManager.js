@@ -346,13 +346,27 @@ class ArchiveGroupsManager {
         const group = this.groups.find(g => g.id === groupId);
         if (!group) return;
         
-        const confirmText = group.setlistCount > 0 
-            ? `Вы уверены, что хотите удалить группу "${group.name}"? Она содержит ${group.setlistCount} сет-листов. Сет-листы не будут удалены, но потеряют связь с этой группой.`
-            : `Вы уверены, что хотите удалить группу "${group.name}"?`;
+        // Создаем детальное сообщение для подтверждения
+        let confirmText = `Удалить группу "${group.icon} ${group.name}"?\n\n`;
+        
+        if (group.setlistCount > 0) {
+            confirmText += `⚠️ Внимание: группа содержит ${group.setlistCount} сет-лист${this.getPlural(group.setlistCount, '', 'а', 'ов')}.\n`;
+            confirmText += `Сет-листы НЕ будут удалены, но потеряют связь с этой группой.\n\n`;
+            confirmText += `Продолжить удаление?`;
+        } else {
+            confirmText += `Группа не содержит сет-листов.`;
+        }
         
         if (!confirm(confirmText)) return;
         
         try {
+            // Показываем индикатор загрузки
+            const deleteBtn = document.querySelector(`.group-delete-btn[data-group-id="${groupId}"]`);
+            if (deleteBtn) {
+                deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                deleteBtn.disabled = true;
+            }
+            
             await deleteArchiveGroup(groupId);
             logger.log('Group deleted:', groupId);
             
@@ -364,10 +378,33 @@ class ArchiveGroupsManager {
             if (modal.classList.contains('show')) {
                 this.renderGroupsList();
             }
+            
+            // Обновляем отображение сет-листов на странице
+            if (window.loadArchiveData) {
+                await window.loadArchiveData();
+            }
         } catch (error) {
             logger.error('Error deleting group:', error);
-            alert('Ошибка при удалении группы');
+            alert('Ошибка при удалении группы: ' + error.message);
+            
+            // Восстанавливаем кнопку
+            if (deleteBtn) {
+                deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                deleteBtn.disabled = false;
+            }
         }
+    }
+    
+    /**
+     * Вспомогательная функция для правильного склонения
+     */
+    getPlural(number, form1, form2, form5) {
+        const n = Math.abs(number) % 100;
+        const n1 = n % 10;
+        if (n > 10 && n < 20) return form5;
+        if (n1 > 1 && n1 < 5) return form2;
+        if (n1 === 1) return form1;
+        return form5;
     }
     
     /**
