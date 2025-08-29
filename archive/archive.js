@@ -1641,7 +1641,7 @@ async function saveSetlistGroups() {
 /**
  * Показ временного уведомления
  */
-function showTemporaryNotification(message) {
+function showTemporaryNotification(message, type = 'info') {
     // Удаляем предыдущее уведомление, если есть
     const existingNotification = document.querySelector('.temporary-notification');
     if (existingNotification) {
@@ -1770,8 +1770,10 @@ async function launchArchivePlayer(setlistId) {
     }
 }
 
-// Экспорт функции
+// Экспорт функций
 window.launchArchivePlayer = launchArchivePlayer;
+window.showTemporaryNotification = showTemporaryNotification;
+window.showNotification = showTemporaryNotification; // Alias для совместимости с другими модулями
 
 // Запуск при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
