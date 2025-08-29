@@ -945,8 +945,8 @@ async function handleSingleEvent(event, setlistData, selectedDate) {
     actionModal.open(event, setlistData, async (action) => {
         if (action === 'replace') {
             // Заменяем сет-лист
-            const { updateEventSetlist } = await import('../src/modules/events/eventsApi.js');
-            await updateEventSetlist(event.id, setlistData.id);
+            const { updateEventSetlistApi } = await import('../src/modules/events/eventsApi.js');
+            await updateEventSetlistApi(event.id, setlistData.id, setlistData.name);
             showTemporaryNotification('✅ Сет-лист события обновлен');
         } else if (action === 'create') {
             // Создаем новое событие
