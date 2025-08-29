@@ -1,5 +1,5 @@
-// Service Worker v519 - Move add group button and increase sizes by 15%
-const CACHE_NAME = 'agape-worship-cache-v519';
+// Service Worker v520 - Fix add group button width and border positioning
+const CACHE_NAME = 'agape-worship-cache-v520';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

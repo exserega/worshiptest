@@ -4,7 +4,7 @@
 .add-group-wrapper {
     padding: 8px 12px;
     background: var(--bg-secondary, #1f2937);
-    border-bottom: 1px solid var(--border-color, #374151);
+    /* Убираем border-bottom - кнопка относится к группам */
 }
 
 /* Общие стили для строк фильтров */
@@ -18,10 +18,11 @@
 
 .archive-filter-row.groups {
     padding-top: 0;
+    border-bottom: 1px solid var(--border-color, #374151);
 }
 
 .archive-filter-row.sorts {
-    border-bottom: 1px solid var(--border-color, #374151);
+    /* Убираем border-bottom снизу */
 }
 
 /* Кнопка списка (слева от прокрутки) */
@@ -111,18 +112,19 @@
 /* Кнопка добавления группы */
 .add-group-btn {
     height: 32px; /* было 28px (+14%) */
-    padding: 0 12px;
+    padding: 0 16px; /* Увеличиваем отступы для текста */
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 7px;
     color: var(--text-secondary, #9ca3af) !important;
     cursor: pointer;
-    display: flex;
+    display: inline-flex; /* inline-flex вместо flex для автоматической ширины */
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
     font-size: 0.875rem; /* было 0.75rem (+17%) */
     white-space: nowrap;
+    min-width: fit-content; /* Минимальная ширина по содержимому */
 }
 
 .add-group-btn:hover {
@@ -250,10 +252,15 @@
     }
     
     .group-chip,
-    .sort-btn,
-    .add-group-btn {
+    .sort-btn {
         height: 28px; /* было 24px (+17%) */
         font-size: 0.8rem; /* было 0.7rem (+14%) */
         padding: 0 9px;
+    }
+    
+    .add-group-btn {
+        height: 28px; /* было 24px (+17%) */
+        font-size: 0.8rem; /* было 0.7rem (+14%) */
+        padding: 0 12px; /* Больше отступов для текста */
     }
 }
