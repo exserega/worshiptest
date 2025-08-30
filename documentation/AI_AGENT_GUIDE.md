@@ -41,13 +41,24 @@
 │   ├── branches/     # Управление филиалами
 │   ├── admin/        # Админ панель
 │   ├── settings/     # Настройки пользователя
-│   └── songs/        # Оверлеи песен и репертуара
-│       ├── songsOverlay.js      # Оверлей "Все песни"
-│       └── repertoireOverlay.js # Оверлей "Репертуар"
+│   ├── songs/        # Оверлеи песен и репертуара
+│   │   ├── songsOverlay.js      # Оверлей "Все песни"
+│   │   └── repertoireOverlay.js # Оверлей "Репертуар"
+│   ├── archive/      # Модули архива сет-листов
+│   │   ├── archiveApi.js         # CRUD операции архива
+│   │   ├── archiveGroupsApi.js   # API для групп
+│   │   ├── archiveGroupsManager.js # UI управления группами
+│   │   ├── archiveSongsOverlay.js # Создание сет-листов
+│   │   └── archiveSaveModal.js    # Модалка сохранения в архив
+│   └── events/       # Модули событий/календаря
+│       ├── eventPlayer.js        # Просмотр сет-листов
+│       ├── eventsApi.js          # API событий
+│       └── eventCreationModal.js # Создание событий
 ├── api/              # API функции
 ├── utils/            
 │   ├── firebase-v8-adapter.js  # Адаптер v9→v8 (КРИТИЧНО!)
-│   └── logger.js              # Условное логирование
+│   ├── logger.js              # Условное логирование
+│   └── setlistUtils.js        # Универсальный доступ к сет-листам
 └── main/             # Инициализация
 ```
 
@@ -56,7 +67,13 @@
 /public/              # HTML страницы
 ├── admin.html       # Админ панель
 ├── login.html       # Авторизация
-└── settings.html    # Настройки
+├── settings.html    # Настройки
+└── event/           # Страница события
+
+/archive/            # Архив сет-листов
+├── index.html       # Страница архива
+├── archive.js       # Основная логика
+├── *.css            # Стили архива
 
 /css/                # Стили страниц
 /assets/             # Изображения, звуки
@@ -69,7 +86,8 @@
 ├── modals.css       # Стили модальных окон
 ├── panels.css       # Стили панелей
 ├── responsive.css   # Мобильная адаптация
-└── variables.css    # CSS переменные
+├── variables.css    # CSS переменные
+└── archive-save-modal.css # Модалка архива
 ```
 
 ## 🔥 FIREBASE АДАПТЕР
