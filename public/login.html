@@ -20,6 +20,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* КРИТИЧНО: Стили кнопки назад должны применяться мгновенно */
+        .back-btn {
+            position: fixed !important;
+            top: 20px !important;
+            left: 20px !important;
+            z-index: 1000 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 40px !important;
+            height: 40px !important;
+            border: none !important;
+            background: #1a1f2e !important;
+            color: #b0b0b0 !important;
+            border-radius: 10px !important;
+            cursor: pointer !important;
+            transition: background 0.2s ease, color 0.2s ease !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* Кнопка скрыта по умолчанию, но без анимации */
+        .auth-screen .back-btn {
+            display: none !important;
+        }
+        
+        /* Кнопка видна только когда экран активен */
+        .auth-screen.active .back-btn {
+            display: flex !important;
+        }
+        
+        .back-btn:hover {
+            background: #22d3ee !important;
+            color: white !important;
+        }
+        
+        .back-btn i {
+            font-size: 1rem !important;
+            color: inherit !important;
+        }
+        
         /* Стили для новых элементов */
         .auth-subtitle {
             text-align: center;

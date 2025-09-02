@@ -203,45 +203,8 @@ body {
     box-shadow: 0 10px 20px rgba(34, 211, 238, 0.2);
 }
 
-/* Back Button - СТАНДАРТИЗИРОВАНО */
-/* Применяем эталонный стиль icon-button */
-.back-btn {
-    /* Фиксированная позиция относительно viewport для предотвращения прыжков */
-    position: fixed !important;
-    top: 20px !important;
-    left: 20px !important;
-    z-index: 100;
-    
-    /* Эталонный стиль icon-button */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: #1a1f2e; /* var(--bg-tertiary) */
-    color: #b0b0b0 !important;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-    /* Убираем анимацию появления чтобы не было задержки */
-    opacity: 1 !important;
-}
-
-.back-btn:hover {
-    background: #22d3ee; /* var(--primary-color) */
-    color: white !important;
-    transform: translateY(-1px);
-}
-
-.back-btn:active {
-    transform: scale(0.95);
-}
-
-.back-btn i {
-    font-size: 1rem;
-    color: inherit !important;
-}
+/* Back Button стили перенесены в inline-стили в HTML для мгновенного применения */
+/* Это предотвращает прыжки при загрузке страницы */
 
 /* Messages */
 .auth-message {

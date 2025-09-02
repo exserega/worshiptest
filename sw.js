@@ -1,5 +1,5 @@
-// Service Worker v550 - Fixed position for back button to prevent jumping
-const CACHE_NAME = 'agape-worship-cache-v550';
+// Service Worker v552 - Back button visibility controlled with display none/flex
+const CACHE_NAME = 'agape-worship-cache-v552';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
