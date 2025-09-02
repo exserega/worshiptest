@@ -145,28 +145,16 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
 }
 
+/* Позиционирование кнопки очистки поиска */
+.clear-search,
 .clear-search-btn {
     position: absolute;
     right: 48px; /* Смещена левее, чтобы не перекрывать лупу */
     top: 50%;
     transform: translateY(-50%);
-    width: 28px;
-    height: 28px;
-    border: none;
-    background: var(--hover-color);
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-color);
-    transition: all 0.2s ease;
+    width: 28px !important;
+    height: 28px !important;
     z-index: 2; /* Выше иконки лупы */
-}
-
-.clear-search-btn:hover {
-    background: var(--danger-color);
-    color: white;
 }
 
 /* === ФИЛЬТРЫ ПОИСКА === */

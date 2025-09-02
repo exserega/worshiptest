@@ -280,45 +280,20 @@
     letter-spacing: 1px;
 }
 
-.close-metronome-btn {
-    position: absolute;
+/* Кнопка закрытия метронома */
+.metronome-close {
+    position: absolute !important;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border: 2px solid var(--border-color);
-    border-radius: 50%;
-    background: var(--container-background-color);
-    color: var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 1.1rem;
-    font-weight: bold;
-    flex-shrink: 0;
-    line-height: 1;
 }
 
-.close-metronome-btn i {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-}
-
-.close-metronome-btn:hover {
-    background: var(--danger-color);
-    color: var(--color-error-text);
-    border-color: var(--danger-color);
+/* Обратная совместимость для старого класса */
+.close-metronome-btn {
+    position: absolute !important;
+    right: 0;
+    top: 50%;
     transform: translateY(-50%);
-}
-
-.close-metronome-btn:hover i {
-    color: var(--color-error-text);
 }
 
 /* ======================================== */
@@ -597,13 +572,7 @@ body[data-theme="dark"] .metronome-play-button-large i {
     color: var(--primary-color) !important;
 }
 
-body[data-theme="light"] .close-metronome-btn i {
-    color: var(--primary-color) !important;
-}
 
-body[data-theme="dark"] .close-metronome-btn i {
-    color: var(--primary-color) !important;
-}
 
 /* Fix button text colors for better visibility */
 body[data-theme="light"] .metronome-button,
@@ -616,11 +585,7 @@ body[data-theme="dark"] .metronome-play-toggle {
     color: var(--color-text-primary) !important;
 }
 
-/* Fix close button hover states */
-body[data-theme="light"] .close-metronome-btn:hover i,
-body[data-theme="dark"] .close-metronome-btn:hover i {
-    color: var(--color-error-text) !important;
-}
+
 
 /* Fix play button hover states */
 body[data-theme="light"] .metronome-play-button-large:hover i,
@@ -700,14 +665,11 @@ body[data-theme="light"] .metronome-modal {
         justify-content: center;
     }
     
+    .metronome-close,
     .close-metronome-btn {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 35px;
-        height: 35px;
-        font-size: 0.9rem;
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 0.9rem !important;
     }
     
     .bpm-input-large {
@@ -820,34 +782,11 @@ body[data-theme="light"] .metronome-modal {
         text-align: center;
     }
     
+    .metronome-close,
     .close-metronome-btn {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-        font-weight: bold;
-        color: var(--primary-color);
-        flex-shrink: 0;
-        line-height: 1;
-    }
-    
-    .close-metronome-btn i {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-    }
-    
-    .close-metronome-btn:hover {
-        transform: translateY(-50%);
-    }
-    
-    .close-metronome-btn:hover i {
-        color: var(--color-error-text);
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.9rem !important;
     }
     
     .bpm-input-large {

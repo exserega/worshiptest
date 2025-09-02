@@ -284,33 +284,76 @@
     padding-left: 44px; /* Отступ под кнопку закрытия */
 }
 
-.overlay-close-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: var(--hover-color);
-    border-radius: 6px;
-    cursor: pointer;
+/* Компактная версия иконочной кнопки для модальных окон */
+.icon-button-small {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--bg-tertiary, #1a1f2e);
+    color: #b0b0b0 !important;
+    border-radius: 8px;
+    cursor: pointer;
     transition: all 0.2s ease;
-    color: var(--text-color);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     flex-shrink: 0;
 }
 
-.overlay-close-btn i {
+.icon-button-small:hover {
+    background: var(--primary-color, #22d3ee);
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.icon-button-small:active {
+    transform: scale(0.95);
+}
+
+.icon-button-small i {
+    font-size: 0.9rem;
+    color: inherit !important;
     display: flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
 }
 
+/* Обратная совместимость для overlay-close-btn - применяем те же стили */
+.overlay-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--bg-tertiary, #1a1f2e);
+    color: #b0b0b0 !important;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
 .overlay-close-btn:hover {
-    background: var(--danger-color);
-    color: white;
-    transform: scale(1.05);
+    background: var(--primary-color, #22d3ee);
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.overlay-close-btn:active {
+    transform: scale(0.95);
+}
+
+.overlay-close-btn i {
+    font-size: 0.9rem;
+    color: inherit !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 /* Тело оверлея */

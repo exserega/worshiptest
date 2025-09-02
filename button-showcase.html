@@ -140,6 +140,37 @@
             color: inherit !important;
         }
         
+        /* Компактная версия иконочной кнопки для модальных окон */
+        .icon-button-small {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-tertiary);
+            color: #b0b0b0 !important;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .icon-button-small:hover {
+            background: var(--primary-color);
+            color: white !important;
+            transform: translateY(-1px);
+        }
+
+        .icon-button-small:active {
+            transform: scale(0.95);
+        }
+        
+        .icon-button-small i {
+            font-size: 0.9rem;
+            color: inherit !important;
+        }
+        
         /* 2. МАЛЕНЬКАЯ ИКОНОЧНАЯ КНОПКА (для угловых кнопок) */
         .icon-button-sm {
             display: flex;
@@ -333,7 +364,14 @@
                     <button class="icon-button">
                         <i class="fas fa-times"></i>
                     </button>
-                    <span class="button-label">Закрыть</span>
+                    <span class="button-label">Закрыть (40x40)</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button-small">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <span class="button-label">Закрыть компактная (32x32)</span>
                 </div>
                 
                 <div class="button-item">
