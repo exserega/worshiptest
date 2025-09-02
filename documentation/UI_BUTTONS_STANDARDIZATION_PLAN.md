@@ -43,16 +43,17 @@
 
 ---
 
-### ЭТАП 2: КНОПКА "ЗАКРЫТЬ" ❌
+### ЭТАП 2: КНОПКА "ЗАКРЫТЬ" ❌ 
 **Эталонные классы:** 
-- `icon-button` (40x40px) - для больших областей
-- `icon-button-small` (32x32px) - для компактных областей (модальные окна, оверлеи)
+- `icon-button` (40x40px) - для больших областей ✅
+- `icon-button-small` (32x32px) - для компактных областей (модальные окна, оверлеи) ✅
 
 #### Места для замены:
-1. **index.html**
-   - `#close-note-modal-x` - закрытие модального окна заметок
-   - `.modal-close-x` - различные модальные окна
-   - Количество: ~5 кнопок
+1. **index.html** ✅
+   - Все кнопки закрытия обновлены на `icon-button-small`
+   - Метроном использует `icon-button`
+   - Количество: 8 кнопок
+   - **Статус:** Завершено (v558)
 
 2. **src/modules/integration/datePickerModal.js**
    - `.modal-close-btn` - закрытие календаря
@@ -66,9 +67,10 @@
    - `.player-close-btn` - закрытие плеера
    - Количество: 1 кнопка (динамическая)
 
-5. **archive/index.html**
+5. **archive/index.html** ✅
    - `.overlay-close-btn` (#close-create-modal, #close-confirm-modal)
    - Количество: 2 кнопки
+   - **Статус:** Завершено (v558)
 
 6. **styles/modals.css**
    - Глобальные стили для `.modal-close-btn`, `.close-btn`
