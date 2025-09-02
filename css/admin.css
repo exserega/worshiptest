@@ -129,22 +129,34 @@ body {
     z-index: 100;
 }
 
-.back-button {
-    background: transparent;
-    border: none;
-    color: var(--text-color);
-    cursor: pointer;
-    padding: var(--spacing-sm);
-    border-radius: var(--radius);
+/* Стандартная иконочная кнопка */
+.icon-button {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
-    transition: background 0.2s;
-    font-size: var(--font-sm);
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--bg-tertiary, #1a1f2e);
+    color: #b0b0b0 !important;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.back-button:hover {
-    background: var(--hover-color);
+.icon-button:hover {
+    background: var(--primary-color, #22d3ee);
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+.icon-button i {
+    font-size: 1rem;
+    color: inherit !important;
 }
 
 .admin-header h1 {
