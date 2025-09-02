@@ -14,13 +14,15 @@
 **Эталонный класс:** `icon-button` (40x40px)
 
 #### Места для замены:
-1. **public/login.html**
+1. **public/login.html** ✅
    - `.back-btn` (#back-from-email, #back-from-register)
    - Количество: 2 кнопки
+   - **Статус:** Завершено (v553)
 
-2. **public/event/index.html**
+2. **public/event/index.html** ✅
    - `.back-btn` (#back-btn)
    - Количество: 1 кнопка
+   - **Статус:** Завершено (v554)
 
 3. **public/settings.html**
    - `.back-btn` в хедере

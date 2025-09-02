@@ -88,46 +88,34 @@ button, input, select, textarea,
     z-index: 100;
 }
 
-.back-button {
-    background: none;
+/* Стандартная иконочная кнопка */
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
     border: none;
-    font-size: 20px;
-    color: var(--text-secondary);
+    background: var(--bg-tertiary, #1a1f2e);
+    color: #b0b0b0 !important;
+    border-radius: 10px;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 8px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
-.back-button i {
-    color: inherit;
+.icon-button:hover {
+    background: var(--primary-color, #22d3ee);
+    color: white !important;
+    transform: translateY(-1px);
 }
 
-/* Dark theme - light arrow */
-:root .back-button {
-    color: #b0b0b0;
+.icon-button:active {
+    transform: scale(0.95);
 }
 
-:root .back-button i {
-    color: #b0b0b0;
-}
-
-/* Light theme - dark arrow */
-[data-theme="light"] .back-button {
-    color: #666666;
-}
-
-[data-theme="light"] .back-button i {
-    color: #666666;
-}
-
-.back-button:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-}
-
-.back-button:hover i {
-    color: var(--text-primary);
+.icon-button i {
+    font-size: 1rem;
+    color: inherit !important;
 }
 
 .settings-header h1 {
