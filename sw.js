@@ -1,5 +1,5 @@
-// Service Worker v549 - Fix back button jumping issue with standardized style
-const CACHE_NAME = 'agape-worship-cache-v549';
+// Service Worker v550 - Fixed position for back button to prevent jumping
+const CACHE_NAME = 'agape-worship-cache-v550';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
