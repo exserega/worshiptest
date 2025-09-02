@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Витрина стандартных кнопок - AGAPE WORSHIP</title>
+    
+    <!-- Подключаем Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Подключаем шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS переменные для темной темы (копируем из проекта) */
+        :root {
+            --primary-color: #22d3ee;
+            --secondary-color: #06b6d4;
+            --accent-color: #67e8f9;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-tertiary: #1a1f2e;
+            --bg-hover: #374151;
+            
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --button-text-color: #111827;
+            
+            --border-color: #374151;
+            --hover-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Основные стили страницы */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 3rem;
+            font-size: 2rem;
+        }
+        
+        /* Секции для группировки кнопок */
+        .button-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .button-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .button-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .code-snippet {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+        
+        /* ==================== ЭТАЛОННЫЕ СТИЛИ КНОПОК ==================== */
+        
+        /* 1. ИКОНОЧНАЯ КНОПКА (базовый стиль из архива) */
+        .icon-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--bg-tertiary);
+            color: #b0b0b0 !important;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: var(--primary-color);
+            color: white !important;
+            transform: translateY(-1px);
+        }
+        
+        .icon-button:active {
+            transform: scale(0.95);
+        }
+        
+        .icon-button i {
+            font-size: 1rem;
+            color: inherit !important;
+        }
+        
+        /* 2. МАЛЕНЬКАЯ ИКОНОЧНАЯ КНОПКА (для угловых кнопок) */
+        .icon-button-sm {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary) !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button-sm:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white !important;
+        }
+        
+        .icon-button-sm:active {
+            transform: scale(0.95);
+        }
+        
+        .icon-button-sm i {
+            font-size: 0.875rem;
+            color: inherit !important;
+        }
+        
+        /* 3. КНОПКА УДАЛЕНИЯ */
+        .icon-button-delete {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444 !important;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button-delete:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .icon-button-delete i {
+            font-size: 0.875rem;
+            color: #ef4444 !important;
+        }
+        
+        /* 4. ОСНОВНАЯ КНОПКА (СОХРАНИТЬ) */
+        .btn-primary {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--accent-color);
+            color: var(--button-text-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 5. ВТОРИЧНАЯ КНОПКА (ОТМЕНА) */
+        .btn-secondary {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            min-width: 100px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+        
+        /* 6. КНОПКА ОПАСНОГО ДЕЙСТВИЯ */
+        .btn-danger {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: translateY(-1px);
+        }
+        
+        .btn-danger:active {
+            transform: scale(0.98);
+        }
+        
+        /* Дополнительные состояния */
+        .position-demo {
+            position: relative;
+            min-height: 80px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+        
+        .corner-button {
+            position: absolute;
+        }
+        
+        .corner-button.top-right {
+            top: 10px;
+            right: 10px;
+        }
+        
+        .corner-button.top-right-second {
+            top: 10px;
+            right: 48px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Витрина стандартных кнопок AGAPE WORSHIP</h1>
+        
+        <!-- ИКОНОЧНЫЕ КНОПКИ -->
+        <div class="button-section">
+            <h2 class="section-title">📱 Иконочные кнопки (40x40px)</h2>
+            
+            <div class="button-group">
+                <div class="button-item">
+                    <button class="icon-button">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <span class="button-label">Назад</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <span class="button-label">Закрыть</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <span class="button-label">Создать</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <span class="button-label">Поиск</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <span class="button-label">Фильтр</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <span class="button-label">Меню</span>
+                </div>
+            </div>
+            
+            <div class="code-snippet">
+                &lt;button class="icon-button"&gt;<br>
+                &nbsp;&nbsp;&lt;i class="fas fa-arrow-left"&gt;&lt;/i&gt;<br>
+                &lt;/button&gt;
+            </div>
+        </div>
+        
+        <!-- МАЛЕНЬКИЕ ИКОНОЧНЫЕ КНОПКИ -->
+        <div class="button-section">
+            <h2 class="section-title">📐 Маленькие иконочные кнопки (32x32px)</h2>
+            
+            <div class="button-group">
+                <div class="button-item">
+                    <button class="icon-button-sm">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <span class="button-label">Редактировать</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button-delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <span class="button-label">Удалить</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button-sm">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <span class="button-label">Копировать</span>
+                </div>
+                
+                <div class="button-item">
+                    <button class="icon-button-sm">
+                        <i class="fas fa-share"></i>
+                    </button>
+                    <span class="button-label">Поделиться</span>
+                </div>
+            </div>
+            
+            <div class="code-snippet">
+                &lt;button class="icon-button-sm"&gt;<br>
+                &nbsp;&nbsp;&lt;i class="fas fa-edit"&gt;&lt;/i&gt;<br>
+                &lt;/button&gt;<br><br>
+                &lt;button class="icon-button-delete"&gt;<br>
+                &nbsp;&nbsp;&lt;i class="fas fa-trash"&gt;&lt;/i&gt;<br>
+                &lt;/button&gt;
+            </div>
+        </div>
+        
+        <!-- ТЕКСТОВЫЕ КНОПКИ -->
+        <div class="button-section">
+            <h2 class="section-title">📝 Текстовые кнопки</h2>
+            
+            <div class="button-group">
+                <button class="btn-primary">
+                    <i class="fas fa-save"></i>
+                    Сохранить
+                </button>
+                
+                <button class="btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Отмена
+                </button>
+                
+                <button class="btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Удалить
+                </button>
+                
+                <button class="btn-primary" disabled>
+                    <i class="fas fa-save"></i>
+                    Сохранить (отключена)
+                </button>
+            </div>
+            
+            <div class="code-snippet">
+                &lt;button class="btn-primary"&gt;<br>
+                &nbsp;&nbsp;&lt;i class="fas fa-save"&gt;&lt;/i&gt;<br>
+                &nbsp;&nbsp;Сохранить<br>
+                &lt;/button&gt;<br><br>
+                &lt;button class="btn-secondary"&gt;<br>
+                &nbsp;&nbsp;&lt;i class="fas fa-times"&gt;&lt;/i&gt;<br>
+                &nbsp;&nbsp;Отмена<br>
+                &lt;/button&gt;<br><br>
+                &lt;button class="btn-danger"&gt;<br>
+                &nbsp;&nbsp;&lt;i class="fas fa-trash"&gt;&lt;/i&gt;<br>
+                &nbsp;&nbsp;Удалить<br>
+                &lt;/button&gt;
+            </div>
+        </div>
+        
+        <!-- ПОЗИЦИОНИРОВАНИЕ В УГЛАХ -->
+        <div class="button-section">
+            <h2 class="section-title">📍 Кнопки в углах карточек</h2>
+            
+            <div class="position-demo">
+                <span>Карточка с кнопками в углу</span>
+                <button class="icon-button-sm corner-button top-right-second">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="icon-button-delete corner-button top-right">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            
+            <div class="code-snippet">
+                &lt;div style="position: relative;"&gt;<br>
+                &nbsp;&nbsp;&lt;button class="icon-button-sm" style="position: absolute; top: 10px; right: 48px;"&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="fas fa-edit"&gt;&lt;/i&gt;<br>
+                &nbsp;&nbsp;&lt;/button&gt;<br>
+                &nbsp;&nbsp;&lt;button class="icon-button-delete" style="position: absolute; top: 10px; right: 10px;"&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="fas fa-trash"&gt;&lt;/i&gt;<br>
+                &nbsp;&nbsp;&lt;/button&gt;<br>
+                &lt;/div&gt;
+            </div>
+        </div>
+        
+        <!-- КОМБИНАЦИИ -->
+        <div class="button-section">
+            <h2 class="section-title">🎛️ Комбинации в формах</h2>
+            
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+                <button class="btn-secondary">
+                    Отмена
+                </button>
+                <button class="btn-primary">
+                    <i class="fas fa-save"></i>
+                    Сохранить изменения
+                </button>
+            </div>
+            
+            <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+                <button class="btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Удалить навсегда
+                </button>
+            </div>
+        </div>
+        
+        <!-- ПРИМЕЧАНИЯ -->
+        <div class="button-section" style="background: var(--bg-tertiary);">
+            <h2 class="section-title">📌 Важные примечания</h2>
+            
+            <ul style="color: var(--text-secondary); line-height: 1.8;">
+                <li><strong>Иконочные кнопки:</strong> Используйте 40x40px для основных навигационных кнопок (назад, закрыть, создать)</li>
+                <li><strong>Маленькие иконки:</strong> Используйте 32x32px для кнопок в углах карточек (редактировать, удалить)</li>
+                <li><strong>Кнопка удаления:</strong> Всегда используйте красный цвет с полупрозрачным фоном</li>
+                <li><strong>Hover эффекты:</strong> translateY(-1px) для подъема, scale(1.05) для увеличения</li>
+                <li><strong>Active состояние:</strong> scale(0.95) или scale(0.98) для эффекта нажатия</li>
+                <li><strong>Цвета:</strong> Всегда используйте CSS переменные, не хардкодьте цвета</li>
+                <li><strong>Иконки:</strong> FontAwesome 6, размер 1rem для 40px кнопок, 0.875rem для 32px</li>
+                <li><strong>Transition:</strong> all 0.2s ease для плавных анимаций</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

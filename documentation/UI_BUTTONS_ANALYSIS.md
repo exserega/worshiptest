@@ -271,10 +271,158 @@ btn-{function} - close, back, delete, add, edit, save, cancel
 - **Средние кнопки:** высота 44px  
 - **Большие кнопки:** высота 52px
 
+## 🎨 ВЫБРАННЫЕ ЭТАЛОННЫЕ СТИЛИ
+
+### ⬅️ Кнопка "Назад" (из архива)
+```css
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--bg-tertiary, #1a1f2e);
+    color: #b0b0b0 !important;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-button:hover {
+    background: var(--primary-color, #22d3ee);
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+```
+
+### ➕ Кнопка "Создать" (из архива)
+```css
+/* Использует тот же класс icon-button с иконкой плюса */
+.icon-button.create-button {
+    /* Наследует все стили от .icon-button */
+}
+```
+
+### ✏️ Кнопка "Редактировать" (из архива)
+```css
+.edit-btn-corner {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: var(--bg-tertiary, #1a1f2e);
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 8px;
+    color: var(--text-secondary, #9ca3af) !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-btn-corner:hover {
+    background: var(--primary-color, #22d3ee);
+    border-color: var(--primary-color, #22d3ee);
+    color: white !important;
+}
+```
+
+### 🗑️ Кнопка "Удалить" (из архива)
+```css
+.delete-btn-corner {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-btn-corner:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: scale(1.05);
+}
+```
+
+### ❌ Кнопка "Закрыть" (адаптированная от кнопки "Назад")
+```css
+/* Использует те же стили что и кнопка "Назад", но с иконкой крестика */
+.icon-button.close-button {
+    /* Наследует все стили от .icon-button */
+}
+```
+
+### 💾 Кнопка "Сохранить" (из событий)
+```css
+.btn-primary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
+    background: var(--accent-color, #67e8f9);
+    color: var(--button-text-color, #111827);
+    flex: 1;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+```
+
+### 🚫 Кнопка "Отмена" (из событий)
+```css
+.btn-secondary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
+    background: var(--bg-secondary, #1f2937);
+    color: var(--text-secondary, #9ca3af);
+    min-width: 100px;
+}
+
+.btn-secondary:hover {
+    background: var(--bg-hover, #374151);
+    color: var(--text-primary, #e5e7eb);
+}
+```
+
 ## 📝 СЛЕДУЮЩИЕ ШАГИ
 
-1. Выбрать единый стандарт именования
-2. Создать базовый компонент кнопки
+1. ✅ Выбран единый стандарт (стили из архива и событий)
+2. Создать тестовую страницу с примерами
 3. Постепенно мигрировать все кнопки на новый стандарт
 4. Удалить дублирующиеся стили
 5. Создать документацию по использованию
