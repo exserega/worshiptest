@@ -1,5 +1,5 @@
-// Service Worker v558 - Standardized close buttons with two sizes
-const CACHE_NAME = 'agape-worship-cache-v558';
+// Service Worker v559 - Complete standardization of all close buttons
+const CACHE_NAME = 'agape-worship-cache-v559';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

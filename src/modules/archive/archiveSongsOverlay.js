@@ -43,7 +43,7 @@ class ArchiveSongsOverlay {
                     <div class="fullscreen-header">
                         <div class="header-top-row">
                             <div class="header-left">
-                                <button id="close-archive-songs" class="overlay-close-btn">
+                                <button id="close-archive-songs" class="icon-button-small">
                                     <i class="fas fa-times"></i>
                                 </button>
                                 <div class="header-title">
@@ -123,7 +123,7 @@ class ArchiveSongsOverlay {
                     <div class="song-preview-header">
                         <!-- Строка с заголовком и закрытием -->
                         <div class="header-top">
-                            <button id="close-archive-key-modal" class="overlay-close-btn">
+                            <button id="close-archive-key-modal" class="icon-button-small">
                                 <i class="fas fa-times"></i>
                             </button>
                             <div class="header-title">

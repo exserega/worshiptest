@@ -33,7 +33,7 @@ class DatePickerModal {
         const modalHTML = `
             <div id="date-picker-modal" class="global-overlay">
                 <div class="overlay-content date-picker-modal">
-                    <button class="modal-close-btn" aria-label="Закрыть">
+                    <button class="icon-button-small" aria-label="Закрыть">
                         <i class="fas fa-times"></i>
                     </button>
                     
@@ -86,7 +86,7 @@ class DatePickerModal {
      */
     attachEventListeners() {
         const modal = this.modal;
-        const closeBtn = modal.querySelector('.modal-close-btn');
+        const closeBtn = modal.querySelector('.icon-button-small');
         const prevMonthBtn = modal.querySelector('#prevMonth');
         const nextMonthBtn = modal.querySelector('#nextMonth');
         const overlay = modal;

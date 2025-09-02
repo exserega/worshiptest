@@ -18,11 +18,146 @@ button:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 8px
 button:active:not(:disabled) { transform: translateY(0px); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); }
 button:disabled { opacity: 0.5; cursor: not-allowed; background: color-mix(in srgb, var(--border-color) 50%, transparent); box-shadow: none; color: color-mix(in srgb, var(--text-color) 50%, transparent) !important; }
 
-/* Кнопки-иконки */
-button.icon-button { padding: 0; width: 38px; height: 38px; font-size: 1rem; line-height: 1; flex-shrink: 0; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; }
-button.icon-button.simple { background: transparent; box-shadow: none; border: 1px solid var(--border-color); color: var(--text-color) !important; /* Явный цвет для темной темы */ transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
-button.icon-button.simple:hover:not(:disabled) { background: var(--hover-color); border-color: color-mix(in srgb, var(--border-color) 80%, black); color: var(--text-color) !important; transform: none; box-shadow: none; }
-button.icon-button.simple:active:not(:disabled) { background: var(--primary-color); color: var(--button-text-color) !important; border-color: var(--primary-color); transform: translateY(1px); box-shadow: none; }
+/* Стандартные иконочные кнопки - 40x40px */
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--bg-tertiary, #1a1f2e);
+    color: #b0b0b0 !important;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.icon-button:hover {
+    background: var(--primary-color, #22d3ee);
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+.icon-button i {
+    font-size: 1rem;
+    color: inherit !important;
+}
+
+/* Компактная версия иконочной кнопки для модальных окон - 32x32px */
+.icon-button-small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--bg-tertiary, #1a1f2e);
+    color: #b0b0b0 !important;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.icon-button-small:hover {
+    background: var(--primary-color, #22d3ee);
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.icon-button-small:active {
+    transform: scale(0.95);
+}
+
+.icon-button-small i {
+    font-size: 0.9rem;
+    color: inherit !important;
+}
+
+/* Специальные позиции для модальных окон */
+#note-modal .icon-button-small,
+#close-note-modal-x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Позиционирование в оверлеях */
+.modal-header .icon-button-small,
+.song-editor-header .icon-button-small,
+.header-top .icon-button-small,
+.header-top-row .icon-button-small {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Позиционирование в модальных окнах создания */
+.overlay-content .icon-button-small {
+    position: absolute;
+    right: 20px;
+    top: 18px;
+}
+
+/* Кнопка очистки поиска */
+.search-input-wrapper .icon-button-small.clear-search {
+    position: absolute;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Позиционирование в fullscreen оверлеях */
+.fullscreen-header .icon-button-small,
+.song-preview-header .icon-button-small {
+    position: static; /* Позиция уже задана в структуре */
+}
+
+/* Метроном - особое позиционирование */
+.metronome-close {
+    position: absolute !important;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Старые стили для обратной совместимости */
+button.icon-button.simple { 
+    background: transparent; 
+    box-shadow: none; 
+    border: 1px solid var(--border-color); 
+    color: var(--text-color) !important; 
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; 
+}
+button.icon-button.simple:hover:not(:disabled) { 
+    background: var(--hover-color); 
+    border-color: color-mix(in srgb, var(--border-color) 80%, black); 
+    color: var(--text-color) !important; 
+    transform: none; 
+    box-shadow: none; 
+}
+button.icon-button.simple:active:not(:disabled) { 
+    background: var(--primary-color); 
+    color: var(--button-text-color) !important; 
+    border-color: var(--primary-color); 
+    transform: translateY(1px); 
+    box-shadow: none; 
+}
 
 
 /* Ряд Тональность/Разделить/Масштаб */

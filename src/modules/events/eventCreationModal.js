@@ -101,10 +101,8 @@ class EventCreationModal {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2>${this.editMode ? 'Редактировать событие' : 'Создать событие'}</h2>
-                        <button class="close-btn" data-action="close" aria-label="Закрыть">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                        <button class="icon-button-small" data-action="close" aria-label="Закрыть">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
@@ -636,10 +634,8 @@ class EventCreationModal {
             <div class="selector-content">
                 <div class="selector-header">
                     <h3>Добавить участника</h3>
-                    <button class="selector-close-btn" data-action="close-selector" aria-label="Закрыть">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                    <button class="icon-button-small" data-action="close-selector" aria-label="Закрыть">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="selector-body">
@@ -1068,10 +1064,8 @@ class EventCreationModal {
             <div class="selector-content">
                 <div class="selector-header">
                     <h3>Выбрать ведущего</h3>
-                    <button class="selector-close-btn" data-action="close-selector" aria-label="Закрыть">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                    <button class="icon-button-small" data-action="close-selector" aria-label="Закрыть">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="custom-participant-input">
