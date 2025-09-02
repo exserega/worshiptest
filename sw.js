@@ -1,5 +1,5 @@
-// Service Worker v548 - Rollback to check original button behavior
-const CACHE_NAME = 'agape-worship-cache-v548';
+// Service Worker v549 - Fix back button jumping issue with standardized style
+const CACHE_NAME = 'agape-worship-cache-v549';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -42,6 +42,14 @@ body {
     display: flex;
 }
 
+/* Предотвращаем прыжки кнопки назад при смене экранов */
+.auth-screen .back-btn,
+.auth-screen.active .back-btn {
+    position: absolute !important;
+    top: 30px !important;  
+    left: 30px !important;
+}
+
 /* Logo */
 .logo {
     font-size: 2.5rem;
@@ -201,29 +209,41 @@ body {
     box-shadow: 0 10px 20px rgba(34, 211, 238, 0.2);
 }
 
-/* Back Button */
+/* Back Button - СТАНДАРТИЗИРОВАНО */
+/* Применяем эталонный стиль icon-button */
 .back-btn {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid #374151;
-    background: transparent;
-    color: #9ca3af;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    /* Жестко фиксированная позиция */
+    position: absolute !important;
+    top: 30px !important;
+    left: 30px !important;
+    
+    /* Эталонный стиль icon-button */
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #1a1f2e; /* var(--bg-tertiary) */
+    color: #b0b0b0 !important;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .back-btn:hover {
-    border-color: #22d3ee;
-    color: #22d3ee;
-    background: rgba(34, 211, 238, 0.1);
+    background: #22d3ee; /* var(--primary-color) */
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+}
+
+.back-btn i {
+    font-size: 1rem;
+    color: inherit !important;
 }
 
 /* Messages */
@@ -352,8 +372,5 @@ body {
         max-width: 100%;
     }
     
-    .back-btn {
-        top: 20px;
-        left: 20px;
-    }
+    /* Позиция кнопки назад теперь фиксирована через !important в основных стилях */
 }
