@@ -1,5 +1,5 @@
-// Service Worker v553 - Removed transform animations that caused button jumping
-const CACHE_NAME = 'agape-worship-cache-v553';
+// Service Worker v554 - Standardized back button in event page
+const CACHE_NAME = 'agape-worship-cache-v554';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
