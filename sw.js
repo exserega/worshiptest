@@ -1,5 +1,5 @@
-// Service Worker v544 - Improve archive modal visual design
-const CACHE_NAME = 'agape-worship-cache-v544';
+// Service Worker v548 - Rollback to check original button behavior
+const CACHE_NAME = 'agape-worship-cache-v548';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
