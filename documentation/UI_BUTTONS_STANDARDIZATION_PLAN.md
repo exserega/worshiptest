@@ -55,28 +55,36 @@
    - Количество: 8 кнопок
    - **Статус:** Завершено (v558)
 
-2. **src/modules/integration/datePickerModal.js**
+2. **src/modules/integration/datePickerModal.js** ✅
    - `.modal-close-btn` - закрытие календаря
    - Количество: 1 кнопка (динамическая)
+   - **Статус:** Завершено (v559)
 
-3. **src/modules/events/eventCreationModal.js**
+3. **src/modules/events/eventCreationModal.js** ✅
    - `.close-btn` в модальном окне создания события
-   - Количество: 1 кнопка (динамическая)
+   - Количество: 3 кнопки (динамические)
+   - **Статус:** Завершено (v559)
 
-4. **src/modules/events/eventPlayer.js**
+4. **src/modules/events/eventPlayer.js** ✅
    - `.player-close-btn` - закрытие плеера
    - Количество: 1 кнопка (динамическая)
+   - **Статус:** Завершено (v559)
 
 5. **archive/index.html** ✅
    - `.overlay-close-btn` (#close-create-modal, #close-confirm-modal)
    - Количество: 2 кнопки
    - **Статус:** Завершено (v558)
 
-6. **styles/modals.css**
+6. **styles/modals.css** ✅
    - Глобальные стили для `.modal-close-btn`, `.close-btn`
-   - Нужно заменить на `icon-button`
+   - **Статус:** Обновлены через buttons.css (v559)
 
-**Итого:** ~10 замен + обновление глобальных стилей
+7. **src/modules/archive/archiveSongsOverlay.js** ✅
+   - Кнопки закрытия в оверлеях архива
+   - Количество: 2 кнопки (динамические)
+   - **Статус:** Завершено (v559)
+
+**Итого:** ~18 замен ✅ ЭТАП 2 ЗАВЕРШЕН!
 
 ---
 
