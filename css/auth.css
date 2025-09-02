@@ -32,16 +32,20 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    animation: fadeIn 0.3s ease;
+    /* УБИРАЕМ анимацию fadeIn - она создаёт прыжки кнопки из-за transform */
+    /* animation: fadeIn 0.3s ease; */
+    opacity: 0;
     padding: 20px;
     width: 100%;
     max-width: 400px;
     /* ВАЖНО: Делаем auth-screen непозиционированным, чтобы кнопка позиционировалась относительно auth-container */
     position: static !important;
+    transition: opacity 0.3s ease; /* Только плавное появление через opacity */
 }
 
 .auth-screen.active {
     display: flex;
+    opacity: 1; /* Делаем видимым активный экран */
 }
 
 /* Logo */
@@ -280,11 +284,12 @@ body {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        /* УБИРАЕМ transform - он создаёт прыжки позиционирования */
+        /* transform: translateY(20px); */
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        /* transform: translateY(0); */
     }
 }
 

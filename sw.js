@@ -1,5 +1,5 @@
-// Service Worker v552 - Back button visibility controlled with display none/flex
-const CACHE_NAME = 'agape-worship-cache-v552';
+// Service Worker v553 - Removed transform animations that caused button jumping
+const CACHE_NAME = 'agape-worship-cache-v553';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
