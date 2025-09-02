@@ -374,11 +374,11 @@
 }
 ```
 
-### 🚫 Кнопка "Отмена" (из событий)
+### 🚫 Кнопка "Отмена" (из событий, с добавленной границей)
 ```css
 .btn-secondary {
     padding: 12px 24px;
-    border: none;
+    border: 1px solid var(--border-color, #374151);
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
@@ -393,6 +393,7 @@
 .btn-secondary:hover {
     background: var(--bg-hover, #374151);
     color: var(--text-primary, #e5e7eb);
+    border-color: var(--text-secondary, #9ca3af);
 }
 ```
 
