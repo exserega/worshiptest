@@ -1,5 +1,5 @@
-// Service Worker v556 - Standardized back button in admin page
-const CACHE_NAME = 'agape-worship-cache-v556';
+// Service Worker v557 - Completed standardization of all back buttons
+const CACHE_NAME = 'agape-worship-cache-v557';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

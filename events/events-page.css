@@ -27,21 +27,26 @@
     width: 40px;
     height: 40px;
     border: none;
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
+    background: var(--bg-tertiary, #1a1f2e);
+    color: #b0b0b0 !important;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .icon-button:hover {
-    background: var(--primary-color);
+    background: var(--primary-color, #22d3ee);
     color: white !important;
     transform: translateY(-1px);
 }
 
 .icon-button:active {
     transform: scale(0.95);
+}
+
+.icon-button i {
+    font-size: 1rem;
+    color: inherit !important;
 }
 
 .icon-button svg {
