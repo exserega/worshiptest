@@ -89,14 +89,14 @@
                     <button style="flex: 1; padding: 8px; background: rgba(34, 211, 238, 0.1); color: var(--primary-color); border: 1px solid var(--primary-color); border-radius: 6px; font-size: 0.85rem;">
                         <i class="fas fa-plus" style="margin-right: 4px;"></i>Добавить
                     </button>
-                    <button style="width: 36px; height: 36px; background: transparent; color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Презентация">
-                        <i class="fas fa-play"></i>
+                    <button style="width: 36px; height: 36px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Презентация">
+                        <i class="fas fa-play" style="color: #9ca3af;"></i>
                     </button>
-                    <button style="width: 36px; height: 36px; background: transparent; color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Календарь">
-                        <i class="fas fa-calendar"></i>
+                    <button style="width: 36px; height: 36px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Календарь">
+                        <i class="fas fa-calendar" style="color: #9ca3af;"></i>
                     </button>
-                    <button style="width: 36px; height: 36px; background: transparent; color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Архив">
-                        <i class="fas fa-archive"></i>
+                    <button style="width: 36px; height: 36px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Архив">
+                        <i class="fas fa-archive" style="color: #9ca3af;"></i>
                     </button>
                 </div>
             </div>
@@ -119,9 +119,9 @@
         <!-- Тело панели -->
         <div style="padding: 15px;">
             <!-- Создать -->
-            <button style="width: 100%; padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #e5e7eb; border: 2px dashed #374151; border-radius: 8px; font-size: 0.9rem; margin-bottom: 12px;">
+            <button style="width: 100%; padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 2px dashed #374151; border-radius: 8px; font-size: 0.9rem; margin-bottom: 12px;">
                 <i class="fas fa-plus" style="margin-right: 8px; color: var(--primary-color);"></i>
-                Создать новый сет-лист
+                <span style="color: #9ca3af;">Создать новый сет-лист</span>
             </button>
             
             <!-- Активный сет-лист -->
@@ -139,17 +139,17 @@
                         <i class="fas fa-plus"></i>
                         <span>Добавить</span>
                     </button>
-                    <button style="padding: 8px 4px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                        <i class="fas fa-play"></i>
-                        <span>Презент.</span>
+                    <button style="padding: 8px 4px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                        <i class="fas fa-play" style="color: #9ca3af;"></i>
+                        <span style="color: #9ca3af;">Презент.</span>
                     </button>
-                    <button style="padding: 8px 4px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                        <i class="fas fa-calendar"></i>
-                        <span>Календарь</span>
+                    <button style="padding: 8px 4px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                        <i class="fas fa-calendar" style="color: #9ca3af;"></i>
+                        <span style="color: #9ca3af;">Календарь</span>
                     </button>
-                    <button style="padding: 8px 4px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                        <i class="fas fa-archive"></i>
-                        <span>Архив</span>
+                    <button style="padding: 8px 4px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                        <i class="fas fa-archive" style="color: #9ca3af;"></i>
+                        <span style="color: #9ca3af;">Архив</span>
                     </button>
                 </div>
             </div>
@@ -193,7 +193,7 @@
             </div>
             
             <!-- Неактивная карточка -->
-            <div style="background: var(--bg-tertiary); border: 1px solid #374151; border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+            <div style="background: var(--bg-tertiary, #1a1f2e); border: 1px solid #374151; border-radius: 8px; padding: 12px; margin-bottom: 10px;">
                 <h4 style="margin: 0 0 8px 0; color: #e5e7eb; font-size: 0.95rem;">Молодежное служение</h4>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: 0.75rem; color: #9ca3af;">3 песни • 15 мин</span>
@@ -240,17 +240,17 @@
                     <i class="fas fa-plus"></i>
                     <span>Добавить песню</span>
                 </button>
-                <button style="flex: 1; min-width: 45%; padding: 12px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <i class="fas fa-play"></i>
-                    <span>Презентация</span>
+                <button style="flex: 1; min-width: 45%; padding: 12px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fas fa-play" style="color: #9ca3af;"></i>
+                    <span style="color: #9ca3af;">Презентация</span>
                 </button>
-                <button style="flex: 1; min-width: 45%; padding: 12px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>Сменить список</span>
+                <button style="flex: 1; min-width: 45%; padding: 12px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fas fa-exchange-alt" style="color: #9ca3af;"></i>
+                    <span style="color: #9ca3af;">Сменить список</span>
                 </button>
-                <button style="flex: 1; min-width: 45%; padding: 12px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <i class="fas fa-file-plus"></i>
-                    <span>Создать новый</span>
+                <button style="flex: 1; min-width: 45%; padding: 12px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fas fa-file-plus" style="color: #9ca3af;"></i>
+                    <span style="color: #9ca3af;">Создать новый</span>
                 </button>
             </div>
         </div>
@@ -266,7 +266,7 @@
             <!-- Селектор сет-листа как dropdown -->
             <div style="margin-bottom: 12px;">
                 <label style="display: block; font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">Текущий сет-лист:</label>
-                <select style="width: 100%; padding: 10px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 8px; font-size: 0.9rem;">
+                <select style="width: 100%; padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #e5e7eb; border: 1px solid #374151; border-radius: 8px; font-size: 0.9rem;">
                     <option>📋 Воскресное служение (5 песен)</option>
                     <option>📋 Молодежное служение (3 песни)</option>
                     <option>📋 Вечернее служение (4 песни)</option>
@@ -275,7 +275,7 @@
             </div>
             
             <!-- Информация -->
-            <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-tertiary); border-radius: 6px; margin-bottom: 12px; font-size: 0.8rem;">
+            <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-tertiary, #1a1f2e); border-radius: 6px; margin-bottom: 12px; font-size: 0.8rem;">
                 <span style="color: #9ca3af;"><i class="fas fa-building" style="margin-right: 4px; color: var(--primary-color);"></i>Центральный</span>
                 <span style="color: #9ca3af;"><i class="fas fa-clock" style="margin-right: 4px; color: var(--primary-color);"></i>~25 мин</span>
                 <span style="color: #9ca3af;"><i class="fas fa-music" style="margin-right: 4px; color: var(--primary-color);"></i>5 песен</span>
@@ -286,14 +286,14 @@
                 <button style="flex: 1; padding: 10px; background: var(--primary-color); color: #111827; border: none; border-radius: 8px; font-size: 0.9rem;">
                     <i class="fas fa-plus" style="margin-right: 6px;"></i>Добавить
                 </button>
-                <button style="width: 44px; height: 44px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 8px;" title="Презентация">
-                    <i class="fas fa-play"></i>
+                <button style="width: 44px; height: 44px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px;" title="Презентация">
+                    <i class="fas fa-play" style="color: #9ca3af;"></i>
                 </button>
-                <button style="width: 44px; height: 44px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 8px;" title="Календарь">
-                    <i class="fas fa-calendar"></i>
+                <button style="width: 44px; height: 44px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px;" title="Календарь">
+                    <i class="fas fa-calendar" style="color: #9ca3af;"></i>
                 </button>
-                <button style="width: 44px; height: 44px; background: var(--bg-tertiary); color: #e5e7eb; border: 1px solid #374151; border-radius: 8px;" title="Архив">
-                    <i class="fas fa-archive"></i>
+                <button style="width: 44px; height: 44px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px;" title="Архив">
+                    <i class="fas fa-archive" style="color: #9ca3af;"></i>
                 </button>
             </div>
         </div>
@@ -334,14 +334,14 @@
                     <button style="padding: 10px; background: var(--primary-color); color: #111827; border: none; border-radius: 6px; font-size: 0.85rem;">
                         <i class="fas fa-plus" style="margin-right: 6px;"></i>Добавить
                     </button>
-                    <button style="padding: 10px; background: transparent; color: #e5e7eb; border: 1px solid #374151; border-radius: 6px; font-size: 0.85rem;">
-                        <i class="fas fa-play" style="margin-right: 6px;"></i>Презентация
+                    <button style="padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.85rem;">
+                        <i class="fas fa-play" style="margin-right: 6px; color: #9ca3af;"></i><span style="color: #9ca3af;">Презентация</span>
                     </button>
-                    <button style="padding: 10px; background: transparent; color: #e5e7eb; border: 1px solid #374151; border-radius: 6px; font-size: 0.85rem;">
-                        <i class="fas fa-calendar" style="margin-right: 6px;"></i>Календарь
+                    <button style="padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.85rem;">
+                        <i class="fas fa-calendar" style="margin-right: 6px; color: #9ca3af;"></i><span style="color: #9ca3af;">Календарь</span>
                     </button>
-                    <button style="padding: 10px; background: transparent; color: #e5e7eb; border: 1px solid #374151; border-radius: 6px; font-size: 0.85rem;">
-                        <i class="fas fa-archive" style="margin-right: 6px;"></i>Архив
+                    <button style="padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.85rem;">
+                        <i class="fas fa-archive" style="margin-right: 6px; color: #9ca3af;"></i><span style="color: #9ca3af;">Архив</span>
                     </button>
                 </div>
             </div>
