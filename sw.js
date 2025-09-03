@@ -1,5 +1,5 @@
-// Service Worker v606 - Fixed BPM badge width and branch popup close button style
-const CACHE_NAME = 'agape-worship-cache-v606';
+// Service Worker v607 - Centered text in badges and improved branch popup layout
+const CACHE_NAME = 'agape-worship-cache-v607';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
