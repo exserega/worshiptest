@@ -50,7 +50,17 @@ async function loadBranches() {
             branches.push({ id: doc.id, ...doc.data() });
         });
         
+        // Сохраняем филиалы в глобальное состояние
+        if (window.state) {
+            window.state.branches = branches;
+        }
+        
         updateBranchSelector();
+        
+        // Обновляем название филиала в кнопке
+        if (window.setlistCardsModule?.updateCurrentBranchName) {
+            window.setlistCardsModule.updateCurrentBranchName();
+        }
         
     } catch (error) {
         console.error('Error loading branches:', error);

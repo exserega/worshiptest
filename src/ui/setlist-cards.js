@@ -386,18 +386,40 @@ export function initCardHandlers() {
     const branchBtn = document.getElementById('setlist-branch-btn');
     const branchPopup = document.getElementById('branch-selector-popup');
     const branchSelector = document.getElementById('setlist-branch-selector');
+    const branchNameSpan = document.getElementById('current-branch-name');
+    
+    // Обновляем название текущего филиала
+    if (branchNameSpan) {
+        updateCurrentBranchName();
+    }
     
     if (branchBtn && branchPopup) {
         branchBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             branchPopup.style.display = branchPopup.style.display === 'none' ? 'block' : 'none';
+            // Обновляем список филиалов при открытии
+            if (branchPopup.style.display === 'block') {
+                updateBranchSelector();
+            }
         });
         logger.log('📋 Branch button handler attached');
     }
     
     // Обработчик изменения филиала
     if (branchSelector) {
-        // Обработчик уже установлен в branchSelector.js, просто логируем
+        branchSelector.addEventListener('change', async (e) => {
+            const newBranch = e.target.value;
+            if (newBranch) {
+                // Сохраняем выбранный филиал
+                localStorage.setItem('selectedBranch', newBranch);
+                // Обновляем название
+                updateCurrentBranchName();
+                // Закрываем попап
+                branchPopup.style.display = 'none';
+                // Перезагружаем сет-листы для нового филиала
+                // Это будет обработано существующим кодом
+            }
+        });
         logger.log('📋 Branch selector found:', branchSelector);
     }
     
@@ -411,4 +433,87 @@ export function initCardHandlers() {
     });
     
     logger.log('📋 Card handlers initialized');
+}
+
+/**
+ * Обновляет название текущего филиала в кнопке
+ */
+export function updateCurrentBranchName() {
+    const branchNameSpan = document.getElementById('current-branch-name');
+    if (!branchNameSpan) return;
+    
+    const user = getCurrentUser();
+    
+    if (user && user.branchName) {
+        branchNameSpan.textContent = user.branchName;
+    } else {
+        // Пробуем получить из localStorage или state
+        const selectedBranch = localStorage.getItem('selectedBranch');
+        const branches = state.branches || [];
+        
+        if (selectedBranch === 'all') {
+            branchNameSpan.textContent = 'Все филиалы';
+        } else if (selectedBranch && branches.length > 0) {
+            const branch = branches.find(b => b.id === selectedBranch);
+            branchNameSpan.textContent = branch ? branch.name : 'Филиал';
+        } else if (user && user.branchId && branches.length > 0) {
+            const branch = branches.find(b => b.id === user.branchId);
+            branchNameSpan.textContent = branch ? branch.name : 'Филиал';
+        } else {
+            branchNameSpan.textContent = 'Филиал';
+        }
+    }
+}
+
+/**
+ * Обновляет список филиалов с пометкой основного
+ */
+async function updateBranchSelector() {
+    const branchSelector = document.getElementById('setlist-branch-selector');
+    if (!branchSelector) return;
+    
+    const user = getCurrentUser();
+    const userBranchId = user?.branchId;
+    const selectedBranch = localStorage.getItem('selectedBranch') || userBranchId;
+    
+    // Получаем филиалы из state
+    const branches = state.branches || [];
+    
+    if (branches.length === 0) {
+        branchSelector.innerHTML = '<option value="">Загрузка...</option>';
+        return;
+    }
+    
+    // Очищаем селектор
+    branchSelector.innerHTML = '';
+    
+    // Добавляем опцию "Все филиалы"
+    const allOption = document.createElement('option');
+    allOption.value = 'all';
+    allOption.textContent = 'Все филиалы';
+    if (selectedBranch === 'all') {
+        allOption.selected = true;
+    }
+    branchSelector.appendChild(allOption);
+    
+    // Добавляем филиалы
+    branches.forEach(branch => {
+        const option = document.createElement('option');
+        option.value = branch.id;
+        
+        // Добавляем пометку "(Основной)" для филиала пользователя
+        if (branch.id === userBranchId) {
+            option.textContent = `${branch.name} (Основной)`;
+        } else {
+            option.textContent = branch.name;
+        }
+        
+        if (branch.id === selectedBranch) {
+            option.selected = true;
+        }
+        
+        branchSelector.appendChild(option);
+    });
+    
+    logger.log('📋 Branch selector updated with', branches.length, 'branches');
 }

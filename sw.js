@@ -1,5 +1,5 @@
-// Service Worker v602 - Fixed calendar button permissions check
-const CACHE_NAME = 'agape-worship-cache-v602';
+// Service Worker v603 - Updated header buttons with branch name and create text
+const CACHE_NAME = 'agape-worship-cache-v603';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

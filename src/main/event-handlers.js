@@ -805,9 +805,17 @@ function setupSetlistEventHandlers() {
     // Инициализация обработчиков для карточек сет-листов
     try {
         import('../ui/setlist-cards.js').then(module => {
+            // Экспортируем модуль глобально для других модулей
+            window.setlistCardsModule = module;
+            
             if (module.initCardHandlers) {
                 module.initCardHandlers();
                 console.log('📋 [EventHandlers] Card handlers initialized');
+            }
+            
+            // Обновляем название филиала
+            if (module.updateCurrentBranchName) {
+                module.updateCurrentBranchName();
             }
         }).catch(e => {
             console.log('📋 [EventHandlers] Cards module not available', e);

@@ -5100,22 +5100,33 @@ body:not([data-theme="light"]) mark.search-highlight {
 }
 
 .icon-button-header {
-    width: 32px;
+    min-width: 32px;
     height: 32px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
+    padding: 0 10px;
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 8px;
     color: #9ca3af;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 0.85rem;
+    white-space: nowrap;
 }
 
-/* Явно указываем цвет для всех иконок */
-#setlists-panel .icon-button-header i {
+/* Явно указываем цвет для всех иконок и текста */
+#setlists-panel .icon-button-header i,
+#setlists-panel .icon-button-header span {
     color: #9ca3af !important;
+}
+
+/* Название филиала */
+#setlists-panel .icon-button-header .branch-name {
+    color: #e5e7eb !important;
+    font-weight: 500;
 }
 
 .icon-button-header:hover {
@@ -5129,7 +5140,8 @@ body:not([data-theme="light"]) mark.search-highlight {
     color: #111827;
 }
 
-#setlists-panel .icon-button-header.primary i {
+#setlists-panel .icon-button-header.primary i,
+#setlists-panel .icon-button-header.primary span {
     color: #111827 !important;
 }
 
