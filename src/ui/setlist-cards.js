@@ -103,9 +103,22 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
         logger.log('📋 Setlist songs data:', setlist.songs);
         logger.log('📋 All songs available:', state.allSongs?.length);
         
+        // Выводим структуру первой песни для отладки
+        if (setlist.songs.length > 0) {
+            logger.log('📋 First song structure:', {
+                song: setlist.songs[0],
+                keys: Object.keys(setlist.songs[0])
+            });
+        }
+        
         // Проверяем загружены ли все песни
         if (!state.allSongs || state.allSongs.length === 0) {
             logger.warn('📋 Warning: allSongs not loaded, songs data may be incomplete');
+        } else if (state.allSongs.length > 0) {
+            logger.log('📋 First global song structure:', {
+                song: state.allSongs[0],
+                keys: Object.keys(state.allSongs[0])
+            });
         }
         
         const fullSongs = setlist.songs

@@ -1,5 +1,5 @@
-// Service Worker v587 - Fixed preferredKey for songs and centered header buttons
-const CACHE_NAME = 'agape-worship-cache-v587';
+// Service Worker v588 - Added more debugging for song data structure
+const CACHE_NAME = 'agape-worship-cache-v588';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
