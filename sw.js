@@ -1,5 +1,5 @@
-// Service Worker v600 - Full width two-tone design with linear gradient
-const CACHE_NAME = 'agape-worship-cache-v600';
+// Service Worker v601 - Fixed song list height for many songs
+const CACHE_NAME = 'agape-worship-cache-v601';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -5302,10 +5302,30 @@ body:not([data-theme="light"]) mark.search-highlight {
 }
 
 #setlists-panel .setlist-card.expanded .card-songs {
-    max-height: 400px;
+    max-height: 600px;
     margin-top: 8px;
     padding: 8px;
     border-top: 1px solid var(--border-color, #374151);
+    overflow-y: auto;
+}
+
+/* Стилизация скроллбара для области песен */
+#setlists-panel .card-songs::-webkit-scrollbar {
+    width: 6px;
+}
+
+#setlists-panel .card-songs::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+#setlists-panel .card-songs::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+#setlists-panel .card-songs::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 
