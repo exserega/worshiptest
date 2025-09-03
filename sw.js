@@ -1,5 +1,5 @@
-// Service Worker v599 - Simplified dark background for songs
-const CACHE_NAME = 'agape-worship-cache-v599';
+// Service Worker v600 - Full width two-tone design with linear gradient
+const CACHE_NAME = 'agape-worship-cache-v600';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
