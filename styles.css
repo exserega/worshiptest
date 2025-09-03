@@ -3092,6 +3092,7 @@ body[data-theme="light"] button.key-btn {
     padding: 0 !important;
     gap: 0 !important;
     overflow: hidden !important;
+    height: 100% !important;
 }
 
 /* Заголовок панели */
@@ -5101,23 +5102,14 @@ body:not([data-theme="light"]) mark.search-highlight {
     flex: 1;
 }
 
-/* Контейнер основного контента панели */
-.setlists-panel-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
 /* Секция создания сет-листа */
 .panel-create-section {
     padding: 8px;
     padding-left: 4px;
     padding-right: 4px;
     background: var(--bg-primary, #0f172a);
-    border-top: 1px solid var(--border-color, #374151);
+    border-bottom: 1px solid var(--border-color, #374151);
     flex-shrink: 0;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .icon-button-header {
@@ -5217,9 +5209,11 @@ body:not([data-theme="light"]) mark.search-highlight {
 .setlists-cards-container {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 2px;
-    padding-bottom: 8px; /* Небольшой отступ снизу */
+    padding-bottom: 20px; /* Достаточный отступ снизу для последней карточки */
     background: var(--bg-primary, #0f172a);
+    min-height: 0; /* Важно для правильной работы flex и overflow */
 }
 
 /* Карточка сет-листа */

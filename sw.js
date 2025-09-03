@@ -1,5 +1,5 @@
-// Service Worker v610 - Visual improvements for create button section
-const CACHE_NAME = 'agape-worship-cache-v610';
+// Service Worker v611 - Fixed scrolling for setlist cards container
+const CACHE_NAME = 'agape-worship-cache-v611';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
