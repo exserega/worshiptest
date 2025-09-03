@@ -4,7 +4,7 @@
 
 import { logger } from '../utils/logger.js';
 import * as ui from '../../ui.js';
-import * as state from '../../state.js';
+import * as state from '../../js/state.js';
 
 // Текущий активный сет-лист
 let currentActiveSetlist = null;
@@ -330,12 +330,20 @@ export function initCardHandlers() {
     // Обработчик кнопки филиала
     const branchBtn = document.getElementById('setlist-branch-btn');
     const branchPopup = document.getElementById('branch-selector-popup');
+    const branchSelector = document.getElementById('setlist-branch-selector');
     
     if (branchBtn && branchPopup) {
         branchBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             branchPopup.style.display = branchPopup.style.display === 'none' ? 'block' : 'none';
         });
+        logger.log('📋 Branch button handler attached');
+    }
+    
+    // Обработчик изменения филиала
+    if (branchSelector) {
+        // Обработчик уже установлен в branchSelector.js, просто логируем
+        logger.log('📋 Branch selector found:', branchSelector);
     }
     
     // Закрытие попапа по клику вне

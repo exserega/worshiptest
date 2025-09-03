@@ -1,5 +1,5 @@
-// Service Worker v580 - Redesigned setlist panel with cards layout
-const CACHE_NAME = 'agape-worship-cache-v580';
+// Service Worker v581 - Fixed setlist cards module import path
+const CACHE_NAME = 'agape-worship-cache-v581';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
