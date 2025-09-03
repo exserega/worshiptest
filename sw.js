@@ -1,5 +1,5 @@
-// Service Worker v585 - Fixed song data extraction and button colors
-const CACHE_NAME = 'agape-worship-cache-v585';
+// Service Worker v586 - Fixed delete button style, songs data and header positioning
+const CACHE_NAME = 'agape-worship-cache-v586';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

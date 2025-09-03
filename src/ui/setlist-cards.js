@@ -82,10 +82,10 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     
     card.appendChild(headerInfo);
     
-    // Кнопка удаления
+    // Кнопка удаления (стандартная icon-button-delete)
     const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'card-delete-btn';
-    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteBtn.className = 'icon-button-delete card-delete-btn';
+    deleteBtn.innerHTML = '<i class="fas fa-trash" style="color: #ef4444 !important;"></i>';
     deleteBtn.title = 'Удалить сет-лист';
     deleteBtn.onclick = (e) => {
         e.stopPropagation();
@@ -103,24 +103,38 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
         logger.log('📋 Setlist songs data:', setlist.songs);
         logger.log('📋 All songs available:', state.allSongs?.length);
         
+        // Проверяем загружены ли все песни
+        if (!state.allSongs || state.allSongs.length === 0) {
+            logger.warn('📋 Warning: allSongs not loaded, songs data may be incomplete');
+        }
+        
         const fullSongs = setlist.songs
             .map(setlistSong => {
                 // Находим данные песни из общего списка
                 const songDetails = state.allSongs.find(song => song.id === setlistSong.songId) || {};
+                
+                // Определяем тональность (приоритет у сет-листа)
+                const setlistKey = setlistSong.key || setlistSong.originalKey;
+                const songKey = songDetails.key || songDetails.originalKey;
+                const displayKey = setlistKey || songKey || '';
+                
+                // BPM берем из общих данных песни
+                const displayBpm = songDetails.bpm || setlistSong.bpm || '';
+                
                 logger.log('📋 Song mapping:', {
-                    setlistSong,
-                    songDetails,
-                    key: setlistSong.key || songDetails.key,
-                    bpm: songDetails.bpm
+                    songName: songDetails.name || setlistSong.name,
+                    setlistKey,
+                    songKey,
+                    displayKey,
+                    displayBpm
                 });
+                
                 // Объединяем данные, приоритет у данных из сет-листа
                 return { 
                     ...songDetails, 
                     ...setlistSong,
-                    // Используем key из сет-листа (может отличаться от оригинала)
-                    displayKey: setlistSong.key || songDetails.key || '',
-                    // BPM берем из общих данных песни
-                    displayBpm: songDetails.bpm || ''
+                    displayKey,
+                    displayBpm
                 };
             })
             .filter(s => s.songId) // Фильтруем по songId, а не id
@@ -141,8 +155,14 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
             };
             
             // Используем displayKey и displayBpm которые мы подготовили
-            const songKey = song.displayKey;
-            const songBpm = song.displayBpm;
+            const songKey = song.displayKey || '';
+            const songBpm = song.displayBpm || '';
+            
+            logger.log('📋 Rendering song:', {
+                name: song.name,
+                key: songKey,
+                bpm: songBpm
+            });
             
             songItem.innerHTML = `
                 <span class="song-name-text">${song.name || 'Без названия'}</span>

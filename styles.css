@@ -5096,6 +5096,7 @@ body:not([data-theme="light"]) mark.search-highlight {
 .panel-header-buttons {
     display: flex;
     gap: 6px;
+    margin-right: 40px; /* Отступ от кнопки закрытия панели */
 }
 
 .icon-button-header {
@@ -5232,67 +5233,80 @@ body:not([data-theme="light"]) mark.search-highlight {
     color: #9ca3af !important;
 }
 
-/* Кнопка удаления в углу */
-.card-delete-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-tertiary, #1a1f2e);
-    border: 1px solid var(--border-color, #374151);
-    border-radius: 6px;
-    color: #ef4444;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    z-index: 10;
-    font-size: 0.75rem;
+/* Кнопка удаления в углу - стандартный стиль */
+#setlists-panel .card-delete-btn {
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    width: 28px !important;
+    height: 28px !important;
+    z-index: 10 !important;
 }
 
-.card-delete-btn:hover {
-    border-color: #ef4444;
-    background: rgba(239, 68, 68, 0.1);
+/* Наследуем стили от icon-button-delete */
+#setlists-panel .icon-button-delete {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    border: 1px solid var(--border-color, #374151) !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+#setlists-panel .icon-button-delete:hover {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
     transform: scale(1.05);
 }
 
+#setlists-panel .icon-button-delete i {
+    color: #ef4444 !important;
+    font-size: 0.75rem !important;
+}
+
 /* Список песен в карточке */
-.card-songs {
+#setlists-panel .card-songs {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     margin-top: 0;
 }
 
-.setlist-card.expanded .card-songs {
+#setlists-panel .setlist-card.expanded .card-songs {
     max-height: 300px;
     margin-top: 8px;
     padding-top: 8px;
     border-top: 1px solid var(--border-color, #374151);
 }
 
-.song-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 8px;
-    background: var(--bg-tertiary, #1a1f2e);
-    border: 1px solid var(--border-color, #374151);
-    border-radius: 4px;
-    margin-bottom: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+#setlists-panel .song-item {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 4px 8px !important;
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    border: 1px solid var(--border-color, #374151) !important;
+    border-radius: 4px !important;
+    margin-bottom: 4px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
 }
 
-.song-item:hover {
-    background: rgba(34, 211, 238, 0.1);
-    border-color: var(--primary-color);
+#setlists-panel .song-item:hover {
+    background: rgba(34, 211, 238, 0.1) !important;
+    border-color: var(--primary-color) !important;
 }
 
-.song-item:last-child {
-    margin-bottom: 0;
+#setlists-panel .song-item:last-child {
+    margin-bottom: 0 !important;
+}
+
+#setlists-panel .song-info {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
 }
 
 #setlists-panel .song-name-text {
