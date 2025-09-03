@@ -283,19 +283,38 @@
         /* Стили для карточек */
         .card-grid {
             display: grid;
-            gap: 8px;
-            padding: 10px;
+            gap: 6px;
+            padding: 8px;
         }
         
         .setlist-card {
             background: var(--bg-tertiary, #1a1f2e);
             border-radius: 8px;
-            padding: 10px;
+            padding: 8px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             animation: fadeInScale 0.5s ease;
+        }
+        
+        .archive-song-item {
+            background: var(--bg-tertiary, #1a1f2e);
+            border: 1px solid var(--border-color, #374151);
+            border-radius: 4px;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            min-height: 26px;
+            cursor: pointer;
+        }
+        
+        .archive-song-item:hover {
+            background: rgba(34, 211, 238, 0.1);
+            border-color: rgba(34, 211, 238, 0.3);
+            transform: translateX(2px);
         }
         
         .setlist-card::before {
@@ -368,7 +387,11 @@
         
         .setlist-card.expanded .card-songs {
             max-height: 300px;
-            margin-top: 8px;
+            margin-top: 6px;
+        }
+        
+        .card-header-info {
+            margin-bottom: 0;
         }
         
         /* Анимация выбора сет-листа */
@@ -540,19 +563,19 @@
         </div>
         
         <!-- Сетка карточек -->
-        <div class="card-grid" style="padding: 10px;">
+        <div class="card-grid" style="padding: 8px;">
             <!-- Активная карточка -->
-            <div class="setlist-card active expanded" onclick="toggleCard(this)" style="padding: 10px; margin-bottom: 8px;">
-                <div style="margin-bottom: 6px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <div class="setlist-card active expanded" onclick="toggleCard(this)" style="padding: 8px; margin-bottom: 6px;">
+                <div class="card-header-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
                         <h4 class="card-title" style="margin: 0; font-size: 0.9rem;">Воскресное служение</h4>
                         <span class="badge-new" style="font-size: 0.6rem; padding: 2px 4px;">АКТИВНЫЙ</span>
                     </div>
-                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">
+                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 3px;">
                         <i class="fas fa-user" style="font-size: 0.65rem; margin-right: 4px;"></i>
                         Павел Иванов
                     </div>
-                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px;">
+                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px; margin-bottom: 0;">
                         <span><i class="fas fa-music" style="color: var(--primary-color); font-size: 0.65rem;"></i> 5 песен</span>
                         <span><i class="fas fa-calendar" style="color: #9ca3af; font-size: 0.65rem;"></i> 10 дек 2024</span>
                     </div>
@@ -560,27 +583,26 @@
                 
                 <!-- Развернутый список песен -->
                 <div class="card-songs">
-                    <div style="border-top: 1px solid #374151; margin-top: 8px; padding-top: 8px;">
+                    <div style="border-top: 1px solid #374151; margin-top: 6px; padding-top: 6px;">
                         <div style="font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px;">ПОРЯДОК СЛУЖЕНИЯ:</div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Ты достоин')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">1. Ты достоин</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">D</span>
-                                <span class="bpm" style="font-size: 0.6rem;">128</span>
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Ты достоин')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">1.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Ты достоин</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">D</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">128</span>
                             </div>
-                        </div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Святый Бог')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">2. Святый Бог</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">G</span>
-                                <span class="bpm" style="font-size: 0.6rem;">96</span>
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Святый Бог')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">2.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Святый Бог</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">G</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">96</span>
                             </div>
-                        </div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Великий Ты Господь')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">3. Великий Ты Господь</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">C</span>
-                                <span class="bpm" style="font-size: 0.6rem;">72</span>
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Великий Ты Господь')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">3.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Великий Ты Господь</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">C</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">72</span>
                             </div>
                         </div>
                     </div>
@@ -608,44 +630,43 @@
             </div>
             
             <!-- Неактивная карточка 1 -->
-            <div class="setlist-card" onclick="toggleCard(this)" style="padding: 10px; margin-bottom: 8px;">
-                <div style="margin-bottom: 6px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <div class="setlist-card" onclick="toggleCard(this)" style="padding: 8px; margin-bottom: 6px;">
+                <div class="card-header-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
                         <h4 class="card-title" style="margin: 0; font-size: 0.9rem;">Молодежное служение</h4>
                         <i class="fas fa-chevron-down" style="color: #9ca3af; font-size: 0.7rem; transition: transform 0.3s;"></i>
                     </div>
-                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">
+                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 3px;">
                         <i class="fas fa-user" style="font-size: 0.65rem; margin-right: 4px;"></i>
                         Мария Петрова
                     </div>
-                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px;">
+                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px; margin-bottom: 0;">
                         <span><i class="fas fa-music" style="color: var(--primary-color); font-size: 0.65rem;"></i> 3 песни</span>
                         <span><i class="fas fa-calendar" style="color: #9ca3af; font-size: 0.65rem;"></i> 9 дек 2024</span>
                     </div>
                 </div>
                 
                 <div class="card-songs">
-                    <div style="border-top: 1px solid #374151; margin-top: 8px; padding-top: 8px;">
+                    <div style="border-top: 1px solid #374151; margin-top: 6px; padding-top: 6px;">
                         <div style="font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px;">ПЕСНИ:</div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Chains')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">1. Chains</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">Em</span>
-                                <span class="bpm" style="font-size: 0.6rem;">118</span>
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Chains')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">1.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Chains</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">Em</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">118</span>
                             </div>
-                        </div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Oceans')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">2. Oceans</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">D</span>
-                                <span class="bpm" style="font-size: 0.6rem;">65</span>
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Oceans')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">2.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Oceans</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">D</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">65</span>
                             </div>
-                        </div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Reckless Love')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">3. Reckless Love</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">G</span>
-                                <span class="bpm" style="font-size: 0.6rem;">82</span>
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Reckless Love')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">3.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Reckless Love</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">G</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">82</span>
                             </div>
                         </div>
                     </div>
@@ -659,44 +680,43 @@
             </div>
             
             <!-- Неактивная карточка 2 -->
-            <div class="setlist-card" onclick="toggleCard(this)" style="padding: 10px; margin-bottom: 8px;">
-                <div style="margin-bottom: 6px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <div class="setlist-card" onclick="toggleCard(this)" style="padding: 8px; margin-bottom: 6px;">
+                <div class="card-header-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
                         <h4 class="card-title" style="margin: 0; font-size: 0.9rem;">Вечернее служение</h4>
                         <i class="fas fa-chevron-down" style="color: #9ca3af; font-size: 0.7rem; transition: transform 0.3s;"></i>
                     </div>
-                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">
+                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 3px;">
                         <i class="fas fa-user" style="font-size: 0.65rem; margin-right: 4px;"></i>
                         Андрей Сидоров
                     </div>
-                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px;">
+                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px; margin-bottom: 0;">
                         <span><i class="fas fa-music" style="color: var(--primary-color); font-size: 0.65rem;"></i> 4 песни</span>
                         <span><i class="fas fa-calendar" style="color: #9ca3af; font-size: 0.65rem;"></i> 7 дек 2024</span>
                     </div>
                 </div>
                 
                 <div class="card-songs">
-                    <div style="border-top: 1px solid #374151; margin-top: 8px; padding-top: 8px;">
+                    <div style="border-top: 1px solid #374151; margin-top: 6px; padding-top: 6px;">
                         <div style="font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px;">ПЕСНИ:</div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Благодать')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">1. Благодать</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">C</span>
-                                <span class="bpm" style="font-size: 0.6rem;">100</span>
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Благодать')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">1.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Благодать</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">C</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">100</span>
                             </div>
-                        </div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Твоя любовь')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">2. Твоя любовь</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">E</span>
-                                <span class="bpm" style="font-size: 0.6rem;">140</span>
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Твоя любовь')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">2.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Твоя любовь</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">E</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">140</span>
                             </div>
-                        </div>
-                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Иисус')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.75rem;">3. Иисус</span>
-                            <div class="song-info" style="font-size: 0.65rem;">
-                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">A</span>
-                                <span class="bpm" style="font-size: 0.6rem;">72</span>
+                            <div onclick="event.stopPropagation(); openSongAndClosePanel('Иисус')" class="archive-song-item">
+                                <span style="color: #9ca3af; font-size: 0.7rem; margin-right: 4px;">3.</span>
+                                <span style="color: #e5e7eb; font-size: 0.75rem; flex: 1;">Иисус</span>
+                                <span style="background: #0f172a; padding: 1px 4px; border-radius: 3px; font-size: 0.65rem; color: var(--primary-color); font-weight: 600; min-width: 18px; text-align: center;">A</span>
+                                <span style="background: #0f172a; padding: 1px 5px; border-radius: 3px; font-size: 0.65rem; color: #9ca3af; margin-left: 4px;">72</span>
                             </div>
                         </div>
                     </div>

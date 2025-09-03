@@ -1,5 +1,5 @@
-// Service Worker v574 - Compact cards with creator info and click-to-close
-const CACHE_NAME = 'agape-worship-cache-v574';
+// Service Worker v575 - Archive-style song items with proper borders and spacing
+const CACHE_NAME = 'agape-worship-cache-v575';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
