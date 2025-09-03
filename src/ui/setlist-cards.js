@@ -5,6 +5,7 @@
 import logger from '../utils/logger.js';
 import * as ui from '../../ui.js';
 import * as state from '../../js/state.js';
+import { getCurrentUser } from '../modules/auth/authCheck.js';
 
 // Текущий активный сет-лист
 let currentActiveSetlist = null;
@@ -326,8 +327,9 @@ async function activateSetlist(setlist) {
  * Проверяет права на управление событиями
  */
 function canManageEvents() {
-    const role = localStorage.getItem('userRole');
-    return role === 'admin' || role === 'moderator';
+    const user = getCurrentUser();
+    if (!user) return false;
+    return user.role === 'admin' || user.role === 'moderator';
 }
 
 /**

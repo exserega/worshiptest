@@ -1,5 +1,5 @@
-// Service Worker v601 - Fixed song list height for many songs
-const CACHE_NAME = 'agape-worship-cache-v601';
+// Service Worker v602 - Fixed calendar button permissions check
+const CACHE_NAME = 'agape-worship-cache-v602';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
