@@ -5191,13 +5191,28 @@ body:not([data-theme="light"]) mark.search-highlight {
     width: 24px;
     height: 24px;
     background: transparent;
-    border: none;
-    color: #9ca3af;
+    border: 1px solid var(--border-color, #374151);
+    border-radius: 4px;
+    color: #9ca3af !important;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-branch-popup i {
+    color: #9ca3af !important;
+    font-size: 0.75rem;
 }
 
 .close-branch-popup:hover {
-    color: #ef4444;
+    background: var(--bg-secondary, #374151);
+    border-color: #ef4444;
+}
+
+.close-branch-popup:hover i {
+    color: #ef4444 !important;
 }
 
 /* Контейнер карточек */
@@ -5430,11 +5445,11 @@ body:not([data-theme="light"]) mark.search-highlight {
 #setlists-panel .song-bpm {
     display: inline-block !important;
     background: #0f172a !important;
-    padding: 3px 7px !important;
+    padding: 3px 10px !important;
     border-radius: 4px !important;
     color: #9ca3af !important;
     font-size: 0.7rem !important;
-    min-width: 50px !important;
+    min-width: 60px !important;
     text-align: center !important;
     white-space: nowrap !important;
     height: 20px !important;

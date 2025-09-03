@@ -1,5 +1,5 @@
-// Service Worker v605 - Redesigned setlist panel header layout
-const CACHE_NAME = 'agape-worship-cache-v605';
+// Service Worker v606 - Fixed BPM badge width and branch popup close button style
+const CACHE_NAME = 'agape-worship-cache-v606';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
