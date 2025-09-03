@@ -1,5 +1,5 @@
-// Service Worker v609 - Fixed last card cutoff issue
-const CACHE_NAME = 'agape-worship-cache-v609';
+// Service Worker v610 - Visual improvements for create button section
+const CACHE_NAME = 'agape-worship-cache-v610';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
