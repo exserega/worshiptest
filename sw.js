@@ -1,5 +1,5 @@
-// Service Worker v603 - Updated header buttons with branch name and create text
-const CACHE_NAME = 'agape-worship-cache-v603';
+// Service Worker v604 - Fixed branches state management
+const CACHE_NAME = 'agape-worship-cache-v604';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

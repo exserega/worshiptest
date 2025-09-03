@@ -11,6 +11,7 @@ export let areChordsVisible = true;
 export let isChordsOnlyMode = false;
 export let currentRepertoireSongsData = [];
 export let currentRepertoireViewMode = 'byKey';
+export let branches = []; // Список филиалов
 
 // Functions to update state
 export function setAllSongs(newSongs) { 
@@ -36,4 +37,5 @@ export function setIsChordsOnlyMode(onlyMode) {
     }
 }
 export function setCurrentRepertoireSongsData(data) { currentRepertoireSongsData = data; }
-export function setCurrentRepertoireViewMode(mode) { currentRepertoireViewMode = mode; } 
+export function setCurrentRepertoireViewMode(mode) { currentRepertoireViewMode = mode; }
+export function setBranches(newBranches) { branches = newBranches; } 

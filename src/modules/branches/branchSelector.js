@@ -4,6 +4,7 @@
 
 import { db } from '../../../js/firebase-config.js';
 import { getCurrentBranchId, getUserStatus } from '../auth/authCheck.js';
+import { setBranches } from '../../js/state/appState.js';
 
 // Состояние выбранного филиала
 let selectedBranchId = null;
@@ -51,9 +52,7 @@ async function loadBranches() {
         });
         
         // Сохраняем филиалы в глобальное состояние
-        if (window.state) {
-            window.state.branches = branches;
-        }
+        setBranches(branches);
         
         updateBranchSelector();
         

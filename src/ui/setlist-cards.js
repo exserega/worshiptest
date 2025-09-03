@@ -6,6 +6,7 @@ import logger from '../utils/logger.js';
 import * as ui from '../../ui.js';
 import * as state from '../../js/state.js';
 import { getCurrentUser } from '../modules/auth/authCheck.js';
+import { branches } from '../js/state/appState.js';
 
 // Текущий активный сет-лист
 let currentActiveSetlist = null;
@@ -449,15 +450,15 @@ export function updateCurrentBranchName() {
     } else {
         // Пробуем получить из localStorage или state
         const selectedBranch = localStorage.getItem('selectedBranch');
-        const branches = state.branches || [];
+        const branchList = branches || [];
         
         if (selectedBranch === 'all') {
             branchNameSpan.textContent = 'Все филиалы';
-        } else if (selectedBranch && branches.length > 0) {
-            const branch = branches.find(b => b.id === selectedBranch);
+        } else if (selectedBranch && branchList.length > 0) {
+            const branch = branchList.find(b => b.id === selectedBranch);
             branchNameSpan.textContent = branch ? branch.name : 'Филиал';
-        } else if (user && user.branchId && branches.length > 0) {
-            const branch = branches.find(b => b.id === user.branchId);
+        } else if (user && user.branchId && branchList.length > 0) {
+            const branch = branchList.find(b => b.id === user.branchId);
             branchNameSpan.textContent = branch ? branch.name : 'Филиал';
         } else {
             branchNameSpan.textContent = 'Филиал';
@@ -477,9 +478,9 @@ async function updateBranchSelector() {
     const selectedBranch = localStorage.getItem('selectedBranch') || userBranchId;
     
     // Получаем филиалы из state
-    const branches = state.branches || [];
+    const branchList = branches || [];
     
-    if (branches.length === 0) {
+    if (branchList.length === 0) {
         branchSelector.innerHTML = '<option value="">Загрузка...</option>';
         return;
     }
@@ -497,7 +498,7 @@ async function updateBranchSelector() {
     branchSelector.appendChild(allOption);
     
     // Добавляем филиалы
-    branches.forEach(branch => {
+    branchList.forEach(branch => {
         const option = document.createElement('option');
         option.value = branch.id;
         
@@ -515,5 +516,5 @@ async function updateBranchSelector() {
         branchSelector.appendChild(option);
     });
     
-    logger.log('📋 Branch selector updated with', branches.length, 'branches');
+    logger.log('📋 Branch selector updated with', branchList.length, 'branches');
 }
