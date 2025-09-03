@@ -1,5 +1,5 @@
-// Service Worker v588 - Added more debugging for song data structure
-const CACHE_NAME = 'agape-worship-cache-v588';
+// Service Worker v589 - Fixed song list layout and improved visual design
+const CACHE_NAME = 'agape-worship-cache-v589';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

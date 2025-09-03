@@ -180,8 +180,9 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
                 fullSong: song
             });
             
+            // Структура: название слева, тональность и BPM справа в одной строке
             songItem.innerHTML = `
-                <span class="song-name-text">${song.name || 'Без названия'}</span>
+                <span class="song-name-text" title="${song.name || 'Без названия'}">${song.name || 'Без названия'}</span>
                 <div class="song-info">
                     ${songKey ? `<span class="song-key">${songKey}</span>` : ''}
                     ${songBpm ? `<span class="song-bpm">${songBpm} BPM</span>` : ''}
