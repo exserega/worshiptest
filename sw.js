@@ -1,5 +1,5 @@
-// Service Worker v578 - Removed "Activate" button, added "Delete" button to setlist cards
-const CACHE_NAME = 'agape-worship-cache-v578';
+// Service Worker v579 - Added branch/filial change button to setlist panel
+const CACHE_NAME = 'agape-worship-cache-v579';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

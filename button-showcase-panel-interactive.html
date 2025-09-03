@@ -498,9 +498,13 @@
             <h3 style="margin: 0; font-size: 1.1rem; color: #e5e7eb;">Сет-листы</h3>
         </div>
         
-        <!-- Создать новый -->
-        <div style="padding: 10px 15px;">
-            <button class="btn-hover" onclick="showNotification('Открытие формы создания...')" style="width: 100%; padding: 10px; background: var(--primary-color, #22d3ee); color: #111827; border: none; border-radius: 8px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <!-- Кнопки управления -->
+        <div style="padding: 10px 15px; display: flex; gap: 8px;">
+            <button class="btn-hover" onclick="showNotification('Смена филиала...')" style="flex: 0 0 auto; padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid var(--border-color, #374151); border-radius: 8px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i class="fas fa-building" style="color: #9ca3af;"></i>
+                <span style="color: #9ca3af;">Филиал</span>
+            </button>
+            <button class="btn-hover" onclick="showNotification('Открытие формы создания...')" style="flex: 1; padding: 10px; background: var(--primary-color, #22d3ee); color: #111827; border: none; border-radius: 8px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-plus" style="color: #111827;"></i>
                 <span style="color: #111827;">Создать новый сет-лист</span>
             </button>
@@ -595,12 +599,17 @@
     <div class="panel-container">
         <span class="demo-label">LIVE DEMO</span>
         
-        <!-- Заголовок с кнопкой создания -->
+        <!-- Заголовок с кнопками -->
         <div style="padding: 12px; border-bottom: 1px solid var(--border-color, #374151); display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0; font-size: 1.1rem; color: #e5e7eb;">Сет-листы</h3>
-            <button class="btn-hover" onclick="showNotification('Создание сет-листа...')" style="width: 32px; height: 32px; background: var(--primary-color); color: #111827; border: none; border-radius: 8px;">
-                <i class="fas fa-plus" style="color: #111827;"></i>
-            </button>
+            <div style="display: flex; gap: 6px;">
+                <button class="btn-hover" onclick="showNotification('Смена филиала...')" style="width: 32px; height: 32px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid var(--border-color, #374151); border-radius: 8px;" title="Сменить филиал">
+                    <i class="fas fa-building" style="color: #9ca3af; font-size: 0.85rem;"></i>
+                </button>
+                <button class="btn-hover" onclick="showNotification('Создание сет-листа...')" style="width: 32px; height: 32px; background: var(--primary-color); color: #111827; border: none; border-radius: 8px;" title="Создать новый сет-лист">
+                    <i class="fas fa-plus" style="color: #111827;"></i>
+                </button>
+            </div>
         </div>
         
         <!-- Сетка карточек -->
@@ -826,7 +835,13 @@
         
         <!-- Заголовок -->
         <div style="padding: 15px; background: linear-gradient(135deg, var(--primary-color), #06b6d4);">
-            <h3 style="margin: 0 0 12px 0; font-size: 1.1rem; color: #111827;">Сет-листы</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="margin: 0; font-size: 1.1rem; color: #111827;">Сет-листы</h3>
+                <button class="btn-hover" onclick="showNotification('Смена филиала...')" style="padding: 6px 10px; background: rgba(0,0,0,0.2); color: #111827; border: 1px solid rgba(17,24,39,0.3); border-radius: 6px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-building" style="color: #111827; font-size: 0.85rem;"></i>
+                    <span style="color: #111827;">Филиал</span>
+                </button>
+            </div>
             
             <!-- Кастомный селектор -->
             <div class="setlist-selector" style="position: relative;">
