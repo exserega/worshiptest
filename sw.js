@@ -1,5 +1,5 @@
-// Service Worker v575 - Archive-style song items with proper borders and spacing
-const CACHE_NAME = 'agape-worship-cache-v575';
+// Service Worker v576 - Fixed BPM width and card collapsing issues
+const CACHE_NAME = 'agape-worship-cache-v576';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
