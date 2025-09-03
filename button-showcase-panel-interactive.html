@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивные варианты панели - AGAPE WORSHIP</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Стили -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/buttons.css">
+    <link rel="stylesheet" href="styles/save-cancel-override.css">
+    
+    <!-- Шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background: var(--bg-primary, #111827);
+            color: var(--text-primary, #e5e7eb);
+            font-family: 'Montserrat', sans-serif;
+            padding: 20px;
+        }
+        
+        .panel-container {
+            max-width: 400px;
+            margin: 0 auto 40px;
+            background: var(--bg-secondary, #1f2937);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .variant-title {
+            color: var(--primary-color, #22d3ee);
+            margin: 40px 0 20px;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+        
+        /* Анимации */
+        @keyframes slideDown {
+            from {
+                max-height: 0;
+                opacity: 0;
+            }
+            to {
+                max-height: 500px;
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                max-height: 500px;
+                opacity: 1;
+            }
+            to {
+                max-height: 0;
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .expandable {
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+        
+        .expanded {
+            max-height: 500px;
+            opacity: 1;
+        }
+        
+        .song-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        
+        .song-list.show {
+            max-height: 300px;
+            opacity: 1;
+        }
+        
+        .song-item {
+            padding: 8px 12px;
+            background: var(--bg-primary, #111827);
+            margin-bottom: 4px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .song-item:hover {
+            background: rgba(34, 211, 238, 0.1);
+            transform: translateX(4px);
+        }
+        
+        .btn-hover {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .btn-hover:active {
+            transform: translateY(0);
+        }
+        
+        .loading-shimmer {
+            background: linear-gradient(90deg, var(--bg-tertiary) 0%, rgba(34, 211, 238, 0.1) 50%, var(--bg-tertiary) 100%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        .badge-new {
+            background: #ef4444;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .setlist-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .demo-label {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="color: #e5e7eb;">📱 Интерактивные варианты панели "Сет-листы"</h1>
+        <p style="color: #9ca3af;">Кликайте на элементы для взаимодействия</p>
+    </div>
+
+    <!-- ВАРИАНТ 1: Минималистичный с песнями -->
+    <h2 class="variant-title">Вариант 1: Минималистичный с раскрытием песен</h2>
+    <div class="panel-container">
+        <span class="demo-label">DEMO</span>
+        
+        <!-- Заголовок -->
+        <div style="padding: 15px 15px 10px; border-bottom: 1px solid var(--border-color, #374151);">
+            <h3 style="margin: 0; font-size: 1.1rem; color: #e5e7eb;">Сет-листы</h3>
+        </div>
+        
+        <!-- Создать новый -->
+        <div style="padding: 10px 15px;">
+            <button class="btn-hover" onclick="showNotification('Открытие формы создания...')" style="width: 100%; padding: 10px; background: var(--primary-color, #22d3ee); color: #111827; border: none; border-radius: 8px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-plus" style="color: #111827;"></i>
+                <span style="color: #111827;">Создать новый сет-лист</span>
+            </button>
+        </div>
+        
+        <!-- Выбранный сет-лист -->
+        <div style="padding: 0 15px 10px;">
+            <div style="background: var(--bg-tertiary, #1a1f2e); border-radius: 8px; padding: 12px;">
+                <div onclick="toggleSongList('songlist1')" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                    <h4 style="margin: 0; color: #e5e7eb; font-size: 0.95rem;">Воскресное служение</h4>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: rgba(34, 211, 238, 0.2); color: var(--primary-color); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem;">5 песен</span>
+                        <i id="arrow1" class="fas fa-chevron-down" style="color: #9ca3af; transition: transform 0.3s;"></i>
+                    </div>
+                </div>
+                
+                <!-- Список песен -->
+                <div id="songlist1" class="song-list" style="margin-bottom: 12px;">
+                    <div class="song-item">
+                        <span style="color: #e5e7eb; font-size: 0.85rem;">1. Ты достоин</span>
+                        <span style="color: #9ca3af; font-size: 0.75rem;">D • 4:20</span>
+                    </div>
+                    <div class="song-item">
+                        <span style="color: #e5e7eb; font-size: 0.85rem;">2. Святый Бог</span>
+                        <span style="color: #9ca3af; font-size: 0.75rem;">G • 5:15</span>
+                    </div>
+                    <div class="song-item">
+                        <span style="color: #e5e7eb; font-size: 0.85rem;">3. Великий Ты Господь</span>
+                        <span style="color: #9ca3af; font-size: 0.75rem;">C • 4:45</span>
+                    </div>
+                    <div class="song-item">
+                        <span style="color: #e5e7eb; font-size: 0.85rem;">4. Твоя любовь</span>
+                        <span style="color: #9ca3af; font-size: 0.75rem;">E • 3:50</span>
+                    </div>
+                    <div class="song-item">
+                        <span style="color: #e5e7eb; font-size: 0.85rem;">5. Аллилуйя</span>
+                        <span style="color: #9ca3af; font-size: 0.75rem;">A • 6:00</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-hover" onclick="showNotification('Открытие списка песен...')" style="flex: 1; padding: 8px; background: rgba(34, 211, 238, 0.1); color: var(--primary-color); border: 1px solid var(--primary-color); border-radius: 6px; font-size: 0.85rem;">
+                        <i class="fas fa-plus" style="margin-right: 4px; color: var(--primary-color);"></i>
+                        <span style="color: var(--primary-color);">Добавить</span>
+                    </button>
+                    <button class="btn-hover" onclick="startPresentation()" style="width: 36px; height: 36px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Презентация">
+                        <i class="fas fa-play" style="color: #9ca3af;"></i>
+                    </button>
+                    <button class="btn-hover" onclick="showNotification('Добавление в календарь...')" style="width: 36px; height: 36px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Календарь">
+                        <i class="fas fa-calendar" style="color: #9ca3af;"></i>
+                    </button>
+                    <button class="btn-hover" onclick="showNotification('Сохранение в архив...')" style="width: 36px; height: 36px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Архив">
+                        <i class="fas fa-archive" style="color: #9ca3af;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ВАРИАНТ 2: Со сменой сет-листов -->
+    <h2 class="variant-title">Вариант 2: Переключение между сет-листами</h2>
+    <div class="panel-container">
+        <span class="demo-label">DEMO</span>
+        
+        <!-- Заголовок -->
+        <div style="padding: 15px; background: linear-gradient(135deg, var(--primary-color), #06b6d4);">
+            <h3 style="margin: 0 0 8px 0; font-size: 1.1rem; color: #111827;">Сет-листы</h3>
+            <select onchange="changeSetlist(this.value)" style="width: 100%; padding: 6px 10px; background: rgba(255,255,255,0.9); color: #111827; border: none; border-radius: 6px; font-size: 0.85rem;">
+                <option value="sunday">📋 Воскресное служение</option>
+                <option value="youth">📋 Молодежное служение</option>
+                <option value="evening">📋 Вечернее служение</option>
+            </select>
+        </div>
+        
+        <!-- Контент -->
+        <div style="padding: 15px;">
+            <div id="setlist-content" class="setlist-transition">
+                <!-- Воскресное служение (по умолчанию) -->
+                <div style="background: var(--bg-primary, #111827); border-radius: 8px; padding: 12px; border: 1px solid var(--primary-color);">
+                    <div style="margin-bottom: 10px;">
+                        <h4 id="setlist-name" style="margin: 0 0 4px 0; color: #e5e7eb; font-size: 0.95rem;">Воскресное служение</h4>
+                        <div style="display: flex; gap: 10px; font-size: 0.75rem; color: #9ca3af;">
+                            <span><i class="fas fa-music" style="color: var(--primary-color); margin-right: 3px;"></i><span id="song-count">5</span> песен</span>
+                            <span><i class="fas fa-clock" style="color: var(--primary-color); margin-right: 3px;"></i><span id="duration">25</span> мин</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Превью песен -->
+                    <div id="songs-preview" style="margin-bottom: 10px; padding: 8px; background: var(--bg-tertiary, #1a1f2e); border-radius: 6px;">
+                        <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">Песни:</div>
+                        <div id="songs-list" style="font-size: 0.8rem; color: #e5e7eb;">
+                            Ты достоин • Святый Бог • Великий Ты Господь...
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопки -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                        <button class="btn-hover" style="padding: 8px 4px; background: var(--primary-color); color: #111827; border: none; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                            <i class="fas fa-plus" style="color: #111827;"></i>
+                            <span style="color: #111827;">Добавить</span>
+                        </button>
+                        <button class="btn-hover" style="padding: 8px 4px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                            <i class="fas fa-play" style="color: #9ca3af;"></i>
+                            <span style="color: #9ca3af;">Презент.</span>
+                        </button>
+                        <button class="btn-hover" style="padding: 8px 4px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                            <i class="fas fa-calendar" style="color: #9ca3af;"></i>
+                            <span style="color: #9ca3af;">Календарь</span>
+                        </button>
+                        <button class="btn-hover" style="padding: 8px 4px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                            <i class="fas fa-archive" style="color: #9ca3af;"></i>
+                            <span style="color: #9ca3af;">Архив</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ВАРИАНТ 3: Аккордеон интерактивный -->
+    <h2 class="variant-title">Вариант 3: Аккордеон с анимацией</h2>
+    <div class="panel-container">
+        <span class="demo-label">DEMO</span>
+        
+        <!-- Заголовок -->
+        <div style="padding: 15px; border-bottom: 1px solid #374151;">
+            <h3 style="margin: 0; font-size: 1.1rem; color: #e5e7eb;">Сет-листы</h3>
+        </div>
+        
+        <!-- Раздел: Филиал -->
+        <div style="border-bottom: 1px solid #374151;">
+            <button onclick="toggleSection('branch-section')" style="width: 100%; padding: 12px 15px; background: none; border: none; color: #e5e7eb; display: flex; justify-content: space-between; align-items: center; text-align: left; transition: background 0.2s;" onmouseover="this.style.background='rgba(34, 211, 238, 0.05)'" onmouseout="this.style.background='none'">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-building" style="color: var(--primary-color);"></i>
+                    <span style="color: #e5e7eb;">Центральный филиал</span>
+                </span>
+                <i id="branch-arrow" class="fas fa-chevron-right" style="color: #9ca3af; transition: transform 0.3s;"></i>
+            </button>
+            <div id="branch-section" class="expandable collapsed" style="padding: 0 15px; background: var(--bg-tertiary);">
+                <div style="padding: 10px 0;">
+                    <button class="btn-hover" style="width: 100%; padding: 8px; background: transparent; color: #9ca3af; border: 1px solid #374151; border-radius: 6px; margin-bottom: 4px; text-align: left;">
+                        📍 Северный филиал
+                    </button>
+                    <button class="btn-hover" style="width: 100%; padding: 8px; background: transparent; color: #9ca3af; border: 1px solid #374151; border-radius: 6px; margin-bottom: 4px; text-align: left;">
+                        📍 Южный филиал
+                    </button>
+                    <button class="btn-hover" style="width: 100%; padding: 8px; background: transparent; color: #9ca3af; border: 1px solid #374151; border-radius: 6px; text-align: left;">
+                        📍 Восточный филиал
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Раздел: Активный сет-лист -->
+        <div style="border-bottom: 1px solid #374151;">
+            <button onclick="toggleSection('active-section')" style="width: 100%; padding: 12px 15px; background: rgba(34, 211, 238, 0.05); border: none; color: #e5e7eb; display: flex; justify-content: space-between; align-items: center; text-align: left;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-list" style="color: var(--primary-color);"></i>
+                    <span style="color: #e5e7eb;">Воскресное служение</span>
+                    <span style="background: var(--primary-color); color: #111827; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem;">5</span>
+                    <span class="badge-new">NEW</span>
+                </span>
+                <i id="active-arrow" class="fas fa-chevron-down" style="color: #9ca3af; transform: rotate(90deg); transition: transform 0.3s;"></i>
+            </button>
+            <div id="active-section" class="expandable expanded">
+                <div style="padding: 12px 15px; background: var(--bg-tertiary);">
+                    <!-- Список песен с номерами -->
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 8px;">Порядок служения:</div>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div class="song-item" style="padding: 6px 10px;">
+                                <span style="color: #e5e7eb; font-size: 0.8rem;">1. Ты достоин</span>
+                                <span style="color: #9ca3af; font-size: 0.7rem;">D</span>
+                            </div>
+                            <div class="song-item" style="padding: 6px 10px;">
+                                <span style="color: #e5e7eb; font-size: 0.8rem;">2. Святый Бог</span>
+                                <span style="color: #9ca3af; font-size: 0.7rem;">G</span>
+                            </div>
+                            <div class="song-item" style="padding: 6px 10px;">
+                                <span style="color: #e5e7eb; font-size: 0.8rem;">3. Великий Ты Господь</span>
+                                <span style="color: #9ca3af; font-size: 0.7rem;">C</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button class="btn-hover" style="padding: 10px; background: var(--primary-color); color: #111827; border: none; border-radius: 6px; font-size: 0.85rem;">
+                            <i class="fas fa-plus" style="margin-right: 6px; color: #111827;"></i><span style="color: #111827;">Добавить</span>
+                        </button>
+                        <button class="btn-hover" style="padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.85rem;">
+                            <i class="fas fa-play" style="margin-right: 6px; color: #9ca3af;"></i><span style="color: #9ca3af;">Презентация</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Раздел: Создать новый -->
+        <div>
+            <button class="btn-hover" onclick="showNotification('Создание нового сет-листа...')" style="width: 100%; padding: 12px 15px; background: none; border: none; color: var(--primary-color); display: flex; align-items: center; gap: 8px; text-align: left;" onmouseover="this.style.background='rgba(34, 211, 238, 0.05)'" onmouseout="this.style.background='none'">
+                <i class="fas fa-plus-circle"></i>
+                <span style="color: var(--primary-color);">Создать новый сет-лист</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div id="notification" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary-color); color: #111827; padding: 12px 24px; border-radius: 8px; display: none; animation: fadeIn 0.3s; z-index: 1000;">
+        <span id="notification-text"></span>
+    </div>
+
+    <!-- Оверлей презентации -->
+    <div id="presentation-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; z-index: 2000; animation: fadeIn 0.3s;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+            <h2 style="color: #e5e7eb; margin-bottom: 20px;">Режим презентации</h2>
+            <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 10px;">
+                <i class="fas fa-play-circle"></i>
+            </div>
+            <p style="color: #9ca3af; margin-bottom: 30px;">Презентация начнется через <span id="countdown">3</span> секунды...</p>
+            <button onclick="closePresentation()" class="btn-hover" style="padding: 10px 20px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px;">
+                Отмена
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Данные сет-листов
+        const setlists = {
+            sunday: {
+                name: 'Воскресное служение',
+                songs: 5,
+                duration: 25,
+                songsList: 'Ты достоин • Святый Бог • Великий Ты Господь...'
+            },
+            youth: {
+                name: 'Молодежное служение',
+                songs: 3,
+                duration: 15,
+                songsList: 'Chains • Oceans • Reckless Love'
+            },
+            evening: {
+                name: 'Вечернее служение',
+                songs: 4,
+                duration: 20,
+                songsList: 'Благодать • Твоя любовь • Иисус • Слава'
+            }
+        };
+
+        // Переключение списка песен
+        function toggleSongList(id) {
+            const list = document.getElementById(id);
+            const arrow = document.getElementById('arrow1');
+            
+            if (list.classList.contains('show')) {
+                list.classList.remove('show');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                list.classList.add('show');
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Смена сет-листа
+        function changeSetlist(value) {
+            const data = setlists[value];
+            const content = document.getElementById('setlist-content');
+            
+            // Анимация исчезновения
+            content.style.opacity = '0';
+            content.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                // Обновление данных
+                document.getElementById('setlist-name').textContent = data.name;
+                document.getElementById('song-count').textContent = data.songs;
+                document.getElementById('duration').textContent = data.duration;
+                document.getElementById('songs-list').textContent = data.songsList;
+                
+                // Анимация появления
+                content.style.opacity = '1';
+                content.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        // Переключение секций аккордеона
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            const arrow = document.getElementById(id === 'branch-section' ? 'branch-arrow' : 'active-arrow');
+            
+            if (section.classList.contains('collapsed')) {
+                section.classList.remove('collapsed');
+                section.classList.add('expanded');
+                arrow.style.transform = 'rotate(90deg)';
+            } else {
+                section.classList.remove('expanded');
+                section.classList.add('collapsed');
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Показ уведомления
+        function showNotification(text) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            notificationText.textContent = text;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
+        }
+
+        // Запуск презентации
+        function startPresentation() {
+            const overlay = document.getElementById('presentation-overlay');
+            const countdown = document.getElementById('countdown');
+            overlay.style.display = 'block';
+            
+            let count = 3;
+            const interval = setInterval(() => {
+                count--;
+                countdown.textContent = count;
+                if (count === 0) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        showNotification('Презентация запущена!');
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        // Закрытие презентации
+        function closePresentation() {
+            document.getElementById('presentation-overlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

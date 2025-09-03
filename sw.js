@@ -1,5 +1,5 @@
-// Service Worker v571 - Fixed ALL text and icon colors on dark backgrounds
-const CACHE_NAME = 'agape-worship-cache-v571';
+// Service Worker v572 - Added .cursorrules and interactive panel demos
+const CACHE_NAME = 'agape-worship-cache-v572';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
