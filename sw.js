@@ -1,5 +1,5 @@
-// Service Worker v572 - Added .cursorrules and interactive panel demos
-const CACHE_NAME = 'agape-worship-cache-v572';
+// Service Worker v573 - Enhanced interactive panel with cards and BPM info
+const CACHE_NAME = 'agape-worship-cache-v573';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
