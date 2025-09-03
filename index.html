@@ -336,21 +336,25 @@
         <i class="fas fa-chevron-left"></i>
     </button>
     
-    <!-- Заголовок с кнопками управления -->
+    <!-- Заголовок с кнопкой филиала -->
     <div class="panel-header-section">
         <div class="panel-header-row">
-            <h3 class="panel-title">Сет-листы</h3>
-            <div class="panel-header-buttons">
+            <div class="panel-title-group">
+                <h3 class="panel-title">Сет-листы</h3>
                 <button id="setlist-branch-btn" class="icon-button-header branch-button" title="Сменить филиал">
                     <i class="fas fa-church"></i>
                     <span id="current-branch-name" class="branch-name">Загрузка...</span>
                 </button>
-                <button id="create-new-setlist-header-btn" class="icon-button-header primary create-setlist-button" title="Создать новый сет-лист">
-                    <i class="fas fa-plus"></i>
-                    <span>Создать сет-лист</span>
-                </button>
             </div>
         </div>
+    </div>
+    
+    <!-- Кнопка создания сет-листа отдельно -->
+    <div class="panel-create-section">
+        <button id="create-new-setlist-header-btn" class="icon-button-header primary create-setlist-button full-width" title="Создать новый сет-лист">
+            <i class="fas fa-plus"></i>
+            <span>Создать сет-лист</span>
+        </button>
     </div>
     
     <!-- Селектор филиала (скрытый попап) -->

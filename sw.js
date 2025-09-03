@@ -1,5 +1,5 @@
-// Service Worker v604 - Fixed branches state management
-const CACHE_NAME = 'agape-worship-cache-v604';
+// Service Worker v605 - Redesigned setlist panel header layout
+const CACHE_NAME = 'agape-worship-cache-v605';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
