@@ -1,5 +1,5 @@
-// Service Worker v591 - Adjusted width proportions 75/25 for song layout
-const CACHE_NAME = 'agape-worship-cache-v591';
+// Service Worker v592 - Increased song card and badges size for better readability
+const CACHE_NAME = 'agape-worship-cache-v592';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
