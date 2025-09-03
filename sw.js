@@ -1,5 +1,5 @@
-// Service Worker v570 - Fixed all button colors to be visible on dark backgrounds
-const CACHE_NAME = 'agape-worship-cache-v570';
+// Service Worker v571 - Fixed ALL text and icon colors on dark backgrounds
+const CACHE_NAME = 'agape-worship-cache-v571';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

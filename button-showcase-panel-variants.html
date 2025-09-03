@@ -54,7 +54,7 @@
 </head>
 <body>
     <div style="text-align: center; margin-bottom: 40px;">
-        <h1>📱 Варианты дизайна панели "Сет-листы"</h1>
+        <h1 style="color: #e5e7eb;">📱 Варианты дизайна панели "Сет-листы"</h1>
         <div style="background: #dc2626; color: white; padding: 15px; border-radius: 8px; max-width: 600px; margin: 20px auto;">
             <strong>⚠️ КРИТИЧЕСКИ ВАЖНО:</strong><br>
             На темном фоне (#1a1f2e) текст и иконки ВСЕГДА светлые (#e5e7eb)!<br>
@@ -73,8 +73,8 @@
         <!-- Создать новый -->
         <div style="padding: 10px 15px;">
             <button style="width: 100%; padding: 10px; background: var(--primary-color, #22d3ee); color: #111827; border: none; border-radius: 8px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <i class="fas fa-plus"></i>
-                <span>Создать новый сет-лист</span>
+                <i class="fas fa-plus" style="color: #111827;"></i>
+                <span style="color: #111827;">Создать новый сет-лист</span>
             </button>
         </div>
         
@@ -87,7 +87,7 @@
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <button style="flex: 1; padding: 8px; background: rgba(34, 211, 238, 0.1); color: var(--primary-color); border: 1px solid var(--primary-color); border-radius: 6px; font-size: 0.85rem;">
-                        <i class="fas fa-plus" style="margin-right: 4px;"></i>Добавить
+                        <i class="fas fa-plus" style="margin-right: 4px; color: var(--primary-color);"></i><span style="color: var(--primary-color);">Добавить</span>
                     </button>
                     <button style="width: 36px; height: 36px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px;" title="Презентация">
                         <i class="fas fa-play" style="color: #9ca3af;"></i>
@@ -136,8 +136,8 @@
                 <!-- Кнопки -->
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
                     <button style="padding: 8px 4px; background: var(--primary-color); color: #111827; border: none; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                        <i class="fas fa-plus"></i>
-                        <span>Добавить</span>
+                        <i class="fas fa-plus" style="color: #111827;"></i>
+                        <span style="color: #111827;">Добавить</span>
                     </button>
                     <button style="padding: 8px 4px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px;">
                         <i class="fas fa-play" style="color: #9ca3af;"></i>
@@ -164,12 +164,12 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <h3 style="margin: 0; font-size: 1.1rem; color: #e5e7eb;">Сет-листы</h3>
                 <button style="width: 32px; height: 32px; background: var(--primary-color); color: #111827; border: none; border-radius: 8px;">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-plus" style="color: #111827;"></i>
                 </button>
             </div>
             <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #9ca3af;">
                 <i class="fas fa-building" style="color: var(--primary-color);"></i>
-                <span>Центральный филиал</span>
+                <span style="color: #9ca3af;">Центральный филиал</span>
                 <button style="background: none; border: none; color: var(--primary-color); font-size: 0.75rem; cursor: pointer;">сменить</button>
             </div>
         </div>
@@ -183,10 +183,10 @@
                     <span style="font-size: 0.75rem; color: #111827; opacity: 0.8;">5 песен • 25 мин</span>
                     <div style="display: flex; gap: 4px;">
                         <button style="width: 28px; height: 28px; background: rgba(255,255,255,0.9); color: #111827; border: none; border-radius: 6px; font-size: 0.75rem;">
-                            <i class="fas fa-plus"></i>
+                            <i class="fas fa-plus" style="color: #111827;"></i>
                         </button>
                         <button style="width: 28px; height: 28px; background: rgba(255,255,255,0.9); color: #111827; border: none; border-radius: 6px; font-size: 0.75rem;">
-                            <i class="fas fa-play"></i>
+                            <i class="fas fa-play" style="color: #111827;"></i>
                         </button>
                     </div>
                 </div>
@@ -213,13 +213,13 @@
             <h3 style="margin: 0 0 12px 0; font-size: 1.1rem; color: #e5e7eb;">Сет-листы</h3>
             <div style="display: flex; gap: 0; border-bottom: 2px solid #374151;">
                 <button style="flex: 1; padding: 8px; background: none; color: var(--primary-color); border: none; border-bottom: 2px solid var(--primary-color); margin-bottom: -2px; font-size: 0.85rem;">
-                    Мои
+                    <span style="color: var(--primary-color);">Мои</span>
                 </button>
                 <button style="flex: 1; padding: 8px; background: none; color: #9ca3af; border: none; font-size: 0.85rem;">
-                    Филиала
+                    <span style="color: #9ca3af;">Филиала</span>
                 </button>
                 <button style="flex: 1; padding: 8px; background: none; color: #9ca3af; border: none; font-size: 0.85rem;">
-                    Архив
+                    <span style="color: #9ca3af;">Архив</span>
                 </button>
             </div>
         </div>
@@ -237,8 +237,8 @@
             <!-- Быстрые действия -->
             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <button style="flex: 1; min-width: 45%; padding: 12px; background: var(--primary-color); color: #111827; border: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <i class="fas fa-plus"></i>
-                    <span>Добавить песню</span>
+                    <i class="fas fa-plus" style="color: #111827;"></i>
+                    <span style="color: #111827;">Добавить песню</span>
                 </button>
                 <button style="flex: 1; min-width: 45%; padding: 12px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
                     <i class="fas fa-play" style="color: #9ca3af;"></i>
@@ -284,7 +284,7 @@
             <!-- Действия в одну линию -->
             <div style="display: flex; gap: 8px;">
                 <button style="flex: 1; padding: 10px; background: var(--primary-color); color: #111827; border: none; border-radius: 8px; font-size: 0.9rem;">
-                    <i class="fas fa-plus" style="margin-right: 6px;"></i>Добавить
+                    <i class="fas fa-plus" style="margin-right: 6px; color: #111827;"></i><span style="color: #111827;">Добавить</span>
                 </button>
                 <button style="width: 44px; height: 44px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 8px;" title="Презентация">
                     <i class="fas fa-play" style="color: #9ca3af;"></i>
@@ -312,7 +312,7 @@
             <button style="width: 100%; padding: 12px 15px; background: none; border: none; color: #e5e7eb; display: flex; justify-content: space-between; align-items: center; text-align: left;">
                 <span style="display: flex; align-items: center; gap: 8px;">
                     <i class="fas fa-building" style="color: var(--primary-color);"></i>
-                    <span>Центральный филиал</span>
+                    <span style="color: #e5e7eb;">Центральный филиал</span>
                 </span>
                 <i class="fas fa-chevron-right" style="color: #9ca3af;"></i>
             </button>
@@ -323,7 +323,7 @@
             <button style="width: 100%; padding: 12px 15px; background: rgba(34, 211, 238, 0.05); border: none; color: #e5e7eb; display: flex; justify-content: space-between; align-items: center; text-align: left;">
                 <span style="display: flex; align-items: center; gap: 8px;">
                     <i class="fas fa-list" style="color: var(--primary-color);"></i>
-                    <span>Воскресное служение</span>
+                    <span style="color: #e5e7eb;">Воскресное служение</span>
                     <span style="background: var(--primary-color); color: #111827; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem;">5</span>
                 </span>
                 <i class="fas fa-chevron-down" style="color: #9ca3af;"></i>
@@ -332,7 +332,7 @@
             <div style="padding: 12px 15px; background: var(--bg-tertiary);">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <button style="padding: 10px; background: var(--primary-color); color: #111827; border: none; border-radius: 6px; font-size: 0.85rem;">
-                        <i class="fas fa-plus" style="margin-right: 6px;"></i>Добавить
+                        <i class="fas fa-plus" style="margin-right: 6px; color: #111827;"></i><span style="color: #111827;">Добавить</span>
                     </button>
                     <button style="padding: 10px; background: var(--bg-tertiary, #1a1f2e); color: #9ca3af; border: 1px solid #374151; border-radius: 6px; font-size: 0.85rem;">
                         <i class="fas fa-play" style="margin-right: 6px; color: #9ca3af;"></i><span style="color: #9ca3af;">Презентация</span>
@@ -351,7 +351,7 @@
         <div>
             <button style="width: 100%; padding: 12px 15px; background: none; border: none; color: var(--primary-color); display: flex; align-items: center; gap: 8px; text-align: left;">
                 <i class="fas fa-plus-circle"></i>
-                <span>Создать новый сет-лист</span>
+                <span style="color: var(--primary-color);">Создать новый сет-лист</span>
             </button>
         </div>
     </div>
