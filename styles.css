@@ -5248,9 +5248,14 @@ body:not([data-theme="light"]) mark.search-highlight {
     background: linear-gradient(to bottom, #1a1f2e 85px, #0f172a 85px) !important;
     margin-left: 1px !important;
     margin-right: 1px !important;
-    border-left: none !important;
-    border-right: none !important;
+    border-left: 2px solid var(--primary-color, #22d3ee) !important;
+    border-right: 2px solid var(--primary-color, #22d3ee) !important;
+    border-top: 2px solid var(--primary-color, #22d3ee) !important;
+    border-bottom: 2px solid var(--primary-color, #22d3ee) !important;
     border-radius: 0 !important;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.3), 
+                0 0 40px rgba(34, 211, 238, 0.1),
+                inset 0 0 1px rgba(34, 211, 238, 0.5) !important;
 }
 
 /* Заголовок карточки */

@@ -1,5 +1,5 @@
-// Service Worker v611 - Fixed scrolling for setlist cards container
-const CACHE_NAME = 'agape-worship-cache-v611';
+// Service Worker v612 - Enhanced highlight for expanded setlist cards
+const CACHE_NAME = 'agape-worship-cache-v612';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
