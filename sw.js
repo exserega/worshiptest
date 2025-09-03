@@ -1,5 +1,5 @@
-// Service Worker v590 - Fixed song info alignment and text wrapping
-const CACHE_NAME = 'agape-worship-cache-v590';
+// Service Worker v591 - Adjusted width proportions 75/25 for song layout
+const CACHE_NAME = 'agape-worship-cache-v591';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
