@@ -1,5 +1,5 @@
-// Service Worker v586 - Fixed delete button style, songs data and header positioning
-const CACHE_NAME = 'agape-worship-cache-v586';
+// Service Worker v587 - Fixed preferredKey for songs and centered header buttons
+const CACHE_NAME = 'agape-worship-cache-v587';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

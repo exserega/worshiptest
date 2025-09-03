@@ -113,16 +113,18 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
                 // Находим данные песни из общего списка
                 const songDetails = state.allSongs.find(song => song.id === setlistSong.songId) || {};
                 
-                // Определяем тональность (приоритет у сет-листа)
-                const setlistKey = setlistSong.key || setlistSong.originalKey;
-                const songKey = songDetails.key || songDetails.originalKey;
-                const displayKey = setlistKey || songKey || '';
+                // Определяем тональность (приоритет у сет-листа - поле preferredKey!)
+                const setlistKey = setlistSong.preferredKey || setlistSong.key;
+                const songKey = songDetails['Оригинальная тональность'] || songDetails.originalKey || songDetails.key || 'C';
+                const displayKey = setlistKey || songKey || 'C';
                 
                 // BPM берем из общих данных песни
-                const displayBpm = songDetails.bpm || setlistSong.bpm || '';
+                const displayBpm = songDetails.BPM || songDetails.bpm || '';
                 
                 logger.log('📋 Song mapping:', {
                     songName: songDetails.name || setlistSong.name,
+                    setlistSong,
+                    songDetails,
                     setlistKey,
                     songKey,
                     displayKey,
@@ -161,14 +163,15 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
             logger.log('📋 Rendering song:', {
                 name: song.name,
                 key: songKey,
-                bpm: songBpm
+                bpm: songBpm,
+                fullSong: song
             });
             
             songItem.innerHTML = `
                 <span class="song-name-text">${song.name || 'Без названия'}</span>
                 <div class="song-info">
                     ${songKey ? `<span class="song-key">${songKey}</span>` : ''}
-                    ${songBpm ? `<span class="song-bpm">${songBpm}</span>` : ''}
+                    ${songBpm ? `<span class="song-bpm">${songBpm} BPM</span>` : ''}
                 </div>
             `;
             
