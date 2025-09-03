@@ -5171,32 +5171,32 @@ body:not([data-theme="light"]) mark.search-highlight {
 }
 
 /* Карточка сет-листа */
-.setlist-card {
-    background: var(--bg-tertiary, #1a1f2e);
-    border: 1px solid var(--border-color, #374151);
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 6px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s ease;
+#setlists-panel .setlist-card {
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    border: 1px solid var(--border-color, #374151) !important;
+    border-radius: 8px !important;
+    padding: 8px !important;
+    margin-bottom: 6px !important;
+    position: relative !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
 }
 
 .setlist-card:last-child {
     margin-bottom: 0;
 }
 
-.setlist-card:hover {
-    border-color: #60a5fa;
+#setlists-panel .setlist-card:hover {
+    border-color: #60a5fa !important;
 }
 
-.setlist-card.active {
-    border-color: var(--primary-color, #22d3ee);
-    background: rgba(34, 211, 238, 0.05);
+#setlists-panel .setlist-card.active {
+    border-color: var(--primary-color, #22d3ee) !important;
+    background: rgba(34, 211, 238, 0.05) !important;
 }
 
-.setlist-card.expanded {
-    border-color: var(--primary-color, #22d3ee);
+#setlists-panel .setlist-card.expanded {
+    border-color: var(--primary-color, #22d3ee) !important;
 }
 
 /* Заголовок карточки */
@@ -5204,31 +5204,32 @@ body:not([data-theme="light"]) mark.search-highlight {
     padding-right: 36px;
 }
 
-.card-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #e5e7eb;
-    margin: 0 0 3px 0;
+#setlists-panel .card-title {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: #e5e7eb !important;
+    margin: 0 0 3px 0 !important;
 }
 
-.card-creator {
-    font-size: 0.75rem;
-    color: #9ca3af;
-    margin-bottom: 3px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+#setlists-panel .card-creator {
+    font-size: 0.75rem !important;
+    color: #9ca3af !important;
+    margin-bottom: 3px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
 }
 
-.card-creator i {
-    font-size: 0.65rem;
+#setlists-panel .card-creator i {
+    font-size: 0.65rem !important;
+    color: #9ca3af !important;
 }
 
-.card-meta {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.7rem;
-    color: #9ca3af;
+#setlists-panel .card-meta {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 0.7rem !important;
+    color: #9ca3af !important;
 }
 
 /* Кнопка удаления в углу */
@@ -5294,10 +5295,10 @@ body:not([data-theme="light"]) mark.search-highlight {
     margin-bottom: 0;
 }
 
-.song-name-text {
-    font-size: 0.85rem;
-    color: #e5e7eb;
-    font-weight: 500;
+#setlists-panel .song-name-text {
+    font-size: 0.85rem !important;
+    color: #e5e7eb !important;
+    font-weight: 500 !important;
 }
 
 .song-info {
@@ -5306,25 +5307,25 @@ body:not([data-theme="light"]) mark.search-highlight {
     align-items: center;
 }
 
-.song-key {
-    background: #0f172a;
-    padding: 1px 4px;
-    border-radius: 3px;
-    color: var(--primary-color);
-    font-weight: 600;
-    font-size: 0.7rem;
-    min-width: 18px;
-    text-align: center;
+#setlists-panel .song-key {
+    background: #0f172a !important;
+    padding: 1px 4px !important;
+    border-radius: 3px !important;
+    color: var(--primary-color) !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    min-width: 18px !important;
+    text-align: center !important;
 }
 
-.song-bpm {
-    background: #0f172a;
-    padding: 1px 5px;
-    border-radius: 3px;
-    color: #9ca3af;
-    font-size: 0.7rem;
-    min-width: 25px;
-    text-align: center;
+#setlists-panel .song-bpm {
+    background: #0f172a !important;
+    padding: 1px 5px !important;
+    border-radius: 3px !important;
+    color: #9ca3af !important;
+    font-size: 0.7rem !important;
+    min-width: 25px !important;
+    text-align: center !important;
 }
 
 /* Кнопки действий в карточке */

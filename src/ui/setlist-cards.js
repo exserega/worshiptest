@@ -57,15 +57,14 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     headerInfo.appendChild(title);
     
     // Создатель (если есть)
-    if (setlist.creator) {
-        const creator = document.createElement('div');
-        creator.className = 'card-creator';
-        creator.innerHTML = `
-            <i class="fas fa-user"></i>
-            <span>${setlist.creator}</span>
-        `;
-        headerInfo.appendChild(creator);
-    }
+    const creatorName = setlist.createdByName || setlist.creatorName || 'Неизвестно';
+    const creator = document.createElement('div');
+    creator.className = 'card-creator';
+    creator.innerHTML = `
+        <i class="fas fa-user"></i>
+        <span>${creatorName}</span>
+    `;
+    headerInfo.appendChild(creator);
     
     // Метаданные
     const meta = document.createElement('div');
@@ -79,13 +78,7 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     `;
     headerInfo.appendChild(meta);
     
-    // Активный значок
-    if (isActive) {
-        const badge = document.createElement('span');
-        badge.className = 'active-badge';
-        badge.textContent = 'АКТИВНЫЙ';
-        card.appendChild(badge);
-    }
+    // Убран активный значок по запросу пользователя
     
     card.appendChild(headerInfo);
     
@@ -129,11 +122,15 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
                 }
             };
             
+            // Получаем тональность и BPM из дополнительных данных песни
+            const songKey = song.originalKey || song.key || '';
+            const songBpm = song.bpm || '';
+            
             songItem.innerHTML = `
                 <span class="song-name-text">${song.name}</span>
                 <div class="song-info">
-                    ${song.key ? `<span class="song-key">${song.key}</span>` : ''}
-                    ${song.bpm ? `<span class="song-bpm">${song.bpm}</span>` : ''}
+                    ${songKey ? `<span class="song-key">${songKey}</span>` : ''}
+                    ${songBpm ? `<span class="song-bpm">${songBpm}</span>` : ''}
                 </div>
             `;
             
@@ -182,29 +179,31 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     };
     actions.appendChild(presentBtn);
     
-    // Кнопка "Календарь" (если есть права)
-    if (canManageEvents()) {
-        const calendarBtn = document.createElement('button');
-        calendarBtn.className = 'card-action-btn secondary';
-        calendarBtn.innerHTML = `
-            <i class="fas fa-calendar"></i>
-            <span>Календарь</span>
-        `;
-        calendarBtn.onclick = async (e) => {
-            e.stopPropagation();
-            await activateSetlist(setlist);
-            const calBtn = document.getElementById('add-to-calendar-btn');
-            if (calBtn) calBtn.click();
-        };
-        actions.appendChild(calendarBtn);
-    }
+    // Кнопка "В календарь" - показываем всегда, права проверятся при клике
+    const calendarBtn = document.createElement('button');
+    calendarBtn.className = 'card-action-btn secondary';
+    calendarBtn.innerHTML = `
+        <i class="fas fa-calendar"></i>
+        <span>В календарь</span>
+    `;
+    calendarBtn.onclick = async (e) => {
+        e.stopPropagation();
+        if (!canManageEvents()) {
+            alert('Недостаточно прав для добавления в календарь');
+            return;
+        }
+        await activateSetlist(setlist);
+        const calBtn = document.getElementById('add-to-calendar-btn');
+        if (calBtn) calBtn.click();
+    };
+    actions.appendChild(calendarBtn);
     
-    // Кнопка "Архив"
+    // Кнопка "В архив"
     const archiveBtn = document.createElement('button');
     archiveBtn.className = 'card-action-btn secondary';
     archiveBtn.innerHTML = `
         <i class="fas fa-archive"></i>
-        <span>Архив</span>
+        <span>В архив</span>
     `;
     archiveBtn.onclick = async (e) => {
         e.stopPropagation();
@@ -257,16 +256,7 @@ async function activateSetlist(setlist) {
         const isActive = card.dataset.setlistId === setlist.id;
         card.classList.toggle('active', isActive);
         
-        // Обновляем значок
-        const badge = card.querySelector('.active-badge');
-        if (isActive && !badge) {
-            const newBadge = document.createElement('span');
-            newBadge.className = 'active-badge';
-            newBadge.textContent = 'АКТИВНЫЙ';
-            card.insertBefore(newBadge, card.firstChild);
-        } else if (!isActive && badge) {
-            badge.remove();
-        }
+        // Значок активности убран по запросу пользователя
     });
     
     currentActiveSetlist = setlist.id;
@@ -289,8 +279,14 @@ function canManageEvents() {
  * Форматирует дату
  */
 function formatDate(timestamp) {
-    if (!timestamp) return '';
-    const date = new Date(timestamp);
+    if (!timestamp) return 'Неизвестно';
+    
+    // Обработка Firebase Timestamp
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    
+    // Проверка на валидность даты
+    if (isNaN(date.getTime())) return 'Неизвестно';
+    
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();

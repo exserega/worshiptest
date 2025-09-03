@@ -1,5 +1,5 @@
-// Service Worker v583 - Fixed logger import in setlist cards module
-const CACHE_NAME = 'agape-worship-cache-v583';
+// Service Worker v584 - Fixed setlist cards data mapping and styles
+const CACHE_NAME = 'agape-worship-cache-v584';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
