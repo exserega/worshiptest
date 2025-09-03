@@ -5312,8 +5312,9 @@ body:not([data-theme="light"]) mark.search-highlight {
 
 #setlists-panel .song-item {
     display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
     padding: 6px 8px !important;
     background: var(--bg-tertiary, #1a1f2e) !important;
     border: 1px solid var(--border-color, #374151) !important;
@@ -5332,34 +5333,33 @@ body:not([data-theme="light"]) mark.search-highlight {
     margin-bottom: 0 !important;
 }
 
-/* Название песни - занимает все свободное место */
+/* Название песни - занимает все свободное место с переносом */
 #setlists-panel .song-name-text {
     flex: 1 !important;
     font-size: 0.8rem !important;
     color: #e5e7eb !important;
     font-weight: 500 !important;
-    line-height: 1.3 !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    line-height: 1.2 !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
     min-width: 0 !important;
+    padding-top: 2px !important;
 }
 
 /* Информация о песне - фиксированная ширина справа */
 #setlists-panel .song-info {
     display: flex !important;
+    flex-direction: row !important;
     gap: 6px !important;
     align-items: center !important;
     flex-shrink: 0 !important;
-}
-
-.song-info {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+    margin-left: auto !important;
+    align-self: flex-start !important;
+    padding-top: 2px !important;
 }
 
 #setlists-panel .song-key {
+    display: inline-block !important;
     background: #0f172a !important;
     padding: 2px 6px !important;
     border-radius: 3px !important;
@@ -5369,9 +5369,12 @@ body:not([data-theme="light"]) mark.search-highlight {
     min-width: 20px !important;
     text-align: center !important;
     white-space: nowrap !important;
+    height: 18px !important;
+    line-height: 14px !important;
 }
 
 #setlists-panel .song-bpm {
+    display: inline-block !important;
     background: #0f172a !important;
     padding: 2px 6px !important;
     border-radius: 3px !important;
@@ -5380,6 +5383,8 @@ body:not([data-theme="light"]) mark.search-highlight {
     min-width: 45px !important;
     text-align: center !important;
     white-space: nowrap !important;
+    height: 18px !important;
+    line-height: 14px !important;
 }
 
 /* Кнопки действий в карточке */
