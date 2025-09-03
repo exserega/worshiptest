@@ -1,5 +1,5 @@
-// Service Worker v568 - Added setlist panel design variants to showcase
-const CACHE_NAME = 'agape-worship-cache-v568';
+// Service Worker v569 - Fixed colors and added full panel variants
+const CACHE_NAME = 'agape-worship-cache-v569';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
