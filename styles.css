@@ -5208,7 +5208,7 @@ body:not([data-theme="light"]) mark.search-highlight {
 
 #setlists-panel .setlist-card.expanded {
     border-color: var(--primary-color, #22d3ee) !important;
-    overflow: visible !important;
+    background: linear-gradient(to bottom, #1a1f2e 85px, #0f172a 85px) !important;
 }
 
 /* Заголовок карточки */
@@ -5288,12 +5288,8 @@ body:not([data-theme="light"]) mark.search-highlight {
 #setlists-panel .setlist-card.expanded .card-songs {
     max-height: 400px;
     margin-top: 8px;
-    padding: 8px 16px;
+    padding-top: 8px;
     border-top: 1px solid var(--border-color, #374151);
-    background: #0f172a;
-    margin-left: -16px;
-    margin-right: -16px;
-    margin-bottom: -8px;
 }
 
 
