@@ -415,8 +415,10 @@ export function initCardHandlers() {
                 localStorage.setItem('selectedBranch', newBranch);
                 // Обновляем название
                 updateCurrentBranchName();
-                // Закрываем попап
-                branchPopup.style.display = 'none';
+                // Закрываем попап сразу после выбора
+                if (branchPopup) {
+                    branchPopup.style.display = 'none';
+                }
                 // Перезагружаем сет-листы для нового филиала
                 // Это будет обработано существующим кодом
             }

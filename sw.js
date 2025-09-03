@@ -1,5 +1,5 @@
-// Service Worker v607 - Centered text in badges and improved branch popup layout
-const CACHE_NAME = 'agape-worship-cache-v607';
+// Service Worker v608 - Simplified branch selector and wider setlist cards
+const CACHE_NAME = 'agape-worship-cache-v608';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

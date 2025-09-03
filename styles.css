@@ -5169,59 +5169,43 @@ body:not([data-theme="light"]) mark.search-highlight {
     position: absolute;
     top: 50px;
     left: 130px;
-    width: 250px;
+    width: 220px;
     background: var(--bg-secondary, #111827);
     border: 1px solid var(--border-color, #374151);
     border-radius: 8px;
-    padding: 12px;
+    padding: 4px;
     z-index: 100;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.branch-popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+.branch-selector-popup .branch-selector {
+    width: 100%;
+    background: var(--bg-secondary, #111827);
     color: #e5e7eb;
+    border: none;
+    padding: 8px;
     font-size: 0.9rem;
-    white-space: nowrap;
-}
-
-.close-branch-popup {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-    background: transparent;
-    border: 1px solid var(--border-color, #374151);
-    border-radius: 6px;
-    color: #9ca3af !important;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
+    outline: none;
 }
 
-.close-branch-popup i {
-    color: #9ca3af !important;
-    font-size: 0.75rem;
+.branch-selector-popup .branch-selector option {
+    background: var(--bg-secondary, #111827);
+    color: #e5e7eb;
+    padding: 8px;
 }
 
-.close-branch-popup:hover {
-    background: var(--bg-secondary, #374151);
-    border-color: #ef4444;
-}
-
-.close-branch-popup:hover i {
-    color: #ef4444 !important;
+.branch-selector-popup .branch-selector:focus {
+    outline: 1px solid var(--primary-color, #22d3ee);
+    outline-offset: -1px;
+    border-radius: 4px;
 }
 
 /* Контейнер карточек */
 .setlists-cards-container {
     flex: 1;
     overflow-y: auto;
-    padding: 8px;
+    padding: 2px;
     background: var(--bg-primary, #0f172a);
 }
 
@@ -5231,7 +5215,7 @@ body:not([data-theme="light"]) mark.search-highlight {
     border: 1px solid var(--border-color, #374151) !important;
     border-radius: 8px !important;
     padding: 8px !important;
-    margin: 8px !important;
+    margin: 2px !important;
     margin-bottom: 6px !important;
     position: relative !important;
     cursor: pointer !important;
@@ -5255,8 +5239,8 @@ body:not([data-theme="light"]) mark.search-highlight {
 #setlists-panel .setlist-card.expanded {
     border-color: var(--primary-color, #22d3ee) !important;
     background: linear-gradient(to bottom, #1a1f2e 85px, #0f172a 85px) !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    margin-left: 1px !important;
+    margin-right: 1px !important;
     border-left: none !important;
     border-right: none !important;
     border-radius: 0 !important;
