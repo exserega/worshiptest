@@ -1,5 +1,5 @@
-// Service Worker v567 - Fixed icon-text spacing in buttons with gap property
-const CACHE_NAME = 'agape-worship-cache-v567';
+// Service Worker v568 - Added setlist panel design variants to showcase
+const CACHE_NAME = 'agape-worship-cache-v568';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
