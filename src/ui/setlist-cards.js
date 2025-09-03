@@ -2,7 +2,7 @@
  * Модуль для управления карточками сет-листов
  */
 
-import { logger } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import * as ui from '../../ui.js';
 import * as state from '../../js/state.js';
 
