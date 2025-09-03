@@ -357,16 +357,39 @@
     color: rgba(59, 130, 246, 0.8) !important;
 }
 
-.event-actions .icon-button.delete {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.5) !important;
+/* Кнопка удаления - стандартизированная */
+.icon-button-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444 !important;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    font-size: 0.875rem;
+    line-height: 1;
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
-.event-actions .icon-button.delete:hover {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.3);
-    color: rgba(239, 68, 68, 0.8) !important;
+.icon-button-delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: scale(1.05);
+}
+
+.icon-button-delete:active {
+    transform: scale(0.95);
+}
+
+.icon-button-delete i {
+    font-size: 0.875rem;
+    color: #ef4444 !important;
 }
 
 .event-actions .icon-button svg {
@@ -407,16 +430,21 @@
     color: rgba(59, 130, 246, 0.9) !important;
 }
 
-[data-theme="light"] .event-actions .icon-button.delete {
-    background: rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: rgba(0, 0, 0, 0.5) !important;
+/* Светлая тема для кнопки удаления */
+[data-theme="light"] .icon-button-delete {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #dc2626 !important;
 }
 
-[data-theme="light"] .event-actions .icon-button.delete:hover {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: rgba(239, 68, 68, 0.2);
-    color: rgba(239, 68, 68, 0.9) !important;
+[data-theme="light"] .icon-button-delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #b91c1c !important;
+}
+
+[data-theme="light"] .icon-button-delete i {
+    color: #dc2626 !important;
 }
 
 

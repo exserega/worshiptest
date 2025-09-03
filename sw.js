@@ -1,5 +1,5 @@
-// Service Worker v560 - Standardized all delete buttons with icon-button-delete
-const CACHE_NAME = 'agape-worship-cache-v560';
+// Service Worker v561 - Fixed delete button icons in events page
+const CACHE_NAME = 'agape-worship-cache-v561';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
