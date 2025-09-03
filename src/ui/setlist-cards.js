@@ -100,13 +100,31 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     songsList.className = 'card-songs';
     
     if (setlist.songs && setlist.songs.length > 0) {
+        logger.log('📋 Setlist songs data:', setlist.songs);
+        logger.log('📋 All songs available:', state.allSongs?.length);
+        
         const fullSongs = setlist.songs
-            .map(s => {
-                const songDetails = state.allSongs.find(song => song.id === s.songId) || {};
-                return { ...songDetails, ...s };
+            .map(setlistSong => {
+                // Находим данные песни из общего списка
+                const songDetails = state.allSongs.find(song => song.id === setlistSong.songId) || {};
+                logger.log('📋 Song mapping:', {
+                    setlistSong,
+                    songDetails,
+                    key: setlistSong.key || songDetails.key,
+                    bpm: songDetails.bpm
+                });
+                // Объединяем данные, приоритет у данных из сет-листа
+                return { 
+                    ...songDetails, 
+                    ...setlistSong,
+                    // Используем key из сет-листа (может отличаться от оригинала)
+                    displayKey: setlistSong.key || songDetails.key || '',
+                    // BPM берем из общих данных песни
+                    displayBpm: songDetails.bpm || ''
+                };
             })
-            .filter(s => s.id)
-            .sort((a, b) => a.order - b.order);
+            .filter(s => s.songId) // Фильтруем по songId, а не id
+            .sort((a, b) => (a.order || 0) - (b.order || 0));
         
         fullSongs.forEach(song => {
             const songItem = document.createElement('div');
@@ -122,12 +140,12 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
                 }
             };
             
-            // Получаем тональность и BPM из дополнительных данных песни
-            const songKey = song.originalKey || song.key || '';
-            const songBpm = song.bpm || '';
+            // Используем displayKey и displayBpm которые мы подготовили
+            const songKey = song.displayKey;
+            const songBpm = song.displayBpm;
             
             songItem.innerHTML = `
-                <span class="song-name-text">${song.name}</span>
+                <span class="song-name-text">${song.name || 'Без названия'}</span>
                 <div class="song-info">
                     ${songKey ? `<span class="song-key">${songKey}</span>` : ''}
                     ${songBpm ? `<span class="song-bpm">${songBpm}</span>` : ''}
@@ -150,8 +168,8 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     const editBtn = document.createElement('button');
     editBtn.className = 'card-action-btn primary';
     editBtn.innerHTML = `
-        <i class="fas fa-edit"></i>
-        <span>Изменить</span>
+        <i class="fas fa-edit" style="color: #111827 !important;"></i>
+        <span style="color: #111827 !important;">Изменить</span>
     `;
     editBtn.onclick = async (e) => {
         e.stopPropagation();
@@ -167,8 +185,8 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     const presentBtn = document.createElement('button');
     presentBtn.className = 'card-action-btn secondary';
     presentBtn.innerHTML = `
-        <i class="fas fa-play"></i>
-        <span>Презент.</span>
+        <i class="fas fa-play" style="color: #9ca3af !important;"></i>
+        <span style="color: #9ca3af !important;">Презент.</span>
     `;
     presentBtn.onclick = async (e) => {
         e.stopPropagation();
@@ -183,8 +201,8 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     const calendarBtn = document.createElement('button');
     calendarBtn.className = 'card-action-btn secondary';
     calendarBtn.innerHTML = `
-        <i class="fas fa-calendar"></i>
-        <span>В календарь</span>
+        <i class="fas fa-calendar" style="color: #9ca3af !important;"></i>
+        <span style="color: #9ca3af !important;">В календарь</span>
     `;
     calendarBtn.onclick = async (e) => {
         e.stopPropagation();
@@ -202,8 +220,8 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
     const archiveBtn = document.createElement('button');
     archiveBtn.className = 'card-action-btn secondary';
     archiveBtn.innerHTML = `
-        <i class="fas fa-archive"></i>
-        <span>В архив</span>
+        <i class="fas fa-archive" style="color: #9ca3af !important;"></i>
+        <span style="color: #9ca3af !important;">В архив</span>
     `;
     archiveBtn.onclick = async (e) => {
         e.stopPropagation();

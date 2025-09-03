@@ -1,5 +1,5 @@
-// Service Worker v584 - Fixed setlist cards data mapping and styles
-const CACHE_NAME = 'agape-worship-cache-v584';
+// Service Worker v585 - Fixed song data extraction and button colors
+const CACHE_NAME = 'agape-worship-cache-v585';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -5357,9 +5357,14 @@ body:not([data-theme="light"]) mark.search-highlight {
     border: none;
 }
 
-.card-action-btn.primary {
-    background: var(--primary-color, #22d3ee);
-    color: #111827;
+#setlists-panel .card-action-btn.primary {
+    background: var(--primary-color, #22d3ee) !important;
+    color: #111827 !important;
+}
+
+#setlists-panel .card-action-btn.primary i,
+#setlists-panel .card-action-btn.primary span {
+    color: #111827 !important;
 }
 
 .card-action-btn.primary:hover {
@@ -5367,10 +5372,15 @@ body:not([data-theme="light"]) mark.search-highlight {
     transform: scale(1.05);
 }
 
-.card-action-btn.secondary {
-    background: var(--bg-tertiary, #1a1f2e);
-    color: #9ca3af;
-    border: 1px solid var(--border-color, #374151);
+#setlists-panel .card-action-btn.secondary {
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    color: #9ca3af !important;
+    border: 1px solid var(--border-color, #374151) !important;
+}
+
+#setlists-panel .card-action-btn.secondary i,
+#setlists-panel .card-action-btn.secondary span {
+    color: #9ca3af !important;
 }
 
 .card-action-btn.secondary:hover {
@@ -5378,12 +5388,12 @@ body:not([data-theme="light"]) mark.search-highlight {
     color: #60a5fa;
 }
 
-.card-action-btn i {
-    font-size: 0.8rem;
+#setlists-panel .card-action-btn i {
+    font-size: 0.8rem !important;
 }
 
-.card-action-btn span {
-    font-size: 0.65rem;
+#setlists-panel .card-action-btn span {
+    font-size: 0.65rem !important;
 }
 
 /* Значок активного сет-листа */
