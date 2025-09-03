@@ -1,5 +1,5 @@
-// Service Worker v579 - Added branch/filial change button to setlist panel
-const CACHE_NAME = 'agape-worship-cache-v579';
+// Service Worker v580 - Redesigned setlist panel with cards layout
+const CACHE_NAME = 'agape-worship-cache-v580';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

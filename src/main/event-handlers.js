@@ -802,6 +802,20 @@ function setupSetlistEventHandlers() {
         console.error('📋 [EventHandlers] setlist-dropdown-btn не найден!');
     }
     
+    // Инициализация обработчиков для карточек сет-листов
+    try {
+        import('../ui/setlist-cards.js').then(module => {
+            if (module.initCardHandlers) {
+                module.initCardHandlers();
+                console.log('📋 [EventHandlers] Card handlers initialized');
+            }
+        }).catch(e => {
+            console.log('📋 [EventHandlers] Cards module not available', e);
+        });
+    } catch (e) {
+        console.log('📋 [EventHandlers] Failed to init card handlers', e);
+    }
+    
     // ОБРАБОТЧИКИ КНОПОК ЗАКРЫТИЯ ПАНЕЛЕЙ - КРИТИЧЕСКИ ВАЖНО!
     const sidePanelCloseBtns = document.querySelectorAll('.side-panel-close-btn');
     sidePanelCloseBtns.forEach(btn => {

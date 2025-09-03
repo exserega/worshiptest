@@ -1290,6 +1290,17 @@ function getSongCountText(count) {
  */
 export async function renderSetlists(setlists, onSelect, onDelete) {
     console.log('📋 [UI] renderSetlists called with:', setlists?.length, 'setlists');
+    
+    // Пробуем отрисовать новые карточки
+    try {
+        const { renderSetlistCards } = await import('./src/ui/setlist-cards.js');
+        renderSetlistCards(setlists, onSelect, onDelete);
+        console.log('📋 [UI] Using new card-based rendering');
+    } catch (e) {
+        console.log('📋 [UI] Cards module not available, using legacy rendering', e);
+    }
+    
+    // Продолжаем заполнять старый контейнер для совместимости
     console.log('📋 [UI] setlistsListContainer:', setlistsListContainer);
     if (!setlistsListContainer) {
         console.error('📋 [UI] setlistsListContainer not found!');
