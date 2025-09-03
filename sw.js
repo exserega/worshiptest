@@ -1,5 +1,5 @@
-// Service Worker v576 - Fixed BPM width and card collapsing issues
-const CACHE_NAME = 'agape-worship-cache-v576';
+// Service Worker v577 - Changed "Add" button to "Edit" for song list management
+const CACHE_NAME = 'agape-worship-cache-v577';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
