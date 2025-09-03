@@ -1,5 +1,5 @@
-// Service Worker v573 - Enhanced interactive panel with cards and BPM info
-const CACHE_NAME = 'agape-worship-cache-v573';
+// Service Worker v574 - Compact cards with creator info and click-to-close
+const CACHE_NAME = 'agape-worship-cache-v574';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

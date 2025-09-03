@@ -150,10 +150,10 @@
         }
         
         .song-item {
-            padding: 10px 12px;
+            padding: 5px 6px;
             background: var(--bg-primary, #111827);
-            margin-bottom: 4px;
-            border-radius: 6px;
+            margin-bottom: 2px;
+            border-radius: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -283,14 +283,14 @@
         /* Стили для карточек */
         .card-grid {
             display: grid;
-            gap: 12px;
-            padding: 15px;
+            gap: 8px;
+            padding: 10px;
         }
         
         .setlist-card {
             background: var(--bg-tertiary, #1a1f2e);
-            border-radius: 10px;
-            padding: 12px;
+            border-radius: 8px;
+            padding: 10px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -334,21 +334,21 @@
         .card-title {
             font-weight: 600;
             color: #e5e7eb;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         
         .card-meta {
             display: flex;
-            gap: 12px;
-            font-size: 0.75rem;
+            gap: 10px;
+            font-size: 0.7rem;
             color: #9ca3af;
         }
         
         .card-actions {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            margin-top: 10px;
+            gap: 4px;
+            margin-top: 8px;
             opacity: 0;
             transform: translateY(-10px);
             transition: all 0.3s ease;
@@ -368,7 +368,7 @@
         
         .setlist-card.expanded .card-songs {
             max-height: 300px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         
         /* Анимация выбора сет-листа */
@@ -532,7 +532,7 @@
         <span class="demo-label">LIVE DEMO</span>
         
         <!-- Заголовок с кнопкой создания -->
-        <div style="padding: 15px; border-bottom: 1px solid var(--border-color, #374151); display: flex; justify-content: space-between; align-items: center;">
+        <div style="padding: 12px; border-bottom: 1px solid var(--border-color, #374151); display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0; font-size: 1.1rem; color: #e5e7eb;">Сет-листы</h3>
             <button class="btn-hover" onclick="showNotification('Создание сет-листа...')" style="width: 32px; height: 32px; background: var(--primary-color); color: #111827; border: none; border-radius: 8px;">
                 <i class="fas fa-plus" style="color: #111827;"></i>
@@ -540,42 +540,47 @@
         </div>
         
         <!-- Сетка карточек -->
-        <div class="card-grid">
+        <div class="card-grid" style="padding: 10px;">
             <!-- Активная карточка -->
-            <div class="setlist-card active expanded" onclick="toggleCard(this)">
-                <div class="card-header">
-                    <h4 class="card-title">Воскресное служение</h4>
-                    <span class="badge-new">АКТИВНЫЙ</span>
-                </div>
-                <div class="card-meta">
-                    <span><i class="fas fa-music" style="color: var(--primary-color);"></i> 5 песен</span>
-                    <span><i class="fas fa-clock" style="color: var(--primary-color);"></i> 24 мин</span>
-                    <span><i class="fas fa-calendar" style="color: var(--primary-color);"></i> Сегодня</span>
+            <div class="setlist-card active expanded" onclick="toggleCard(this)" style="padding: 10px; margin-bottom: 8px;">
+                <div style="margin-bottom: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <h4 class="card-title" style="margin: 0; font-size: 0.9rem;">Воскресное служение</h4>
+                        <span class="badge-new" style="font-size: 0.6rem; padding: 2px 4px;">АКТИВНЫЙ</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">
+                        <i class="fas fa-user" style="font-size: 0.65rem; margin-right: 4px;"></i>
+                        Павел Иванов
+                    </div>
+                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px;">
+                        <span><i class="fas fa-music" style="color: var(--primary-color); font-size: 0.65rem;"></i> 5 песен</span>
+                        <span><i class="fas fa-calendar" style="color: #9ca3af; font-size: 0.65rem;"></i> 10 дек 2024</span>
+                    </div>
                 </div>
                 
                 <!-- Развернутый список песен -->
                 <div class="card-songs">
-                    <div style="border-top: 1px solid #374151; margin-top: 10px; padding-top: 10px;">
-                        <div style="font-size: 0.7rem; color: #9ca3af; margin-bottom: 6px;">ПОРЯДОК СЛУЖЕНИЯ:</div>
-                        <div onclick="event.stopPropagation(); openSong('Ты достоин')" class="song-item" style="padding: 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.8rem;">1. Ты достоин</span>
-                            <div class="song-info" style="font-size: 0.7rem;">
-                                <span class="key">D</span>
-                                <span class="bpm">128</span>
+                    <div style="border-top: 1px solid #374151; margin-top: 8px; padding-top: 8px;">
+                        <div style="font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px;">ПОРЯДОК СЛУЖЕНИЯ:</div>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Ты достоин')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">1. Ты достоин</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">D</span>
+                                <span class="bpm" style="font-size: 0.6rem;">128</span>
                             </div>
                         </div>
-                        <div onclick="event.stopPropagation(); openSong('Святый Бог')" class="song-item" style="padding: 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.8rem;">2. Святый Бог</span>
-                            <div class="song-info" style="font-size: 0.7rem;">
-                                <span class="key">G</span>
-                                <span class="bpm">96</span>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Святый Бог')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">2. Святый Бог</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">G</span>
+                                <span class="bpm" style="font-size: 0.6rem;">96</span>
                             </div>
                         </div>
-                        <div onclick="event.stopPropagation(); openSong('Великий Ты Господь')" class="song-item" style="padding: 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.8rem;">3. Великий Ты Господь</span>
-                            <div class="song-info" style="font-size: 0.7rem;">
-                                <span class="key">C</span>
-                                <span class="bpm">72</span>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Великий Ты Господь')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">3. Великий Ты Господь</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">C</span>
+                                <span class="bpm" style="font-size: 0.6rem;">72</span>
                             </div>
                         </div>
                     </div>
@@ -603,39 +608,44 @@
             </div>
             
             <!-- Неактивная карточка 1 -->
-            <div class="setlist-card" onclick="toggleCard(this)">
-                <div class="card-header">
-                    <h4 class="card-title">Молодежное служение</h4>
-                    <i class="fas fa-chevron-down" style="color: #9ca3af; font-size: 0.8rem; transition: transform 0.3s;"></i>
-                </div>
-                <div class="card-meta">
-                    <span><i class="fas fa-music" style="color: var(--primary-color);"></i> 3 песни</span>
-                    <span><i class="fas fa-clock" style="color: var(--primary-color);"></i> 15 мин</span>
-                    <span><i class="fas fa-calendar" style="color: #9ca3af;"></i> Вчера</span>
+            <div class="setlist-card" onclick="toggleCard(this)" style="padding: 10px; margin-bottom: 8px;">
+                <div style="margin-bottom: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <h4 class="card-title" style="margin: 0; font-size: 0.9rem;">Молодежное служение</h4>
+                        <i class="fas fa-chevron-down" style="color: #9ca3af; font-size: 0.7rem; transition: transform 0.3s;"></i>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">
+                        <i class="fas fa-user" style="font-size: 0.65rem; margin-right: 4px;"></i>
+                        Мария Петрова
+                    </div>
+                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px;">
+                        <span><i class="fas fa-music" style="color: var(--primary-color); font-size: 0.65rem;"></i> 3 песни</span>
+                        <span><i class="fas fa-calendar" style="color: #9ca3af; font-size: 0.65rem;"></i> 9 дек 2024</span>
+                    </div>
                 </div>
                 
                 <div class="card-songs">
-                    <div style="border-top: 1px solid #374151; margin-top: 10px; padding-top: 10px;">
-                        <div style="font-size: 0.7rem; color: #9ca3af; margin-bottom: 6px;">ПЕСНИ:</div>
-                        <div onclick="event.stopPropagation(); openSong('Chains')" class="song-item" style="padding: 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.8rem;">1. Chains</span>
-                            <div class="song-info" style="font-size: 0.7rem;">
-                                <span class="key">Em</span>
-                                <span class="bpm">118</span>
+                    <div style="border-top: 1px solid #374151; margin-top: 8px; padding-top: 8px;">
+                        <div style="font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px;">ПЕСНИ:</div>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Chains')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">1. Chains</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">Em</span>
+                                <span class="bpm" style="font-size: 0.6rem;">118</span>
                             </div>
                         </div>
-                        <div onclick="event.stopPropagation(); openSong('Oceans')" class="song-item" style="padding: 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.8rem;">2. Oceans</span>
-                            <div class="song-info" style="font-size: 0.7rem;">
-                                <span class="key">D</span>
-                                <span class="bpm">65</span>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Oceans')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">2. Oceans</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">D</span>
+                                <span class="bpm" style="font-size: 0.6rem;">65</span>
                             </div>
                         </div>
-                        <div onclick="event.stopPropagation(); openSong('Reckless Love')" class="song-item" style="padding: 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.8rem;">3. Reckless Love</span>
-                            <div class="song-info" style="font-size: 0.7rem;">
-                                <span class="key">G</span>
-                                <span class="bpm">82</span>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Reckless Love')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">3. Reckless Love</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">G</span>
+                                <span class="bpm" style="font-size: 0.6rem;">82</span>
                             </div>
                         </div>
                     </div>
@@ -649,32 +659,44 @@
             </div>
             
             <!-- Неактивная карточка 2 -->
-            <div class="setlist-card" onclick="toggleCard(this)">
-                <div class="card-header">
-                    <h4 class="card-title">Вечернее служение</h4>
-                    <i class="fas fa-chevron-down" style="color: #9ca3af; font-size: 0.8rem; transition: transform 0.3s;"></i>
-                </div>
-                <div class="card-meta">
-                    <span><i class="fas fa-music" style="color: var(--primary-color);"></i> 4 песни</span>
-                    <span><i class="fas fa-clock" style="color: var(--primary-color);"></i> 20 мин</span>
-                    <span><i class="fas fa-calendar" style="color: #9ca3af;"></i> 3 дня</span>
+            <div class="setlist-card" onclick="toggleCard(this)" style="padding: 10px; margin-bottom: 8px;">
+                <div style="margin-bottom: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <h4 class="card-title" style="margin: 0; font-size: 0.9rem;">Вечернее служение</h4>
+                        <i class="fas fa-chevron-down" style="color: #9ca3af; font-size: 0.7rem; transition: transform 0.3s;"></i>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">
+                        <i class="fas fa-user" style="font-size: 0.65rem; margin-right: 4px;"></i>
+                        Андрей Сидоров
+                    </div>
+                    <div class="card-meta" style="font-size: 0.7rem; gap: 10px;">
+                        <span><i class="fas fa-music" style="color: var(--primary-color); font-size: 0.65rem;"></i> 4 песни</span>
+                        <span><i class="fas fa-calendar" style="color: #9ca3af; font-size: 0.65rem;"></i> 7 дек 2024</span>
+                    </div>
                 </div>
                 
                 <div class="card-songs">
-                    <div style="border-top: 1px solid #374151; margin-top: 10px; padding-top: 10px;">
-                        <div style="font-size: 0.7rem; color: #9ca3af; margin-bottom: 6px;">ПЕСНИ:</div>
-                        <div onclick="event.stopPropagation(); openSong('Благодать')" class="song-item" style="padding: 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.8rem;">1. Благодать</span>
-                            <div class="song-info" style="font-size: 0.7rem;">
-                                <span class="key">C</span>
-                                <span class="bpm">100</span>
+                    <div style="border-top: 1px solid #374151; margin-top: 8px; padding-top: 8px;">
+                        <div style="font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px;">ПЕСНИ:</div>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Благодать')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">1. Благодать</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">C</span>
+                                <span class="bpm" style="font-size: 0.6rem;">100</span>
                             </div>
                         </div>
-                        <div onclick="event.stopPropagation(); openSong('Твоя любовь')" class="song-item" style="padding: 6px; margin-bottom: 2px;">
-                            <span style="color: #e5e7eb; font-size: 0.8rem;">2. Твоя любовь</span>
-                            <div class="song-info" style="font-size: 0.7rem;">
-                                <span class="key">E</span>
-                                <span class="bpm">140</span>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Твоя любовь')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">2. Твоя любовь</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">E</span>
+                                <span class="bpm" style="font-size: 0.6rem;">140</span>
+                            </div>
+                        </div>
+                        <div onclick="event.stopPropagation(); openSongAndClosePanel('Иисус')" class="song-item" style="padding: 5px 6px; margin-bottom: 2px;">
+                            <span style="color: #e5e7eb; font-size: 0.75rem;">3. Иисус</span>
+                            <div class="song-info" style="font-size: 0.65rem;">
+                                <span class="key" style="padding: 1px 4px; font-size: 0.6rem;">A</span>
+                                <span class="bpm" style="font-size: 0.6rem;">72</span>
                             </div>
                         </div>
                     </div>
@@ -994,6 +1016,23 @@
                 document.getElementById('song-duration').textContent = songData.duration;
                 document.getElementById('song-modal').style.display = 'block';
             }
+        }
+        
+        // Открытие песни и закрытие панели (для основного использования)
+        function openSongAndClosePanel(name) {
+            // Анимация закрытия панели
+            const panels = document.querySelectorAll('.panel-container');
+            panels.forEach(panel => {
+                panel.style.animation = 'slideDown 0.3s ease reverse';
+            });
+            
+            // Показываем уведомление
+            showNotification(`Открытие песни: ${name}`);
+            
+            // Имитация закрытия панели и открытия песни на главной странице
+            setTimeout(() => {
+                showNotification(`Песня "${name}" открыта на главной странице`);
+            }, 500);
         }
 
         // Закрытие модального окна песни
