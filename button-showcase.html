@@ -589,6 +589,100 @@
                 <li><strong>Transition:</strong> all 0.2s ease для плавных анимаций</li>
             </ul>
         </div>
+        
+        <!-- Секция с вариантами панели сет-листа -->
+        <h2 style="margin-top: 40px;">🎨 Варианты дизайна панели сет-листа</h2>
+        <div style="background: var(--bg-secondary, #1f2937); padding: 20px; border-radius: 10px;">
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">4 кнопки: Добавить, Презентация, Календарь, Архив</p>
+            
+            <!-- Вариант 1: Горизонтальный ряд с иконками и текстом -->
+            <div style="margin-bottom: 40px; padding: 20px; background: var(--bg-primary); border-radius: 8px;">
+                <h3 style="color: var(--primary-color); margin-bottom: 15px;">Вариант 1: Горизонтальный ряд (иконки + текст)</h3>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button style="display: flex; align-items: center; gap: 6px; padding: 8px 15px; background: var(--primary-color); color: var(--button-text-color); border: none; border-radius: 8px; font-size: 0.9rem;">
+                        <i class="fas fa-plus"></i>
+                        <span>Добавить</span>
+                    </button>
+                    <button style="display: flex; align-items: center; gap: 6px; padding: 8px 15px; background: var(--bg-tertiary); color: #b0b0b0; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
+                        <i class="fas fa-play"></i>
+                        <span>Презентация</span>
+                    </button>
+                    <button style="display: flex; align-items: center; gap: 6px; padding: 8px 15px; background: var(--bg-tertiary); color: #b0b0b0; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Календарь</span>
+                    </button>
+                    <button style="display: flex; align-items: center; gap: 6px; padding: 8px 15px; background: var(--bg-tertiary); color: #b0b0b0; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
+                        <i class="fas fa-archive"></i>
+                        <span>Архив</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Вариант 2: Только иконки в ряд -->
+            <div style="margin-bottom: 40px; padding: 20px; background: var(--bg-primary); border-radius: 8px;">
+                <h3 style="color: var(--primary-color); margin-bottom: 15px;">Вариант 2: Только иконки в ряд</h3>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--primary-color); color: var(--button-text-color); border: none; border-radius: 10px;" title="Добавить">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); color: #b0b0b0; border: none; border-radius: 10px;" title="Презентация">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); color: #b0b0b0; border: none; border-radius: 10px;" title="Календарь">
+                        <i class="fas fa-calendar-plus"></i>
+                    </button>
+                    <button style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); color: #b0b0b0; border: none; border-radius: 10px;" title="Архив">
+                        <i class="fas fa-archive"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Вариант 3: 2x2 сетка с иконками и подписями -->
+            <div style="margin-bottom: 40px; padding: 20px; background: var(--bg-primary); border-radius: 8px;">
+                <h3 style="color: var(--primary-color); margin-bottom: 15px;">Вариант 3: Сетка 2x2 (иконка + подпись)</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 250px; margin: 0 auto;">
+                    <button style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px; background: var(--primary-color); color: var(--button-text-color); border: none; border-radius: 10px;">
+                        <i class="fas fa-plus" style="font-size: 1.2rem;"></i>
+                        <span style="font-size: 0.75rem;">Добавить</span>
+                    </button>
+                    <button style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px; background: var(--bg-tertiary); color: #b0b0b0; border: 1px solid var(--border-color); border-radius: 10px;">
+                        <i class="fas fa-play" style="font-size: 1.2rem;"></i>
+                        <span style="font-size: 0.75rem;">Презентация</span>
+                    </button>
+                    <button style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px; background: var(--bg-tertiary); color: #b0b0b0; border: 1px solid var(--border-color); border-radius: 10px;">
+                        <i class="fas fa-calendar-plus" style="font-size: 1.2rem;"></i>
+                        <span style="font-size: 0.75rem;">Календарь</span>
+                    </button>
+                    <button style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px; background: var(--bg-tertiary); color: #b0b0b0; border: 1px solid var(--border-color); border-radius: 10px;">
+                        <i class="fas fa-archive" style="font-size: 1.2rem;"></i>
+                        <span style="font-size: 0.75rem;">Архив</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Вариант 4: Комбинированный (главная кнопка с текстом, остальные иконки) -->
+            <div style="margin-bottom: 40px; padding: 20px; background: var(--bg-primary); border-radius: 8px;">
+                <h3 style="color: var(--primary-color); margin-bottom: 15px;">Вариант 4: Комбинированный (главная + иконки)</h3>
+                <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                    <button style="display: flex; align-items: center; gap: 6px; padding: 10px 20px; background: var(--primary-color); color: var(--button-text-color); border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 500;">
+                        <i class="fas fa-plus"></i>
+                        <span>Добавить</span>
+                    </button>
+                    <div style="display: flex; gap: 8px; padding-left: 10px; border-left: 1px solid var(--border-color); margin-left: 8px;">
+                        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); color: #b0b0b0; border: none; border-radius: 10px;" title="Презентация">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); color: #b0b0b0; border: none; border-radius: 10px;" title="Календарь">
+                            <i class="fas fa-calendar-plus"></i>
+                        </button>
+                        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); color: #b0b0b0; border: none; border-radius: 10px;" title="Архив">
+                            <i class="fas fa-archive"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
     </div>
 </body>
 </html>
