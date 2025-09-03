@@ -5101,11 +5101,20 @@ body:not([data-theme="light"]) mark.search-highlight {
     flex: 1;
 }
 
+/* Контейнер основного контента панели */
+.setlists-panel-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
 /* Секция создания сет-листа */
 .panel-create-section {
     padding: 8px;
     background: var(--bg-primary, #0f172a);
-    border-bottom: 1px solid var(--border-color, #374151);
+    border-top: 1px solid var(--border-color, #374151);
+    flex-shrink: 0;
 }
 
 .icon-button-header {
@@ -5206,6 +5215,7 @@ body:not([data-theme="light"]) mark.search-highlight {
     flex: 1;
     overflow-y: auto;
     padding: 2px;
+    padding-bottom: 8px; /* Небольшой отступ снизу */
     background: var(--bg-primary, #0f172a);
 }
 

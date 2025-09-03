@@ -349,14 +349,6 @@
         </div>
     </div>
     
-    <!-- Кнопка создания сет-листа отдельно -->
-    <div class="panel-create-section">
-        <button id="create-new-setlist-header-btn" class="icon-button-header primary create-setlist-button full-width" title="Создать новый сет-лист">
-            <i class="fas fa-plus"></i>
-            <span>Создать сет-лист</span>
-        </button>
-    </div>
-    
     <!-- Селектор филиала (скрытый попап) -->
     <div id="branch-selector-popup" class="branch-selector-popup" style="display: none;">
         <select id="setlist-branch-selector" class="branch-selector">
@@ -364,9 +356,20 @@
         </select>
     </div>
     
-    <!-- Контейнер для карточек сет-листов -->
-    <div id="setlists-cards-container" class="setlists-cards-container">
-        <div class="empty-message">Загрузка сет-листов...</div>
+    <!-- Контейнер для карточек сет-листов и кнопки создания -->
+    <div class="setlists-panel-content">
+        <!-- Контейнер для карточек сет-листов -->
+        <div id="setlists-cards-container" class="setlists-cards-container">
+            <div class="empty-message">Загрузка сет-листов...</div>
+        </div>
+        
+        <!-- Кнопка создания сет-листа внизу -->
+        <div class="panel-create-section">
+            <button id="create-new-setlist-header-btn" class="icon-button-header primary create-setlist-button full-width" title="Создать новый сет-лист">
+                <i class="fas fa-plus"></i>
+                <span>Создать сет-лист</span>
+            </button>
+        </div>
     </div>
     
     <!-- Скрытые элементы для совместимости -->

@@ -1,5 +1,5 @@
-// Service Worker v608 - Simplified branch selector and wider setlist cards
-const CACHE_NAME = 'agape-worship-cache-v608';
+// Service Worker v609 - Fixed last card cutoff issue
+const CACHE_NAME = 'agape-worship-cache-v609';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
