@@ -123,7 +123,9 @@ function createSetlistCard(setlist, isActive, onSelect, onDelete) {
                 // Открываем песню на главной странице и закрываем панель
                 if (window.handleFavoriteOrRepertoireSelect) {
                     window.handleFavoriteOrRepertoireSelect(song);
-                    ui.closeAllPanels();
+                    // Закрываем панель сет-листов
+                    const panel = document.getElementById('setlists-panel');
+                    if (panel) panel.classList.remove('open');
                 }
             };
             

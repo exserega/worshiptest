@@ -1,5 +1,5 @@
-// Service Worker v581 - Fixed setlist cards module import path
-const CACHE_NAME = 'agape-worship-cache-v581';
+// Service Worker v582 - Fixed setlist cards module dependencies
+const CACHE_NAME = 'agape-worship-cache-v582';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
