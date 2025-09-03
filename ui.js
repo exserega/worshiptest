@@ -846,8 +846,8 @@ function createRepertoireSongElement(song, vocalistId, onClick) {
     listItem.appendChild(songInfo);
 
     const removeBtn = document.createElement('button');
-    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-    removeBtn.className = 'remove-button';
+    removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+    removeBtn.className = 'icon-button-delete';
     removeBtn.title = 'Удалить из репертуара';
     removeBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
@@ -1139,8 +1139,8 @@ async function renderCurrentSetlistSongs(songs, onSongSelect, onSongRemove) {
         songActions.className = 'song-actions';
         
         const removeBtn = document.createElement('button');
-        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-        removeBtn.className = 'song-action-btn';
+        removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        removeBtn.className = 'icon-button-delete';
         
         // Используем результат проверки прав
         if (!canEdit) {
@@ -1388,7 +1388,7 @@ export async function renderSetlists(setlists, onSelect, onDelete) {
 
         const deleteBtn = document.createElement('button');
         deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-        deleteBtn.className = 'remove-button';
+        deleteBtn.className = 'icon-button-delete';
         
         // Проверяем права для текущего филиала
         if (!canEdit) {

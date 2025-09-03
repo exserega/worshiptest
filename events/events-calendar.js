@@ -670,12 +670,8 @@ export class EventsCalendar {
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
-                            <button class="icon-button delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                    <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M10 11V17M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
+                            <button class="icon-button-delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     `;
@@ -901,12 +897,8 @@ export class EventsCalendar {
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
-                            <button class="icon-button delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                    <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M10 11V17M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
+                            <button class="icon-button-delete" onclick="window.eventsCalendar.handleDeleteEvent('${event.id}')" title="Удалить">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     ` : ''}

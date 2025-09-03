@@ -98,7 +98,7 @@ function createBranchCard(branch, users, isRootAdmin) {
                     </button>
                     
                     ${!branch.isMain ? `
-                        <button class="button small danger" 
+                        <button class="icon-button-delete" 
                                 onclick="window.adminModules.branches.deleteBranch('${branch.id}')"
                                 title="Удалить">
                             <i class="fas fa-trash"></i>

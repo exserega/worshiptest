@@ -587,7 +587,7 @@ function createSetlistCard(setlist) {
             <i class="fas fa-edit"></i>
         </button>
         
-        <button class="delete-btn-corner" title="Удалить" onclick="deleteSetlist('${setlist.id}')">
+        <button class="icon-button-delete delete-corner" title="Удалить" onclick="deleteSetlist('${setlist.id}')">
             <i class="fas fa-trash"></i>
         </button>
         

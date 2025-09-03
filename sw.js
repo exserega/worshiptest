@@ -1,5 +1,5 @@
-// Service Worker v559 - Complete standardization of all close buttons
-const CACHE_NAME = 'agape-worship-cache-v559';
+// Service Worker v560 - Standardized all delete buttons with icon-button-delete
+const CACHE_NAME = 'agape-worship-cache-v560';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

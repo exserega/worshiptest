@@ -136,6 +136,55 @@ button:disabled { opacity: 0.5; cursor: not-allowed; background: color-mix(in sr
     transform: translateY(-50%);
 }
 
+/* Кнопка удаления - 32x32px красная */
+.icon-button-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444 !important;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    font-size: 0.875rem;
+    line-height: 1;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.icon-button-delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: scale(1.05);
+}
+
+.icon-button-delete:active {
+    transform: scale(0.95);
+}
+
+.icon-button-delete i {
+    font-size: 0.875rem;
+    color: #ef4444 !important;
+}
+
+/* Позиционирование кнопки удаления в углу карточки */
+.delete-corner {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.setlist-card:hover .delete-corner,
+.archive-setlist-card:hover .delete-corner {
+    opacity: 1;
+}
+
 /* Старые стили для обратной совместимости */
 button.icon-button.simple { 
     background: transparent; 

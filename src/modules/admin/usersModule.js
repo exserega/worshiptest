@@ -124,7 +124,7 @@ function createUserCard(user, branches, currentUser, isRootAdmin) {
                 ` : ''}
                 
                 ${isRootAdmin && !isCurrentUser && !user.isFounder ? `
-                    <button class="button small danger" 
+                    <button class="icon-button-delete" 
                             onclick="window.adminModules.users.deleteUser('${user.id}')"
                             title="Удалить">
                         <i class="fas fa-trash"></i>
