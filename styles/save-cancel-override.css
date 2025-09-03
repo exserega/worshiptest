@@ -3,6 +3,48 @@
 /* ТОЛЬКО визуальные изменения!             */
 /* ======================================== */
 
+/* Добавляем поддержку отступа между иконкой и текстом для всех кнопок */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn.btn-primary,
+.btn.btn-secondary,
+.btn-modern,
+.btn-modern.primary,
+.btn-modern.secondary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important; /* Отступ между иконкой и текстом */
+}
+
+/* Убедимся, что иконки и span элементы не имеют лишних отступов */
+.btn i,
+.btn-primary i,
+.btn-secondary i,
+.btn-modern i,
+.btn span,
+.btn-primary span,
+.btn-secondary span,
+.btn-modern span {
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+/* Специфичное правило для Font Awesome иконок */
+.btn .fas,
+.btn .far,
+.btn .fab,
+.btn-primary .fas,
+.btn-primary .far,
+.btn-secondary .fas,
+.btn-secondary .far,
+.btn-modern .fas,
+.btn-modern .far {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
 /* Переопределение для кнопок сохранения */
 .btn-primary,
 .btn.btn-primary,
@@ -95,4 +137,21 @@
 .modal-footer .btn-secondary {
     background: var(--bg-tertiary, #1a1f2e) !important;
     color: #9ca3af !important;
+}
+
+/* Специфичные правила для модальных окон - убеждаемся в правильном отступе */
+.modal-footer .btn,
+.modal-footer button,
+.event-creation-modal button,
+.archive-save-modal button {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Если в кнопках есть иконки Font Awesome - сбрасываем их margin */
+.modal-footer button i[class*="fa-"],
+.event-creation-modal button i[class*="fa-"],
+.archive-save-modal button i[class*="fa-"] {
+    margin: 0 !important;
 }

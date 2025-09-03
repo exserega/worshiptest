@@ -1,5 +1,5 @@
-// Service Worker v566 - CSS-only override for save/cancel button styles
-const CACHE_NAME = 'agape-worship-cache-v566';
+// Service Worker v567 - Fixed icon-text spacing in buttons with gap property
+const CACHE_NAME = 'agape-worship-cache-v567';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
