@@ -1,5 +1,5 @@
-// Service Worker v561 - Fixed delete button icons in events page
-const CACHE_NAME = 'agape-worship-cache-v561';
+// Service Worker v566 - CSS-only override for save/cancel button styles
+const CACHE_NAME = 'agape-worship-cache-v566';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

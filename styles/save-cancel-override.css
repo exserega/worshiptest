@@ -1,0 +1,98 @@
+/* ======================================== */
+/* Переопределение стилей кнопок Save/Cancel */
+/* ТОЛЬКО визуальные изменения!             */
+/* ======================================== */
+
+/* Переопределение для кнопок сохранения */
+.btn-primary,
+.btn.btn-primary,
+.btn-modern.primary {
+    background: var(--primary-color, #22d3ee) !important;
+    background-image: none !important; /* Убираем градиенты */
+    color: var(--button-text-color, #111827) !important;
+    border-color: transparent !important;
+}
+
+.btn-primary:hover:not(:disabled),
+.btn.btn-primary:hover:not(:disabled),
+.btn-modern.primary:hover:not(:disabled) {
+    background: var(--accent-color, #06b6d4) !important;
+    background-image: none !important;
+}
+
+/* Переопределение для кнопок отмены */
+.btn-secondary,
+.btn.btn-secondary,
+.btn-modern.secondary {
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    background-image: none !important;
+    color: #9ca3af !important;
+    border: 1px solid var(--border-color, #374151) !important;
+}
+
+.btn-secondary:hover,
+.btn.btn-secondary:hover,
+.btn-modern.secondary:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+    background-image: none !important;
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+}
+
+/* Специфичные переопределения для модальных окон событий */
+.event-creation-modal .btn-primary {
+    background: var(--primary-color, #22d3ee) !important;
+    color: var(--button-text-color, #111827) !important;
+    box-shadow: 0 2px 4px rgba(34, 211, 238, 0.2) !important;
+}
+
+.event-creation-modal .btn-primary:hover {
+    background: var(--accent-color, #06b6d4) !important;
+    box-shadow: 0 4px 8px rgba(34, 211, 238, 0.3) !important;
+}
+
+.event-creation-modal .btn-secondary {
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    color: #9ca3af !important;
+    border: 1px solid var(--border-color, #374151) !important;
+}
+
+.event-creation-modal .btn-secondary:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+}
+
+/* Переопределения для архива */
+.archive-save-modal .btn-primary {
+    background: var(--primary-color, #22d3ee) !important;
+    color: var(--button-text-color, #111827) !important;
+}
+
+.archive-save-modal .btn-secondary {
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    color: #9ca3af !important;
+    border: 1px solid var(--border-color, #374151) !important;
+}
+
+/* Убираем градиенты из btn-modern */
+.btn-modern.primary {
+    background: var(--primary-color, #22d3ee) !important;
+    background-image: none !important;
+}
+
+.btn-modern.secondary {
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    background-image: none !important;
+}
+
+/* Для settings */
+.modal-footer .btn-primary {
+    background: var(--primary-color, #22d3ee) !important;
+    color: var(--button-text-color, #111827) !important;
+}
+
+.modal-footer .btn-secondary {
+    background: var(--bg-tertiary, #1a1f2e) !important;
+    color: #9ca3af !important;
+}
