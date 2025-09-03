@@ -1,5 +1,5 @@
-// Service Worker v577 - Changed "Add" button to "Edit" for song list management
-const CACHE_NAME = 'agape-worship-cache-v577';
+// Service Worker v578 - Removed "Activate" button, added "Delete" button to setlist cards
+const CACHE_NAME = 'agape-worship-cache-v578';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
