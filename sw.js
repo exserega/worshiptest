@@ -1,5 +1,5 @@
-// Service Worker v592 - Increased song card and badges size for better readability
-const CACHE_NAME = 'agape-worship-cache-v592';
+// Service Worker v598 - Simple two-tone design for song area
+const CACHE_NAME = 'agape-worship-cache-v598';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
