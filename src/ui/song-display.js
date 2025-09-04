@@ -15,6 +15,7 @@ import {
   domElements 
 } from '../core/index.js';
 import { subscribeResolvedContent } from '../api/overrides.js';
+import { showNotification, showConfirmDialog } from './modal-manager.js';
 
 // ====================================
 // SONG DISPLAY UTILITIES
@@ -83,12 +84,18 @@ export function displaySongDetails(songData, keyToSelect) {
   try {
     if (songData.id) {
       if (window._overrideUnsub) { try { window._overrideUnsub(); } catch(e) {} }
-      window._overrideUnsub = subscribeResolvedContent(songData.id, ({ content }) => {
-        applyRender(content != null ? content : baseLyrics);
-      }, ({ global }) => {
-        // TODO: optionally show notice comparing versions
-        console.log('ℹ️ Global override updated for this song', global?.editorEmail);
-      });
+      window._overrideUnsub = subscribeResolvedContent(
+        songData.id,
+        ({ content }) => {
+          applyRender(content != null ? content : baseLyrics);
+        },
+        async ({ global }) => {
+          // Уведомление о глобальном обновлении при наличии персональной версии
+          try {
+            await showNotification('Глобальная версия обновлена лидером в вашем филиале', 'info', 3000);
+          } catch (e) { /* ignore */ }
+        }
+      );
     }
   } catch (e) {
     console.warn('Overrides subscribe failed, rendering base', e);

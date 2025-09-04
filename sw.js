@@ -1,5 +1,5 @@
-// Service Worker v6313 - Branch-scoped overrides (global per branch)
-const CACHE_NAME = 'agape-worship-cache-v6313';
+// Service Worker v6314 - Global update notification wiring
+const CACHE_NAME = 'agape-worship-cache-v6314';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
