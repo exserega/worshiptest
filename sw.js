@@ -1,5 +1,5 @@
-// Service Worker v630k - Remove block legend icons on main page
-const CACHE_NAME = 'agape-worship-cache-v630k';
+// Service Worker v630l - Persist and reapply filters in Songs Overlay
+const CACHE_NAME = 'agape-worship-cache-v630l';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

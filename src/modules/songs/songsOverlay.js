@@ -141,9 +141,11 @@ class SongsOverlay {
         this.overlay.classList.add('visible');
         document.body.style.overflow = 'hidden';
         
-        // Загружаем песни из state
+        // Загружаем песни из state и применяем сохраненные фильтры
         this.loadSongs();
-        this.renderSongs();
+        this.loadPersistedFilterState();
+        this.applyFilterStateToUI();
+        this.filterSongs();
         
         logger.log('🎵 Songs overlay opened');
     }
@@ -218,6 +220,9 @@ class SongsOverlay {
             chip.classList.remove('active');
         });
         
+        // Сохраняем выбор
+        this.persistFilterState();
+
         this.filterSongs();
     }
     
@@ -238,6 +243,9 @@ class SongsOverlay {
             chip.classList.toggle('active', chip.dataset.subCategory === this.selectedSubCategory);
         });
         
+        // Сохраняем выбор
+        this.persistFilterState();
+
         this.filterSongs();
     }
     
@@ -286,6 +294,65 @@ class SongsOverlay {
         this.renderSongs();
     }
     
+    /**
+     * Синхронизация UI с текущим состоянием фильтров
+     */
+    applyFilterStateToUI() {
+        // Основные категории
+        const mainChips = this.overlay.querySelectorAll('.main-category');
+        mainChips.forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.mainCategory === this.selectedMainCategory);
+        });
+
+        // Подкатегории: показать/скрыть контейнер
+        const subFilters = this.overlay.querySelector('.sub-filters');
+        if (this.selectedMainCategory === 'fast' || this.selectedMainCategory === 'worship') {
+            subFilters.style.display = 'flex';
+        } else {
+            subFilters.style.display = 'none';
+        }
+
+        // Подкатегории: активная кнопка
+        const subChips = this.overlay.querySelectorAll('.sub-category');
+        subChips.forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.subCategory === this.selectedSubCategory);
+        });
+    }
+
+    /**
+     * Сохранение выбранных фильтров между открытиями (localStorage)
+     */
+    persistFilterState() {
+        try {
+            localStorage.setItem('songsOverlay.mainCategory', this.selectedMainCategory || 'all');
+            localStorage.setItem('songsOverlay.subCategory', this.selectedSubCategory || '');
+        } catch (e) {
+            logger.warn('⚠️ Не удалось сохранить состояние фильтров песен', e);
+        }
+    }
+
+    /**
+     * Загрузка сохраненных фильтров (если есть)
+     */
+    loadPersistedFilterState() {
+        try {
+            const persistedMain = localStorage.getItem('songsOverlay.mainCategory');
+            const persistedSub = localStorage.getItem('songsOverlay.subCategory');
+
+            if (persistedMain && MAIN_CATEGORIES[persistedMain]) {
+                this.selectedMainCategory = persistedMain;
+            }
+            // Пустая строка означает отсутствие подкатегории
+            if (persistedSub && SUB_CATEGORIES[persistedSub]) {
+                this.selectedSubCategory = persistedSub;
+            } else {
+                this.selectedSubCategory = null;
+            }
+        } catch (e) {
+            logger.warn('⚠️ Не удалось загрузить состояние фильтров песен', e);
+        }
+    }
+
     /**
      * Отрисовка списка песен
      */
