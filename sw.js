@@ -1,5 +1,5 @@
-// Service Worker v6318 - Editor confirmations and full revert
-const CACHE_NAME = 'agape-worship-cache-v6318';
+// Service Worker v6319 - Editor mobile UI redesign
+const CACHE_NAME = 'agape-worship-cache-v6319';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

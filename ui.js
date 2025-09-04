@@ -1733,6 +1733,9 @@ export async function openSongEditor(songData) {
         if (delGlobalBtn) delGlobalBtn.style.display = canGlobal ? 'inline-flex' : 'none';
         const delUserBtn = document.getElementById('delete-user-override-button');
         if (delUserBtn) delUserBtn.style.display = 'inline-flex';
+        // Скрываем кнопку закрытия, полагаемся на Отменить
+        const closeBtn = document.getElementById('close-editor-button');
+        if (closeBtn) closeBtn.style.display = 'none';
     } catch (e) { /* ignore */ }
 
     // Загружаем текст в textarea: приоритет user→global→base
