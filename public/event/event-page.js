@@ -694,9 +694,9 @@ function shareEvent(platform) {
             const name = s.name || `Песня ${idx + 1}`;
             const key = s.preferredKey || s.defaultKey || '';
             if (platform === 'telegram' && s.youtubeLink) {
-                // Пытаемся обернуть название в ссылку (в некоторых клиентах Telegram поддерживается)
-                const line = `\n• <a href="${s.youtubeLink}">${name}</a>${key ? ` — ${key}` : ''}`;
-                text += line;
+                // Телеграм через t.me/share/url не поддерживает HTML/Markdown форматирование.
+                // Используем обычный URL в скобках, чтобы название оставалось читаемым, а ссылка была кликабельной.
+                text += `\n• ${name}${key ? ` — ${key}` : ''} (${s.youtubeLink})`;
             } else {
                 text += `\n• ${name}${key ? ` — ${key}` : ''}`;
             }
@@ -711,8 +711,9 @@ function shareEvent(platform) {
     if (platform === 'whatsapp') {
         shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
     } else if (platform === 'telegram') {
-        // Для Telegram: отправляем только text, без отдельного url (чтобы не было дублирования)
-        shareUrl = `https://t.me/share/url?text=${encodeURIComponent(text)}`;
+        // Для Telegram: передаем url параметром, а из текста убираем нижнюю ссылку, чтобы не было дубля
+        const textWithoutBottomLink = text.replace(`\n🔗 ${url}`, '');
+        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(textWithoutBottomLink)}`;
     }
     
     if (shareUrl) {
