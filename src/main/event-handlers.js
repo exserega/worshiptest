@@ -1624,6 +1624,52 @@ function setupSongEventHandlers() {
             }
         });
     }
+
+    // Global/user override buttons
+    const saveGlobalBtn = document.getElementById('save-global-button');
+    const deleteUserBtn = document.getElementById('delete-user-override-button');
+    const deleteGlobalBtn = document.getElementById('delete-global-override-button');
+
+    if (saveGlobalBtn) {
+        saveGlobalBtn.addEventListener('click', async () => {
+            try {
+                const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
+                const editorTextarea = document.getElementById('song-edit-textarea');
+                if (!currentSong || !editorTextarea) return;
+                const content = editorTextarea.value;
+                if (window.apiOverrides && window.apiOverrides.saveGlobalOverride) {
+                    await window.apiOverrides.saveGlobalOverride(currentSong.id, content);
+                    console.log('✅ Saved global override');
+                }
+            } catch (e) { console.error(e); }
+        });
+    }
+
+    if (deleteUserBtn) {
+        deleteUserBtn.addEventListener('click', async () => {
+            try {
+                const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
+                if (!currentSong) return;
+                if (window.apiOverrides && window.apiOverrides.deleteUserOverride) {
+                    await window.apiOverrides.deleteUserOverride(currentSong.id);
+                    console.log('🗑️ Deleted user override');
+                }
+            } catch (e) { console.error(e); }
+        });
+    }
+
+    if (deleteGlobalBtn) {
+        deleteGlobalBtn.addEventListener('click', async () => {
+            try {
+                const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
+                if (!currentSong) return;
+                if (window.apiOverrides && window.apiOverrides.deleteGlobalOverride) {
+                    await window.apiOverrides.deleteGlobalOverride(currentSong.id);
+                    console.log('🗑️ Deleted global override');
+                }
+            } catch (e) { console.error(e); }
+        });
+    }
     
     if (ui.cancelEditButton) {
         ui.cancelEditButton.addEventListener('click', () => {

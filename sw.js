@@ -1,5 +1,5 @@
-// Service Worker v6311 - Main view subscribes to overrides (user/global)
-const CACHE_NAME = 'agape-worship-cache-v6311';
+// Service Worker v6312 - Editor role buttons and handlers
+const CACHE_NAME = 'agape-worship-cache-v6312';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

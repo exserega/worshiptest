@@ -1701,6 +1701,18 @@ export async function openSongEditor(songData) {
         editorTitle.textContent = `Редактирование: ${cleanTitle}`;
     }
     
+    // Ролевые кнопки
+    try {
+        const { canEditSongs } = await import('./src/modules/permissions/permissions.js');
+        const canGlobal = canEditSongs();
+        const saveGlobalBtn = document.getElementById('save-global-button');
+        const delGlobalBtn = document.getElementById('delete-global-override-button');
+        if (saveGlobalBtn) saveGlobalBtn.style.display = canGlobal ? 'inline-flex' : 'none';
+        if (delGlobalBtn) delGlobalBtn.style.display = canGlobal ? 'inline-flex' : 'none';
+        const delUserBtn = document.getElementById('delete-user-override-button');
+        if (delUserBtn) delUserBtn.style.display = 'inline-flex';
+    } catch (e) { /* ignore */ }
+
     // Загружаем текст в textarea: приоритет user→global→base
     try {
         // Dynamic import to avoid circular deps
