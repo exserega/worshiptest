@@ -1,5 +1,5 @@
-// Service Worker v630z - Editor UI wide modal and overrides in editor
-const CACHE_NAME = 'agape-worship-cache-v630z';
+// Service Worker v6310 - Fix async openSongEditor transpilation and cache
+const CACHE_NAME = 'agape-worship-cache-v6310';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

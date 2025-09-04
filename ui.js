@@ -1658,7 +1658,7 @@ export function updateEditStatus(songData) {
 }
 
 /** Открывает редактор песни */
-export function openSongEditor(songData) {
+export async function openSongEditor(songData) {
     console.log('📝 [UI] openSongEditor called with:', songData?.name);
     
     if (!songData) {
