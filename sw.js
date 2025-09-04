@@ -1,5 +1,5 @@
-// Service Worker v630n - Overlay font sizing fix (song name vs subline)
-const CACHE_NAME = 'agape-worship-cache-v630n';
+// Service Worker v630o - Compact overlay cards and typography (10px/6px)
+const CACHE_NAME = 'agape-worship-cache-v630o';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
