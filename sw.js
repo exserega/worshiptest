@@ -1,5 +1,5 @@
-// Service Worker v630d - Archive search: hide search icon when clear is visible
-const CACHE_NAME = 'agape-worship-cache-v630d';
+// Service Worker v630e - Archive overlay search: hide search icon and adjust input padding
+const CACHE_NAME = 'agape-worship-cache-v630e';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

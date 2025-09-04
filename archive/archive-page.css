@@ -101,6 +101,10 @@ html, body {
     width: 100%;
     flex: 1;
 }
+.search-container:has(.clear-search-btn:not([style*="display: none"])) i.fas.fa-search,
+#archive-songs-overlay .search-input-wrapper:has(.clear-search-btn:not([style*="display: none"])) i.fas.fa-search {
+    display: none !important;
+}
 
 .search-icon {
     position: absolute;
@@ -118,7 +122,7 @@ html, body {
 
 .search-input {
     width: 100%;
-    padding: 10px 36px 10px 12px;
+    padding: 10px 48px 10px 12px; /* больше места под 32px clear */
     background: var(--bg-tertiary, #1a1f2e);
     border: 1px solid var(--border-color, #374151);
     border-radius: 8px;
