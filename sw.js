@@ -1,5 +1,5 @@
-// Service Worker v628 - Clear-X buttons across searches
-const CACHE_NAME = 'agape-worship-cache-v628';
+// Service Worker v629 - Tune main search clear button visuals
+const CACHE_NAME = 'agape-worship-cache-v629';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

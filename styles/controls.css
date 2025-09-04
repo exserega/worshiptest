@@ -23,11 +23,11 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     background: transparent;
     border: none;
-    color: var(--text-color);
+    color: #e5e7eb !important; /* Светлый крестик для темного фона */
     border-radius: 6px;
     display: none; /* Показ при вводе текста */
     cursor: pointer;
@@ -40,6 +40,7 @@
 
 .search-input-container .clear-search-btn i {
     pointer-events: none;
+    color: #e5e7eb !important;
 }
 
 /* Если показан крестик, скрываем лупу */
