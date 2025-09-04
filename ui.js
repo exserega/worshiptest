@@ -337,9 +337,8 @@ export function displaySongDetails(songData, keyToSelect) {
 
     const title = songData.name || 'Без названия';
     // 🔥 ПРИОРИТЕТ: Используем отредактированный текст, если есть
-    const originalLyrics = songData.hasWebEdits 
-        ? (songData['Текст и аккорды (edited)'] || '') 
-        : (songData['Текст и аккорды'] || '');
+    // Base content only; overrides are applied by song-display module
+    const originalLyrics = (songData['Текст и аккорды'] || '');
     const originalKeyFromSheet = getSongKey(songData);
     const srcUrl = songData.Holychords || '#';
     const bpm = songData.BPM || 'N/A';
