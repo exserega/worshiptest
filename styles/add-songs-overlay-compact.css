@@ -474,6 +474,28 @@ body[data-theme="light"] #add-songs-overlay .song-bpm {
     max-height: 200px !important;
 }
 
+/* === KEY SELECTION MODAL CLOSE BUTTON FIXES === */
+#key-selection-modal .header-top {
+    align-items: center !important;
+}
+
+#key-selection-modal .icon-button-small {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    border-radius: 6px !important;
+    position: static !important;
+    transform: none !important;
+}
+
+#key-selection-modal .icon-button-small:hover,
+#key-selection-modal .icon-button-small:active {
+    transform: none !important;
+}
+
 #add-songs-overlay .search-result-item {
     padding: 6px 10px !important;
     font-size: 0.85rem !important;

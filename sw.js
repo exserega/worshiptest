@@ -1,5 +1,5 @@
-// Service Worker v622 - Persist removal from overlay and live refresh
-const CACHE_NAME = 'agape-worship-cache-v622';
+// Service Worker v623 - Key selection modal close button alignment/hover fixes
+const CACHE_NAME = 'agape-worship-cache-v623';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
