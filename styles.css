@@ -912,7 +912,7 @@
         color-mix(in srgb, var(--primary-color) 85%, var(--container-background-color)), 
         color-mix(in srgb, var(--primary-color) 75%, var(--container-background-color)));
     border-color: color-mix(in srgb, var(--primary-color) 70%, var(--border-color));
-    transform: translateY(-1px);
+    transform: none; /* В полноэкранном оверлее не двигаем */
 }
 
 .btn-modern.secondary {
@@ -924,7 +924,7 @@
 .btn-modern.secondary:hover {
     background: color-mix(in srgb, var(--hover-color) 85%, var(--primary-color));
     border-color: var(--primary-color);
-    transform: translateY(-1px);
+    transform: none; /* В полноэкранном оверлее не двигаем */
 }
 
 /* === ПОЛНОЭКРАННЫЙ ОВЕРЛЕЙ === */

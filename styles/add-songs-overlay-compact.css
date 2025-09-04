@@ -14,6 +14,7 @@
 
 #add-songs-overlay .header-top-row {
     gap: 8px !important;
+    align-items: center !important; /* Выровнять кнопки по центру по вертикали */
 }
 
 #add-songs-overlay .header-left {
@@ -27,7 +28,8 @@
 }
 
 /* Кнопка закрытия - компактная */
-#add-songs-overlay .overlay-close-btn {
+#add-songs-overlay .overlay-close-btn,
+#add-songs-overlay .icon-button-small {
     width: 32px !important;
     height: 32px !important;
     font-size: 0.9rem !important;
@@ -35,6 +37,13 @@
     border: 1px solid var(--border-color) !important;
     color: var(--text-color) !important;
     border-radius: 6px !important;
+    position: static !important; /* Не абсолютное позиционирование в заголовке */
+}
+
+/* Кнопка закрытия: только смена цвета без смещения */
+#add-songs-overlay .icon-button-small:hover,
+#add-songs-overlay .overlay-close-btn:hover {
+    transform: none !important;
 }
 
 /* Счетчик добавленных - скрываем в заголовке */
@@ -73,6 +82,12 @@
 
 #add-songs-overlay .btn-modern.primary i {
     font-size: 0.75rem !important;
+}
+
+/* Запрещаем вертикальные сдвиги у кнопок в заголовке (закрыть/готово) */
+#add-songs-overlay .fullscreen-header .btn-modern:hover,
+#add-songs-overlay .fullscreen-header .btn-modern:active {
+    transform: none !important;
 }
 
 /* Подзаголовок с названием сет-листа */
