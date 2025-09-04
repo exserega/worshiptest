@@ -708,16 +708,19 @@ window.handleRevertToOriginal = async function() {
         }
         
         // Подтверждение действия
-        const confirmRevert = confirm('Вы уверены, что хотите откатить все изменения к оригинальной версии из Google Таблицы?');
+        const confirmRevert = confirm('Вы уверены? Будут удалены глобальная и ваша персональная версии, будет показан оригинал из Google Таблицы.');
         if (!confirmRevert) {
             return;
         }
         
         console.log('🔄 [Legacy] Reverting song:', songId);
         
-        // Удаляем персональную версию (возврат к приоритету global/base)
+        // Удаляем глобальную и персональную версии, возвращаем к оригиналу
+        if (typeof apiOverrides?.deleteGlobalOverride === 'function') {
+            try { await apiOverrides.deleteGlobalOverride(songId); } catch(e) { /* ignore */ }
+        }
         if (typeof apiOverrides?.deleteUserOverride === 'function') {
-            await apiOverrides.deleteUserOverride(songId);
+            try { await apiOverrides.deleteUserOverride(songId); } catch(e) { /* ignore */ }
             
             // Обновляем песню в state
             const song = window.state.allSongs.find(s => s.id === songId);

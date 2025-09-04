@@ -1,5 +1,5 @@
-// Service Worker v6317 - Event page guest global override
-const CACHE_NAME = 'agape-worship-cache-v6317';
+// Service Worker v6318 - Editor confirmations and full revert
+const CACHE_NAME = 'agape-worship-cache-v6318';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

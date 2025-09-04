@@ -1637,6 +1637,8 @@ function setupSongEventHandlers() {
                 const editorTextarea = document.getElementById('song-edit-textarea');
                 if (!currentSong || !editorTextarea) return;
                 const content = editorTextarea.value;
+                const ok = window.confirm('Сохранить глобально для всех в текущем филиале?');
+                if (!ok) return;
                 if (window.apiOverrides && window.apiOverrides.saveGlobalOverride) {
                     await window.apiOverrides.saveGlobalOverride(currentSong.id, content);
                     console.log('✅ Saved global override');
@@ -1650,6 +1652,8 @@ function setupSongEventHandlers() {
             try {
                 const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
                 if (!currentSong) return;
+                const ok = window.confirm('Удалить вашу персональную версию?');
+                if (!ok) return;
                 if (window.apiOverrides && window.apiOverrides.deleteUserOverride) {
                     await window.apiOverrides.deleteUserOverride(currentSong.id);
                     console.log('🗑️ Deleted user override');
@@ -1663,10 +1667,19 @@ function setupSongEventHandlers() {
             try {
                 const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
                 if (!currentSong) return;
+                const ok = window.confirm('Восстановить оригинал? Будет удалена глобальная версия.');
+                if (!ok) return;
                 if (window.apiOverrides && window.apiOverrides.deleteGlobalOverride) {
                     await window.apiOverrides.deleteGlobalOverride(currentSong.id);
                     console.log('🗑️ Deleted global override');
                 }
+                // Также удаляем персональную версию, чтобы вернуть полностью к оригиналу
+                try {
+                    if (window.apiOverrides && window.apiOverrides.deleteUserOverride) {
+                        await window.apiOverrides.deleteUserOverride(currentSong.id);
+                        console.log('🗑️ Deleted user override along with global revert');
+                    }
+                } catch (e) { /* ignore */ }
             } catch (e) { console.error(e); }
         });
     }
