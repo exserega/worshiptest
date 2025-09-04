@@ -1,5 +1,5 @@
-// Service Worker v6323 - Editor close button pinned top-right without movement
-const CACHE_NAME = 'agape-worship-cache-v6323';
+// Service Worker v6324 - Remove 'Мои' button from song legend
+const CACHE_NAME = 'agape-worship-cache-v6324';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
