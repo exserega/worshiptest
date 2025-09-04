@@ -1,5 +1,5 @@
-// Service Worker v612 - Enhanced highlight for expanded setlist cards
-const CACHE_NAME = 'agape-worship-cache-v612';
+// Service Worker v613 - Simplified create-setlist modal + direct Add Songs overlay
+const CACHE_NAME = 'agape-worship-cache-v613';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
