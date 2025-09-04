@@ -1,5 +1,5 @@
-// Service Worker v630q - Overlay subline 10px, 1px spacing under title
-const CACHE_NAME = 'agape-worship-cache-v630q';
+// Service Worker v630r - Enforce minimal spacing between song title and subline
+const CACHE_NAME = 'agape-worship-cache-v630r';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

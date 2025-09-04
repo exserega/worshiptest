@@ -255,6 +255,8 @@
     font-weight: 600;
     color: var(--text-primary);
     display: block;
+    line-height: 1; /* Минимальная высота строки для уменьшения интервала */
+    margin: 0 !important; /* Убираем любые внешние отступы */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -263,10 +265,15 @@
 
 /* Подстрока под названием (категория/подкатегория) */
 .songs-overlay .song-subline {
-    margin-top: 1px; /* Минимальный отступ между названием и категорией */
+    margin-top: 1px !important; /* Строго 1px интервал */
     font-size: 10px; /* По запросу: 10px */
-    line-height: 1.2;
+    line-height: 1; /* Минимальная высота строки */
     color: var(--text-secondary); /* На темном фоне светлый вторичный */
+}
+
+/* Гарантируем отсутствие межэлементных зазоров от контейнера */
+.songs-overlay .song-info {
+    display: block;
 }
 
 /* Кнопка удаления песни */
