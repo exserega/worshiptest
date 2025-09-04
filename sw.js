@@ -1,5 +1,5 @@
-// Service Worker v630p - Overlay typography update (14px title, 8px subline, 3px gap)
-const CACHE_NAME = 'agape-worship-cache-v630p';
+// Service Worker v630q - Overlay subline 10px, 1px spacing under title
+const CACHE_NAME = 'agape-worship-cache-v630q';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
