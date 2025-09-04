@@ -128,6 +128,29 @@ button:disabled { opacity: 0.5; cursor: not-allowed; background: color-mix(in sr
     position: static; /* Позиция уже задана в структуре */
 }
 
+/* Mobile song preview overlay: enforce inline alignment and no movement */
+#mobile-song-preview-overlay .header-top-row {
+    align-items: center !important;
+}
+
+#mobile-song-preview-overlay .header-top-row .icon-button-small {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+    width: 32px !important;
+    height: 32px !important;
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    border-radius: 6px !important;
+}
+
+#mobile-song-preview-overlay .icon-button-small:hover,
+#mobile-song-preview-overlay .icon-button-small:active {
+    transform: none !important;
+}
+
 /* Метроном - особое позиционирование */
 .metronome-close {
     position: absolute !important;

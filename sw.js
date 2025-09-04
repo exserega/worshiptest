@@ -1,5 +1,5 @@
-// Service Worker v624 - Stronger overrides for key modal close button
-const CACHE_NAME = 'agape-worship-cache-v624';
+// Service Worker v625 - Also fix mobile song preview close button
+const CACHE_NAME = 'agape-worship-cache-v625';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
