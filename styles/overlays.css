@@ -251,14 +251,22 @@
 }
 
 .song-name {
-    font-size: 18px; /* Увеличен на 2px для лучшей читаемости */
-    font-weight: 500;
+    font-size: 18px; /* Крупнее, чем подстрока */
+    font-weight: 600;
     color: var(--text-primary);
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     flex: 1;
+}
+
+/* Подстрока под названием (категория/подкатегория) */
+.song-subline {
+    margin-top: 2px;
+    font-size: 12px; /* Меньше, чем название */
+    line-height: 1.3;
+    color: var(--text-secondary); /* На темном фоне светлый вторичный */
 }
 
 /* Кнопка удаления песни */
@@ -526,7 +534,7 @@
     }
     
     .song-name {
-        font-size: 17px; /* Увеличен на 2px */
+        font-size: 17px; /* Крупнее названия, подстрока останется меньше */
     }
     
     .song-key {

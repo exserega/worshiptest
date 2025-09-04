@@ -1,5 +1,5 @@
-// Service Worker v630m - Songs overlay labels for categories/subcategories
-const CACHE_NAME = 'agape-worship-cache-v630m';
+// Service Worker v630n - Overlay font sizing fix (song name vs subline)
+const CACHE_NAME = 'agape-worship-cache-v630n';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
