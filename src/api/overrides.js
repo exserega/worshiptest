@@ -133,12 +133,8 @@ export function subscribeResolvedContent(songId, onChange, onGlobalUpdateForUser
                    : null; // caller should fallback to base
     const source = userExists ? 'user' : (globalExists ? 'global' : 'base');
     onChange && onChange({ content: resolved, source, user: userData, global: globalData });
-    if (userExists && globalExists) {
-      const gu = globalData.updatedAt?.toDate ? globalData.updatedAt.toDate() : new Date(globalData.updatedAt || 0);
-      const uu = userData.updatedAt?.toDate ? userData.updatedAt.toDate() : new Date(userData.updatedAt || 0);
-      if (gu && uu && gu > uu) {
-        onGlobalUpdateForUser && onGlobalUpdateForUser({ global: globalData, user: userData });
-      }
+    if (globalExists) {
+      onGlobalUpdateForUser && onGlobalUpdateForUser({ global: globalData, user: userData });
     }
   }
 
