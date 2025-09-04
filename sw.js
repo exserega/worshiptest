@@ -1,5 +1,5 @@
-// Service Worker v630c - Standardize clear-X across overlay, archive, events
-const CACHE_NAME = 'agape-worship-cache-v630c';
+// Service Worker v630d - Archive search: hide search icon when clear is visible
+const CACHE_NAME = 'agape-worship-cache-v630d';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
