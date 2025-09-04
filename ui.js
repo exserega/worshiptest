@@ -490,7 +490,9 @@ export function displaySongDetails(songData, keyToSelect) {
         if (keyDisplay) keyDisplay.style.display = 'none';
     }
 
-    favoriteButton.disabled = false;
+    if (favoriteButton) {
+        favoriteButton.disabled = false;
+    }
     
     // Проверяем статус пользователя и доступ к филиалу для кнопки добавления в сет-лист
     if (hasLimitedAccess()) {

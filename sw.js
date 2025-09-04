@@ -1,5 +1,5 @@
-// Service Worker v6324 - Remove 'Мои' button from song legend
-const CACHE_NAME = 'agape-worship-cache-v6324';
+// Service Worker v6325 - Guard favorite-button removal references
+const CACHE_NAME = 'agape-worship-cache-v6325';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

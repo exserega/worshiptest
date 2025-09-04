@@ -1581,7 +1581,7 @@ function setupSongEventHandlers() {
         console.error('🎤 [EventHandlers] Repertoire (mic) button NOT FOUND');
     }
     
-    // Кнопка избранного
+    // Кнопка избранного (может быть скрыта/удалена)
     if (ui.favoriteButton) {
         ui.favoriteButton.addEventListener('click', async () => {
             const currentSong = window.currentSong;
@@ -1589,6 +1589,8 @@ function setupSongEventHandlers() {
                 controller.handleFavoriteOrRepertoireSelect(currentSong);
             }
         });
+    } else {
+        console.log('⭐ [EventHandlers] Favorite button not present (hidden/removed)');
     }
     
     // Редактор песен
