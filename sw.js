@@ -1,5 +1,5 @@
-// Service Worker v630e - Archive overlay search: hide search icon and adjust input padding
-const CACHE_NAME = 'agape-worship-cache-v630e';
+// Service Worker v630f - Main search: prioritize title matches over lyrics
+const CACHE_NAME = 'agape-worship-cache-v630f';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

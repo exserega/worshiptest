@@ -43,6 +43,7 @@ import {
     getNormalizedTitle,
     getNormalizedLyrics,
     getCleanedLyrics,
+    searchSongsWithCache,
     
     // Setlist functions  
     startAddingSongs as startAddingSongsModule,
@@ -205,20 +206,19 @@ window.handleMainSearch = function() {
         return;
     }
     
-    // Простой поиск без Worker (безопасно)
+    // Поиск с приоритетом названия (как в overlay): сперва совпадение по названию, затем по тексту
     if (window.state && window.state.allSongs) {
-        console.log('🔍 [Legacy] Searching in allSongs:', window.state.allSongs.length);
+        console.log('🔍 [MainSearch] Searching with scoring in allSongs:', window.state.allSongs.length);
         
-        const results = window.state.allSongs.filter(song => {
-            const titleMatch = song.name.toLowerCase().includes(rawQuery.toLowerCase());
-            const lyricsMatch = song['Текст и аккорды'] && 
-                song['Текст и аккорды'].toLowerCase().includes(rawQuery.toLowerCase());
-            return titleMatch || lyricsMatch;
-        }).slice(0, 10); // Ограничиваем результаты
+        const results = searchSongsWithCache(window.state.allSongs, rawQuery, {
+            searchInLyrics: true,
+            caseSensitive: false,
+            maxResults: 20
+        }).slice(0, 10);
         
-        console.log('🔍 [Legacy] Found results:', results.length);
+        console.log('🔍 [MainSearch] Found results:', results.length);
         
-        // Используем существующую функцию отображения
+        // Используем существующую функцию отображения (покажет title выше, фрагмент из текста ниже)
         if (typeof ui.displaySearchResults === 'function') {
             ui.displaySearchResults(results, (song) => {
                 console.log('🔍 [Legacy] Search result selected:', song.name);
