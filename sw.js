@@ -1,5 +1,5 @@
-// Service Worker v630f - Main search: prioritize title matches over lyrics
-const CACHE_NAME = 'agape-worship-cache-v630f';
+// Service Worker v630g - Fix copy button on main page (clipboard handler)
+const CACHE_NAME = 'agape-worship-cache-v630g';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

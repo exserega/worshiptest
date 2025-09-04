@@ -381,7 +381,22 @@ export function displaySongDetails(songData, keyToSelect) {
     const cleanTitle = title.includes('(') ? title.split('(')[0].trim() : title;
     if (songTitleText) songTitleText.textContent = cleanTitle;
     if (songPre) songPre.innerHTML = finalHighlightedLyrics;
-            // Кнопка копирования теперь управляется через CSS
+    // Кнопка копирования: показываем и вешаем обработчик копирования текста
+    if (copyBtn) {
+        copyBtn.style.display = 'inline-flex';
+        copyBtn.onclick = async (e) => {
+            e.preventDefault();
+            try {
+                const lyricsText = songContent.querySelector('#song-display')?.textContent || '';
+                await navigator.clipboard.writeText(lyricsText);
+                copyBtn.classList.add('copied');
+                setTimeout(() => copyBtn.classList.remove('copied'), 2000);
+            } catch (err) {
+                console.error('Ошибка копирования текста песни:', err);
+            }
+        };
+    }
+    // Кнопка редактирования
     if (editBtn) {
         // Проверяем права доступа для кнопки редактирования
         import('./src/modules/permissions/permissions.js').then(({ canEditSongs }) => {
