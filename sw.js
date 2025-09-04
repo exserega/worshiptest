@@ -1,5 +1,5 @@
-// Service Worker v6321 - Editor: top-right close, dynamic status label, color fixes
-const CACHE_NAME = 'agape-worship-cache-v6321';
+// Service Worker v6322 - Editor button height normalization and close button fix
+const CACHE_NAME = 'agape-worship-cache-v6322';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
