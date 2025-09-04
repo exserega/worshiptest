@@ -239,10 +239,10 @@
     border: 1px solid var(--border-color);
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 800px;
-    height: 90%;
-    max-height: 700px;
+    width: 96%;
+    max-width: 1200px; /* Почти на всю ширину */
+    height: 92vh;
+    max-height: 92vh; /* Выше, чем было */
     display: flex;
     flex-direction: column;
     overflow: hidden;

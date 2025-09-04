@@ -1,5 +1,5 @@
-// Service Worker v630y - Overrides (user/global) modules and wiring
-const CACHE_NAME = 'agape-worship-cache-v630y';
+// Service Worker v630z - Editor UI wide modal and overrides in editor
+const CACHE_NAME = 'agape-worship-cache-v630z';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

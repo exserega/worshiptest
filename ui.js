@@ -1683,15 +1683,22 @@ export function openSongEditor(songData) {
         editorTitle.textContent = `Редактирование: ${cleanTitle}`;
     }
     
-    // Загружаем текст в textarea
-    const originalLyrics = songData.hasWebEdits 
-        ? (songData['Текст и аккорды (edited)'] || '') 
-        : (songData['Текст и аккорды'] || '');
-    
-    console.log('📝 [UI] Loading lyrics, hasWebEdits:', songData.hasWebEdits);
-    console.log('📝 [UI] Original lyrics length:', originalLyrics.length);
-    
-    songEditTextarea.value = originalLyrics;
+    // Загружаем текст в textarea: приоритет user→global→base
+    try {
+        // Dynamic import to avoid circular deps
+        const { subscribeResolvedContent } = await import('./src/api/overrides.js');
+        const baseText = (songData['Текст и аккорды'] || '');
+        if (window._editorOverrideUnsub) { try { window._editorOverrideUnsub(); } catch(e) {} }
+        window._editorOverrideUnsub = subscribeResolvedContent(songData.id, ({ content }) => {
+            const text = (content != null ? content : baseText);
+            songEditTextarea.value = text;
+            console.log('📝 [UI] Editor loaded text (len):', text.length);
+        });
+    } catch (e) {
+        console.warn('Overrides not available, fallback to base text', e);
+        const fallback = (songData['Текст и аккорды'] || '');
+        songEditTextarea.value = fallback;
+    }
     
     // Обновляем статус
     updateEditStatus(songData);
