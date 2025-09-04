@@ -25,6 +25,8 @@
     transform: translateY(-50%);
     width: 32px; /* квадрат как icon-button-small */
     height: 32px; /* квадрат как icon-button-small */
+    min-width: 32px;
+    min-height: 32px;
     background: transparent; /* прозрачный фон на темном фоне */
     border: 1px solid var(--border-color); /* тонкая рамка как в кнопках */
     color: #e5e7eb !important; /* светлая иконка на темном фоне */
@@ -34,6 +36,9 @@
     display: inline-flex; /* центрирование содержимого */
     align-items: center;
     justify-content: center;
+    padding: 0 !important; /* перекрыть глобальный padding у button */
+    box-sizing: border-box; /* ширина/высота включают бордер/паддинг */
+    box-shadow: none; /* убрать глобальные тени кнопок */
 }
 
 .search-input-container .clear-search-btn:hover,

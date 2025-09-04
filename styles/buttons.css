@@ -60,6 +60,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; background: color-mix(in sr
     justify-content: center;
     width: 32px;
     height: 32px;
+    min-width: 32px;
+    min-height: 32px;
     border: none;
     background: var(--bg-tertiary, #1a1f2e);
     color: #b0b0b0 !important;
