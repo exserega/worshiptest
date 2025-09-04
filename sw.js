@@ -1,5 +1,5 @@
-// Service Worker v630w - Migration: better song name matching and category fallbacks
-const CACHE_NAME = 'agape-worship-cache-v630w';
+// Service Worker v630x - Fix repertoire overlay title by ensuring name merge
+const CACHE_NAME = 'agape-worship-cache-v630x';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

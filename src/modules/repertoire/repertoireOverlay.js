@@ -482,9 +482,14 @@ class RepertoireOverlay {
             const fullSongData = await getSongById(song.id);
             
             if (fullSongData) {
+                // Гарантируем корректное название при отображении
+                const mergedSongData = {
+                    ...fullSongData,
+                    name: fullSongData.name || song.name || `Песня ${song.id}`
+                };
                 // Открываем песню в основном окне с сохраненной тональностью
                 if (typeof displaySongDetails === 'function') {
-                    displaySongDetails(fullSongData, song.preferredKey);
+                    displaySongDetails(mergedSongData, song.preferredKey);
                 }
                 
                 // Закрываем оверлей
