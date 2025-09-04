@@ -1,5 +1,5 @@
-// Service Worker v630u - Songs overlay shows user key; open with saved key
-const CACHE_NAME = 'agape-worship-cache-v630u';
+// Service Worker v630v - Migration page fixes for vocalists structures
+const CACHE_NAME = 'agape-worship-cache-v630v';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
