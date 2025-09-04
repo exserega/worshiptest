@@ -22,6 +22,14 @@ const SUB_CATEGORIES = {
     'horizontal': 'Горизонталь'
 };
 
+// Маппинг значения поля song.sheet -> { main, sub }
+const SHEET_TO_LABELS = {
+    'Быстрые (вертикаль)': { main: 'Быстрые', sub: 'Вертикаль' },
+    'Быстрые (горизонталь)': { main: 'Быстрые', sub: 'Горизонталь' },
+    'Поклонение (вертикаль)': { main: 'Поклонение', sub: 'Вертикаль' },
+    'Поклонение (горизонталь)': { main: 'Поклонение', sub: 'Горизонталь' }
+};
+
 class SongsOverlay {
     constructor() {
         this.overlay = null;
@@ -293,6 +301,38 @@ class SongsOverlay {
         logger.log(`🎵 Filtered songs count: ${this.filteredSongs.length}`);
         this.renderSongs();
     }
+
+    /**
+     * Возвращает объект меток для песни: { main, sub }
+     */
+    getSongCategoryLabels(song) {
+        const labels = SHEET_TO_LABELS[song?.sheet];
+        if (labels) return labels;
+        return { main: '—', sub: '—' };
+    }
+
+    /**
+     * Возвращает HTML подстроки под названием песни в зависимости от выбранных фильтров
+     */
+    getSongSublineHTML(song) {
+        const { main, sub } = this.getSongCategoryLabels(song);
+        // ТЕМНЫЙ фон → светлый текст (явно задаем цвет, не полагаемся на наследование)
+        const colorStyle = 'color: var(--text-secondary, #9ca3af);';
+        
+        if (this.selectedMainCategory === 'all') {
+            // Показать главную категорию и подкатегорию
+            return `<div class="song-subline" style="${colorStyle}">${main} • ${sub}</div>`;
+        }
+        
+        const isMainSelected = (this.selectedMainCategory === 'fast' || this.selectedMainCategory === 'worship');
+        if (isMainSelected && !this.selectedSubCategory) {
+            // Показать только подкатегорию
+            return `<div class="song-subline" style="${colorStyle}">${sub}</div>`;
+        }
+        
+        // При выбранной подкатегории ничего не показываем
+        return '';
+    }
     
     /**
      * Синхронизация UI с текущим состоянием фильтров
@@ -372,6 +412,7 @@ class SongsOverlay {
             <div class="song-item" data-song-id="${song.id}">
                 <div class="song-info">
                     <span class="song-name">${song.name || 'Без названия'}</span>
+                    ${this.getSongSublineHTML(song)}
                 </div>
                 <div class="song-meta">
                     <span class="song-key">${song['Оригинальная тональность'] || song.defaultKey || 'C'}</span>

@@ -1,5 +1,5 @@
-// Service Worker v630l - Persist and reapply filters in Songs Overlay
-const CACHE_NAME = 'agape-worship-cache-v630l';
+// Service Worker v630m - Songs overlay labels for categories/subcategories
+const CACHE_NAME = 'agape-worship-cache-v630m';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -34,6 +34,8 @@ const urlsToCache = [
   './src/modules/events/eventModal.js',
   './styles/event-creation-fixes.css',
   './styles/event-creation-modal-complete.css',
+  // Обновление оверлея песен
+  './src/modules/songs/songsOverlay.js',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются
