@@ -1,5 +1,5 @@
-// Service Worker v631 - Center clear-X icons in main and overlay searches
-const CACHE_NAME = 'agape-worship-cache-v631';
+// Service Worker v632 - Hide overlay clear-X by default and center icons
+const CACHE_NAME = 'agape-worship-cache-v632';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

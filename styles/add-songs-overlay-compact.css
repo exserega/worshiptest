@@ -154,8 +154,7 @@
     background: transparent !important;
     border: none !important;
     color: #e5e7eb !important;
-    display: none; /* показ/скрытие через JS */
-    display: inline-flex !important;
+    display: none !important; /* по умолчанию скрыта; показ через JS */
     align-items: center !important;
     justify-content: center !important;
 }
