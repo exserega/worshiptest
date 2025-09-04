@@ -87,12 +87,12 @@ export async function handleCreateSetlist(name) {
             }
         }
         
-        // Показываем модальное окно подтверждения добавления песен
-        if (ui.createdSetlistName) {
-            ui.createdSetlistName.textContent = name.trim();
-        }
-        if (ui.addSongsConfirmModal) {
-            ui.addSongsConfirmModal.classList.add('show');
+        // Сразу открываем overlay добавления песен (без промежуточного подтверждения)
+        try {
+            const { startAddingSongs } = await import('../ui/setlist-manager.js');
+            await startAddingSongs('create', setlistId, name.trim());
+        } catch (e) {
+            console.error('❌ [Controller] Не удалось открыть overlay добавления песен:', e);
         }
         
         showNotification('✅ Сет-лист создан успешно!', 'success');

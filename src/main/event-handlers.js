@@ -322,28 +322,7 @@ function setupModalEventHandlers() {
         });
     }
     
-    // Модальное окно подтверждения добавления песен
-    if (ui.closeConfirmModal) {
-        ui.closeConfirmModal.addEventListener('click', () => {
-            if (ui.addSongsConfirmModal) {
-                ui.addSongsConfirmModal.classList.remove('show');
-            }
-        });
-    }
-    
-    if (ui.skipAddSongs) {
-        ui.skipAddSongs.addEventListener('click', () => {
-            if (ui.addSongsConfirmModal) {
-                ui.addSongsConfirmModal.classList.remove('show');
-            }
-        });
-    }
-    
-    if (ui.startAddSongs) {
-        ui.startAddSongs.addEventListener('click', () => {
-            startAddingSongsModule('create');
-        });
-    }
+    // Подтверждение добавления песен больше не используется (удалено для упрощения UX)
     
     // Модальное окно заметок
     if (ui.saveNoteButton) {

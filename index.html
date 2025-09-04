@@ -599,37 +599,22 @@
 <div id="create-setlist-modal" class="global-overlay">
     <div class="overlay-content create-setlist-content">
         <div class="overlay-header">
-            <div class="header-info">
-                <i class="fas fa-plus-circle"></i>
-                <div>
-                    <h3>Создать сет-лист</h3>
-                    <p>Шаг 1 из 2: Название</p>
-                </div>
-            </div>
+            <h3 style="margin: 0; color: var(--text-primary);">Введите название сет-листа</h3>
             <button id="close-create-modal" class="icon-button-small">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
-        <div class="overlay-body">
+        <div class="overlay-body" style="padding-top: 8px;">
             <div class="input-section">
-                <label for="new-setlist-name-input" class="modern-label">
-                    <i class="fas fa-list"></i>
-                    Название сет-листа
-                </label>
                 <input 
                     type="text" 
                     id="new-setlist-name-input" 
                     class="modern-input"
-                    placeholder="Например: Воскресное служение, Молодежка..."
+                    placeholder="Название..."
                     maxlength="50"
                 >
-                <div class="input-hint">
-                    <span id="name-char-count">0</span>/50 символов
-                </div>
             </div>
         </div>
-        
         <div class="overlay-footer">
             <button id="cancel-create-setlist" class="btn-modern secondary">
                 <i class="fas fa-times"></i>
@@ -637,52 +622,13 @@
             </button>
             <button id="create-setlist-button" class="btn-modern primary">
                 <i class="fas fa-arrow-right"></i>
-                <span>Продолжить</span>
+                <span>Сохранить</span>
             </button>
         </div>
     </div>
 </div>
 
-<!-- Модальное окно подтверждения добавления песен -->
-<div id="add-songs-confirm-modal" class="global-overlay">
-    <div class="overlay-content confirm-content">
-        <div class="overlay-header">
-            <div class="header-info">
-                <i class="fas fa-music"></i>
-                <div>
-                    <h3>Добавить песни?</h3>
-                    <p>Сет-лист "<span id="created-setlist-name"></span>" создан</p>
-                </div>
-            </div>
-            <button id="close-confirm-modal" class="icon-button-small">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="overlay-body">
-            <div class="confirm-section">
-                <div class="confirm-icon">
-                    <i class="fas fa-question-circle"></i>
-                </div>
-                <div class="confirm-text">
-                    <h4>Хотите добавить песни сейчас?</h4>
-                    <p>Вы можете добавить песни в сет-лист прямо сейчас или сделать это позже</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="overlay-footer">
-            <button id="skip-add-songs" class="btn-modern secondary">
-                <i class="fas fa-check"></i>
-                <span>Пока нет</span>
-            </button>
-            <button id="start-add-songs" class="btn-modern primary">
-                <i class="fas fa-plus"></i>
-                <span>Добавить песни</span>
-            </button>
-        </div>
-    </div>
-</div>
+<!-- Модальное окно подтверждения добавления песен удалено по требованию: сразу открываем overlay добавления -->
 
 <!-- Полноэкранный оверлей для добавления песен -->
 <div id="add-songs-overlay" class="global-fullscreen-overlay">
