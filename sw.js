@@ -1,5 +1,5 @@
-// Service Worker v630x - Fix repertoire overlay title by ensuring name merge
-const CACHE_NAME = 'agape-worship-cache-v630x';
+// Service Worker v630y - Overrides (user/global) modules and wiring
+const CACHE_NAME = 'agape-worship-cache-v630y';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -38,6 +38,7 @@ const urlsToCache = [
   './src/modules/songs/songsOverlay.js',
   // Репертуар
   './src/modules/repertoire/repertoireOverlay.js',
+  './src/api/overrides.js',
   // Страница миграции репертуара
   './migrate-repertoire/index.html',
   './migrate-repertoire/migrate.js',

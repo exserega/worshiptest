@@ -844,6 +844,15 @@
         });
 </script>
 
+<!-- Overrides API bridge for legacy scripts -->
+<script>
+    window.apiOverrides = {};
+  </script>
+<script type="module">
+    import * as overrides from '/src/api/overrides.js';
+    window.apiOverrides = overrides;
+  </script>
+
 <!-- Development Testing Scripts -->
 <!-- Удалено для продакшена: <script src="tests/baseline-test.js"></script> -->
 

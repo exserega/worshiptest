@@ -14,6 +14,7 @@ import {
   getSongKey,
   domElements 
 } from '../core/index.js';
+import { subscribeResolvedContent } from '../api/overrides.js';
 
 // ====================================
 // SONG DISPLAY UTILITIES
@@ -38,25 +39,31 @@ export function displaySongDetails(songData, keyToSelect) {
 
   // Получаем данные песни
   const songTitle = songData.name || 'Без названия';
-  const originalLyrics = songData['Текст и аккорды'] || songData.lyrics || '';
+  const baseLyrics = songData['Текст и аккорды'] || songData.lyrics || '';
   const originalKey = getSongKey(songData);
   const targetKey = keyToSelect || originalKey;
   const bpm = songData.BPM || songData.bpm || null;
   const category = songData.sheet || 'Без категории';
 
   // Транспонируем если нужно
-  let displayLyrics = originalLyrics;
+  let displayLyrics = baseLyrics;
   if (targetKey !== originalKey) {
     const transposition = getTransposition(originalKey, targetKey);
     displayLyrics = transposeLyrics(displayLyrics, transposition, targetKey);
   }
 
   // Обрабатываем и выделяем
-  displayLyrics = processLyrics(displayLyrics);
-  displayLyrics = highlightChords(displayLyrics);
-
-  // Формируем HTML
-  const songHtml = `
+  const applyRender = (rawText) => {
+    let text = rawText != null ? String(rawText) : baseLyrics;
+    // Транспонирование
+    if (targetKey !== originalKey) {
+      const transposition = getTransposition(originalKey, targetKey);
+      text = transposeLyrics(text, transposition, targetKey);
+    }
+    // Обработка
+    text = processLyrics(text);
+    text = highlightChords(text);
+    const songHtml = `
     <div class="song-header">
       <h2 class="song-title">${songTitle}</h2>
       <div class="song-meta">
@@ -66,11 +73,27 @@ export function displaySongDetails(songData, keyToSelect) {
       </div>
     </div>
     <div class="song-content-wrapper">
-      <pre id="song-display" class="song-text">${displayLyrics}</pre>
-    </div>
-  `;
+      <pre id="song-display" class="song-text">${text}</pre>
+    </div>`;
+    songContent.innerHTML = songHtml;
+  };
 
-  songContent.innerHTML = songHtml;
+  // Формируем HTML
+  // Реалтайм подписка на overrides (user→global→base)
+  try {
+    if (songData.id) {
+      if (window._overrideUnsub) { try { window._overrideUnsub(); } catch(e) {} }
+      window._overrideUnsub = subscribeResolvedContent(songData.id, ({ content }) => {
+        applyRender(content != null ? content : baseLyrics);
+      }, ({ global }) => {
+        // TODO: optionally show notice comparing versions
+        console.log('ℹ️ Global override updated for this song', global?.editorEmail);
+      });
+    }
+  } catch (e) {
+    console.warn('Overrides subscribe failed, rendering base', e);
+    applyRender(baseLyrics);
+  }
 
   // Обновляем BPM дисплей если есть
   if (bpm && domElements.bpmDisplay) {

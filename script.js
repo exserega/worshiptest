@@ -641,9 +641,9 @@ window.handleSaveEdit = async function() {
         
         console.log('💾 [Legacy] Saving song:', songId);
         
-        // Сохраняем изменения через API
-        if (typeof api.saveSongEdit === 'function') {
-            await api.saveSongEdit(songId, editedContent);
+        // Сохраняем изменения в персональные overrides (user)
+        if (typeof apiOverrides?.saveUserOverride === 'function') {
+            await apiOverrides.saveUserOverride(songId, editedContent);
             
             // Обновляем отображение песни если она сейчас выбрана
             const currentSelect = ui.songSelect?.value;
@@ -715,9 +715,9 @@ window.handleRevertToOriginal = async function() {
         
         console.log('🔄 [Legacy] Reverting song:', songId);
         
-        // Откатываем через API
-        if (typeof api.revertToOriginal === 'function') {
-            await api.revertToOriginal(songId);
+        // Удаляем персональную версию (возврат к приоритету global/base)
+        if (typeof apiOverrides?.deleteUserOverride === 'function') {
+            await apiOverrides.deleteUserOverride(songId);
             
             // Обновляем песню в state
             const song = window.state.allSongs.find(s => s.id === songId);
