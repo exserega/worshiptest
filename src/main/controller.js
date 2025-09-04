@@ -429,24 +429,24 @@ export async function finishAddingSongs() {
         }
     }
     
-    // Обновляем отображение сет-листа если панель открыта
-    if (currentSetlistId && ui.setlistsPanel && ui.setlistsPanel.classList.contains('open')) {
+    // Обновляем панель сет-листов динамически, если она открыта
+    if (ui.setlistsPanel && ui.setlistsPanel.classList.contains('open')) {
         try {
-            // Загружаем обновленные данные сет-листа
-            const setlists = await api.loadSetlists();
-            const updatedSetlist = setlists.find(s => s.id === currentSetlistId);
-            
-            if (updatedSetlist) {
-                console.log('🔄 [Controller] Обновляем отображение сет-листа:', updatedSetlist.name);
-                // Используем те же функции что и при выборе сет-листа
-                ui.displaySelectedSetlist(
-                    updatedSetlist,
-                    window.handleFavoriteOrRepertoireSelect || function() {},
-                    window.handleRemoveSongFromSetlist || function() {}
-                );
+            const setlists = await refreshSetlists();
+            // Сохраняем/восстанавливаем выбранный сет-лист
+            const selectedId = currentSetlistId || state.currentSetlistId;
+            if (selectedId) {
+                const updatedSetlist = setlists.find(s => s.id === selectedId);
+                if (updatedSetlist) {
+                    ui.displaySelectedSetlist(
+                        updatedSetlist,
+                        window.handleFavoriteOrRepertoireSelect || function() {},
+                        window.handleRemoveSongFromSetlist || function() {}
+                    );
+                }
             }
         } catch (error) {
-            console.error('❌ [Controller] Ошибка обновления сет-листа:', error);
+            console.error('❌ [Controller] Ошибка динамического обновления панели сет-листов:', error);
         }
     }
     

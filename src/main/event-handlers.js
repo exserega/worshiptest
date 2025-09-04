@@ -1379,7 +1379,7 @@ function setupSetlistEventHandlers() {
                 const setlistId = (window.eventBus?.getState('currentSetlistId')) || window.state?.currentSetlistId;
                 if (!setlistId) return;
 
-                const { updateSetlistName, loadSetlists } = await import('../api/index.js');
+                const { updateSetlistName } = await import('../api/index.js');
                 await updateSetlistName(setlistId, newName.trim());
 
                 // Локально обновляем отображение в заголовке
@@ -1390,9 +1390,10 @@ function setupSetlistEventHandlers() {
                     window.state.setCurrentSetlistName(newName.trim());
                 }
 
-                // Обновляем панель при открытой панели сет-листов
+                // Динамически обновляем панель сет-листов
                 if (document.getElementById('setlists-panel')?.classList.contains('open')) {
-                    const setlists = await loadSetlists();
+                    const { refreshSetlists } = await import('../main/controller.js');
+                    const setlists = await refreshSetlists();
                     const updated = setlists.find(s => s.id === setlistId);
                     if (updated && typeof window.ui?.displaySelectedSetlist === 'function') {
                         window.ui.displaySelectedSetlist(updated, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);

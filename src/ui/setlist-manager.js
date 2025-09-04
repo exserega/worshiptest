@@ -253,6 +253,21 @@ export async function addSongToSetlist(song, key) {
             if (typeof window.refreshSongsDisplay === 'function') {
                 window.refreshSongsDisplay();
             }
+
+            // Динамически обновляем панель сет-листов, если открыта
+            try {
+                const setlistsPanel = document.getElementById('setlists-panel');
+                if (setlistsPanel && setlistsPanel.classList.contains('open')) {
+                    const { refreshSetlists } = await import('../main/controller.js');
+                    const setlists = await refreshSetlists();
+                    const updated = setlists.find(s => s.id === targetSetlistId);
+                    if (updated && typeof window.ui?.displaySelectedSetlist === 'function') {
+                        window.ui.displaySelectedSetlist(updated, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
+                    }
+                }
+            } catch (e) {
+                console.error('❌ [SetlistManager] Не удалось обновить панель сет-листов:', e);
+            }
             
         } else if (result.status === 'duplicate_different') {
             console.log('⚠️ Song exists with different key');

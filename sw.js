@@ -1,5 +1,5 @@
-// Service Worker v620 - Rename in overlay header; remove note icon near key
-const CACHE_NAME = 'agape-worship-cache-v620';
+// Service Worker v621 - Dynamic side panel refresh after finish/add/rename
+const CACHE_NAME = 'agape-worship-cache-v621';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
