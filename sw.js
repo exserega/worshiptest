@@ -1,5 +1,5 @@
-// Service Worker v6310 - Fix async openSongEditor transpilation and cache
-const CACHE_NAME = 'agape-worship-cache-v6310';
+// Service Worker v6311 - Main view subscribes to overrides (user/global)
+const CACHE_NAME = 'agape-worship-cache-v6311';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

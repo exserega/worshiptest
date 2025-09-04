@@ -364,24 +364,42 @@ export function displaySongDetails(songData, keyToSelect) {
         }
     }
 
-    let finalHighlightedLyrics = getRenderedSongText(originalLyrics, originalKeyFromSheet, currentSelectedKey);
-    
-    // Если включен двухколоночный режим, распределяем блоки по колонкам
-    if (songContent.classList.contains('split-columns')) {
-        finalHighlightedLyrics = distributeSongBlocksToColumns(finalHighlightedLyrics);
-    }
-    
+    const baseTextForRender = originalLyrics;
     // Обновляем legend и pre, сохраняя fieldset структуру
     const songTitle = songContent.querySelector('#song-title');
     const songTitleText = songContent.querySelector('.song-title-text');
     const songPre = songContent.querySelector('#song-display');
     const copyBtn = document.getElementById('copy-text-button');
     const editBtn = songContent.querySelector('#edit-song-button');
-    
+
+    const renderWith = (rawText) => {
+        let src = rawText != null ? String(rawText) : baseTextForRender;
+        let rendered = getRenderedSongText(src, originalKeyFromSheet, currentSelectedKey);
+        if (songContent.classList.contains('split-columns')) {
+            rendered = distributeSongBlocksToColumns(rendered);
+        }
+        if (songPre) songPre.innerHTML = rendered;
+    };
+
     // Убираем из заголовка всё что идет после скобок (строчки для поиска)
     const cleanTitle = title.includes('(') ? title.split('(')[0].trim() : title;
     if (songTitleText) songTitleText.textContent = cleanTitle;
-    if (songPre) songPre.innerHTML = finalHighlightedLyrics;
+    // Первичный рендер базового текста
+    renderWith(baseTextForRender);
+
+    // Подписка на overrides (user→global→base) для основного отображения
+    try {
+        import('/src/api/overrides.js').then(({ subscribeResolvedContent }) => {
+            if (window._mainOverrideUnsub) {
+                try { window._mainOverrideUnsub(); } catch (e) {}
+            }
+            if (songData?.id) {
+                window._mainOverrideUnsub = subscribeResolvedContent(songData.id, ({ content }) => {
+                    renderWith(content);
+                });
+            }
+        }).catch(() => { /* ignore */ });
+    } catch (e) { /* ignore */ }
     // Кнопка копирования: показываем и вешаем обработчик копирования текста
     if (copyBtn) {
         console.log('[Copy] Binding handler to #copy-text-button');
