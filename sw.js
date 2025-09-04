@@ -1,5 +1,5 @@
-// Service Worker v6320 - Editor UI tweaks: smaller buttons, light text, friendly confirm
-const CACHE_NAME = 'agape-worship-cache-v6320';
+// Service Worker v6321 - Editor: top-right close, dynamic status label, color fixes
+const CACHE_NAME = 'agape-worship-cache-v6321';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

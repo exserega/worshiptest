@@ -257,13 +257,25 @@
 /* Заголовок редактора */
 .song-editor-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding: 12px 12px 8px 12px;
+    padding: 10px 12px 8px 12px;
     border-bottom: 1px solid var(--border-color);
     background: var(--container-background-color);
     flex-shrink: 0;
 }
+
+#close-editor-button {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: transparent;
+    color: #e5e7eb !important;
+}
+#close-editor-button i { color: #e5e7eb !important; }
 
 .song-editor-header h3 {
     margin: 0;
@@ -380,7 +392,7 @@
 
 .editor-controls { display: flex; flex-direction: column; gap: 8px; }
 .editor-row { display: flex; gap: 6px; justify-content: space-between; }
-.editor-row.secondary { justify-content: flex-end; }
+.editor-row.secondary { justify-content: space-between; }
 
 .editor-button {
     padding: 6px 10px;
@@ -408,8 +420,8 @@
     background: color-mix(in srgb, var(--accent-color) 85%, black);
 }
 
-.editor-button.cancel { background: var(--border-color); color: #e5e7eb; }
-.editor-button.cancel i { color: #e5e7eb; }
+.editor-button.cancel { background: var(--border-color); color: #e5e7eb !important; }
+.editor-button.cancel i { color: #e5e7eb !important; }
 .editor-button.revert { background: #e74c3c; color: #e5e7eb; }
 .editor-button.revert i { color: #e5e7eb; }
 

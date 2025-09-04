@@ -132,7 +132,10 @@ export function subscribeResolvedContent(songId, onChange, onGlobalUpdateForUser
                    : globalExists ? globalData.content
                    : null; // caller should fallback to base
     const source = userExists ? 'user' : (globalExists ? 'global' : 'base');
-    onChange && onChange({ content: resolved, source, user: userData, global: globalData });
+    const label = source === 'user' ? 'Персонально измененная версия'
+                 : source === 'global' ? 'Измененная глобальная версия'
+                 : 'Оригинал из Google Таблицы';
+    onChange && onChange({ content: resolved, source, user: userData, global: globalData, label });
     if (globalExists) {
       onGlobalUpdateForUser && onGlobalUpdateForUser({ global: globalData, user: userData });
     }

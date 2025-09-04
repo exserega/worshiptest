@@ -1733,20 +1733,24 @@ export async function openSongEditor(songData) {
         if (delGlobalBtn) delGlobalBtn.style.display = canGlobal ? 'inline-flex' : 'none';
         const delUserBtn = document.getElementById('delete-user-override-button');
         if (delUserBtn) delUserBtn.style.display = 'inline-flex';
-        // Скрываем кнопку закрытия, полагаемся на Отменить
+        // Показываем кнопку закрытия в шапке
         const closeBtn = document.getElementById('close-editor-button');
-        if (closeBtn) closeBtn.style.display = 'none';
+        if (closeBtn) closeBtn.style.display = 'inline-flex';
     } catch (e) { /* ignore */ }
 
-    // Загружаем текст в textarea: приоритет user→global→base
+    // Загружаем текст и статус в textarea: приоритет user→global→base
     try {
         // Dynamic import to avoid circular deps
         const { subscribeResolvedContent } = await import('./src/api/overrides.js');
         const baseText = (songData['Текст и аккорды'] || '');
         if (window._editorOverrideUnsub) { try { window._editorOverrideUnsub(); } catch(e) {} }
-        window._editorOverrideUnsub = subscribeResolvedContent(songData.id, ({ content }) => {
+        window._editorOverrideUnsub = subscribeResolvedContent(songData.id, ({ content, label, source }) => {
             const text = (content != null ? content : baseText);
             songEditTextarea.value = text;
+            if (editStatusInfo && label) {
+                editStatusInfo.textContent = label;
+                editStatusInfo.style.color = (source === 'user') ? 'var(--accent-color)' : (source === 'global') ? 'var(--primary-color)' : 'var(--label-color)';
+            }
             console.log('📝 [UI] Editor loaded text (len):', text.length);
         });
     } catch (e) {
@@ -1755,8 +1759,7 @@ export async function openSongEditor(songData) {
         songEditTextarea.value = fallback;
     }
     
-    // Обновляем статус
-    updateEditStatus(songData);
+    // Статус теперь обновляется от подписки
     
     // Показываем модальное окно
     songEditorOverlay.classList.add('visible');

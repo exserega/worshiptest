@@ -1684,13 +1684,7 @@ function setupSongEventHandlers() {
         });
     }
     
-    if (ui.cancelEditButton) {
-        ui.cancelEditButton.addEventListener('click', () => {
-            if (ui.songEditorOverlay) {
-                ui.songEditorOverlay.classList.remove('visible'); // Исправлено: visible вместо show
-            }
-        });
-    }
+    // Кнопка Отменить удалена из интерфейса
     
     if (ui.closeEditorButton) {
         ui.closeEditorButton.addEventListener('click', () => {
