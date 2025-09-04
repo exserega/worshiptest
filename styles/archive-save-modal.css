@@ -31,18 +31,30 @@
 }
 
 .archive-save-modal .close-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary, #9ca3af);
+    background: transparent !important;
+    border: 1px solid var(--border-color, #374151) !important;
+    color: var(--text-color, #e5e7eb) !important;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .archive-save-modal .close-btn:hover {
-    background: var(--bg-tertiary, #374151);
-    color: var(--text-primary, #e5e7eb);
+    background: var(--hover-color, #374151) !important;
+    border-color: var(--hover-color, #4b5563) !important;
+    color: var(--text-color, #e5e7eb) !important;
+}
+
+/* Убираем любые перемещения на hover/active */
+.archive-save-modal .close-btn:hover,
+.archive-save-modal .close-btn:active {
+    transform: none !important;
 }
 
 .archive-save-modal .modal-body {
