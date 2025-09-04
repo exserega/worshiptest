@@ -1,5 +1,5 @@
-// Service Worker v630h - Add logs and fallback for copy button
-const CACHE_NAME = 'agape-worship-cache-v630h';
+// Service Worker v630i - Ensure copy button handler attaches to global button
+const CACHE_NAME = 'agape-worship-cache-v630i';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

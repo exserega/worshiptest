@@ -330,6 +330,8 @@ export function displaySongDetails(songData, keyToSelect) {
         songContent.classList.remove('chords-hidden');
         const editBtn = songContent.querySelector('#edit-song-button');
         if (editBtn) editBtn.style.display = 'none';
+        const copyBtnGlobal = document.getElementById('copy-text-button');
+        if (copyBtnGlobal) copyBtnGlobal.style.display = 'none';
         return;
     }
 
@@ -374,7 +376,7 @@ export function displaySongDetails(songData, keyToSelect) {
     const songTitle = songContent.querySelector('#song-title');
     const songTitleText = songContent.querySelector('.song-title-text');
     const songPre = songContent.querySelector('#song-display');
-    const copyBtn = songContent.querySelector('#copy-text-button');
+    const copyBtn = document.getElementById('copy-text-button');
     const editBtn = songContent.querySelector('#edit-song-button');
     
     // Убираем из заголовка всё что идет после скобок (строчки для поиска)
@@ -383,6 +385,7 @@ export function displaySongDetails(songData, keyToSelect) {
     if (songPre) songPre.innerHTML = finalHighlightedLyrics;
     // Кнопка копирования: показываем и вешаем обработчик копирования текста
     if (copyBtn) {
+        console.log('[Copy] Binding handler to #copy-text-button');
         copyBtn.style.display = 'inline-flex';
         copyBtn.onclick = async (e) => {
             e.preventDefault();
@@ -419,25 +422,23 @@ export function displaySongDetails(songData, keyToSelect) {
     }
     // Кнопка редактирования
     if (editBtn) {
-        // Проверяем права доступа для кнопки редактирования
+        // Проверяем права на редактирование
         import('./src/modules/permissions/permissions.js').then(({ canEditSongs }) => {
             // Проверяем права
             const hasEditRights = canEditSongs();
+            // Показываем кнопку только если у пользователя есть права на редактирование песен
             editBtn.style.display = hasEditRights ? 'block' : 'none';
             
             // Логируем результат проверки для отладки
-            console.log('📝 [UI Legacy] Edit button visibility check:', {
+            console.log('🔐 [SongDisplay] Edit button visibility:', {
                 hasEditRights,
-                display: editBtn.style.display,
-                songTitle: cleanTitle
+                display: editBtn.style.display
             });
         }).catch(err => {
             // В случае ошибки импорта скрываем кнопку
-            console.error('❌ [UI Legacy] Error checking edit rights:', err);
+            console.error('❌ [SongDisplay] Error checking edit rights:', err);
             editBtn.style.display = 'none';
         });
-    } else {
-        console.warn('⚠️ [UI] Edit button not found in song content');
     }
     
     // Обновляем статус редактирования
