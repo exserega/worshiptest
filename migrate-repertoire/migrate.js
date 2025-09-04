@@ -43,12 +43,44 @@
     log(`Загружено пользователей: ${opts.length}`);
   }
 
+  function normalizeNameVariants(name) {
+    const variants = new Set();
+    const base = (name || '').trim();
+    variants.add(base);
+    // Убираем хвосты вида " + ..."
+    variants.add(base.replace(/\s*\+.+$/, '').trim());
+    // Убираем хвосты в скобках в конце
+    variants.add(base.replace(/\s*\([^)]*\)\s*$/, '').trim());
+    // Убираем '!' в конце
+    variants.add(base.replace(/[!！]+$/g, '').trim());
+    // Сжать двойные пробелы
+    variants.add(base.replace(/\s{2,}/g, ' ').trim());
+    // Комбинированные варианты
+    const noPlus = base.replace(/\s*\+.+$/, '').trim();
+    variants.add(noPlus.replace(/\s*\([^)]*\)\s*$/, '').trim());
+    variants.add(noPlus.replace(/[!！]+$/g, '').trim());
+    return Array.from(variants).filter(v => v);
+  }
+
   async function findSongByName(name) {
-    // Songs/{songId} has 'name', 'bpm', 'category'
-    const q = await firebase.firestore().collection('songs').where('name', '==', name).limit(1).get();
-    if (q.empty) return null;
-    const doc = q.docs[0];
-    return { id: doc.id, ...doc.data() };
+    const db = firebase.firestore();
+    const variants = normalizeNameVariants(name);
+    // 1) Поиск по полю name
+    for (const v of variants) {
+      const q = await db.collection('songs').where('name', '==', v).limit(1).get();
+      if (!q.empty) {
+        const doc = q.docs[0];
+        return { id: doc.id, ...doc.data() };
+      }
+    }
+    // 2) Поиск по ID документа (часто songId = name)
+    for (const v of variants) {
+      const ds = await db.collection('songs').doc(v).get();
+      if (ds.exists) {
+        return { id: ds.id, ...ds.data() };
+      }
+    }
+    return null;
   }
 
   async function migrateOnce(vocalistId, userId) {
@@ -65,11 +97,15 @@
     log(`Найдено документов в repertoire: ${flatSnap.size}`);
 
     // Определим, являются ли документы песнями (есть name) или категориями (нет name)
-    const flatSongDocs = flatSnap.docs.filter(d => !!(d.data() && (d.data().name || d.data().preferredKey)));
-    const categoryDocs = flatSnap.docs.filter(d => !flatSongDocs.includes(d));
+    const flatSongDocs = flatSnap.docs.filter(d => {
+      const data = d.data() || {};
+      return !!(data.name || data.preferredKey);
+    });
+    const flatIds = new Set(flatSongDocs.map(d => d.id));
+    const categoryDocs = flatSnap.docs.filter(d => !flatIds.has(d.id));
     log(`Опознано песен напрямую: ${flatSongDocs.length}, категорий: ${categoryDocs.length}`);
 
-    async function processSongRecord(name, preferredKey) {
+    async function processSongRecord(name, preferredKey, fallbackCategory) {
       total++;
       if (!name || !preferredKey) { skipped++; log(`⚠️ Пропуск: нет name/key у записи`); return; }
       const songDoc = await findSongByName(name);
@@ -79,7 +115,7 @@
           name,
           preferredKey,
           bpm: songDoc.bpm || songDoc.BPM || null,
-          category: songDoc.category || songDoc.sheet || null,
+          category: songDoc.category || songDoc.sheet || fallbackCategory || null,
           added: new Date(),
           updated: new Date()
         }, { merge: true });
@@ -100,8 +136,13 @@
     }
 
     // 2) Попытка: песни как ПОДКОЛЛЕКЦИИ внутри категорий vocalists/{id}/repertoire/{category}/songs
+    function baseCategoryFromId(id) {
+      return (id || '').replace(/_[0-9]+$/, '').trim();
+    }
+
     for (const catDoc of categoryDocs) {
       const catId = catDoc.id; // например: "Быстрые (вертикаль)_16"
+      const catBase = baseCategoryFromId(catId);
       // Основной вариант: подколлекция 'songs'
       const subCol = repCol.doc(catId).collection('songs');
       let subSnap;
@@ -116,7 +157,7 @@
           const sdata = sd.data();
           const name = sdata.name || sd.id;
           const preferredKey = sdata.preferredKey || sdata.key || null;
-          await processSongRecord(name, preferredKey);
+          await processSongRecord(name, preferredKey, catBase);
         }
         continue;
       }
@@ -135,10 +176,26 @@
           const sdata = sd.data();
           const name = sdata.name || sd.id;
           const preferredKey = sdata.preferredKey || sdata.key || null;
-          await processSongRecord(name, preferredKey);
+          await processSongRecord(name, preferredKey, catBase);
         }
       } else {
-        log(`⚠️ Категория ${catId}: не найдены подколлекции 'songs' или 'repertoire'`);
+        // Доп. фоллбек: песни как массив внутри doc (songs|list|items) или объект
+        const cdata = catDoc.data() || {};
+        let arr = null;
+        if (Array.isArray(cdata.songs)) arr = cdata.songs;
+        else if (Array.isArray(cdata.list)) arr = cdata.list;
+        else if (Array.isArray(cdata.items)) arr = cdata.items;
+        else if (cdata.songs && typeof cdata.songs === 'object') arr = Object.values(cdata.songs);
+        if (Array.isArray(arr) && arr.length) {
+          log(`Категория ${catId}: найден массив песен: ${arr.length}`);
+          for (const s of arr) {
+            const name = s?.name || s?.title || '';
+            const preferredKey = s?.preferredKey || s?.key || null;
+            await processSongRecord(name, preferredKey, catBase);
+          }
+        } else {
+          log(`⚠️ Категория ${catId}: не найдены подколлекции 'songs'/'repertoire' и массивов песен`);
+        }
       }
     }
 

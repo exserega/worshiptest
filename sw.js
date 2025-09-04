@@ -1,5 +1,5 @@
-// Service Worker v630v - Migration page fixes for vocalists structures
-const CACHE_NAME = 'agape-worship-cache-v630v';
+// Service Worker v630w - Migration: better song name matching and category fallbacks
+const CACHE_NAME = 'agape-worship-cache-v630w';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
