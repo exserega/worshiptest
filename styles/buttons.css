@@ -27,7 +27,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; background: color-mix(in sr
     height: 40px;
     border: none;
     background: var(--bg-tertiary, #1a1f2e);
-    color: #9ca3af !important;
+    color: #b0b0b0 !important;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -62,7 +62,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; background: color-mix(in sr
     height: 32px;
     border: none;
     background: var(--bg-tertiary, #1a1f2e);
-    color: #9ca3af !important;
+    color: #b0b0b0 !important;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
