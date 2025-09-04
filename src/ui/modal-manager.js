@@ -317,6 +317,64 @@ export function showConfirmDialog(message, options = {}) {
     });
 }
 
+/**
+ * Диалог с несколькими вариантами (до 3 кнопок)
+ * @param {Object} params
+ * @param {string} params.title
+ * @param {string} params.message
+ * @param {Array<{key:string,label:string,variant?:'primary'|'danger'|'default'}>} params.choices
+ * @returns {Promise<string|null>} возвращает key выбранного варианта или null
+ */
+export function showChoiceDialog({ title = 'Выбор', message = '', choices = [] } = {}) {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'choice-dialog-overlay';
+        overlay.style.cssText = `
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            display:flex; align-items:center; justify-content:center; z-index:10002;
+        `;
+        const dialog = document.createElement('div');
+        dialog.className = 'choice-dialog';
+        dialog.style.cssText = `
+            background: var(--container-background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px; max-width: 460px; margin: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        `;
+        const header = `<h3 style="margin:0 0 12px 0;color:var(--text-color);font-size:1.1rem;">${title}</h3>`;
+        const body = `<p style="margin:0 0 18px 0;color:var(--text-color);line-height:1.5;">${message}</p>`;
+        const actions = document.createElement('div');
+        actions.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;';
+        choices.slice(0,3).forEach(c => {
+            const btn = document.createElement('button');
+            btn.textContent = c.label;
+            btn.style.cssText = `padding:8px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border-color);`;
+            if (c.variant === 'primary') {
+                btn.style.background = '#22d3ee';
+                btn.style.color = '#111827';
+                btn.style.borderColor = '#22d3ee';
+            } else if (c.variant === 'danger') {
+                btn.style.background = '#e74c3c';
+                btn.style.color = '#fee2e2';
+                btn.style.borderColor = '#e74c3c';
+            } else {
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--text-color)';
+            }
+            btn.onclick = () => { cleanup(); resolve(c.key); };
+            actions.appendChild(btn);
+        });
+        dialog.innerHTML = header + body;
+        dialog.appendChild(actions);
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+        const cleanup = () => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); };
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) { cleanup(); resolve(null); } });
+        document.addEventListener('keydown', function esc(e){ if(e.key==='Escape'){ document.removeEventListener('keydown', esc); cleanup(); resolve(null);} });
+    });
+}
+
 // ====================================
 // TOAST SYSTEM
 // ====================================

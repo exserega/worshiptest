@@ -15,7 +15,7 @@ import {
   domElements 
 } from '../core/index.js';
 import { subscribeResolvedContent } from '../api/overrides.js';
-import { showNotification, showConfirmDialog } from './modal-manager.js';
+import { showNotification, showConfirmDialog, showChoiceDialog } from './modal-manager.js';
 
 // ====================================
 // SONG DISPLAY UTILITIES
@@ -89,11 +89,27 @@ export function displaySongDetails(songData, keyToSelect) {
         ({ content }) => {
           applyRender(content != null ? content : baseLyrics);
         },
-        async ({ global }) => {
-          // Уведомление о глобальном обновлении при наличии персональной версии
-          try {
+        async ({ global, user }) => {
+          // Если у пользователя есть персональная версия, предлагаем варианты
+          if (user) {
+            const key = await showChoiceDialog({
+              title: 'Глобальная версия обновлена',
+              message: 'У вас есть персональная версия. Что сделать? ',
+              choices: [
+                { key: 'keep', label: 'Оставить мою', variant: 'default' },
+                { key: 'apply', label: 'Применить глобальную (удалить мою)', variant: 'danger' },
+                { key: 'preview', label: 'Просмотреть сравнение', variant: 'primary' }
+              ]
+            });
+            if (key === 'apply' && window.apiOverrides?.deleteUserOverride && songData?.id) {
+              await window.apiOverrides.deleteUserOverride(songData.id);
+              await showNotification('Персональная версия удалена. Применена глобальная.', 'success', 2500);
+            } else if (key === 'preview') {
+              await showNotification('Сравнение в разработке. Показана ваша версия.', 'info', 2500);
+            }
+          } else {
             await showNotification('Глобальная версия обновлена лидером в вашем филиале', 'info', 3000);
-          } catch (e) { /* ignore */ }
+          }
         }
       );
     }
@@ -156,12 +172,24 @@ export function displaySongTextInMobileOverlay(song, selectedKey) {
     console.log('⚪ Транспонирование не требуется');
   }
 
-  // Обрабатываем и выделяем
-  displayLyrics = processLyrics(displayLyrics);
-  displayLyrics = highlightChords(displayLyrics);
+  const renderMobile = (raw) => {
+    let txt = raw != null ? String(raw) : originalLyrics;
+    txt = processLyrics(txt);
+    txt = highlightChords(txt);
+    textContainer.innerHTML = `<pre class="mobile-song-display">${txt}</pre>`;
+  };
 
-  // Отображаем в overlay
-  textContainer.innerHTML = `<pre class="mobile-song-display">${displayLyrics}</pre>`;
+  // Подписка на overrides и первичный рендер
+  try {
+    import('../api/overrides.js').then(({ subscribeResolvedContent }) => {
+      if (window._mobileOverrideUnsub) { try { window._mobileOverrideUnsub(); } catch(e){} }
+      window._mobileOverrideUnsub = subscribeResolvedContent(song.id, ({ content }) => {
+        renderMobile(content);
+      });
+    });
+  } catch (e) {
+    renderMobile(originalLyrics);
+  }
   
   console.log('📝 Текст песни отображен в mobile overlay');
 }

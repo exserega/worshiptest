@@ -1055,6 +1055,22 @@ export function displayCurrentPresentationSong() {
     // Применяем скрытие блоков с только аккордами в режиме презентации
     toggleChordOnlyBlocks(!state.areChordsVisible);
 
+    // Подписка на overrides (user→global→base) для презентации
+    try {
+        import('/src/api/overrides.js').then(({ subscribeResolvedContent }) => {
+            if (window._presentationOverrideUnsub) { try { window._presentationOverrideUnsub(); } catch(e){} }
+            window._presentationOverrideUnsub = subscribeResolvedContent(song.id, ({ content }) => {
+                const src = content != null ? content : originalLyrics;
+                let rendered = getRenderedSongText(src, originalKey, targetKey);
+                if (state.isPresentationSplit) {
+                    rendered = distributeSongBlocksToColumns(rendered);
+                }
+                const pre = presentationContent.querySelector('pre');
+                if (pre) pre.innerHTML = rendered;
+            });
+        });
+    } catch (e) { /* ignore */ }
+
     presCounter.textContent = `${state.currentPresentationIndex + 1} / ${state.presentationSongs.length}`;
     presPrevBtn.disabled = (state.currentPresentationIndex === 0);
     presNextBtn.disabled = (state.currentPresentationIndex >= state.presentationSongs.length - 1);
