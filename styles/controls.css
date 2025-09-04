@@ -23,14 +23,17 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    width: 28px;
-    height: 28px;
-    background: transparent;
-    border: none;
-    color: #e5e7eb !important; /* Светлый крестик для темного фона */
-    border-radius: 6px;
+    width: 32px; /* квадрат как icon-button-small */
+    height: 32px; /* квадрат как icon-button-small */
+    background: transparent; /* прозрачный фон на темном фоне */
+    border: 1px solid var(--border-color); /* тонкая рамка как в кнопках */
+    color: #e5e7eb !important; /* светлая иконка на темном фоне */
+    border-radius: 8px; /* как icon-button-small */
     display: none; /* Показ при вводе текста */
     cursor: pointer;
+    display: inline-flex; /* центрирование содержимого */
+    align-items: center;
+    justify-content: center;
 }
 
 .search-input-container .clear-search-btn:hover,
@@ -41,6 +44,11 @@
 .search-input-container .clear-search-btn i {
     pointer-events: none;
     color: #e5e7eb !important;
+    margin: 0 !important; /* убираем сдвиги */
+    font-size: 0.9rem; /* как icon-button-small */
+    width: 14px;
+    height: 14px;
+    line-height: 1;
 }
 
 /* Если показан крестик, скрываем лупу */
@@ -49,7 +57,7 @@
 }
 
 #search-input {
-    padding-right: 40px; /* Отступ для иконки справа */
+    padding-right: 56px; /* запас под квадратную кнопку 32px + отступы */
     width: 100%;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
