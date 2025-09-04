@@ -1,5 +1,5 @@
-// Service Worker v617 - Add Songs list: hide key, title+BPM inline, category label, plus-only button
-const CACHE_NAME = 'agape-worship-cache-v617';
+// Service Worker v618 - Prepopulate added songs on edit mode for overlay
+const CACHE_NAME = 'agape-worship-cache-v618';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

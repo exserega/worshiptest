@@ -70,17 +70,53 @@ export async function startAddingSongs(mode = 'create', targetSetlistId = null, 
         window.activeSetlistName = activeSetlistName;
     }
     
-    // Очищаем и инициализируем состояние
+    // Инициализация addedSongsToCurrentSetlist
     const addedSongsToCurrentSetlist = window.addedSongsToCurrentSetlist || new Map();
     addedSongsToCurrentSetlist.clear();
-    
-    if (ui.addedSongsCount) {
-        ui.addedSongsCount.textContent = '0';
-    }
-    // Обнуляем бейдж в кнопке фильтра
-    if (ui.addedSongsCountBadge) {
-        ui.addedSongsCountBadge.textContent = '0';
-        ui.addedSongsCountBadge.style.display = 'none';
+
+    // Если режим редактирования — заполняем уже существующие песни в сет-листе
+    if (mode === 'edit') {
+        try {
+            // Получаем список песен текущего сет-листа из state/eventBus
+            const existingSongs = stateManager.getAllSetlists?.()
+                ?.find(s => s.id === activeSetlistId)?.songs
+                || (window.state?.setlists || []).find(s => s.id === activeSetlistId)?.songs
+                || state.currentSetlistSongs
+                || [];
+
+            existingSongs.forEach(songRef => {
+                // Сохраняем id -> preferredKey (если есть) или 'C'
+                const preferredKey = songRef.preferredKey || songRef.key || 'C';
+                addedSongsToCurrentSetlist.set(songRef.songId || songRef.id, preferredKey);
+            });
+
+            // Обновляем счётчики UI
+            const count = addedSongsToCurrentSetlist.size;
+            if (ui.addedSongsCount) {
+                ui.addedSongsCount.textContent = String(count);
+            }
+            if (ui.addedSongsCountBadge) {
+                ui.addedSongsCountBadge.textContent = String(count);
+                ui.addedSongsCountBadge.style.display = count > 0 ? 'inline-flex' : 'none';
+            }
+
+            // Автопереключение фильтра "Показать добавленные"
+            const showAddedOnlyBtn = document.getElementById('show-added-only');
+            if (showAddedOnlyBtn) {
+                showAddedOnlyBtn.classList.add('active');
+            }
+        } catch (e) {
+            console.error('❌ [SetlistManager] Не удалось предзаполнить добавленные песни:', e);
+        }
+    } else {
+        // Создание: сбрасываем счётчики
+        if (ui.addedSongsCount) {
+            ui.addedSongsCount.textContent = '0';
+        }
+        if (ui.addedSongsCountBadge) {
+            ui.addedSongsCountBadge.textContent = '0';
+            ui.addedSongsCountBadge.style.display = 'none';
+        }
     }
     
     // Показываем полноэкранный overlay
@@ -114,19 +150,21 @@ export async function startAddingSongs(mode = 'create', targetSetlistId = null, 
         categoryFilter.value = '';
     }
     
-    // Сбрасываем состояние кнопки "Показать добавленные"
-    const showAddedOnlyBtn = document.getElementById('show-added-only');
-    if (showAddedOnlyBtn) {
-        showAddedOnlyBtn.classList.remove('active');
+    // В режиме редактирования кнопка уже активирована выше; в режиме создания — сброс
+    if (mode !== 'edit') {
+        const showAddedOnlyBtn = document.getElementById('show-added-only');
+        if (showAddedOnlyBtn) {
+            showAddedOnlyBtn.classList.remove('active');
+        }
     }
     
     // Отображаем песни
     if (typeof window.filterAndDisplaySongs === 'function') {
-        await window.filterAndDisplaySongs('', '');
+        await window.filterAndDisplaySongs('', '', mode === 'edit');
     } else {
         // Импортируем функцию динамически
         const { filterAndDisplaySongs } = await import('./search-manager.js');
-        await filterAndDisplaySongs('', '');
+        await filterAndDisplaySongs('', '', mode === 'edit');
     }
     
     console.log('🎵 [SetlistManager] startAddingSongs END');
