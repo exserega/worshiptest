@@ -131,3 +131,4 @@
 - `/documentation/EVENTS_FEATURE_GUIDE.md` — руководство по функционалу событий
 - `/documentation/SETLIST_EVENT_INTEGRATION_GUIDE.md` — интеграция сет-листов с событиями
 - `/documentation/ROLES_AND_PERMISSIONS_GUIDE.md` — система ролей и прав доступа
+- Страница миграции: `/migrate-repertoire/` — перенос старых репертуаров Vocalists → Users

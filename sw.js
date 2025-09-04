@@ -38,6 +38,9 @@ const urlsToCache = [
   './src/modules/songs/songsOverlay.js',
   // Репертуар
   './src/modules/repertoire/repertoireOverlay.js',
+  // Страница миграции репертуара
+  './migrate-repertoire/index.html',
+  './migrate-repertoire/migrate.js',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются
