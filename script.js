@@ -380,17 +380,15 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
         songCard.innerHTML = `
             <div class="song-card-header">
                 <div class="song-info">
-                    <h4 class="song-title">${song.name}</h4>
-                    <div class="song-meta-info">
-                        <span class="song-key">${addedKey || originalKey}</span>
+                    <div class="song-title-row">
+                        <h4 class="song-title">${song.name}</h4>
                         ${song.BPM && song.BPM !== 'NA' ? `<span class="song-bpm"><i class="fas fa-tachometer-alt"></i>${song.BPM}</span>` : ''}
-                        <span class="song-category">${song.sheet || 'Без категории'}</span>
                     </div>
+                    <div class="song-category-label">${song.sheet || 'Без категории'}</div>
                     ${textFragment ? `<div class="song-text-fragment">${textFragment}</div>` : ''}
                 </div>
-                <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}">
+                <button class="song-add-btn ${isAdded ? 'added' : ''}" data-song-id="${song.id}" aria-label="${isAdded ? (isShowingAddedOnly ? 'Удалить' : 'Добавлена') : 'Добавить'}">
                     <i class="fas fa-${isAdded ? (isShowingAddedOnly ? 'times' : 'check') : 'plus'}"></i>
-                    <span>${isAdded ? (isShowingAddedOnly ? 'Удалить' : 'Добавлена') : 'Добавить'}</span>
                 </button>
             </div>
         `;

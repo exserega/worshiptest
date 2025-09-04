@@ -342,26 +342,50 @@
 
 /* Мета-информация - компактная */
 #add-songs-overlay .song-meta-info {
+    display: none !important; /* Больше не используем старый блок мета */
+}
+
+#add-songs-overlay .song-category { display: none !important; }
+
+/* Новая строка: название + BPM в одну линию */
+#add-songs-overlay .song-title-row {
     display: flex !important;
     align-items: center !important;
-    gap: 6px !important;
-    flex-shrink: 0 !important;
+    gap: 8px !important;
+    min-width: 0 !important;
 }
 
-#add-songs-overlay .song-category {
-    display: none !important; /* Скрываем категорию для экономии места */
+/* Название — усечение по ширине */
+#add-songs-overlay .song-title-row .song-title {
+    flex: 1 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
-/* Тональность - с правильным темным фоном */
-#add-songs-overlay .song-key {
-    background: rgba(0, 0, 0, 0.3) !important; /* Более темный фон */
+/* BPM рядом с названием (компактно) */
+#add-songs-overlay .song-title-row .song-bpm {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+    background: rgba(0, 0, 0, 0.3) !important;
     color: var(--text-color) !important;
     padding: 2px 6px !important;
     border-radius: 4px !important;
+    font-weight: 500 !important;
     font-size: 0.7rem !important;
-    font-weight: 600 !important;
-    display: inline-block !important;
 }
+
+/* Мелкая метка категории под названием */
+#add-songs-overlay .song-category-label {
+    font-size: 0.75rem !important;
+    color: var(--text-secondary) !important;
+    margin-top: 2px !important;
+}
+
+/* Тональность - с правильным темным фоном */
+/* Тональность в списке не показываем */
+#add-songs-overlay .song-key { display: none !important; }
 
 /* BPM - с тем же темным фоном */
 #add-songs-overlay .song-bpm {
@@ -389,15 +413,17 @@ body[data-theme="light"] #add-songs-overlay .song-bpm {
 
 /* Кнопка добавления - компактная */
 #add-songs-overlay .song-add-btn {
-    min-width: auto !important;
-    padding: 6px 10px !important;
+    min-width: 28px !important;
+    width: 28px !important;
     height: 28px !important;
-    font-size: 0.75rem !important;
+    padding: 0 !important;
     border-radius: 6px !important;
-    gap: 4px !important;
     background: transparent !important;
     color: var(--primary-color) !important;
     border: 1px solid var(--primary-color) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 #add-songs-overlay .song-add-btn:hover {
@@ -512,9 +538,7 @@ body[data-theme="light"] #add-songs-overlay .song-bpm {
         min-width: 60px !important;
     }
     
-    #add-songs-overlay .song-add-btn span {
-        display: none !important; /* Только иконка */
-    }
+    #add-songs-overlay .song-add-btn span { display: none !important; }
     
     #add-songs-overlay .song-card {
         padding: 6px 8px !important;
