@@ -1,5 +1,5 @@
-// Service Worker v6312 - Editor role buttons and handlers
-const CACHE_NAME = 'agape-worship-cache-v6312';
+// Service Worker v6313 - Branch-scoped overrides (global per branch)
+const CACHE_NAME = 'agape-worship-cache-v6313';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
