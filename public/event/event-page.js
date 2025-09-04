@@ -740,10 +740,35 @@ async function launchPlayer() {
         // Скрываем скролл на основной странице
         document.body.style.overflow = 'hidden';
         
-        // Динамически импортируем модуль плеера
-        const { openEventPlayer } = await import('/src/modules/events/eventPlayer.js');
+        // Динамически импортируем модуль плеера и overrides
+        const [{ openEventPlayer }, overrides] = await Promise.all([
+            import('/src/modules/events/eventPlayer.js'),
+            import('/src/api/overrides.js')
+        ]);
         
-        // Открываем плеер с песнями события
+        // Если гостевой режим — подменяем тексты на глобальные по филиалу события
+        if (!currentUser) {
+            const branchId = eventData.branchId || null;
+            for (let i = 0; i < eventSongs.length; i++) {
+                const s = eventSongs[i];
+                try {
+                    await new Promise((resolve) => {
+                        // Одноразовая подписка: читаем актуальный контент и сразу отписываемся
+                        const unsub = overrides.subscribeResolvedContent(s.id, ({ content }) => {
+                            if (content != null) {
+                                s['Текст и аккорды'] = content;
+                            }
+                            if (unsub) unsub();
+                            resolve();
+                        }, null, { viewerBranchId: branchId });
+                        // Таймаут на случай отсутствия override
+                        setTimeout(() => { try { unsub && unsub(); } catch(e){} resolve(); }, 300);
+                    });
+                } catch (e) { /* ignore */ }
+            }
+        }
+        
+        // Открываем плеер с песнями события (EventPlayer сам подпишется на изменения)
         await openEventPlayer(eventData.id, eventSongs, 0);
         
         console.log('✅ Плеер открыт');

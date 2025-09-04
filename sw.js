@@ -1,5 +1,5 @@
-// Service Worker v6316 - EventPlayer override subscription
-const CACHE_NAME = 'agape-worship-cache-v6316';
+// Service Worker v6317 - Event page guest global override
+const CACHE_NAME = 'agape-worship-cache-v6317';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

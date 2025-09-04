@@ -113,10 +113,10 @@ export async function deleteGlobalOverride(songId) {
   }).catch(() => {});
 }
 
-export function subscribeResolvedContent(songId, onChange, onGlobalUpdateForUser) {
+export function subscribeResolvedContent(songId, onChange, onGlobalUpdateForUser, options = {}) {
   const user = getUser();
   const userId = user?.uid || user?.id || null;
-  const viewerBranchId = getCurrentBranchId?.() || user?.branchId || null;
+  const viewerBranchId = options.viewerBranchId || getCurrentBranchId?.() || user?.branchId || null;
   const songDoc = getSongDoc(songId);
   let latestUser = null;
   let latestGlobal = null;
