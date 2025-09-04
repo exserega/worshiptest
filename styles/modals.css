@@ -379,18 +379,18 @@
 }
 
 .editor-controls { display: flex; flex-direction: column; gap: 8px; }
-.editor-row { display: flex; gap: 8px; justify-content: space-between; }
+.editor-row { display: flex; gap: 6px; justify-content: space-between; }
 .editor-row.secondary { justify-content: flex-end; }
 
 .editor-button {
-    padding: 10px 14px;
+    padding: 6px 10px;
     border: none;
     border-radius: 6px;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     transition: all 0.2s ease;
     font-weight: 500;
 }
@@ -408,10 +408,10 @@
     background: color-mix(in srgb, var(--accent-color) 85%, black);
 }
 
-.editor-button.cancel {
-    background: var(--border-color);
-    color: var(--text-color);
-}
+.editor-button.cancel { background: var(--border-color); color: #e5e7eb; }
+.editor-button.cancel i { color: #e5e7eb; }
+.editor-button.revert { background: #e74c3c; color: #e5e7eb; }
+.editor-button.revert i { color: #e5e7eb; }
 
 .editor-button.cancel:hover {
     background: color-mix(in srgb, var(--border-color) 80%, black);
@@ -435,7 +435,7 @@
     }
     
     .song-edit-textarea { min-height: 60vh; font-size: 16px; }
-    .editor-controls { gap: 8px; }
+    .editor-controls { gap: 6px; }
     .editor-row { flex-wrap: wrap; }
     .editor-button { flex: 1; justify-content: center; }
 }

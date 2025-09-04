@@ -708,7 +708,7 @@ window.handleRevertToOriginal = async function() {
         }
         
         // Подтверждение действия
-        const confirmRevert = confirm('Вы уверены? Будут удалены глобальная и ваша персональная версии, будет показан оригинал из Google Таблицы.');
+        const confirmRevert = confirm('Все изменения текста будут удалены. Восстановить оригинал?');
         if (!confirmRevert) {
             return;
         }

@@ -1667,7 +1667,7 @@ function setupSongEventHandlers() {
             try {
                 const currentSong = window.stateManager?.getCurrentSong?.() || window.currentSong;
                 if (!currentSong) return;
-                const ok = window.confirm('Восстановить оригинал? Будет удалена глобальная версия.');
+                const ok = window.confirm('Все изменения текста будут удалены. Восстановить оригинал?');
                 if (!ok) return;
                 if (window.apiOverrides && window.apiOverrides.deleteGlobalOverride) {
                     await window.apiOverrides.deleteGlobalOverride(currentSong.id);
