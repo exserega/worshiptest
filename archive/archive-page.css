@@ -1679,6 +1679,49 @@ textarea.form-control {
     transition: all 0.2s ease;
 }
 
+/* === Archive overlays: enforce close button alignment (no clipping, no movement) === */
+#archive-songs-overlay .header-top-row {
+    align-items: center !important;
+}
+
+#archive-songs-overlay .header-top-row .icon-button-small {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+    width: 32px !important;
+    height: 32px !important;
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    border-radius: 6px !important;
+}
+
+#archive-songs-overlay .icon-button-small:hover,
+#archive-songs-overlay .icon-button-small:active {
+    transform: none !important;
+}
+
+/* Archive key modal close button fix */
+#archive-key-modal .song-preview-header .icon-button-small,
+#archive-key-modal .header-top .icon-button-small {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+    width: 32px !important;
+    height: 32px !important;
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    border-radius: 6px !important;
+}
+
+#archive-key-modal .icon-button-small:hover,
+#archive-key-modal .icon-button-small:active {
+    transform: none !important;
+}
+
 .add-to-setlist-btn:hover {
     background: color-mix(in srgb, var(--primary-color) 85%, black);
     transform: translateY(-1px);

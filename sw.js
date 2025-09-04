@@ -1,5 +1,5 @@
-// Service Worker v625 - Also fix mobile song preview close button
-const CACHE_NAME = 'agape-worship-cache-v625';
+// Service Worker v626 - Archive overlays close button fixes
+const CACHE_NAME = 'agape-worship-cache-v626';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
