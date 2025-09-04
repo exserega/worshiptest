@@ -230,6 +230,60 @@
     background: var(--background-color) !important; /* Как в панели сет-листов */
 }
 
+/* Приводим отображение песен к виду архива: номер, название, мелкий label категории справа */
+#add-songs-overlay .songs-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+#add-songs-overlay .song-card {
+    padding: 8px 10px !important;
+    border-radius: 6px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+#add-songs-overlay .song-number {
+    font-size: 0.8rem !important;
+    color: var(--text-secondary) !important;
+    min-width: 20px !important;
+    margin-right: 8px !important;
+}
+
+#add-songs-overlay .song-info {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+#add-songs-overlay .song-title {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    line-height: 1.2 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    width: 100% !important;
+}
+
+#add-songs-overlay .song-category-label {
+    font-size: 0.75rem !important; /* Мельче под названием */
+    color: var(--text-secondary) !important;
+}
+
+#add-songs-overlay .song-meta {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
 /* Сетка песен - мобильная */
 #add-songs-overlay .songs-grid {
     display: flex !important;
