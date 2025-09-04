@@ -1,5 +1,5 @@
-// Service Worker v6315 - Presentation view override logging
-const CACHE_NAME = 'agape-worship-cache-v6315';
+// Service Worker v6316 - EventPlayer override subscription
+const CACHE_NAME = 'agape-worship-cache-v6316';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

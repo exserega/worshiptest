@@ -407,18 +407,8 @@ class EventPlayer {
                 import('/src/js/core/transposition.js')
             ]);
             
-            // Получаем текст песни (приоритет отредактированному)
-            console.log('📝 Проверка отредактированного текста:', {
-                hasWebEdits: song.hasWebEdits,
-                hasEditedText: !!song['Текст и аккорды (edited)'],
-                editedLength: song['Текст и аккорды (edited)']?.length || 0
-            });
-            
-            const originalLyrics = song.hasWebEdits 
-                ? (song['Текст и аккорды (edited)'] || song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден')
-                : (song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден');
-                
-            console.log('📝 Используем текст:', song.hasWebEdits ? 'отредактированный' : 'оригинальный');
+            // Базовый текст (оригинал из Songs)
+            const baseLyrics = (song['Текст и аккорды'] || song.lyrics || song.text || 'Текст песни не найден');
             
             // Оригинальная тональность из Firebase (та, в которой записаны аккорды)
             const originalKey = song['Оригинальная тональность'] || song.originalKey || song.defaultKey || 'C';
@@ -459,7 +449,8 @@ class EventPlayer {
                 from: originalKey, 
                 to: this.currentKey 
             });
-            let finalLyrics = getRenderedSongText(originalLyrics, originalKey, this.currentKey);
+            // Начальный рендер по базе (перекроется overrides при наличии)
+            let finalLyrics = getRenderedSongText(baseLyrics, originalKey, this.currentKey);
             
             // Распределяем по колонкам если включен режим
             if (this.isSplitMode) {
@@ -501,6 +492,23 @@ class EventPlayer {
                     }
                 }
             }, 0);
+            
+            // Подписка на overrides (персональный/глобальный в рамках филиала)
+            try {
+                const { subscribeResolvedContent } = await import('/src/api/overrides.js');
+                if (this._unsubscribeOverrides) { try { this._unsubscribeOverrides(); } catch(e){} }
+                this._unsubscribeOverrides = subscribeResolvedContent(song.id, ({ content }) => {
+                    const src = content != null ? content : baseLyrics;
+                    let rendered = getRenderedSongText(src, originalKey, this.currentKey);
+                    if (this.isSplitMode) {
+                        rendered = distributeSongBlocksToColumns(rendered);
+                    }
+                    const preEl = this.overlay.querySelector('#player-song-display pre');
+                    if (preEl) preEl.innerHTML = rendered;
+                });
+            } catch (e) {
+                console.warn('[EventPlayer] Overrides subscription failed', e);
+            }
             
         } catch (error) {
             console.error('❌ Ошибка отображения песни:', error);
