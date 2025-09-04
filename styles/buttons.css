@@ -260,3 +260,16 @@ button.icon-button.simple:active:not(:disabled) {
 /* Нижний ряд управления */
 .controls-footer { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding-top: 0;}
 /* Old BPM controls moved to metronome.css */
+
+#key-selection-modal .song-preview-header .icon-button-small,
+#key-selection-modal .header-top .icon-button-small {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+}
+
+#key-selection-modal .icon-button-small:hover,
+#key-selection-modal .icon-button-small:active {
+    transform: none !important;
+}

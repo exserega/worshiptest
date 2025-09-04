@@ -1,5 +1,5 @@
-// Service Worker v623 - Key selection modal close button alignment/hover fixes
-const CACHE_NAME = 'agape-worship-cache-v623';
+// Service Worker v624 - Stronger overrides for key modal close button
+const CACHE_NAME = 'agape-worship-cache-v624';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
