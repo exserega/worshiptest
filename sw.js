@@ -1,5 +1,5 @@
-// Service Worker v630o - Compact overlay cards and typography (10px/6px)
-const CACHE_NAME = 'agape-worship-cache-v630o';
+// Service Worker v630p - Overlay typography update (14px title, 8px subline, 3px gap)
+const CACHE_NAME = 'agape-worship-cache-v630p';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
