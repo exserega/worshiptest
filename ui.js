@@ -392,8 +392,11 @@ export function displaySongDetails(songData, keyToSelect) {
             try {
                 console.log('[Copy] Clicked copy-text-button');
                 const preEl = document.getElementById('song-display');
-                const lyricsText = preEl ? preEl.textContent : '';
-                console.log('[Copy] Text length:', lyricsText?.length);
+                const lyricsText = preEl ? preEl.innerText : '';
+                console.log('[Copy] Text length (visible only):', lyricsText?.length, {
+                    areChordsVisible: window.state?.areChordsVisible,
+                    isChordsOnlyMode: window.state?.isChordsOnlyMode
+                });
                 if (!lyricsText) {
                     console.warn('[Copy] No lyrics to copy');
                     return;

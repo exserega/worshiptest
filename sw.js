@@ -1,5 +1,5 @@
-// Service Worker v630i - Ensure copy button handler attaches to global button
-const CACHE_NAME = 'agape-worship-cache-v630i';
+// Service Worker v630j - Copy visible content only (innerText)
+const CACHE_NAME = 'agape-worship-cache-v630j';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
