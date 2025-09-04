@@ -393,6 +393,9 @@ async function loadSongs() {
                         console.log('🎵 Название:', songDoc.id);
                         console.log('📝 hasWebEdits:', songData.hasWebEdits);
                         console.log('📝 Есть отредактированный текст:', !!songData['Текст и аккорды (edited)']);
+                        // Извлекаем YouTube Link из документа Songs:
+                        // Поля могут называться по-разному: 'YouTube Link', 'YouTube', 'youtube', 'youtubeLink'
+                        const yt = songData['YouTube Link'] || songData['YouTube'] || songData['youtube'] || songData['youtubeLink'] || '';
                         return {
                             ...songData,
                             id: songDoc.id,
@@ -400,7 +403,8 @@ async function loadSongs() {
                             preferredKey: setlistSong.preferredKey || songData.defaultKey,
                             order: setlistSong.order,
                             hasWebEdits: songData.hasWebEdits || false,
-                            'Текст и аккорды (edited)': songData['Текст и аккорды (edited)'] || null
+                            'Текст и аккорды (edited)': songData['Текст и аккорды (edited)'] || null,
+                            youtubeLink: typeof yt === 'string' ? yt : ''
                         };
                     }
                 } catch (err) {
@@ -667,6 +671,24 @@ function shareEvent(platform) {
         }
     }
     
+    // Добавляем список песен с тональностями
+    if (eventSongs && eventSongs.length > 0) {
+        text += `\n🎶 Список песен:`;
+        eventSongs.forEach((s, idx) => {
+            const name = s.name || `Песня ${idx + 1}`;
+            const key = s.preferredKey || s.defaultKey || '';
+            if (platform === 'telegram' && s.youtubeLink) {
+                // Telegram поддерживает HTML разметку, используем t.me/share/url с текстом в HTML недоступно напрямую.
+                // Поэтому используем MarkdownV2/HTML в Bot API, но для client share мы делаем кликабельный урл в тексте
+                // в формате: Название (YouTube)
+                text += `\n• ${name} (${s.youtubeLink}) ${key ? `— ${key}` : ''}`;
+            } else {
+                text += `\n• ${name}${key ? ` — ${key}` : ''}`;
+            }
+        });
+        text += '\n';
+    }
+    
     text += `\n🔗 ${url}`;
     
     let shareUrl;
@@ -674,9 +696,8 @@ function shareEvent(platform) {
     if (platform === 'whatsapp') {
         shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
     } else if (platform === 'telegram') {
-        // Для Telegram не дублируем ссылку, так как она уже в тексте
-        const textWithoutLink = text.replace(`\n🔗 ${url}`, '');
-        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(textWithoutLink)}`;
+        // Для Telegram: отправляем весь текст, URL пойдет отдельным параметром
+        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
     }
     
     if (shareUrl) {
