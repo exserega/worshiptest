@@ -1060,13 +1060,19 @@ export function displayCurrentPresentationSong() {
         import('/src/api/overrides.js').then(({ subscribeResolvedContent }) => {
             if (window._presentationOverrideUnsub) { try { window._presentationOverrideUnsub(); } catch(e){} }
             window._presentationOverrideUnsub = subscribeResolvedContent(song.id, ({ content }) => {
+                console.log('[Presentation] Override content received. Using', content != null ? 'override' : 'base');
                 const src = content != null ? content : originalLyrics;
                 let rendered = getRenderedSongText(src, originalKey, targetKey);
                 if (state.isPresentationSplit) {
                     rendered = distributeSongBlocksToColumns(rendered);
                 }
                 const pre = presentationContent.querySelector('pre');
-                if (pre) pre.innerHTML = rendered;
+                if (pre) {
+                    pre.innerHTML = rendered;
+                    console.log('[Presentation] Updated pre with override/base content');
+                } else {
+                    console.warn('[Presentation] <pre> not found for update');
+                }
             });
         });
     } catch (e) { /* ignore */ }

@@ -1,5 +1,5 @@
-// Service Worker v6314 - Global update notification wiring
-const CACHE_NAME = 'agape-worship-cache-v6314';
+// Service Worker v6315 - Presentation view override logging
+const CACHE_NAME = 'agape-worship-cache-v6315';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
