@@ -376,6 +376,19 @@
     font-size: 0.7rem !important;
 }
 
+/* Показ тональности рядом с BPM для добавленных песен */
+#add-songs-overlay .song-title-row .song-added-key {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    color: var(--text-color) !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+}
+
 /* Мелкая метка категории под названием */
 #add-songs-overlay .song-category-label {
     font-size: 0.75rem !important;

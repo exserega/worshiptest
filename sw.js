@@ -1,5 +1,5 @@
-// Service Worker v618 - Prepopulate added songs on edit mode for overlay
-const CACHE_NAME = 'agape-worship-cache-v618';
+// Service Worker v619 - Show added key next to BPM in Add Songs overlay
+const CACHE_NAME = 'agape-worship-cache-v619';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

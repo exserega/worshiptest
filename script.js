@@ -382,7 +382,8 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
                 <div class="song-info">
                     <div class="song-title-row">
                         <h4 class="song-title">${song.name}</h4>
-                        ${song.BPM && song.BPM !== 'NA' ? `<span class="song-bpm"><i class="fas fa-tachometer-alt"></i>${song.BPM}</span>` : ''}
+                        ${song.BPM && song.BPM !== 'NA' ? `<span class=\"song-bpm\"><i class=\"fas fa-tachometer-alt\"></i>${song.BPM}</span>` : ''}
+                        ${isAdded && addedKey ? `<span class=\"song-added-key\"><i class=\"fas fa-music\"></i>${addedKey}</span>` : ''}
                     </div>
                     <div class="song-category-label">${song.sheet || 'Без категории'}</div>
                     ${textFragment ? `<div class="song-text-fragment">${textFragment}</div>` : ''}
@@ -397,6 +398,27 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
     });
     
     console.log('🎵 [Legacy] displaySongsGrid completed, rendered', songs.length, 'songs');
+};
+
+// Обновление списка песен в overlay с сохранением текущих фильтров
+window.refreshSongsDisplay = async function() {
+    try {
+        const searchInput = document.getElementById('song-search-input');
+        const categorySelect = document.getElementById('category-filter');
+        const showAddedOnlyBtn = document.getElementById('show-added-only');
+        const searchTerm = (searchInput && searchInput.value) || '';
+        const category = (categorySelect && categorySelect.value) || '';
+        const showAddedOnly = !!(showAddedOnlyBtn && showAddedOnlyBtn.classList.contains('active'));
+
+        if (typeof window.filterAndDisplaySongs === 'function') {
+            await window.filterAndDisplaySongs(searchTerm, category, showAddedOnly);
+        } else {
+            const { filterAndDisplaySongs } = await import('./src/ui/search-manager.js');
+            await filterAndDisplaySongs(searchTerm, category, showAddedOnly);
+        }
+    } catch (e) {
+        console.error('❌ refreshSongsDisplay failed:', e);
+    }
 };
 
 // УБРАЛИ toggleMyListPanel - логика теперь в обработчике событий
