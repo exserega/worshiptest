@@ -545,6 +545,22 @@ function getInstrumentOrder(instrument) {
     return order[instrumentLower] || 8; // Все остальное - "другое" с приоритетом 8
 }
 
+// Эмодзи для инструментов в шаринге
+function getInstrumentEmoji(instrument) {
+    const m = {
+        'вокал': '🎤',
+        'клавиши': '🎹',
+        'электрогитара': '🎸',
+        'акустическая гитара': '🎸',
+        'бас-гитара': '🎸',
+        'барабаны': '🥁',
+        'кахон': '🥁',
+        'звукооператор': '🎚️'
+    };
+    const key = (instrument || '').toLowerCase();
+    return m[key] || '🎵';
+}
+
 /**
  * Отображение участников
  */
@@ -649,7 +665,7 @@ function shareEvent(platform) {
     const title = eventData.name || 'Событие';
     const date = eventData.date ? formatShareDate(eventData.date) : '';
     
-    // Формируем текст с участниками
+    // Формируем шапку (без верхней ссылки на событие)
     let text = `📅 ${title}\n${date}\n`;
     
     if (eventData.leaderName) {
@@ -665,9 +681,9 @@ function shareEvent(platform) {
             }
             grouped[p.instrumentName].push(p.userName);
         });
-        
         for (const [instrument, names] of Object.entries(grouped)) {
-            text += `${instrument}: ${names.join(', ')}\n`;
+            const emoji = getInstrumentEmoji(instrument);
+            text += `${emoji} ${instrument}: ${names.join(', ')}\n`;
         }
     }
     
@@ -678,10 +694,9 @@ function shareEvent(platform) {
             const name = s.name || `Песня ${idx + 1}`;
             const key = s.preferredKey || s.defaultKey || '';
             if (platform === 'telegram' && s.youtubeLink) {
-                // Telegram поддерживает HTML разметку, используем t.me/share/url с текстом в HTML недоступно напрямую.
-                // Поэтому используем MarkdownV2/HTML в Bot API, но для client share мы делаем кликабельный урл в тексте
-                // в формате: Название (YouTube)
-                text += `\n• ${name} (${s.youtubeLink}) ${key ? `— ${key}` : ''}`;
+                // Пытаемся обернуть название в ссылку (в некоторых клиентах Telegram поддерживается)
+                const line = `\n• <a href="${s.youtubeLink}">${name}</a>${key ? ` — ${key}` : ''}`;
+                text += line;
             } else {
                 text += `\n• ${name}${key ? ` — ${key}` : ''}`;
             }
@@ -696,8 +711,8 @@ function shareEvent(platform) {
     if (platform === 'whatsapp') {
         shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
     } else if (platform === 'telegram') {
-        // Для Telegram: отправляем весь текст, URL пойдет отдельным параметром
-        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        // Для Telegram: отправляем только text, без отдельного url (чтобы не было дублирования)
+        shareUrl = `https://t.me/share/url?text=${encodeURIComponent(text)}`;
     }
     
     if (shareUrl) {

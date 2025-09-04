@@ -1,5 +1,5 @@
-// Service Worker v6326 - Event share includes songs and Telegram YouTube links
-const CACHE_NAME = 'agape-worship-cache-v6326';
+// Service Worker v6327 - Telegram: clickable song titles; single event link; emojis for instruments
+const CACHE_NAME = 'agape-worship-cache-v6327';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
