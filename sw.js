@@ -1,5 +1,5 @@
-// Service Worker v630s - Title 12px, subline spacing 3px in songs overlay
-const CACHE_NAME = 'agape-worship-cache-v630s';
+// Service Worker v630t - Repertoire overlay: persist filters + category sublines
+const CACHE_NAME = 'agape-worship-cache-v630t';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -36,6 +36,8 @@ const urlsToCache = [
   './styles/event-creation-modal-complete.css',
   // Обновление оверлея песен
   './src/modules/songs/songsOverlay.js',
+  // Репертуар
+  './src/modules/repertoire/repertoireOverlay.js',
   './assets/images/Icon-192.png', // Добавим иконки для PWA
   './assets/images/Icon-512.png',
   // Внешние ресурсы, их пути не меняются
