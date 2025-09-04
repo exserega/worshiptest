@@ -1,5 +1,5 @@
-// Service Worker v6322 - Editor button height normalization and close button fix
-const CACHE_NAME = 'agape-worship-cache-v6322';
+// Service Worker v6323 - Editor close button pinned top-right without movement
+const CACHE_NAME = 'agape-worship-cache-v6323';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

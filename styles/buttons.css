@@ -100,13 +100,24 @@ button:disabled { opacity: 0.5; cursor: not-allowed; background: color-mix(in sr
 
 /* Позиционирование в оверлеях */
 .modal-header .icon-button-small,
-.song-editor-header .icon-button-small,
 .header-top .icon-button-small,
 .header-top-row .icon-button-small {
     position: absolute;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+/* Editor close button: pinned top-right, no movement */
+.song-editor-header #close-editor-button.icon-button-small {
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    transform: none !important;
+}
+.song-editor-header #close-editor-button.icon-button-small:hover,
+.song-editor-header #close-editor-button.icon-button-small:active {
+    transform: none !important;
 }
 
 /* Позиционирование в модальных окнах создания */

@@ -267,17 +267,20 @@
 }
 
 #close-editor-button {
-    position: absolute;
-    top: 8px;
-    right: 8px;
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    transform: none !important;
     width: 32px;
     height: 32px;
     min-width: 32px;
     min-height: 32px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: #111827;
+    background: transparent;
     color: #e5e7eb !important;
+    transition: none !important;
+    z-index: 2;
 }
 #close-editor-button i { color: #e5e7eb !important; }
 
@@ -292,17 +295,14 @@
     width: 32px;
     height: 32px;
     font-size: 1rem;
-    background: #111827;
+    background: transparent;
     border: 1px solid var(--border-color);
     color: #e5e7eb !important;
     border-radius: 8px;
-    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-#close-editor-button:hover {
-    background: var(--hover-color);
-    color: #e5e7eb !important;
-}
+#close-editor-button:hover { background: var(--hover-color); color: #e5e7eb !important; transform: none !important; }
+#close-editor-button:active { transform: none !important; }
 
 /* Основной контент редактора */
 .song-editor-content {
