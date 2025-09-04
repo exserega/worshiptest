@@ -1,5 +1,5 @@
-// Service Worker v619 - Show added key next to BPM in Add Songs overlay
-const CACHE_NAME = 'agape-worship-cache-v619';
+// Service Worker v620 - Rename in overlay header; remove note icon near key
+const CACHE_NAME = 'agape-worship-cache-v620';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

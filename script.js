@@ -383,7 +383,7 @@ window.displaySongsGrid = function(songs, searchTerm = '') {
                     <div class="song-title-row">
                         <h4 class="song-title">${song.name}</h4>
                         ${song.BPM && song.BPM !== 'NA' ? `<span class=\"song-bpm\"><i class=\"fas fa-tachometer-alt\"></i>${song.BPM}</span>` : ''}
-                        ${isAdded && addedKey ? `<span class=\"song-added-key\"><i class=\"fas fa-music\"></i>${addedKey}</span>` : ''}
+                        ${isAdded && addedKey ? `<span class=\"song-added-key\">${addedKey}</span>` : ''}
                     </div>
                     <div class="song-category-label">${song.sheet || 'Без категории'}</div>
                     ${textFragment ? `<div class="song-text-fragment">${textFragment}</div>` : ''}

@@ -1363,6 +1363,54 @@ function setupSetlistEventHandlers() {
     } else {
         console.error('🎵 [EventHandlers] songs-grid не найден!');
     }
+
+    // Переименование сет-листа по клику на название в заголовке оверлея
+    const targetSetlistNameEl = document.getElementById('target-setlist-name');
+    if (targetSetlistNameEl) {
+        targetSetlistNameEl.style.cursor = 'text';
+        targetSetlistNameEl.title = 'Изменить название сет-листа';
+        targetSetlistNameEl.addEventListener('click', async () => {
+            try {
+                const currentName = targetSetlistNameEl.textContent || '';
+                // Простое inline-редактирование через prompt для первой версии
+                const newName = prompt('Введите новое название сет-листа', currentName);
+                if (!newName || newName.trim() === '' || newName === currentName) return;
+
+                const setlistId = (window.eventBus?.getState('currentSetlistId')) || window.state?.currentSetlistId;
+                if (!setlistId) return;
+
+                const { updateSetlistName, loadSetlists } = await import('../api/index.js');
+                await updateSetlistName(setlistId, newName.trim());
+
+                // Локально обновляем отображение в заголовке
+                targetSetlistNameEl.textContent = newName.trim();
+
+                // Обновляем состояние и панель сет-листов
+                if (window.state && typeof window.state.setCurrentSetlistName === 'function') {
+                    window.state.setCurrentSetlistName(newName.trim());
+                }
+
+                // Обновляем панель при открытой панели сет-листов
+                if (document.getElementById('setlists-panel')?.classList.contains('open')) {
+                    const setlists = await loadSetlists();
+                    const updated = setlists.find(s => s.id === setlistId);
+                    if (updated && typeof window.ui?.displaySelectedSetlist === 'function') {
+                        window.ui.displaySelectedSetlist(updated, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
+                    }
+                }
+
+                // Уведомление
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification(`Сет-лист переименован в "${newName.trim()}"`, 'success');
+                }
+            } catch (e) {
+                console.error('❌ Ошибка переименования сет-листа:', e);
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification('Ошибка при переименовании сет-листа', 'error');
+                }
+            }
+        });
+    }
     
     // Селектор вокалистов
     if (ui.vocalistSelect) {
