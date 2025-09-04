@@ -1,5 +1,5 @@
-// Service Worker v621 - Dynamic side panel refresh after finish/add/rename
-const CACHE_NAME = 'agape-worship-cache-v621';
+// Service Worker v622 - Persist removal from overlay and live refresh
+const CACHE_NAME = 'agape-worship-cache-v622';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

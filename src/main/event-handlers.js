@@ -1315,23 +1315,52 @@ function setupSetlistEventHandlers() {
                         const isShowingAddedOnly = showAddedOnly && showAddedOnly.classList.contains('active');
                         
                         if (isAdded && isShowingAddedOnly) {
-                            // В режиме "Показать добавленные" удаляем песню
-                            console.log('🎵 [EventHandlers] Removing song from added list:', song.name);
-                            window.addedSongsToCurrentSetlist.delete(songId);
-                            
-                            // Обновляем счетчик
+                            // В режиме "Показать добавленные": удаляем
+                            console.log('🎵 [EventHandlers] Removing song (persist) from setlist:', song.name);
+
+                            // Если песня была изначально в сет-листе (режим edit), сохраняем удаление в БД
+                            try {
+                                const activeSetlistId = (window.eventBus?.getState('activeSetlistId')) || window.activeSetlistId || window.state?.currentSetlistId;
+                                if (activeSetlistId) {
+                                    const { removeSongFromSetlist } = await import('../api/index.js');
+                                    await removeSongFromSetlist(activeSetlistId, songId);
+                                }
+                            } catch (err) {
+                                console.error('❌ [EventHandlers] Ошибка удаления песни из сет-листа:', err);
+                            }
+
+                            // Удаляем из локального набора и обновляем счётчики
+                            window.addedSongsToCurrentSetlist?.delete(songId);
                             if (typeof window.updateAddedSongsCount === 'function') {
                                 window.updateAddedSongsCount();
                             }
-                            
-                            // Обновляем отображение
-                            const searchTerm = document.getElementById('search-input')?.value || '';
-                            const currentCategory = document.getElementById('category-select')?.value || '';
-                            const { filterAndDisplaySongs: filterAndDisplaySongsModule } = await import('../ui/search-manager.js');
-                            filterAndDisplaySongsModule(searchTerm, currentCategory, true);
-                            
+
+                            // Обновляем отображение списка в оверлее
+                            if (typeof window.refreshSongsDisplay === 'function') {
+                                await window.refreshSongsDisplay();
+                            } else {
+                                const { filterAndDisplaySongs } = await import('../ui/search-manager.js');
+                                await filterAndDisplaySongs('', '', true);
+                            }
+
+                            // Динамически обновляем панель сет-листов, если открыта
+                            try {
+                                const setlistsPanel = document.getElementById('setlists-panel');
+                                if (setlistsPanel && setlistsPanel.classList.contains('open')) {
+                                    const { refreshSetlists } = await import('../main/controller.js');
+                                    const setlists = await refreshSetlists();
+                                    const activeSetlistId = (window.eventBus?.getState('activeSetlistId')) || window.activeSetlistId || window.state?.currentSetlistId;
+                                    const updated = setlists.find(s => s.id === activeSetlistId);
+                                    if (updated && typeof window.ui?.displaySelectedSetlist === 'function') {
+                                        window.ui.displaySelectedSetlist(updated, window.handleFavoriteOrRepertoireSelect, window.handleRemoveSongFromSetlist);
+                                    }
+                                }
+                            } catch (e2) {
+                                console.error('❌ [EventHandlers] Не удалось обновить панель сет-листов после удаления:', e2);
+                            }
+
                             if (typeof window.showNotification === 'function') {
-                                window.showNotification(`➖ "${song.name}" удалена из списка`, 'info');
+                                window.showNotification(`➖ "${song.name}" удалена из сет-листа`, 'info');
                             }
                             return;
                         } else if (isAdded) {
