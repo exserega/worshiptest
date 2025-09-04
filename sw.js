@@ -1,5 +1,5 @@
-// Service Worker v6328 - Telegram share fix: use url+text, no HTML
-const CACHE_NAME = 'agape-worship-cache-v6328';
+// Service Worker v6329 - Share: keep instrument order consistent with event page
+const CACHE_NAME = 'agape-worship-cache-v6329';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

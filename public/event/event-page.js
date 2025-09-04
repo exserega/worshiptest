@@ -681,7 +681,8 @@ function shareEvent(platform) {
             }
             grouped[p.instrumentName].push(p.userName);
         });
-        for (const [instrument, names] of Object.entries(grouped)) {
+        const sortedGroups = Object.entries(grouped).sort(([a], [b]) => getInstrumentOrder(a) - getInstrumentOrder(b));
+        for (const [instrument, names] of sortedGroups) {
             const emoji = getInstrumentEmoji(instrument);
             text += `${emoji} ${instrument}: ${names.join(', ')}\n`;
         }
