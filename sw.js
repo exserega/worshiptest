@@ -1,5 +1,5 @@
-// Service Worker v614 - Add Songs header alignment and hover fixes
-const CACHE_NAME = 'agape-worship-cache-v614';
+// Service Worker v615 - Add Songs close button alignment and hover fix
+const CACHE_NAME = 'agape-worship-cache-v615';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

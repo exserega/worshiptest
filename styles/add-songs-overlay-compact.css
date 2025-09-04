@@ -17,6 +17,13 @@
     align-items: center !important; /* Выровнять кнопки по центру по вертикали */
 }
 
+/* Переопределение глобального правила, которое сдвигает кнопку вверх */
+#add-songs-overlay .header-top-row .icon-button-small {
+    transform: none !important;      /* Без смещения на -50% */
+    top: auto !important;            /* Игнорируем top из абсолютного позиционирования */
+    right: auto !important;          /* Игнорируем right */
+}
+
 #add-songs-overlay .header-left {
     gap: 8px !important;
 }
@@ -42,8 +49,10 @@
 
 /* Кнопка закрытия: только смена цвета без смещения */
 #add-songs-overlay .icon-button-small:hover,
-#add-songs-overlay .overlay-close-btn:hover {
-    transform: none !important;
+#add-songs-overlay .icon-button-small:active,
+#add-songs-overlay .overlay-close-btn:hover,
+#add-songs-overlay .overlay-close-btn:active {
+    transform: none !important; /* Без сдвига на hover/active */
 }
 
 /* Счетчик добавленных - скрываем в заголовке */
