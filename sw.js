@@ -1,5 +1,5 @@
-// Service Worker v630b - Square main clear button, remove extra padding
-const CACHE_NAME = 'agape-worship-cache-v630b';
+// Service Worker v630c - Standardize clear-X across overlay, archive, events
+const CACHE_NAME = 'agape-worship-cache-v630c';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

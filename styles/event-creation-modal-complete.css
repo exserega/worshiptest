@@ -771,6 +771,35 @@
     border-radius: 12px 12px 0 0;
 }
 
+/* Единый вид кнопки очистки в поисках внутри модалки событий */
+.participant-selector .clear-search-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: #e5e7eb;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.participant-selector .clear-search-btn i {
+    margin: 0;
+    width: 14px;
+    height: 14px;
+    line-height: 1;
+    color: #e5e7eb;
+}
+
 .participant-selector .selector-header h3 {
     font-size: 1.125rem;
     font-weight: 600;
