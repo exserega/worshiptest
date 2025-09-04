@@ -387,8 +387,29 @@ export function displaySongDetails(songData, keyToSelect) {
         copyBtn.onclick = async (e) => {
             e.preventDefault();
             try {
-                const lyricsText = songContent.querySelector('#song-display')?.textContent || '';
-                await navigator.clipboard.writeText(lyricsText);
+                console.log('[Copy] Clicked copy-text-button');
+                const preEl = document.getElementById('song-display');
+                const lyricsText = preEl ? preEl.textContent : '';
+                console.log('[Copy] Text length:', lyricsText?.length);
+                if (!lyricsText) {
+                    console.warn('[Copy] No lyrics to copy');
+                    return;
+                }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(lyricsText);
+                    console.log('[Copy] Copied via navigator.clipboard');
+                } else {
+                    // Fallback: временный textarea
+                    const ta = document.createElement('textarea');
+                    ta.value = lyricsText;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    console.log('[Copy] Copied via execCommand fallback');
+                }
                 copyBtn.classList.add('copied');
                 setTimeout(() => copyBtn.classList.remove('copied'), 2000);
             } catch (err) {

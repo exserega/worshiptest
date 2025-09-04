@@ -1,5 +1,5 @@
-// Service Worker v630g - Fix copy button on main page (clipboard handler)
-const CACHE_NAME = 'agape-worship-cache-v630g';
+// Service Worker v630h - Add logs and fallback for copy button
+const CACHE_NAME = 'agape-worship-cache-v630h';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
