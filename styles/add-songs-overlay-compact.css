@@ -155,16 +155,6 @@
     border: none !important;
     color: #e5e7eb !important;
     display: none; /* показ/скрытие через JS */
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-#add-songs-overlay .clear-search-btn i {
-    margin: 0 !important;
-    width: 14px !important;
-    height: 14px !important;
-    line-height: 1 !important;
 }
 
 /* Когда крестик видим — скрываем лупу */
