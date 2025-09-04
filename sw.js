@@ -1,5 +1,5 @@
-// Service Worker v630j - Copy visible content only (innerText)
-const CACHE_NAME = 'agape-worship-cache-v630j';
+// Service Worker v630k - Remove block legend icons on main page
+const CACHE_NAME = 'agape-worship-cache-v630k';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
