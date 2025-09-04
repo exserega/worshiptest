@@ -17,6 +17,36 @@
     pointer-events: none;
 }
 
+/* Кнопка очистки для главного поиска */
+.search-input-container .clear-search-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    border-radius: 6px;
+    display: none; /* Показ при вводе текста */
+    cursor: pointer;
+}
+
+.search-input-container .clear-search-btn:hover,
+.search-input-container .clear-search-btn:active {
+    transform: translateY(-50%);
+}
+
+.search-input-container .clear-search-btn i {
+    pointer-events: none;
+}
+
+/* Если показан крестик, скрываем лупу */
+.search-input-container:has(.clear-search-btn:not([style*="display: none"])) .search-icon {
+    display: none !important;
+}
+
 #search-input {
     padding-right: 40px; /* Отступ для иконки справа */
     width: 100%;

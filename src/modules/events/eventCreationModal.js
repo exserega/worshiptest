@@ -639,11 +639,16 @@ class EventCreationModal {
                     </button>
                 </div>
                 <div class="selector-body">
-                    <input type="text" 
-                           id="participantSearchInput" 
-                           placeholder="Введите имя для поиска или создания" 
-                           class="custom-participant-input"
-                           autocomplete="off">
+                    <div class="search-input-wrapper" style="position: relative;">
+                        <input type="text" 
+                               id="participantSearchInput" 
+                               placeholder="Введите имя для поиска или создания" 
+                               class="form-control"
+                               autocomplete="off">
+                        <button class="clear-search-btn" data-action="clear-participant-search" style="display: none;" aria-label="Очистить">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                     <div class="user-list" id="participantsList">
                         ${this.renderParticipantsList(this.availableUsers, '', instrumentId)}
                     </div>
@@ -717,6 +722,7 @@ class EventCreationModal {
     initParticipantSearch(selector, instrumentId) {
         const input = selector.querySelector('#participantSearchInput');
         const list = selector.querySelector('#participantsList');
+        const clearBtn = selector.querySelector('[data-action="clear-participant-search"]');
         
         if (!input || !list) return;
         
@@ -743,6 +749,7 @@ class EventCreationModal {
         // Обработчик ввода
         input.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
+            if (clearBtn) clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
             
             if (query.length === 0) {
                 list.innerHTML = this.renderParticipantsList(this.availableUsers, '', instrumentId);
@@ -781,6 +788,15 @@ class EventCreationModal {
                 }
             }
         });
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                input.value = '';
+                clearBtn.style.display = 'none';
+                list.innerHTML = this.renderParticipantsList(this.availableUsers, '', instrumentId);
+                input.focus();
+            });
+        }
         
         // Обработка клавиш
         input.addEventListener('keydown', (e) => {
@@ -1068,12 +1084,15 @@ class EventCreationModal {
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="custom-participant-input">
+                <div class="search-input-wrapper" style="position: relative;">
                     <input type="text" 
                            id="leaderSearchInput" 
                            placeholder="Введите имя для поиска или создания" 
                            class="form-control"
                            autocomplete="off">
+                    <button class="clear-search-btn" data-action="clear-leader-search" style="display: none;" aria-label="Очистить">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="user-list" id="leadersList">
                     ${this.renderLeadersList(this.availableUsers, '')}
@@ -1125,6 +1144,7 @@ class EventCreationModal {
     initLeaderSearch(selector) {
         const input = selector.querySelector('#leaderSearchInput');
         const list = selector.querySelector('#leadersList');
+        const clearBtn = selector.querySelector('[data-action="clear-leader-search"]');
         
         if (!input || !list) return;
         
@@ -1151,6 +1171,7 @@ class EventCreationModal {
         // Обработчик ввода
         input.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
+            if (clearBtn) clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
             
             if (query.length === 0) {
                 list.innerHTML = this.renderLeadersList(this.availableUsers, '');
@@ -1164,6 +1185,15 @@ class EventCreationModal {
                 list.innerHTML = this.renderLeadersList(filtered, query);
             }
         });
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                input.value = '';
+                clearBtn.style.display = 'none';
+                list.innerHTML = this.renderLeadersList(this.availableUsers, '');
+                input.focus();
+            });
+        }
         
         // Обработка клавиш (как в селекторе участников)
         input.addEventListener('keydown', (e) => {

@@ -1,5 +1,5 @@
-// Service Worker v627 - Archive Save modal close button standardized
-const CACHE_NAME = 'agape-worship-cache-v627';
+// Service Worker v628 - Clear-X buttons across searches
+const CACHE_NAME = 'agape-worship-cache-v628';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

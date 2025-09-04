@@ -1021,6 +1021,33 @@
     z-index: 1;
 }
 
+/* Унифицированная кнопка очистки (внутри .search-input-wrapper) */
+.search-input-wrapper .clear-search-btn {
+    position: absolute;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    background: var(--hover-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-input-wrapper .clear-search-btn:hover,
+.search-input-wrapper .clear-search-btn:active {
+    transform: translateY(-50%);
+}
+
+/* Если показан крестик, можно скрыть лупу (для узких полей) */
+.search-input-wrapper:has(.clear-search-btn:not([style*="display: none"])) i.fa-search.hide-when-clear {
+    display: none !important;
+}
+
 .search-input {
     width: 100%;
     padding: 14px 44px 14px 16px; /* Отступ справа для иконки лупы */

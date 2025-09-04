@@ -666,9 +666,21 @@ function createSetlistCard(setlist) {
  */
 function setupEventHandlers() {
     // Поиск
+    const archiveClearBtn = document.getElementById('archive-clear-main-search');
     elements.searchInput.addEventListener('input', debounce(() => {
+        if (archiveClearBtn) {
+            const has = elements.searchInput.value.trim().length > 0;
+            archiveClearBtn.style.display = has ? 'inline-flex' : 'none';
+        }
         applyFiltersAndSort();
     }, 300));
+    if (archiveClearBtn) {
+        archiveClearBtn.addEventListener('click', () => {
+            elements.searchInput.value = '';
+            archiveClearBtn.style.display = 'none';
+            applyFiltersAndSort();
+        });
+    }
     
     // Группы
     elements.groupsList.addEventListener('click', (e) => {

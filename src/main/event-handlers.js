@@ -208,8 +208,13 @@ function setupSearchEventHandlers() {
     if (ui.searchInput) {
         // Простая debounce функция
         let searchTimeout;
+        const clearMainBtn = document.getElementById('clear-main-search');
         
         ui.searchInput.addEventListener('input', () => {
+            if (clearMainBtn) {
+                const hasValue = ui.searchInput.value && ui.searchInput.value.trim().length > 0;
+                clearMainBtn.style.display = hasValue ? 'inline-flex' : 'none';
+            }
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 if (typeof window.handleMainSearch === 'function') {
@@ -217,6 +222,16 @@ function setupSearchEventHandlers() {
                 }
             }, 150); // Задержка 150мс
         });
+
+        if (clearMainBtn) {
+            clearMainBtn.addEventListener('click', () => {
+                ui.searchInput.value = '';
+                clearMainBtn.style.display = 'none';
+                if (typeof window.handleMainSearch === 'function') {
+                    window.handleMainSearch();
+                }
+            });
+        }
         
         ui.searchInput.addEventListener('blur', () => {
             setTimeout(() => {
@@ -233,6 +248,8 @@ function setupSearchEventHandlers() {
             const searchTerm = e.target.value.trim();
             const currentCategory = ui.categoryFilter ? ui.categoryFilter.value : '';
             const showAddedOnly = ui.showAddedOnly ? ui.showAddedOnly.classList.contains('active') : false;
+            const csBtn = document.getElementById('clear-search');
+            if (csBtn) csBtn.style.display = searchTerm.length > 0 ? 'inline-flex' : 'none';
             
             // Используем модульную функцию
             filterAndDisplaySongsModule(searchTerm, currentCategory, showAddedOnly);
