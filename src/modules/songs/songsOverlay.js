@@ -8,6 +8,7 @@
 import logger from '../../utils/logger.js';
 import { displaySongDetails } from '../../../ui.js';
 import * as state from '../../../js/state.js';
+import { getUserRepertoire } from '../../api/userRepertoire.js';
 
 // Основные категории (первый уровень)
 const MAIN_CATEGORIES = {
@@ -38,6 +39,7 @@ class SongsOverlay {
         this.selectedMainCategory = 'all';
         this.selectedSubCategory = null; // null означает "показать все"
         this.isOpen = false;
+        this.repertoireKeyBySongId = {}; // songId -> preferredKey
         
         this.init();
     }
@@ -151,6 +153,7 @@ class SongsOverlay {
         
         // Загружаем песни из state и применяем сохраненные фильтры
         this.loadSongs();
+        await this.loadUserRepertoireMap();
         this.loadPersistedFilterState();
         this.applyFilterStateToUI();
         this.filterSongs();
@@ -198,6 +201,26 @@ class SongsOverlay {
             logger.error('Error loading songs:', error);
             this.songs = [];
             this.filteredSongs = [];
+        }
+    }
+
+    /**
+     * Загружает карту репертуара пользователя: songId -> preferredKey
+     */
+    async loadUserRepertoireMap() {
+        try {
+            const repSongs = await getUserRepertoire();
+            const map = {};
+            repSongs.forEach(rs => {
+                if (rs?.id && rs?.preferredKey) {
+                    map[rs.id] = rs.preferredKey;
+                }
+            });
+            this.repertoireKeyBySongId = map;
+            logger.log(`🎤 Repertoire map size: ${Object.keys(map).length}`);
+        } catch (e) {
+            logger.warn('⚠️ Не удалось загрузить репертуар пользователя', e);
+            this.repertoireKeyBySongId = {};
         }
     }
     
@@ -408,18 +431,22 @@ class SongsOverlay {
             return;
         }
         
-        songsList.innerHTML = this.filteredSongs.map(song => `
-            <div class="song-item" data-song-id="${song.id}">
-                <div class="song-info">
-                    <span class="song-name">${song.name || 'Без названия'}</span>
-                    ${this.getSongSublineHTML(song)}
+        songsList.innerHTML = this.filteredSongs.map(song => {
+            const userKey = this.repertoireKeyBySongId[song.id];
+            const bpmLabel = (song.BPM || song.bpm) ? `${song.BPM || song.bpm} BPM` : '— BPM';
+            return `
+                <div class="song-item" data-song-id="${song.id}">
+                    <div class="song-info">
+                        <span class="song-name">${song.name || 'Без названия'}</span>
+                        ${this.getSongSublineHTML(song)}
+                    </div>
+                    <div class="song-meta">
+                        ${userKey ? `<span class="song-key">${userKey}</span>` : ''}
+                        <span class="song-bpm">${bpmLabel}</span>
+                    </div>
                 </div>
-                <div class="song-meta">
-                    <span class="song-key">${song['Оригинальная тональность'] || song.defaultKey || 'C'}</span>
-                    <span class="song-bpm">${song.BPM || song.bpm || '—'} BPM</span>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
         
         // Добавляем обработчики клика на песни
         const songItems = songsList.querySelectorAll('.song-item');
@@ -439,8 +466,13 @@ class SongsOverlay {
         if (song) {
             logger.log(`🎵 Selected song: ${song.name}`);
             this.close();
-            // Отображаем песню на главном экране
-            displaySongDetails(song);
+            // Открываем в сохраненной тональности, если есть в репертуаре
+            const userKey = this.repertoireKeyBySongId[song.id];
+            if (userKey) {
+                displaySongDetails(song, userKey);
+            } else {
+                displaySongDetails(song);
+            }
         }
     }
 }

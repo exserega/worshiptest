@@ -1,5 +1,5 @@
-// Service Worker v630t - Repertoire overlay: persist filters + category sublines
-const CACHE_NAME = 'agape-worship-cache-v630t';
+// Service Worker v630u - Songs overlay shows user key; open with saved key
+const CACHE_NAME = 'agape-worship-cache-v630u';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
