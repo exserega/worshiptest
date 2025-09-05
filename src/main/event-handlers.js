@@ -1226,7 +1226,7 @@ function setupSetlistEventHandlers() {
         });
         console.log('🎵 [EventHandlers] Start add songs button attached');
     } else {
-        console.error('🎵 [EventHandlers] start-add-songs не найден!');
+        console.debug('🎵 [EventHandlers] start-add-songs отсутствует (не критично)');
     }
     
     // Кнопка "Пока нет" в модале подтверждения
@@ -1242,7 +1242,7 @@ function setupSetlistEventHandlers() {
         });
         console.log('🎵 [EventHandlers] Skip add songs button attached');
     } else {
-        console.error('🎵 [EventHandlers] skip-add-songs не найден!');
+        console.debug('🎵 [EventHandlers] skip-add-songs отсутствует (не критично)');
     }
     
     // Кнопка закрытия модала подтверждения
@@ -1257,7 +1257,7 @@ function setupSetlistEventHandlers() {
         });
         console.log('❌ [EventHandlers] Close confirm modal button attached');
     } else {
-        console.error('❌ [EventHandlers] close-confirm-modal не найден!');
+        console.debug('❌ [EventHandlers] close-confirm-modal отсутствует (не критично)');
     }
     
     // ОБРАБОТЧИКИ ОВЕРЛЕЯ ДОБАВЛЕНИЯ ПЕСЕН - КРИТИЧЕСКИ ВАЖНО!

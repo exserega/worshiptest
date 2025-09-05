@@ -1,5 +1,5 @@
-// Service Worker v6340 - Parallelize vocalists loading (non-blocking)
-const CACHE_NAME = 'agape-worship-cache-v6340';
+// Service Worker v6341 - Quiet missing-optional logs in event-handlers
+const CACHE_NAME = 'agape-worship-cache-v6341';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
