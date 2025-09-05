@@ -1,5 +1,5 @@
-// Service Worker v6331 - Fix ui.js import duplication; update guest guards
-const CACHE_NAME = 'agape-worship-cache-v6331';
+// Service Worker v6332 - Add preconnect & performance metrics injection across pages
+const CACHE_NAME = 'agape-worship-cache-v6332';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

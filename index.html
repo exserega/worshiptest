@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agape Worship</title>
+    <!-- Performance: preconnect/dns-prefetch for Firebase/Auth/CDN -->
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://securetoken.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <link rel="dns-prefetch" href="https://www.googleapis.com">
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    <link rel="dns-prefetch" href="https://securetoken.googleapis.com">
     <link rel="stylesheet" href="styles.css?v=6.6">
     <link rel="stylesheet" href="styles/branch-selection-modal.css">
     <link rel="stylesheet" href="styles/events-overlay.css">
@@ -28,6 +37,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
       <link rel="manifest" href="/manifest.json">
+  <script>
+    // Performance metrics (basic) - non-blocking, reporting to console
+    (function(){
+      try {
+        window.addEventListener('load', function(){
+          var t = performance.timing;
+          var ttfb = t.responseStart - t.requestStart;
+          var domContentLoaded = t.domContentLoadedEventEnd - t.navigationStart;
+          var loadTotal = t.loadEventEnd ? (t.loadEventEnd - t.navigationStart) : 0;
+          console.log('[Perf] TTFB(ms):', ttfb, 'DCL(ms):', domContentLoaded, 'Load(ms):', loadTotal);
+        });
+      } catch(e) {}
+    })();
+  </script>
   <script>
     // Применяем темную тему сразу, чтобы избежать мигания светлой темы
     (function() {

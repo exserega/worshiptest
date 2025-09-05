@@ -4,6 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Событие - Agape Worship</title>
+    <!-- Performance: preconnect/dns-prefetch for Firebase/Auth/CDN -->
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://securetoken.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <link rel="dns-prefetch" href="https://www.googleapis.com">
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    <link rel="dns-prefetch" href="https://securetoken.googleapis.com">
+    <script>
+      (function(){
+        try {
+          window.addEventListener('load', function(){
+            var t = performance.timing;
+            var ttfb = t.responseStart - t.requestStart;
+            var domContentLoaded = t.domContentLoadedEventEnd - t.navigationStart;
+            var loadTotal = t.loadEventEnd ? (t.loadEventEnd - t.navigationStart) : 0;
+            console.log('[Perf][Event] TTFB:', ttfb, 'DCL:', domContentLoaded, 'Load:', loadTotal);
+          });
+        } catch(e) {}
+      })();
+    </script>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
