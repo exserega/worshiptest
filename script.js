@@ -1144,6 +1144,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveToArchiveBtn) {
         saveToArchiveBtn.addEventListener('click', async () => {
             logger.log('📦 Клик по кнопке "Сохранить в архив"');
+            try {
+                const { hasLimitedAccess } = await import('./src/modules/permissions/permissions.js');
+                const { isUserGuest, showPendingUserMessage, showGuestMessage } = await import('./src/modules/auth/authCheck.js');
+                if (hasLimitedAccess()) {
+                    if (isUserGuest()) {
+                        showGuestMessage('Сохранение в архив');
+                    } else {
+                        showPendingUserMessage('Сохранение в архив');
+                    }
+                    return;
+                }
+            } catch (e) {
+                console.error('Ошибка проверки прав для архива:', e);
+            }
             
             // Получаем текущий выбранный сет-лист из state (как в кнопке календаря)
             const currentSetlistId = window.state?.currentSetlistId;

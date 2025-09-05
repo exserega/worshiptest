@@ -39,7 +39,8 @@ import {
     checkAuth, 
     signInWithGoogle, 
     signOut,
-    getCurrentUser
+    getCurrentUser,
+    isUserGuest
 } from '../modules/auth/authCheck.js';
 
 import {

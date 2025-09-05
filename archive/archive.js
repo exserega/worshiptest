@@ -4,7 +4,7 @@
 
 import logger from '../src/utils/logger.js';
 import { db } from '../firebase-init.js';
-import { getCurrentUser, initAuthGate } from '../src/modules/auth/authCheck.js';
+import { getCurrentUser, initAuthGate, isUserGuest, showPendingUserMessage, showGuestMessage } from '../src/modules/auth/authCheck.js';
 import { 
     loadArchiveSetlists, 
     createArchiveSetlist,
@@ -657,6 +657,27 @@ function createSetlistCard(setlist) {
             }
         });
     });
+
+    // Визуальная блокировка для pending/guest
+    (async () => {
+        try {
+            const { hasLimitedAccess } = await import('../src/modules/permissions/permissions.js');
+            if (hasLimitedAccess()) {
+                // Не используем disabled, оставляем клики для показа сообщений
+                editBtn.classList.add('pending-disabled');
+                editBtn.title = 'Недоступно: ваш аккаунт ожидает подтверждения';
+                const delBtn = card.querySelector('.delete-corner');
+                if (delBtn) {
+                    delBtn.classList.add('pending-disabled');
+                    delBtn.title = 'Недоступно: ваш аккаунт ожидает подтверждения';
+                }
+                actionBtns.forEach(b => {
+                    b.classList.add('pending-disabled');
+                    b.title = 'Недоступно: ваш аккаунт ожидает подтверждения';
+                });
+            }
+        } catch (e) { /* ignore */ }
+    })();
     
     return card;
 }
@@ -721,7 +742,18 @@ function setupEventHandlers() {
     });
     
     // Создание сет-листа
-    elements.createBtn.addEventListener('click', () => {
+    elements.createBtn.addEventListener('click', async () => {
+        try {
+            const { hasLimitedAccess } = await import('../src/modules/permissions/permissions.js');
+            if (hasLimitedAccess()) {
+                if (isUserGuest()) {
+                    showGuestMessage('Создание архивного сет-листа');
+                } else {
+                    showPendingUserMessage('Создание архивного сет-листа');
+                }
+                return;
+            }
+        } catch (e) { /* ignore */ }
         openCreateSetlistModal();
     });
     
@@ -854,8 +886,16 @@ window.addToCalendar = async function(setlistId) {
     }
     
     try {
-        // Проверяем права на создание событий
-        const { canManageEvents } = await import('../src/modules/permissions/permissions.js');
+        // Проверяем права и статус
+        const { hasLimitedAccess, canManageEvents } = await import('../src/modules/permissions/permissions.js');
+        if (hasLimitedAccess()) {
+            if (isUserGuest()) {
+                showGuestMessage('Добавление в календарь');
+            } else {
+                showPendingUserMessage('Добавление в календарь');
+            }
+            return;
+        }
         if (!canManageEvents()) {
             alert('У вас нет прав на создание событий');
             return;
@@ -991,6 +1031,18 @@ async function handleMultipleEvents(events, selectedDate, setlistData) {
 let currentEditingSetlistId = null;
 
 window.addToGroup = function(setlistId) {
+    // Ограничения для pending/guest
+    try {
+        const { hasLimitedAccess } = require('../src/modules/permissions/permissions.js');
+        if (hasLimitedAccess && hasLimitedAccess()) {
+            if (isUserGuest()) {
+                showGuestMessage('Управление группами');
+            } else {
+                showPendingUserMessage('Управление группами');
+            }
+            return;
+        }
+    } catch (e) { /* ignore */ }
     const setlist = archiveSetlists.find(s => s.id === setlistId);
     if (!setlist) return;
     
@@ -1010,6 +1062,17 @@ window.addToGroup = function(setlistId) {
  * Редактирование сет-листа
  */
 window.editSetlist = async function(setlistId) {
+    try {
+        const { hasLimitedAccess } = await import('../src/modules/permissions/permissions.js');
+        if (hasLimitedAccess()) {
+            if (isUserGuest()) {
+                showGuestMessage('Редактирование архивного сет-листа');
+            } else {
+                showPendingUserMessage('Редактирование архивного сет-листа');
+            }
+            return;
+        }
+    } catch (e) { /* ignore */ }
     const setlist = archiveSetlists.find(s => s.id === setlistId);
     if (!setlist) {
         showError('Сет-лист не найден');
@@ -1033,6 +1096,17 @@ window.editSetlist = async function(setlistId) {
  * Удаление сет-листа
  */
 window.deleteSetlist = async function(setlistId) {
+    try {
+        const { hasLimitedAccess } = await import('../src/modules/permissions/permissions.js');
+        if (hasLimitedAccess()) {
+            if (isUserGuest()) {
+                showGuestMessage('Удаление архивного сет-листа');
+            } else {
+                showPendingUserMessage('Удаление архивного сет-листа');
+            }
+            return;
+        }
+    } catch (e) { /* ignore */ }
     const setlist = archiveSetlists.find(s => s.id === setlistId);
     if (!setlist) {
         showError('Сет-лист не найден');

@@ -3,7 +3,7 @@
  */
 
 import logger from '../../utils/logger.js';
-import { getCurrentUser } from '../auth/authCheck.js';
+import { getCurrentUser, isUserGuest, showPendingUserMessage, showGuestMessage } from '../auth/authCheck.js';
 import { 
     createArchiveGroup, 
     updateArchiveGroup, 
@@ -78,7 +78,20 @@ class ArchiveGroupsManager {
         // Кнопка создания группы
         const addGroupBtn = document.getElementById('add-group-btn');
         if (addGroupBtn) {
-            addGroupBtn.addEventListener('click', () => this.openCreateModal());
+            addGroupBtn.addEventListener('click', async () => {
+                try {
+                    const { hasLimitedAccess } = await import('../permissions/permissions.js');
+                    if (hasLimitedAccess()) {
+                        if (isUserGuest()) {
+                            showGuestMessage('Создание группы архива');
+                        } else {
+                            showPendingUserMessage('Создание группы архива');
+                        }
+                        return;
+                    }
+                } catch (e) { /* ignore */ }
+                this.openCreateModal();
+            });
         }
         
         // Кнопка списка групп
