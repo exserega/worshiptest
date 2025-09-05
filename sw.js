@@ -1,5 +1,5 @@
-// Service Worker v6348 - Add docs: assets, QA, store metadata
-const CACHE_NAME = 'agape-worship-cache-v6348';
+// Service Worker v6349 - Add local setup SDKs doc
+const CACHE_NAME = 'agape-worship-cache-v6349';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
