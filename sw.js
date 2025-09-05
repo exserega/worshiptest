@@ -1,5 +1,5 @@
-// Service Worker v6330 - Add notifications toast + alert shim
-const CACHE_NAME = 'agape-worship-cache-v6330';
+// Service Worker v6329 - Share: keep instrument order consistent with event page
+const CACHE_NAME = 'agape-worship-cache-v6329';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

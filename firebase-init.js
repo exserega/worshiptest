@@ -64,22 +64,3 @@ if (isIOSSafari) {
 
 // Экспорт для модулей
 export { firebase, auth, db, storage, firebaseConfig };
-
-// ================================
-// Global alert shim → dark toast
-// ================================
-try {
-    (async () => {
-        const url = new URL(window.location.href);
-        const nativeAlertOnly = url.searchParams.get('nativeAlert') === '1';
-        if (nativeAlertOnly) return;
-        if (!window._nativeAlert) window._nativeAlert = window.alert.bind(window);
-        const { showToast } = await import('/src/ui/notifications.js');
-        window.alert = function(message) {
-            try { showToast(String(message || ''), 'warning', 3000); } catch (e) { window._nativeAlert(String(message || '')); }
-        };
-        console.log('✅ Alert shim enabled (toast)');
-    })();
-} catch (e) {
-    console.warn('⚠️ Alert shim failed, using native alert', e);
-}
