@@ -1,5 +1,5 @@
-// Service Worker v6350 - Capacitor assets generator config
-const CACHE_NAME = 'agape-worship-cache-v6350';
+// Service Worker v6351 - Render PNG assets from SVG
+const CACHE_NAME = 'agape-worship-cache-v6351';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
