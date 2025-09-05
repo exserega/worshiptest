@@ -16,6 +16,7 @@ function ensureContainer() {
     container.style.flexDirection = 'column';
     container.style.gap = '8px';
     container.style.pointerEvents = 'none';
+    container.style.paddingBottom = 'env(safe-area-inset-bottom, 0)';
     document.body.appendChild(container);
   }
   return container;
@@ -25,6 +26,8 @@ function makeToastElement(message, type) {
   const el = document.createElement('div');
   el.className = `agw-toast agw-toast-${type || 'info'}`;
   el.textContent = String(message || '');
+  el.setAttribute('role', 'status');
+  el.setAttribute('aria-live', 'polite');
   el.style.background = 'rgba(17, 24, 39, 0.95)'; // #111827
   el.style.color = '#e5e7eb';
   el.style.border = '1px solid #374151';
@@ -32,6 +35,7 @@ function makeToastElement(message, type) {
   el.style.padding = '10px 12px';
   el.style.fontSize = '0.9rem';
   el.style.lineHeight = '1.3';
+  el.style.whiteSpace = 'pre-line';
   el.style.boxShadow = '0 6px 20px rgba(0,0,0,0.35)';
   el.style.maxWidth = '86vw';
   el.style.pointerEvents = 'auto';

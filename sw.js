@@ -1,5 +1,5 @@
-// Service Worker v6330 - Add notifications toast + alert shim
-const CACHE_NAME = 'agape-worship-cache-v6330';
+// Service Worker v6331 - Notifications: ARIA, safe-area, type detection
+const CACHE_NAME = 'agape-worship-cache-v6331';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
