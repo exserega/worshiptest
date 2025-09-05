@@ -133,8 +133,8 @@ async function loadArchiveData() {
         // Загружаем архивные сет-листы
         archiveSetlists = await loadArchiveSetlists(currentUser.branchId);
         
-        // Загружаем пользователей филиала
-        await loadBranchUsers();
+        // Пользователей филиала для сортировок больше не грузим сразу.
+        // Ленивая загрузка произойдёт при первом открытии списка сортировок.
         
         // Применяем фильтры и сортировку
         applyFiltersAndSort();
@@ -388,12 +388,14 @@ function renderSortButtons() {
         <button class="sort-btn ${currentSort === 'popular' ? 'active' : ''}" data-sort="popular">Популярные</button>
     `;
     
-    // Добавляем кнопки для пользователей
-    const userButtons = branchUsers.map(user => 
-        `<button class="sort-btn ${currentSort === `user-${user.id}` ? 'active' : ''}" 
-                 data-sort="user-${user.id}" 
-                 title="${user.name} (${user.setlistCount})">${user.name}</button>`
-    ).join('');
+    // Добавляем кнопки для пользователей (лениво, если список загружен)
+    const userButtons = branchUsers.length > 0
+        ? branchUsers.map(user => 
+            `<button class="sort-btn ${currentSort === `user-${user.id}` ? 'active' : ''}" 
+                     data-sort="user-${user.id}" 
+                     title="${user.name} (${user.setlistCount})">${user.name}</button>`
+          ).join('')
+        : '';
     
     elements.sortButtonsContainer.innerHTML = baseButtons + userButtons;
     
@@ -770,7 +772,15 @@ function setupEventHandlers() {
     
     // Список сортировок
     if (elements.listSortsBtn) {
-        elements.listSortsBtn.addEventListener('click', () => {
+        elements.listSortsBtn.addEventListener('click', async () => {
+            // Ленивая загрузка пользователей филиала для сортировок
+            try {
+                if (!branchUsers || branchUsers.length === 0) {
+                    await loadBranchUsers();
+                }
+            } catch (e) {
+                logger.warn('Не удалось загрузить пользователей филиала перед открытием сортировок:', e);
+            }
             openSortsListModal();
         });
     }

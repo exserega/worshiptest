@@ -50,9 +50,6 @@ class SearchWorkerManager {
                 this.fallbackToMainThread();
             });
             
-            // Инициализируем worker
-            this.worker.postMessage({ type: 'init' });
-            
             console.log('🧵 SearchWorkerManager инициализирован');
             
         } catch (error) {
