@@ -6,6 +6,22 @@
   "server": {
     "androidScheme": "https",
     "iosScheme": "https"
+  },
+  "assets": {
+    "icon": {
+      "sources": [
+        {
+          "src": "resources/icon.png"
+        }
+      ]
+    },
+    "splash": {
+      "sources": [
+        {
+          "src": "resources/splash.png"
+        }
+      ]
+    }
   }
 }
 

@@ -1,5 +1,5 @@
-// Service Worker v6351 - Render PNG assets from SVG
-const CACHE_NAME = 'agape-worship-cache-v6351';
+// Service Worker v6352 - Generate PWA icons via @capacitor/assets
+const CACHE_NAME = 'agape-worship-cache-v6352';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
