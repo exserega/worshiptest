@@ -76,15 +76,7 @@ try {
         if (!window._nativeAlert) window._nativeAlert = window.alert.bind(window);
         const { showToast } = await import('/src/ui/notifications.js');
         window.alert = function(message) {
-            try {
-                const msg = String(message || '');
-                const lower = msg.toLowerCase();
-                const type = /ошиб|error|fail|не удалось|⚠️|❌/.test(lower) ? 'error'
-                          : /успеш|готово|ok|✅|success/.test(lower) ? 'success'
-                          : /внимани|предупр|warning|!/.test(lower) ? 'warning'
-                          : 'info';
-                showToast(msg, type, 3500);
-            } catch (e) { window._nativeAlert(String(message || '')); }
+            try { showToast(String(message || ''), 'warning', 3000); } catch (e) { window._nativeAlert(String(message || '')); }
         };
         console.log('✅ Alert shim enabled (toast)');
     })();
