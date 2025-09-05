@@ -1,0 +1,11 @@
+{
+  "appId": "com.agapeworship.app",
+  "appName": "Agape Worship",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "https"
+  }
+}
+

@@ -1,1 +1,11 @@
+android/
+ios/
+*.iml
+.idea/
+/.DS_Store
+/.gradle/
+/build/
+xcuserdata/
+Pods/
+
 node_modules

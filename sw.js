@@ -1,5 +1,5 @@
-// Service Worker v6344 - Auth redirect flow support prep (no behavioral change)
-const CACHE_NAME = 'agape-worship-cache-v6344';
+// Service Worker v6345 - Add Capacitor config and scripts (no runtime change)
+const CACHE_NAME = 'agape-worship-cache-v6345';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
