@@ -71,6 +71,71 @@ const vocalistsCollection = collection(db, "vocalists");
 // SONGS API
 // ====================================
 
+// Ключи sessionStorage для кэша в пределах сессии вкладки
+const SESSION_CACHE_KEYS = {
+    songs: 'aw_allSongs_v1',
+    songsBySheet: 'aw_songsBySheet_v1',
+    ts: 'aw_songs_cache_ts'
+};
+
+/**
+ * Вспомогательная функция: загрузка песен из Firestore и обновление состояния/кэша
+ */
+async function fetchSongsFromFirestoreAndUpdateState() {
+    let querySnapshot;
+    try {
+        // Пытаемся читать из сети
+        querySnapshot = await getDocs(songsCollection);
+    } catch (netErr) {
+        console.warn('⚠️ Сеть недоступна, читаем песни из офлайн-кэша');
+        querySnapshot = await getDocsFromCache(songsCollection);
+    }
+    let newAllSongs = [];
+    let newSongsBySheet = {};
+
+    querySnapshot.forEach(doc => {
+        const songData = doc.data();
+        const songId = doc.id;
+        const song = { id: songId, name: songId, ...songData };
+        newAllSongs.push(song);
+
+        const sheetName = song.sheet;
+        if (sheetName) {
+            if (!newSongsBySheet[sheetName]) {
+                newSongsBySheet[sheetName] = [];
+            }
+            newSongsBySheet[sheetName].push(song);
+        } else {
+            console.warn(`Песня "${song.name}" (${songId}) не имеет поля 'sheet' (категории).`);
+        }
+    });
+
+    newAllSongs.sort((a, b) => a.name.localeCompare(b.name));
+    for (const category in newSongsBySheet) {
+        newSongsBySheet[category].sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // Обновляем state
+    state.setAllSongs(newAllSongs);
+    state.setSongsBySheet(newSongsBySheet);
+    console.log(`Загружено ${state.allSongs.length} песен.`);
+
+    // Сохраняем в sessionStorage для текущей вкладки/сессии
+    try {
+        sessionStorage.setItem(SESSION_CACHE_KEYS.songs, JSON.stringify(newAllSongs));
+        sessionStorage.setItem(SESSION_CACHE_KEYS.songsBySheet, JSON.stringify(newSongsBySheet));
+        sessionStorage.setItem(SESSION_CACHE_KEYS.ts, String(Date.now()));
+    } catch (e) {
+        // Игнорируем ошибки квоты/доступности sessionStorage
+        console.warn('⚠️ Не удалось сохранить кэш песен в sessionStorage:', e);
+    }
+
+    // Обновляем базу данных в Web Worker (если доступен)
+    if (typeof window !== 'undefined' && window.searchWorkerManager) {
+        window.searchWorkerManager.updateSongsDatabase(newAllSongs);
+    }
+}
+
 /**
  * Загружает все песни из Firestore и сохраняет в state
  * @returns {Promise<void>}
@@ -78,47 +143,30 @@ const vocalistsCollection = collection(db, "vocalists");
 export async function loadAllSongsFromFirestore() {
     try {
         console.log("Загрузка всех песен из Firestore...");
-        let querySnapshot;
+
+        // 1) Пробуем sessionStorage (ускорение повторных загрузок в рамках вкладки)
         try {
-            // Пытаемся читать из сети
-            querySnapshot = await getDocs(songsCollection);
-        } catch (netErr) {
-            console.warn('⚠️ Сеть недоступна, читаем песни из офлайн-кэша');
-            querySnapshot = await getDocsFromCache(songsCollection);
-        }
-        let newAllSongs = [];
-        let newSongsBySheet = {};
-
-        querySnapshot.forEach(doc => {
-            const songData = doc.data();
-            const songId = doc.id;
-            const song = { id: songId, name: songId, ...songData };
-            newAllSongs.push(song);
-
-            const sheetName = song.sheet;
-            if (sheetName) {
-                if (!newSongsBySheet[sheetName]) {
-                    newSongsBySheet[sheetName] = [];
+            const cachedSongsJSON = sessionStorage.getItem(SESSION_CACHE_KEYS.songs);
+            const cachedBySheetJSON = sessionStorage.getItem(SESSION_CACHE_KEYS.songsBySheet);
+            if (cachedSongsJSON && cachedBySheetJSON) {
+                const cachedSongs = JSON.parse(cachedSongsJSON);
+                const cachedBySheet = JSON.parse(cachedBySheetJSON);
+                state.setAllSongs(cachedSongs);
+                state.setSongsBySheet(cachedBySheet);
+                console.log(`♻️ Используем sessionStorage для песен: ${cachedSongs.length}`);
+                if (typeof window !== 'undefined' && window.searchWorkerManager) {
+                    window.searchWorkerManager.updateSongsDatabase(cachedSongs);
                 }
-                newSongsBySheet[sheetName].push(song);
-            } else {
-                console.warn(`Песня "${song.name}" (${songId}) не имеет поля 'sheet' (категории).`);
+                // Фоновое обновление без ожидания
+                fetchSongsFromFirestoreAndUpdateState().catch(e => console.warn('⚠️ Не удалось обновить песни в фоне:', e));
+                return;
             }
-        });
-
-        newAllSongs.sort((a, b) => a.name.localeCompare(b.name));
-        for (const category in newSongsBySheet) {
-            newSongsBySheet[category].sort((a, b) => a.name.localeCompare(b.name));
+        } catch (e) {
+            console.warn('⚠️ Ошибка чтения sessionStorage для песен:', e);
         }
-        
-        state.setAllSongs(newAllSongs);
-        state.setSongsBySheet(newSongsBySheet);
-        console.log(`Загружено ${state.allSongs.length} песен.`);
-        
-        // Обновляем базу данных в Web Worker (если доступен)
-        // if (typeof window !== 'undefined' && window.searchWorkerManager) {
-        //     window.searchWorkerManager.updateSongsDatabase(newAllSongs);
-        // }
+
+        // 2) Если кэша нет — грузим из Firestore как обычно
+        await fetchSongsFromFirestoreAndUpdateState();
     } catch (error) {
         console.error('❌ Ошибка загрузки песен:', error);
         throw error;

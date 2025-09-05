@@ -1,5 +1,5 @@
-// Service Worker v6337 - Lazy init SearchWorker; defer branch users
-const CACHE_NAME = 'agape-worship-cache-v6337';
+// Service Worker v6338 - SessionStorage cache for songs; lazy search worker
+const CACHE_NAME = 'agape-worship-cache-v6338';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
