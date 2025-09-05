@@ -3,7 +3,6 @@
 import { SONG_CATEGORIES_ORDER, MIN_FONT_SIZE, chords } from './js/constants.js';
 import logger from './src/utils/logger.js';
 import { canManageEvents } from './src/modules/permissions/permissions.js';
-import { isUserGuest } from './src/modules/auth/authCheck.js';
 
 // --- UTILITY FUNCTIONS ---
 

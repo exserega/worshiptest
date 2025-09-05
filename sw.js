@@ -1,5 +1,5 @@
-// Service Worker v6330 - Guards for pending/guest on archive and save-to-archive
-const CACHE_NAME = 'agape-worship-cache-v6330';
+// Service Worker v6331 - Fix ui.js import duplication; update guest guards
+const CACHE_NAME = 'agape-worship-cache-v6331';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
