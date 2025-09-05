@@ -78,7 +78,7 @@ export async function initializeApp() {
         // THEME SETUP
         // ====================================
         
-        // Показываем индикатор загрузки
+        // Показываем индикатор загрузки (не блокируем UI — параллелим задачи)
         showLoadingIndicator();
         
         // Настройка темы (должна быть первой)
@@ -95,11 +95,11 @@ export async function initializeApp() {
         // Настройка swipe жестов
         setupSwipeToClose();
         
-        // Инициализация метронома
-        await initializeMetronome();
-        
-        // Загрузка данных
-        await loadInitialData();
+        // Параллельная инициализация: метроном и загрузка данных
+        await Promise.all([
+            initializeMetronome(),
+            loadInitialData()
+        ]);
         
         // Настройка мобильных оптимизаций
         setupMobileOptimizations();

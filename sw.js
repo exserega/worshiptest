@@ -1,5 +1,5 @@
-// Service Worker v6332 - Add preconnect & performance metrics injection across pages
-const CACHE_NAME = 'agape-worship-cache-v6332';
+// Service Worker v6333 - Preconnect on more pages (settings, admin)
+const CACHE_NAME = 'agape-worship-cache-v6333';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

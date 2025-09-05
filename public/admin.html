@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель администратора</title>
+    <!-- Performance: preconnect/dns-prefetch for Firebase/Auth/CDN -->
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://securetoken.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <link rel="dns-prefetch" href="https://www.googleapis.com">
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    <link rel="dns-prefetch" href="https://securetoken.googleapis.com">
+    <script>
+      (function(){
+        try {
+          window.addEventListener('load', function(){
+            var t = performance.timing;
+            var ttfb = t.responseStart - t.requestStart;
+            var dcl = t.domContentLoadedEventEnd - t.navigationStart;
+            console.log('[Perf][Admin] TTFB:', ttfb, 'DCL:', dcl);
+          });
+        } catch(e) {}
+      })();
+    </script>
     <link rel="stylesheet" href="../css/admin.css">
     
     <!-- Google Fonts -->
