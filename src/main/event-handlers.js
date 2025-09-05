@@ -772,6 +772,11 @@ function setupSetlistEventHandlers() {
     if (ui.toggleRepertoireButton) {
         ui.toggleRepertoireButton.addEventListener('click', async () => {
             console.log('🎭 [EventHandlers] Repertoire button clicked');
+            // Гость: недоступно
+            if (isUserGuest()) {
+                showGuestMessage('Репертуар');
+                return;
+            }
             
             // Закрываем все панели
             ui.closeAllSidePanels();
@@ -842,6 +847,12 @@ function setupSetlistEventHandlers() {
         createSetlistBtn.addEventListener('click', async () => {
             console.log('🎵 [EventHandlers] Create setlist button clicked');
             
+            // Гость: сразу уведомление
+            if (isUserGuest()) {
+                showGuestMessage('Создание сет-листов');
+                return;
+            }
+
             // Проверяем права для текущего филиала
             let canEdit = true;
             try {
@@ -1578,6 +1589,11 @@ function setupSongEventHandlers() {
         console.log('🎤 [EventHandlers] Repertoire (mic) button found, attaching handler');
         ui.repertoireButton.addEventListener('click', async () => {
             console.log('🎤 [EventHandlers] Repertoire (mic) button clicked');
+            // Гость: недоступно
+            if (isUserGuest()) {
+                showGuestMessage('Репертуар');
+                return;
+            }
             // Используем window.currentSong, так как там хранится текущая песня
             const currentSong = window.currentSong;
             console.log('🎤 [EventHandlers] Current song:', currentSong);
