@@ -1030,11 +1030,11 @@ async function handleMultipleEvents(events, selectedDate, setlistData) {
  */
 let currentEditingSetlistId = null;
 
-window.addToGroup = function(setlistId) {
+window.addToGroup = async function(setlistId) {
     // Ограничения для pending/guest
     try {
-        const { hasLimitedAccess } = require('../src/modules/permissions/permissions.js');
-        if (hasLimitedAccess && hasLimitedAccess()) {
+        const { hasLimitedAccess } = await import('../src/modules/permissions/permissions.js');
+        if (hasLimitedAccess()) {
             if (isUserGuest()) {
                 showGuestMessage('Управление группами');
             } else {
