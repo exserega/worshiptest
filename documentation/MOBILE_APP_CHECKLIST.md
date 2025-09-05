@@ -35,6 +35,20 @@
   - [ ] Проверить поддержку Google/Apple Sign-In (для iOS потребуется Apple Sign-In, для публикации)
 - [ ] Точечно править `src/modules/auth/login.js`: ветка для WebView определяет использование Redirect
 
+Подробности OAuth/redirect (для настройки в Firebase Console):
+- Разрешённые домены аутентификации:
+  - `agapeworship.asia` (основной домен приложения)
+  - `song-archive-389a6.firebaseapp.com` (authDomain из конфига Firebase)
+- Google OAuth: Authorised redirect URIs (в экране провайдера Google)
+  - `https://song-archive-389a6.firebaseapp.com/__/auth/handler`
+  - (опционально, если используем пользовательский домен): `https://agapeworship.asia/__/auth/handler`
+- Apple Sign-In:
+  - Service ID: зарегистрировать на Apple Developer
+  - Return URLs: те же Redirect URIs (Firebase handler), либо свои URL на домене
+  - Настроить Email/Name scopes и связку с Firebase
+
+Важно: При использовании нативной оболочки (Capacitor) сначала проверяем `signInWithRedirect` внутри WebView. Если провайдер блокирует WebView/Third‑party cookies на iOS, используем `@capacitor/browser` для открытия внешнего браузера и возврат по redirect URI (потребуется схема и intercept) — это advanced‑путь; исполним после первичных тестов.
+
 ### 6. Конфигурации платформ
 - Android (AndroidManifest.xml / strings.xml):
   - [ ] Указать intent-filter для схемы редиректа

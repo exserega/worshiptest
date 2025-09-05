@@ -1,5 +1,5 @@
-// Service Worker v6346 - Add Capacitor plugins deps (no runtime change)
-const CACHE_NAME = 'agape-worship-cache-v6346';
+// Service Worker v6347 - Docs for OAuth redirect URIs
+const CACHE_NAME = 'agape-worship-cache-v6347';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
