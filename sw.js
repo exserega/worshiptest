@@ -1,5 +1,5 @@
-// Service Worker v6349 - Add local setup SDKs doc
-const CACHE_NAME = 'agape-worship-cache-v6349';
+// Service Worker v6350 - Capacitor assets generator config
+const CACHE_NAME = 'agape-worship-cache-v6350';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

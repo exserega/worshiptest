@@ -14,7 +14,8 @@
     "cap:init": "npx cap init \"Agape Worship\" com.agapeworship.app --web-dir=.",
     "cap:sync": "npx cap sync",
     "cap:open:android": "npx cap open android",
-    "cap:open:ios": "npx cap open ios"
+    "cap:open:ios": "npx cap open ios",
+    "assets:generate": "npx @capacitor/assets generate"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
@@ -23,7 +24,8 @@
     "eslint-plugin-n": "^16.6.2",
     "http-server": "^14.1.1",
     "@capacitor/cli": "^6.2.0",
-    "@capacitor/core": "^6.2.0"
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/assets": "^3.0.5"
   }
 }
 
