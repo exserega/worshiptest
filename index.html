@@ -575,22 +575,7 @@
     </button>
 </nav>
 
-<!-- Блокирующий оверлей до полной готовности приложения -->
-<div id="app-blocker" style="position:fixed;inset:0;z-index:9999;background:#111827;display:flex;align-items:center;justify-content:center;">
-  <div style="color:#9ca3af;font-size:14px;letter-spacing:.3px">Загрузка...</div>
-  <script>
-    // Снимаем блокер как только JS выполнится и событие app:ready случится
-    (function(){
-      function removeBlocker(){
-        var el = document.getElementById('app-blocker');
-        if(el){ el.parentNode.removeChild(el); }
-      }
-      document.addEventListener('app:ready', removeBlocker);
-      // Фолбэк: если что-то пошло не так — снимем через 5 секунд
-      setTimeout(removeBlocker, 5000);
-    })();
-  </script>
-</div>
+ 
 
   <!-- New Metronome Module - No external libraries needed -->
   
