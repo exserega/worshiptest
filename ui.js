@@ -3,6 +3,7 @@
 import { SONG_CATEGORIES_ORDER, MIN_FONT_SIZE, chords } from './js/constants.js';
 import logger from './src/utils/logger.js';
 import { canManageEvents } from './src/modules/permissions/permissions.js';
+import { isUserGuest } from './src/modules/auth/authCheck.js';
 
 // --- UTILITY FUNCTIONS ---
 
@@ -1328,19 +1329,12 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
     // Показываем/скрываем кнопку "Сохранить в архив"
     const saveToArchiveBtn = document.getElementById('save-to-archive-btn');
     if (saveToArchiveBtn) {
-        try {
-            // Прячем для гостевого режима
-            const { isUserGuest } = await import('./src/modules/auth/authCheck.js');
-            if (isUserGuest && isUserGuest()) {
-                saveToArchiveBtn.style.display = 'none';
-                logger.log('📦 Кнопка "Сохранить в архив" скрыта для гостя');
-            } else {
-                saveToArchiveBtn.style.display = 'flex';
-                logger.log('📦 Кнопка "Сохранить в архив" показана');
-            }
-        } catch (e) {
-            // Fallback: показываем
+        if (isUserGuest && isUserGuest()) {
+            saveToArchiveBtn.style.display = 'none';
+            logger.log('📦 Кнопка "Сохранить в архив" скрыта для гостя');
+        } else {
             saveToArchiveBtn.style.display = 'flex';
+            logger.log('📦 Кнопка "Сохранить в архив" показана');
         }
     }
 
