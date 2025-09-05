@@ -19,7 +19,7 @@ class SearchWorkerManager {
         this.mainSearchQueue = [];
         this.overlaySearchQueue = [];
         
-        this.initWorker();
+        // Ленивая инициализация: worker будет создан при первом поиске
     }
     
     /**
@@ -56,6 +56,15 @@ class SearchWorkerManager {
             console.error('❌ Ошибка создания Worker:', error);
             this.fallbackToMainThread();
         }
+    }
+    
+    /**
+     * Обеспечить инициализацию worker по требованию
+     */
+    async ensureWorkerInitialized() {
+        if (this.fallbackMode) return; // В режиме fallback worker не нужен
+        if (this.worker) return;       // Уже создан
+        await this.initWorker();
     }
     
     /**
@@ -209,6 +218,8 @@ class SearchWorkerManager {
      * Основной метод поиска
      */
     async search(query, songs, options = {}, searchType = 'main') {
+        // Гарантируем ленивую инициализацию перед первым поиском
+        await this.ensureWorkerInitialized();
         return new Promise((resolve, reject) => {
             const requestId = this.generateRequestId();
             const callback = (error, results, metadata) => {

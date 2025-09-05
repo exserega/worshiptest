@@ -1,5 +1,5 @@
-// Service Worker v6336 - Defer branch users loading; refine worker logs
-const CACHE_NAME = 'agape-worship-cache-v6336';
+// Service Worker v6337 - Lazy init SearchWorker; defer branch users
+const CACHE_NAME = 'agape-worship-cache-v6337';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
