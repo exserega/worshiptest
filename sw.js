@@ -1,5 +1,5 @@
-// Service Worker v6339 - SessionStorage branchId; finalize preconnect/metrics
-const CACHE_NAME = 'agape-worship-cache-v6339';
+// Service Worker v6340 - Parallelize vocalists loading (non-blocking)
+const CACHE_NAME = 'agape-worship-cache-v6340';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -387,17 +387,23 @@ async function loadInitialData() {
     console.log('📊 [Initialization] loadInitialData');
     
     try {
-        // Загружаем все песни из Firestore
+        // Загружаем песни (с кэшем в сессии)
         await api.loadAllSongsFromFirestore();
         
         // Заполняем селекторы
         populateSelectors();
         
-        // Загружаем вокалистов
-        const vocalists = await api.loadVocalists();
-        if (typeof ui.populateVocalistSelect === 'function') {
-            ui.populateVocalistSelect(vocalists);
-        }
+        // Вокалистов грузим в фоне — не блокируем оставшуюся инициализацию
+        (async () => {
+            try {
+                const vocalists = await api.loadVocalists();
+                if (typeof ui.populateVocalistSelect === 'function') {
+                    ui.populateVocalistSelect(vocalists);
+                }
+            } catch (e) {
+                console.warn('⚠️ [Initialization] Не удалось загрузить список вокалистов фоном:', e);
+            }
+        })();
         
         // Делаем search worker manager доступным глобально
         if (typeof window !== 'undefined') {
