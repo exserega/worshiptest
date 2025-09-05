@@ -1,5 +1,5 @@
-// Service Worker v6343 - Revert app-blocker overlay changes
-const CACHE_NAME = 'agape-worship-cache-v6343';
+// Service Worker v6344 - Auth redirect flow support prep (no behavioral change)
+const CACHE_NAME = 'agape-worship-cache-v6344';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

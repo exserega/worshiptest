@@ -37,6 +37,23 @@ const elements = {
     authLoading: document.getElementById('auth-loading')
 };
 
+// Определение: нативная оболочка (Capacitor WebView) или обычный веб
+function isNativeWebView() {
+    try {
+        // Если Capacitor загружен в WebView, объект присутствует
+        if (window.Capacitor && typeof window.Capacitor === 'object') {
+            // В новых версиях есть метод isNativePlatform
+            if (typeof window.Capacitor.isNativePlatform === 'function') {
+                return !!window.Capacitor.isNativePlatform();
+            }
+            return true;
+        }
+        return false;
+    } catch (e) {
+        return false;
+    }
+}
+
 // ====================================
 // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 // ====================================
@@ -123,16 +140,17 @@ async function handleGoogleLogin() {
     
     try {
         const provider = new firebase.auth.GoogleAuthProvider();
-        const result = await auth.signInWithPopup(provider);
-        
-        await createOrUpdateUser(result.user);
-        
-        logger.log('✅ Google авторизация успешна');
-        showMessage('Вход выполнен успешно!', 'success');
-        
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 1000);
+        if (isNativeWebView()) {
+            // В нативной оболочке используем Redirect-поток
+            await auth.signInWithRedirect(provider);
+            return;
+        } else {
+            const result = await auth.signInWithPopup(provider);
+            await createOrUpdateUser(result.user);
+            logger.log('✅ Google авторизация успешна');
+            showMessage('Вход выполнен успешно!', 'success');
+            setTimeout(() => { window.location.href = '/'; }, 1000);
+        }
         
     } catch (error) {
         logger.error('❌ Google login error:', error);
@@ -150,17 +168,16 @@ async function handleAppleLogin() {
         const provider = new firebase.auth.OAuthProvider('apple.com');
         provider.addScope('email');
         provider.addScope('name');
-        
-        const result = await auth.signInWithPopup(provider);
-        
-        await createOrUpdateUser(result.user);
-        
-        logger.log('✅ Apple авторизация успешна');
-        showMessage('Вход выполнен успешно!', 'success');
-        
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 1000);
+        if (isNativeWebView()) {
+            await auth.signInWithRedirect(provider);
+            return;
+        } else {
+            const result = await auth.signInWithPopup(provider);
+            await createOrUpdateUser(result.user);
+            logger.log('✅ Apple авторизация успешна');
+            showMessage('Вход выполнен успешно!', 'success');
+            setTimeout(() => { window.location.href = '/'; }, 1000);
+        }
         
     } catch (error) {
         logger.error('❌ Apple login error:', error);
@@ -363,6 +380,24 @@ function init() {
             window.location.href = '/';
         }
     });
+
+    // Обрабатываем Redirect-поток (нативные Android/iOS WebView)
+    auth.getRedirectResult()
+        .then(async (result) => {
+            if (result && result.user) {
+                try {
+                    await createOrUpdateUser(result.user);
+                    logger.log('✅ Redirect авторизация успешна');
+                    window.location.href = '/';
+                } catch (e) {
+                    logger.error('❌ Ошибка post-redirect обработки:', e);
+                    showMessage(getErrorMessage(e.code));
+                }
+            }
+        })
+        .catch(err => {
+            logger.error('❌ Redirect login error:', err);
+        });
 }
 
 // Запуск при загрузке
