@@ -1,5 +1,5 @@
-// Service Worker v6338 - SessionStorage cache for songs; lazy search worker
-const CACHE_NAME = 'agape-worship-cache-v6338';
+// Service Worker v6339 - SessionStorage branchId; finalize preconnect/metrics
+const CACHE_NAME = 'agape-worship-cache-v6339';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

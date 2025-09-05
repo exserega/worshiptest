@@ -445,11 +445,21 @@ export async function loadSetlists() {
             }
         }
         
-        // Проверяем выбранный филиал в селекторе
+        // Проверяем выбранный филиал в селекторе (с sessionStorage-кэшем)
         let selectedBranchId = userBranchId; // По умолчанию - филиал пользователя
+        try {
+            const ssBranch = sessionStorage.getItem('aw_selected_branch');
+            if (ssBranch) {
+                selectedBranchId = ssBranch;
+            }
+        } catch (e) { /* ignore */ }
         try {
             const { getSelectedBranchId } = await import('../modules/branches/branchSelector.js');
             selectedBranchId = getSelectedBranchId() || userBranchId;
+            // Сохраняем выбор в sessionStorage для текущей вкладки
+            if (selectedBranchId) {
+                try { sessionStorage.setItem('aw_selected_branch', selectedBranchId); } catch (e) { /* ignore */ }
+            }
         } catch (e) {
             // Если модуль еще не загружен, используем филиал пользователя
             console.log('Branch selector not initialized yet');
