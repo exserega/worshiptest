@@ -39,7 +39,7 @@ class EventPlayer {
                 <!-- Первая строка: закрытие, переключатель панели, позиция, навигация -->
                 <div class="player-header-row-1">
                     <div class="player-header-left">
-                        <button class="icon-button-small player-close" aria-label="Закрыть плеер">
+                        <button class="player-close-btn" aria-label="Закрыть плеер">
                             <i class="fas fa-times"></i>
                         </button>
                         <button class="player-toggle-controls-btn" aria-label="Скрыть панель инструментов" title="Скрыть панель инструментов">
@@ -129,7 +129,7 @@ class EventPlayer {
     
     attachEventHandlers() {
         // Закрытие плеера
-        const closeBtn = this.overlay.querySelector('.player-close');
+        const closeBtn = this.overlay.querySelector('.player-close-btn');
         closeBtn.addEventListener('click', () => this.close());
         
         // Переключение панели инструментов
