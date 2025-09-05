@@ -1,5 +1,5 @@
-// Service Worker v6332 - Precache notifications module for alert shim
-const CACHE_NAME = 'agape-worship-cache-v6332';
+// Service Worker v6331 - Notifications: ARIA, safe-area, type detection
+const CACHE_NAME = 'agape-worship-cache-v6331';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
@@ -34,8 +34,6 @@ const urlsToCache = [
   './src/modules/events/eventModal.js',
   './styles/event-creation-fixes.css',
   './styles/event-creation-modal-complete.css',
-  // Notifications
-  './src/ui/notifications.js',
   // Обновление оверлея песен
   './src/modules/songs/songsOverlay.js',
   // Репертуар
