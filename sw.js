@@ -1,5 +1,5 @@
-// Service Worker v6345 - Add Capacitor config and scripts (no runtime change)
-const CACHE_NAME = 'agape-worship-cache-v6345';
+// Service Worker v6346 - Add Capacitor plugins deps (no runtime change)
+const CACHE_NAME = 'agape-worship-cache-v6346';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "description": "Static dev server and lint config for local development",
+  "dependencies": {
+    "@capacitor/app": "^6.2.0",
+    "@capacitor/browser": "^6.2.0",
+    "@capacitor/splash-screen": "^6.2.0"
+  },
   "scripts": {
     "start": "http-server -p 8001 -c-1 .",
     "lint": "eslint --ext .js ./src ./js ./public || exit 0",
