@@ -73,6 +73,20 @@
     <script type="module" src="../firebase-init.js"></script>
 </head>
 <body>
+    <!-- Блокирующий оверлей до полной готовности страницы архива -->
+    <div id="app-blocker" style="position:fixed;inset:0;z-index:9999;background:#111827;display:flex;align-items:center;justify-content:center;">
+        <div style="color:#9ca3af;font-size:14px;letter-spacing:.3px">Загрузка...</div>
+        <script>
+          (function(){
+            function removeBlocker(){
+              var el = document.getElementById('app-blocker');
+              if(el){ el.parentNode.removeChild(el); }
+            }
+            document.addEventListener('app:ready', removeBlocker);
+            setTimeout(removeBlocker, 5000);
+          })();
+        </script>
+    </div>
     <div class="archive-page-container">
         <!-- Фиксированная шапка -->
         <div class="archive-header">

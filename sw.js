@@ -1,5 +1,5 @@
-// Service Worker v6341 - Quiet missing-optional logs in event-handlers
-const CACHE_NAME = 'agape-worship-cache-v6341';
+// Service Worker v6342 - Add app-blocker overlay to hide half-ready UI
+const CACHE_NAME = 'agape-worship-cache-v6342';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

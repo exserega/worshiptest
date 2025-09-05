@@ -414,6 +414,8 @@ async function loadInitialData() {
         const { initBranchSelector } = await import('../modules/branches/branchSelector.js');
         initBranchSelector();
         
+        // Сигнализируем UI, что приложение готово
+        try { document.dispatchEvent(new CustomEvent('app:ready')); } catch (e) { /* ignore */ }
     } catch (error) {
         console.error('❌ [Initialization] Ошибка загрузки данных:', error);
         throw error;
