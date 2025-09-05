@@ -69,12 +69,12 @@ export { firebase, auth, db, storage, firebaseConfig };
 // Global alert shim → dark toast
 // ================================
 try {
-    (async () => {
-        const url = new URL(window.location.href);
-        const nativeAlertOnly = url.searchParams.get('nativeAlert') === '1';
-        if (nativeAlertOnly) return;
+    const url = new URL(window.location.href);
+    const nativeAlertOnly = url.searchParams.get('nativeAlert') === '1';
+    if (!nativeAlertOnly) {
         if (!window._nativeAlert) window._nativeAlert = window.alert.bind(window);
-        const { showToast } = await import('/src/ui/notifications.js');
+        // Prefetch notifications in background
+        import('/src/ui/notifications.js').catch(() => {});
         window.alert = function(message) {
             try {
                 const msg = String(message || '');
@@ -83,11 +83,17 @@ try {
                           : /успеш|готово|ok|✅|success/.test(lower) ? 'success'
                           : /внимани|предупр|warning|!/.test(lower) ? 'warning'
                           : 'info';
-                showToast(msg, type, 3500);
+                if (window.showToast) {
+                    window.showToast(msg, type, 3500);
+                } else {
+                    import('/src/ui/notifications.js')
+                        .then(mod => { (mod?.showToast || window.showToast || window._nativeAlert)(msg, type, 3500); })
+                        .catch(() => window._nativeAlert(msg));
+                }
             } catch (e) { window._nativeAlert(String(message || '')); }
         };
         console.log('✅ Alert shim enabled (toast)');
-    })();
+    }
 } catch (e) {
     console.warn('⚠️ Alert shim failed, using native alert', e);
 }
