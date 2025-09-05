@@ -1328,9 +1328,20 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
     // Показываем/скрываем кнопку "Сохранить в архив"
     const saveToArchiveBtn = document.getElementById('save-to-archive-btn');
     if (saveToArchiveBtn) {
-        // Показываем для всех авторизованных пользователей
-        saveToArchiveBtn.style.display = 'flex';
-        logger.log('📦 Кнопка "Сохранить в архив" показана');
+        try {
+            // Прячем для гостевого режима
+            const { isUserGuest } = await import('./src/modules/auth/authCheck.js');
+            if (isUserGuest && isUserGuest()) {
+                saveToArchiveBtn.style.display = 'none';
+                logger.log('📦 Кнопка "Сохранить в архив" скрыта для гостя');
+            } else {
+                saveToArchiveBtn.style.display = 'flex';
+                logger.log('📦 Кнопка "Сохранить в архив" показана');
+            }
+        } catch (e) {
+            // Fallback: показываем
+            saveToArchiveBtn.style.display = 'flex';
+        }
     }
 
     // Обновляем счетчик песен в новом блоке управления

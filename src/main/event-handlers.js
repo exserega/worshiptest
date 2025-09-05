@@ -696,10 +696,13 @@ function setupSetlistEventHandlers() {
     const toggleEventsButton = document.getElementById('toggle-events');
     if (toggleEventsButton) {
         toggleEventsButton.addEventListener('click', () => {
-            console.log('📅 [EventHandlers] Events button clicked - navigating to events page');
-            ui.closeAllSidePanels(); // Закрываем все панели
-            
-            // Переходим на страницу событий
+            console.log('📅 [EventHandlers] Events button clicked');
+            // Блокируем для гостевого режима
+            if (isUserGuest()) {
+                showGuestMessage('Календарь');
+                return;
+            }
+            ui.closeAllSidePanels();
             window.location.href = '/events/';
         });
     }
@@ -708,10 +711,13 @@ function setupSetlistEventHandlers() {
     const toggleArchiveButton = document.getElementById('toggle-archive');
     if (toggleArchiveButton) {
         toggleArchiveButton.addEventListener('click', () => {
-            console.log('📚 [EventHandlers] Archive button clicked - navigating to archive page');
-            ui.closeAllSidePanels(); // Закрываем все панели
-            
-            // Переходим на страницу архива с полным путем для GitHub Pages
+            console.log('📚 [EventHandlers] Archive button clicked');
+            // Блокируем для гостевого режима
+            if (isUserGuest()) {
+                showGuestMessage('Архив сет-листов');
+                return;
+            }
+            ui.closeAllSidePanels();
             window.location.href = '/archive/index.html';
         });
     }
@@ -977,6 +983,11 @@ function setupSetlistEventHandlers() {
     if (calendarBtn) {
         calendarBtn.addEventListener('click', async () => {
             console.log('📅 [EventHandlers] Add to calendar button clicked');
+            // Блокируем для гостя до открытия интеграции
+            if (isUserGuest()) {
+                showGuestMessage('Календарь');
+                return;
+            }
             
             // Получаем текущий выбранный сет-лист
             const currentSetlistId = state.currentSetlistId;
