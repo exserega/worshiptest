@@ -86,23 +86,7 @@
       display: flex !important;
     }
 
-    /* Skeleton styles (легкие, не блокирующие) */
-    .skeleton { position: relative; overflow: hidden; background: #1f2937; border-radius: 10px; }
-    .skeleton::after {
-      content: "";
-      position: absolute; inset: 0;
-      transform: translateX(-100%);
-      background: linear-gradient(90deg, rgba(31,41,55,0) 0%, rgba(55,65,81,0.5) 50%, rgba(31,41,55,0) 100%);
-      animation: skeleton-loading 1.2s ease-in-out infinite;
-    }
-    @keyframes skeleton-loading { 0% { transform: translateX(-100%);} 100% { transform: translateX(100%);} }
-    .skeleton-card { height: 72px; margin: 10px 0; border: 1px solid #374151; display: flex; align-items: center; padding: 12px; gap: 12px; }
-    .skeleton-avatar { width: 40px; height: 40px; border-radius: 8px; background: #1f2937; }
-    .skeleton-lines { flex: 1; display: grid; gap: 8px; }
-    .skeleton-line { height: 10px; border-radius: 6px; background: #1f2937; }
-    .skeleton-line.short { width: 40%; }
-    .skeleton-line.medium { width: 70%; }
-    .skeleton-line.long { width: 90%; }
+    /* loading-indicator оставляем компактным как раньше */
   </style>
 </head>
 <body>
@@ -570,23 +554,7 @@
     </div>
 </div>
 
-<!-- Лёгкий скелетон на время первичной загрузки -->
-<div id="loading-indicator">
-  <div class="skeleton-card skeleton">
-    <div class="skeleton-avatar skeleton"></div>
-    <div class="skeleton-lines">
-      <div class="skeleton-line long skeleton"></div>
-      <div class="skeleton-line medium skeleton"></div>
-    </div>
-  </div>
-  <div class="skeleton-card skeleton">
-    <div class="skeleton-avatar skeleton"></div>
-    <div class="skeleton-lines">
-      <div class="skeleton-line long skeleton"></div>
-      <div class="skeleton-line short skeleton"></div>
-    </div>
-  </div>
-</div>
+<div id="loading-indicator">Загрузка...</div>
 
 <nav class="mobile-bottom-nav" role="navigation" aria-label="Основная навигация">
     <button id="toggle-setlists" class="mobile-nav-button" aria-label="Открыть панель сет-листов" title="Сет-листы">

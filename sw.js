@@ -1,5 +1,5 @@
-// Service Worker v6334 - Add skeleton markup for loaders
-const CACHE_NAME = 'agape-worship-cache-v6334';
+// Service Worker v6335 - Revert loader markup to original
+const CACHE_NAME = 'agape-worship-cache-v6335';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
