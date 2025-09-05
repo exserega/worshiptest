@@ -1,5 +1,5 @@
-// Service Worker v6333 - Preconnect on more pages (settings, admin)
-const CACHE_NAME = 'agape-worship-cache-v6333';
+// Service Worker v6334 - Add skeleton markup for loaders
+const CACHE_NAME = 'agape-worship-cache-v6334';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
