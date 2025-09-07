@@ -1,5 +1,5 @@
-// Service Worker v6352 - Generate PWA icons via @capacitor/assets
-const CACHE_NAME = 'agape-worship-cache-v6352';
+// Service Worker v6353 - DatePickerModal visual enhancements, event indicators
+const CACHE_NAME = 'agape-worship-cache-v6353';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

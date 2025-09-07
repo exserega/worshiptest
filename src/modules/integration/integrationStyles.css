@@ -8,11 +8,12 @@
     width: 90% !important;
     max-height: 90vh !important;
     padding: 0 !important;
-    background: #1a1f2e !important;
+    background: #1a1f2e !important; /* темный терциарный */
     border-radius: 16px !important;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    border: 1px solid #374151; /* четкая граница */
 }
 
 /* Кнопка закрытия */
@@ -43,19 +44,19 @@
 /* Заголовок */
 .date-picker-modal .modal-title {
     text-align: center;
-    color: white;
-    font-size: 1.3rem;
-    margin: 20px 50px 12px;
+    color: #e5e7eb; /* светлый текст */
+    font-size: 1.1rem;
+    margin: 16px 48px 10px;
     font-weight: 600;
 }
 
 /* Название сет-листа */
 .date-picker-modal .setlist-name-display {
     text-align: center;
-    color: var(--accent-color);
-    font-size: 1rem;
-    margin-bottom: 20px;
-    padding: 0 20px;
+    color: #9ca3af; /* вторичный текст на темном */
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    padding: 0 16px;
     font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
