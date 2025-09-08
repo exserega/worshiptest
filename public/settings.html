@@ -32,6 +32,20 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../css/settings.css">
+    <script>
+      // Desktop-only stylesheet: load only on >=1280px to avoid mobile download
+      (function(){
+        try {
+          var mq = window.matchMedia && window.matchMedia('(min-width: 1280px)');
+          if (mq && mq.matches) {
+            var l = document.createElement('link');
+            l.rel = 'stylesheet';
+            l.href = '../styles/desktop.css';
+            document.head.appendChild(l);
+          }
+        } catch(e) {}
+      })();
+    </script>
     
     <!-- Переопределение стилей кнопок - должно быть последним -->
     <link rel="stylesheet" href="../styles/save-cancel-override.css">

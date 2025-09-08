@@ -1,5 +1,5 @@
-// Service Worker v6361 - Fix list view full-height and sticky subheader on desktop
-const CACHE_NAME = 'agape-worship-cache-v6361';
+// Service Worker v6362 - Settings desktop polish (conditional desktop.css, wider layout)
+const CACHE_NAME = 'agape-worship-cache-v6362';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -305,3 +305,44 @@
 @media (min-width: 1440px) {
 	/* Larger desktop tweaks */
 }
+
+/* ================================ */
+/* Stage 5: Settings page (desktop) */
+/* ================================ */
+@media (min-width: 1280px) {
+	/* Wider, centered settings container */
+	.settings-container {
+		max-width: 900px; /* было 600px в мобильном */
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	/* Make user header more spacious */
+	.user-info-section {
+		padding: 32px 28px;
+	}
+
+	/* Sections spacing */
+	.settings-sections {
+		padding: 24px 28px;
+	}
+
+	.settings-section {
+		padding: 22px;
+	}
+
+	/* Compact items for density */
+	.settings-item {
+		padding: 10px 0;
+	}
+
+	/* Branch actions buttons alignment */
+	.branch-actions {
+		gap: 12px;
+	}
+
+	/* Modal widths slightly larger on desktop */
+	.modal .modal-content {
+		max-width: 560px;
+	}
+}
