@@ -191,6 +191,8 @@
 		grid-template-areas:
 			"top"
 			"list";
+		/* ensure list row can truly fill viewport */
+		grid-template-rows: auto minmax(0, 1fr);
 	}
 
 	body:has(.events-list-view) .calendar-section {
@@ -201,11 +203,27 @@
 		max-width: 920px; /* шире для списка */
 		padding-left: 1.5rem;
 		padding-right: 1.5rem;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden; /* внутренний список прокручиваем */
 	}
 
 	/* Compact list view cards for better density */
 	body:has(.events-list-view) .events-list {
 		gap: 0.5rem;
+		flex: 1 1 auto;
+		overflow-y: auto;
+	}
+
+	/* Sticky subheader inside list for better UX */
+	body:has(.events-list-view) .selected-date-header {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background: var(--bg-primary);
+		border-bottom: 1px solid var(--border-color);
+		margin-bottom: 0.5rem;
 	}
 
 	body:has(.events-list-view) .month-section-title {

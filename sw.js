@@ -1,5 +1,5 @@
-// Service Worker v6360 - Compact events list on desktop (smaller cards)
-const CACHE_NAME = 'agape-worship-cache-v6360';
+// Service Worker v6361 - Fix list view full-height and sticky subheader on desktop
+const CACHE_NAME = 'agape-worship-cache-v6361';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
