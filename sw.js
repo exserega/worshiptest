@@ -1,5 +1,5 @@
-// Service Worker v6369 - Desktop: unify icons; key select dark theme and spacing
-const CACHE_NAME = 'agape-worship-cache-v6369';
+// Service Worker v6370 - Desktop: restore native key select arrow & visibility
+const CACHE_NAME = 'agape-worship-cache-v6370';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
