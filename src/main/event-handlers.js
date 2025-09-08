@@ -94,7 +94,14 @@ export function setupEventListeners() {
         const dropdown = document.getElementById('notifications-dropdown');
         if (bellBtn && dropdown) {
             const toggleDropdown = (show) => {
-                dropdown.style.display = show ? 'block' : 'none';
+                if (show) {
+                    // Ensure dropdown positions from the bell (mobile first)
+                    const rect = bellBtn.getBoundingClientRect();
+                    dropdown.style.left = '0';
+                    dropdown.style.display = 'block';
+                } else {
+                    dropdown.style.display = 'none';
+                }
                 bellBtn.classList.toggle('active', !!show);
             };
             bellBtn.addEventListener('click', (e) => {

@@ -9,12 +9,11 @@
   background: #1f2937;
   border: 1px solid #374151;
   cursor: pointer;
+  padding: 0;
+  line-height: 1;
 }
 
-.header-bell-button i {
-  color: #e5e7eb;
-  font-size: 16px;
-}
+.header-bell-button i { color: #e5e7eb; font-size: 16px; display: flex; align-items: center; justify-content: center; }
 
 .notifications-badge {
   position: absolute;
@@ -32,11 +31,7 @@
   border: 1px solid #111827;
 }
 
-.notifications-bell-container {
-  position: relative;
-  display: inline-block;
-  margin-right: 12px;
-}
+.notifications-bell-container { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); display: inline-block; }
 
 .notifications-dropdown {
   position: absolute;
@@ -48,7 +43,7 @@
   border: 1px solid #374151;
   border-radius: 10px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-  z-index: 2000;
+  z-index: 10001;
 }
 
 .notifications-header {
@@ -108,7 +103,6 @@
 @media (max-width: 480px) {
   .notifications-dropdown { width: 300px; max-width: 92vw; }
   .header-bell-button { width: 34px; height: 34px; }
-  .notifications-bell-container { position: absolute; left: 12px; top: 12px; }
 }
 
 /* Active/pressed state for visibility on dark background */
