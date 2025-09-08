@@ -52,6 +52,20 @@
     })();
   </script>
   <script>
+    // Tablet CSS: load only for width between 768px and 1279px
+    (function(){
+      try {
+        var mqTablet = window.matchMedia && window.matchMedia('(min-width: 768px) and (max-width: 1279px)');
+        if (mqTablet && mqTablet.matches) {
+          var l = document.createElement('link');
+          l.rel = 'stylesheet';
+          l.href = '/styles/tablet.css';
+          document.head.appendChild(l);
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <script>
     // Desktop CSS: load only on width >= 1280px (do not download on mobile)
     (function(){
       try {

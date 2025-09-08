@@ -1,0 +1,154 @@
+/* Tablet-only stylesheet (non-invasive). Load only for 768px–1279px. */
+
+/* Main container width for readability */
+.container {
+	max-width: 860px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Controls align with container */
+.controls {
+	max-width: 860px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* "Все песни" button: slightly larger on tablet */
+.songs-button-container .songs-overlay-button {
+	height: 42px;
+	min-width: 200px;
+	padding: 8px 12px;
+	font-size: 0.95rem;
+	border: 1px solid #374151;
+	background: #1a1f2e;
+	color: #e5e7eb;
+	border-radius: 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.songs-button-container .songs-overlay-button i {
+	font-size: 1rem;
+	color: #e5e7eb;
+}
+
+.songs-button-container .songs-overlay-button:hover {
+	background: #22d3ee;
+	border-color: #22d3ee;
+	color: #111827;
+}
+
+.songs-button-container .songs-overlay-button:hover i {
+	color: #111827;
+}
+
+/* Functional buttons: icon-only on tablet */
+#toggle-chords-button .button-text,
+#chords-only-button .button-text,
+#split-text-button .button-text,
+#copy-text-button .button-text {
+	display: none !important;
+}
+
+#toggle-chords-button,
+#chords-only-button,
+#split-text-button,
+#copy-text-button {
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#split-text-button i,
+#toggle-chords-button i,
+.font-size-controls .icon-button i,
+#chords-only-button .text-icon {
+	font-size: 1rem !important;
+	line-height: 1;
+	display: inline-block;
+	margin: 0 !important;
+}
+
+/* Key select spacing and single border (container provides border) */
+.key-group {
+	margin-left: 10px;
+}
+
+#key-select {
+	background: transparent;
+	border: none !important;
+	color: #e5e7eb;
+	padding: 0 8px;
+	border-radius: 0;
+	appearance: auto;
+	background-image: none !important;
+	display: inline-block;
+	min-width: 80px;
+	height: 34px;
+	line-height: 1.2;
+	font-size: 0.95rem;
+	box-sizing: border-box;
+}
+
+#key-select option {
+	background: #111827;
+	color: #e5e7eb;
+}
+
+/* Songs overlay: tablet comfortable size */
+.songs-overlay .songs-overlay-content {
+	max-width: 640px;
+	width: 94%;
+	height: calc(100vh - 90px);
+	max-height: calc(100vh - 90px);
+	display: flex;
+	flex-direction: column;
+}
+
+.songs-overlay .songs-list-container {
+	flex: 1 1 auto;
+	overflow-y: auto;
+}
+
+.songs-overlay .songs-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	overflow: visible;
+	padding-right: 4px;
+}
+
+.songs-overlay .song-item {
+	background: var(--bg-secondary);
+	border: 1px solid var(--border-color);
+	border-radius: 10px;
+	padding: 10px;
+	transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+}
+
+.songs-overlay .song-item:hover {
+	background: var(--hover-bg);
+	border-color: var(--primary-color);
+	transform: translateY(-1px);
+}
+
+.songs-overlay .song-name {
+	color: var(--text-primary);
+	font-size: 0.95rem;
+	line-height: 1.2;
+}
+
+/* Song text: slightly tighter spacing on tablet */
+#song-content pre {
+	line-height: 1.2; /* tighter than mobile, looser than desktop */
+}
+

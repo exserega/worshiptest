@@ -1,5 +1,5 @@
-// Service Worker v6372 - Desktop: remove double border on key select (transparent, no inner border)
-const CACHE_NAME = 'agape-worship-cache-v6372';
+// Service Worker v6373 - Tablet stylesheet (768–1279px) conditional load on pages
+const CACHE_NAME = 'agape-worship-cache-v6373';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

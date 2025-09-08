@@ -25,6 +25,20 @@
     <!-- Стили страницы событий -->
     <link rel="stylesheet" href="./events-page.css">
     <script>
+        // Tablet-only stylesheet (load for 768px–1279px)
+        (function(){
+            try {
+                var mqTablet = window.matchMedia && window.matchMedia('(min-width: 768px) and (max-width: 1279px)');
+                if (mqTablet && mqTablet.matches) {
+                    var l = document.createElement('link');
+                    l.rel = 'stylesheet';
+                    l.href = '../styles/tablet.css';
+                    document.head.appendChild(l);
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <script>
         // Load desktop-only stylesheet only on widths >= 1280px
         (function(){
             try {
