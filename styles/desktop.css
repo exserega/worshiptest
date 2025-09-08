@@ -328,6 +328,116 @@
 }
 
 /* ================================ */
+/* Main page: controls (desktop)   */
+/* ================================ */
+@media (min-width: 1280px) {
+	/* 1) "Все песни" — крупнее на десктопе */
+	.songs-button-container .songs-overlay-button {
+		height: 44px;
+		padding: 10px 14px;
+		font-size: 0.95rem;
+		border: 1px solid #374151;
+		background: #1a1f2e;
+		color: #e5e7eb;
+		border-radius: 10px;
+	}
+
+	.songs-button-container .songs-overlay-button i {
+		font-size: 1rem;
+		color: #e5e7eb;
+	}
+
+	.songs-button-container .songs-overlay-button:hover {
+		background: #22d3ee;
+		border-color: #22d3ee;
+		color: #111827;
+	}
+
+	.songs-button-container .songs-overlay-button:hover i {
+		color: #111827;
+	}
+
+	/* 2) Кнопки режимов: иконки без текста на десктопе */
+	#toggle-chords-button .button-text,
+	#chords-only-button .button-text {
+		display: none !important;
+	}
+
+	#toggle-chords-button,
+	#chords-only-button {
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	#chords-only-button .text-icon {
+		display: inline-block;
+		font-size: 1rem;
+		color: #e5e7eb;
+		line-height: 1;
+	}
+
+	#toggle-chords-button i {
+		font-size: 1rem;
+		color: #e5e7eb;
+	}
+
+	#toggle-chords-button:hover i,
+	#chords-only-button:hover .text-icon {
+		color: #111827;
+	}
+
+	/* 3) Оверлей "Все песни" — более удобный вид: грид карточек */
+	.songs-overlay .songs-overlay-content {
+		max-width: 1100px;
+		width: 96%;
+		height: calc(100vh - 120px);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.songs-overlay .songs-list-container {
+		flex: 1 1 auto;
+		overflow: hidden;
+	}
+
+	.songs-overlay .songs-list {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 8px;
+		overflow-y: auto;
+		padding-right: 4px;
+	}
+
+	.songs-overlay .song-item {
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-color);
+		border-radius: 10px;
+		padding: 10px;
+		transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
+	}
+
+	.songs-overlay .song-item:hover {
+		background: var(--hover-bg);
+		border-color: var(--primary-color);
+		transform: translateY(-1px);
+	}
+
+	.songs-overlay .song-name {
+		color: var(--text-primary);
+	}
+}
+
+@media (min-width: 1440px) {
+	.songs-overlay .songs-list {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+/* ================================ */
 /* Stage 5: Settings page (desktop) */
 /* ================================ */
 @media (min-width: 1280px) {

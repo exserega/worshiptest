@@ -1,5 +1,5 @@
-// Service Worker v6364 - Cross-browser fallback for events list view
-const CACHE_NAME = 'agape-worship-cache-v6364';
+// Service Worker v6365 - Desktop main: larger songs button, icon-only toggles, grid overlay
+const CACHE_NAME = 'agape-worship-cache-v6365';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
