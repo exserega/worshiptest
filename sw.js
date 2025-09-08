@@ -1,5 +1,5 @@
-// Service Worker v6367 - Songs overlay desktop: full-height and scroll restored
-const CACHE_NAME = 'agape-worship-cache-v6367';
+// Service Worker v6368 - Songs overlay desktop: narrower width (~560px)
+const CACHE_NAME = 'agape-worship-cache-v6368';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
