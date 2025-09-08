@@ -931,6 +931,8 @@ export class EventsCalendar {
      */
     renderListView() {
         logger.log('📋 Рендеринг списка событий');
+        // Кроссбраузерный фолбэк без :has — помечаем body классом
+        try { document.body.classList.add('events-list-active'); } catch (e) {}
         
         // Скрываем календарь и показываем контейнер для списка
         this.weekdays.style.display = 'none';
@@ -1040,6 +1042,8 @@ export class EventsCalendar {
             this.selectedDateEvents.style.display = 'none';
             this.selectedDateEvents.innerHTML = ''; // Очищаем контейнер
             this.selectedDate = null; // Сбрасываем выбранную дату
+            // Снимаем фолбэк‑класс списка
+            try { document.body.classList.remove('events-list-active'); } catch (e) {}
         }
         
         // Перерисовываем интерфейс

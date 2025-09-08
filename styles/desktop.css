@@ -195,7 +195,19 @@
 		grid-template-rows: auto minmax(0, 1fr);
 	}
 
+	/* Fallback without :has(): use body.events-list-active */
+	body.events-list-active .events-page-container {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas:
+			"top"
+			"list";
+		grid-template-rows: auto minmax(0, 1fr);
+	}
+
 	body:has(.events-list-view) .calendar-section {
+		display: none;
+	}
+	body.events-list-active .calendar-section {
 		display: none;
 	}
 
@@ -207,6 +219,15 @@
 		display: flex;
 		flex-direction: column;
 		overflow: hidden; /* внутренний список прокручиваем */
+	}
+	body.events-list-active .selected-date-events {
+		max-width: 920px;
+		padding-left: 1.5rem;
+		padding-right: 1.5rem;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 	}
 
 	/* Compact list view cards for better density */
