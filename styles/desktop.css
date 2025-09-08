@@ -10,6 +10,28 @@
 		margin-right: auto;
 	}
 
+	/* Hide mobile bottom navigation on desktop */
+	.mobile-bottom-nav {
+		display: none !important;
+	}
+
+	/* Side panels: define consistent desktop widths without altering visuals */
+	#setlists-panel,
+	#my-list-panel,
+	#repertoire-panel {
+		width: 360px;
+		max-width: 360px;
+	}
+
+	/* Shift main content when panels are open (non-invasive, uses :has) */
+	body:has(#setlists-panel.open) .container,
+	body:has(#my-list-panel.open) .container {
+		margin-left: 380px; /* panel width + safe gap */
+	}
+	body:has(#repertoire-panel.open) .container {
+		margin-right: 380px;
+	}
+
 	/* Side panels: keep their widths and position; no visual redesign */
 	.setlists-panel,
 	.my-list-panel,
