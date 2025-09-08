@@ -5,7 +5,7 @@
 
 	/* Limit main content width for readability */
 	.container {
-		max-width: 1200px;
+		max-width: 1000px;
 		margin-left: auto;
 		margin-right: auto;
 	}
@@ -140,7 +140,7 @@
 
 	/* Search area: align with content width */
 	.controls {
-		max-width: 1200px;
+		max-width: 1000px;
 		margin-left: auto;
 		margin-right: auto;
 	}
