@@ -203,6 +203,68 @@
 		padding-right: 1.5rem;
 	}
 
+	/* Compact list view cards for better density */
+	body:has(.events-list-view) .events-list {
+		gap: 0.5rem;
+	}
+
+	body:has(.events-list-view) .month-section-title {
+		font-size: 1rem;
+		margin-bottom: 0.5rem;
+		padding-bottom: 0.25rem;
+	}
+
+	body:has(.events-list-view) .month-events {
+		gap: 0.5rem;
+	}
+
+	body:has(.events-list-view) .event-card {
+		padding: 0.75rem;
+		border-radius: 10px;
+	}
+
+	body:has(.events-list-view) .event-header-redesigned {
+		margin-bottom: 0.5rem;
+	}
+
+	body:has(.events-list-view) .event-name {
+		font-size: 1rem;
+	}
+
+	body:has(.events-list-view) .event-date,
+	body:has(.events-list-view) .event-time {
+		font-size: 0.8125rem;
+	}
+
+	body:has(.events-list-view) .event-leader {
+		font-size: 0.8125rem;
+		margin: 0.25rem 0;
+	}
+
+	body:has(.events-list-view) .event-participants-compact {
+		font-size: 0.78rem;
+		gap: 0.2rem;
+		margin-top: 0.25rem;
+	}
+
+	body:has(.events-list-view) .instrument-line {
+		font-size: 0.78rem;
+	}
+
+	body:has(.events-list-view) .event-footer {
+		margin-top: 0.5rem;
+		padding-top: 0.5rem;
+	}
+
+	body:has(.events-list-view) .event-count {
+		font-size: 0.75rem;
+	}
+
+	body:has(.events-list-view) .event-actions .icon-button {
+		width: 28px;
+		height: 28px;
+	}
+
 	/* Tighter paddings for desktop */
 	.calendar-grid {
 		padding: 0.5rem 1rem 1rem;
