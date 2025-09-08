@@ -10,38 +10,38 @@
 		margin-right: auto;
 	}
 
-	/* Desktop navigation: reuse mobile bottom nav as vertical dock */
+	/* Desktop navigation: convert mobile bottom nav to top bar with labels */
 	.mobile-bottom-nav {
 		display: flex !important;
-		flex-direction: column;
-		gap: 8px;
+		flex-direction: row;
+		gap: 12px;
 		position: fixed;
-		top: 120px;
-		left: 24px;
-		right: auto;
-		bottom: auto;
-		width: 220px; /* fixed width to avoid full-width bug */
+		top: 78px; /* below header */
+		left: 50%;
+		transform: translateX(-50%);
+		width: auto;
 		z-index: 200;
-		background: #1a1f2e; /* dark tertiary */
+		background: #1f2937; /* dark secondary */
 		border: 1px solid #374151;
 		border-radius: 12px;
-		padding: 10px;
+		padding: 8px 10px;
 		box-shadow: 0 8px 16px rgba(0,0,0,0.35);
 	}
 
 	.mobile-bottom-nav .mobile-nav-button {
-		width: 100%;
-		height: 44px;
-		display: flex;
+		min-width: 150px;
+		height: 40px;
+		display: inline-flex;
 		align-items: center;
-		justify-content: flex-start;
-		gap: 10px;
+		justify-content: center;
+		gap: 8px;
 		background: #1a1f2e;
 		color: #9ca3af !important;
 		border: 1px solid #374151;
 		border-radius: 10px;
 		cursor: pointer;
 		transition: all 0.2s ease;
+		padding: 0 12px;
 	}
 
 	.mobile-bottom-nav .mobile-nav-button:hover {
@@ -50,7 +50,7 @@
 		border-color: #22d3ee;
 	}
 
-	/* Icon + label colors */
+	/* Icon + label colors (labels always visible) */
 	.mobile-bottom-nav .mobile-nav-button i {
 		color: inherit !important;
 		width: 18px;
@@ -60,6 +60,7 @@
 	.mobile-bottom-nav .mobile-nav-button span {
 		color: #9ca3af !important;
 		font-size: 0.9rem;
+		display: inline-block !important; /* ensure visible */
 	}
 
 	.mobile-bottom-nav .mobile-nav-button:hover span,
@@ -100,7 +101,8 @@
 
 	/* Reserve space for vertical dock */
 	.container {
-		padding-left: 280px; /* reserve space for nav dock */
+		padding-left: 0; /* no left dock */
+		padding-top: 60px; /* reserve space for top bar */
 	}
 
 	/* Search area: align with content width */
