@@ -1,5 +1,5 @@
-// Service Worker v6368 - Songs overlay desktop: narrower width (~560px)
-const CACHE_NAME = 'agape-worship-cache-v6368';
+// Service Worker v6369 - Desktop: unify icons; key select dark theme and spacing
+const CACHE_NAME = 'agape-worship-cache-v6369';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

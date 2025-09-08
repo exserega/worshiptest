@@ -399,6 +399,52 @@
 		color: #111827;
 	}
 
+	/* Unify icon sizing/centering for functional buttons */
+	.function-buttons-group .icon-button i,
+	.font-size-controls .icon-button i {
+		font-size: 1rem;
+		line-height: 1;
+		display: inline-block;
+		margin: 0;
+	}
+
+	#chords-only-button .text-icon {
+		font-size: 1rem;
+		line-height: 1;
+		display: inline-block;
+		margin: 0;
+	}
+
+	/* Slight left gap for key selector */
+	.key-group {
+		margin-left: 12px;
+	}
+
+	/* Dark-themed key select (desktop) */
+	#key-select {
+		background: #1f2937;
+		border: 1px solid #374151;
+		color: #e5e7eb;
+		padding: 8px 36px 8px 12px;
+		border-radius: 8px;
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 12px center;
+		background-size: 14px;
+	}
+
+	#key-select:focus {
+		outline: none;
+		border-color: #22d3ee;
+		box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+	}
+
+	#key-select option {
+		background: #111827;
+		color: #e5e7eb;
+	}
+
 	/* 3) Оверлей "Все песни" — более удобный вид: грид карточек */
 	.songs-overlay .songs-overlay-content {
 		max-width: 560px;
