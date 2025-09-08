@@ -76,7 +76,7 @@ h1 {
     align-items: center;
     justify-content: space-between;
     font-size: 0.8rem;
-    overflow: hidden;
+    overflow: visible; /* prevent clipping descendants */
 }
 
 #theme-toggle-button:hover {
