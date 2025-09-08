@@ -1,10 +1,11 @@
-// Service Worker v6376 - Archive: dynamic usageCount UI + cache bump
-const CACHE_NAME = 'agape-worship-cache-v6376';
+// Service Worker v6377 - Notifications UI assets + cache bump
+const CACHE_NAME = 'agape-worship-cache-v6377';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
   './script.js',
   './styles.css',
+  './styles/notifications.css',
   './manifest.json',
   './archive/', // Страница архива
   './archive/index.html',

@@ -14,6 +14,7 @@
     <link rel="dns-prefetch" href="https://firestore.googleapis.com">
     <link rel="dns-prefetch" href="https://securetoken.googleapis.com">
     <link rel="stylesheet" href="styles.css?v=6.6">
+    <link rel="stylesheet" href="styles/notifications.css">
     <link rel="stylesheet" href="styles/branch-selection-modal.css">
     <link rel="stylesheet" href="styles/events-overlay.css">
     <link rel="stylesheet" href="styles/event-modal.css">
@@ -155,6 +156,24 @@
 </div>
 
 <header>
+    <div class="notifications-bell-container">
+        <button id="notifications-bell-button" class="header-bell-button" title="Уведомления" aria-label="Уведомления">
+            <i class="fas fa-bell"></i>
+            <span id="notifications-badge" class="notifications-badge" style="display: none;">0</span>
+        </button>
+        <div id="notifications-dropdown" class="notifications-dropdown" aria-label="Список уведомлений" style="display: none;">
+            <div class="notifications-header">
+                <span class="notifications-title">Уведомления</span>
+                <button id="notifications-mark-all" class="notifications-action" title="Отметить все как прочитанные">
+                    <i class="fas fa-check-double"></i>
+                    <span>Отметить все</span>
+                </button>
+            </div>
+            <div id="notifications-list" class="notifications-list">
+                <div class="notifications-empty">Пока нет уведомлений</div>
+            </div>
+        </div>
+    </div>
     <h1>Agape Worship</h1>
     <!-- Кнопка смены темы скрыта, функционал сохранен для будущей реализации -->
     <button id="theme-toggle-button" class="theme-toggle" title="Переключить тему" style="display: none;">

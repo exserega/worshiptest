@@ -87,6 +87,40 @@ export function setupEventListeners() {
     }
 
     console.log('🎮 [EventHandlers] setupEventListeners COMPLETED');
+
+    // Notifications bell toggle (UI only)
+    try {
+        const bellBtn = document.getElementById('notifications-bell-button');
+        const dropdown = document.getElementById('notifications-dropdown');
+        if (bellBtn && dropdown) {
+            const toggleDropdown = (show) => {
+                dropdown.style.display = show ? 'block' : 'none';
+                bellBtn.classList.toggle('active', !!show);
+            };
+            bellBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = dropdown.style.display === 'block';
+                toggleDropdown(!isOpen);
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#notifications-dropdown') && !e.target.closest('#notifications-bell-button')) {
+                    toggleDropdown(false);
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') toggleDropdown(false);
+            });
+            const markAllBtn = document.getElementById('notifications-mark-all');
+            if (markAllBtn) {
+                markAllBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Placeholder: logic will be added in next steps
+                });
+            }
+        }
+    } catch (e) {
+        console.error('Notifications UI setup failed:', e);
+    }
 }
 
 // ====================================
