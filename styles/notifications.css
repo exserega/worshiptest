@@ -101,7 +101,7 @@
 .notification-unread .notification-title { font-weight: 700; }
 
 @media (max-width: 480px) {
-  .notifications-dropdown { width: 300px; max-width: 92vw; }
+  .notifications-dropdown { width: 92vw; max-width: 92vw; }
   .header-bell-button { width: 34px; height: 34px; }
 }
 

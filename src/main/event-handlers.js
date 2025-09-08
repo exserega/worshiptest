@@ -98,6 +98,12 @@ export function setupEventListeners() {
                     // Mobile-first: position dropdown fixed under the bell and keep within viewport
                     const rect = bellBtn.getBoundingClientRect();
                     const vw = window.innerWidth || document.documentElement.clientWidth;
+                    // Move dropdown to body to avoid transformed ancestor stacking/context issues
+                    try {
+                        if (dropdown.parentElement !== document.body) {
+                            document.body.appendChild(dropdown);
+                        }
+                    } catch (e) { /* ignore */ }
                     dropdown.style.position = 'fixed';
                     dropdown.style.display = 'block';
                     dropdown.style.visibility = 'hidden';
