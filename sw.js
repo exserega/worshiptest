@@ -1,5 +1,5 @@
-// Service Worker v6373 - Tablet stylesheet (768–1279px) conditional load on pages
-const CACHE_NAME = 'agape-worship-cache-v6373';
+// Service Worker v6374 - Archive key modal: select defaults to original key
+const CACHE_NAME = 'agape-worship-cache-v6374';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

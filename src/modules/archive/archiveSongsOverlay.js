@@ -631,6 +631,18 @@ class ArchiveSongsOverlay {
                                song.key || 
                                song.defaultKey ||
                                (keys.length > 0 ? keys[0] : 'C');
+
+            // Выставляем селект на исходную тональность (если такой опции нет — добавим)
+            if (originalKey) {
+                const exists = Array.from(keySelect.options).some(opt => opt.value === originalKey);
+                if (!exists) {
+                    const opt = document.createElement('option');
+                    opt.value = originalKey;
+                    opt.textContent = originalKey;
+                    keySelect.insertBefore(opt, keySelect.firstChild);
+                }
+                keySelect.value = originalKey;
+            }
             
             // Показываем текст в исходной тональности
             this.displaySongInKey(songDisplay, originalLyrics, originalKey, originalKey);
