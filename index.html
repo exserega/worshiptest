@@ -52,6 +52,20 @@
     })();
   </script>
   <script>
+    // Desktop CSS: load only on width >= 1280px (do not download on mobile)
+    (function(){
+      try {
+        var mq = window.matchMedia && window.matchMedia('(min-width: 1280px)');
+        if (mq && mq.matches) {
+          var l = document.createElement('link');
+          l.rel = 'stylesheet';
+          l.href = '/styles/desktop.css';
+          document.head.appendChild(l);
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <script>
     // Применяем темную тему сразу, чтобы избежать мигания светлой темы
     (function() {
       var savedTheme = localStorage.getItem('theme');
