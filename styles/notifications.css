@@ -43,7 +43,7 @@
   border: 1px solid #374151;
   border-radius: 10px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-  z-index: 10001;
+  z-index: 10002; /* above global-fullscreen-overlay (999998) and modal-manager (10001) */
 }
 
 .notifications-header {
