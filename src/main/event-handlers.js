@@ -95,9 +95,11 @@ export function setupEventListeners() {
         if (bellBtn && dropdown) {
             const toggleDropdown = (show) => {
                 if (show) {
-                    // Ensure dropdown positions from the bell (mobile first)
+                    // Mobile-first: position dropdown fixed under the bell
                     const rect = bellBtn.getBoundingClientRect();
-                    dropdown.style.left = '0';
+                    dropdown.style.position = 'fixed';
+                    dropdown.style.left = Math.max(8, Math.round(rect.left)) + 'px';
+                    dropdown.style.top = Math.round(rect.bottom + 8) + 'px';
                     dropdown.style.display = 'block';
                 } else {
                     dropdown.style.display = 'none';
