@@ -1,5 +1,5 @@
-// Service Worker v6357 - Desktop events layout and narrower main container
-const CACHE_NAME = 'agape-worship-cache-v6357';
+// Service Worker v6358 - Events desktop refinements (sticky header, widths)
+const CACHE_NAME = 'agape-worship-cache-v6358';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
