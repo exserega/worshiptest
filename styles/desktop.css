@@ -1,0 +1,13 @@
+/* Desktop-only stylesheet (non-invasive). Activate via <link> at Stage Gate. */
+
+@media (min-width: 1280px) {
+	/* Layout: app shell */
+	/* Placeholder sections; rules will be filled in Stage 1-5 */
+	.app-desktop-container {
+		/* reserved for layout grid if needed */
+	}
+}
+
+@media (min-width: 1440px) {
+	/* Larger desktop tweaks */
+}
