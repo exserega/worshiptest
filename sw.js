@@ -1,5 +1,5 @@
-// Service Worker v6377 - Notifications UI assets + cache bump
-const CACHE_NAME = 'agape-worship-cache-v6377';
+// Service Worker v6378 - Notifications dropdown fixes + cache bump
+const CACHE_NAME = 'agape-worship-cache-v6378';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
