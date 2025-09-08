@@ -80,6 +80,7 @@
 		max-width: 520px;
 		width: 90%;
 		margin: 48px auto;
+		padding: 16px;
 	}
 
 	/* Setlist select overlay */
@@ -87,6 +88,7 @@
 		max-width: 720px;
 		width: 92%;
 		margin: 48px auto;
+		padding: 16px;
 	}
 
 	/* Song editor overlay */
@@ -95,6 +97,7 @@
 		width: 92%;
 		margin: 48px auto;
 		max-height: calc(100vh - 120px);
+		padding: 16px;
 	}
 
 	/* Key selection preview */
@@ -103,6 +106,7 @@
 		width: 92%;
 		margin: 24px auto;
 		height: calc(100vh - 140px);
+		padding: 16px;
 	}
 
 	/* Add songs fullscreen overlay */
@@ -111,6 +115,7 @@
 		width: 96%;
 		margin: 0 auto;
 		height: calc(100vh - 100px);
+		padding: 16px;
 	}
 
 	/* Metronome overlay */
@@ -118,6 +123,19 @@
 		max-width: 720px;
 		width: 92%;
 		margin: 48px auto;
+		padding: 16px;
+	}
+
+	/* Typography tweaks for readability */
+	#song-editor-overlay .song-editor-content textarea.song-edit-textarea {
+		font-size: 0.98rem;
+		line-height: 1.5;
+	}
+
+	#key-selection-modal .song-text-display,
+	#add-songs-overlay .songs-grid,
+	#setlist-select-overlay .modal-body.compact {
+		line-height: 1.45;
 	}
 
 	/* Search area: align with content width */
