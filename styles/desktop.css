@@ -10,26 +10,28 @@
 		margin-right: auto;
 	}
 
-	/* Desktop navigation: convert mobile bottom nav to top bar with labels */
+	/* Desktop: keep mobile bottom nav dock fixed at bottom (as on mobile) */
 	.mobile-bottom-nav {
 		display: flex !important;
 		flex-direction: row;
-		gap: 12px;
+		gap: 0;
 		position: fixed;
-		top: 78px; /* below header */
-		left: 50%;
-		transform: translateX(-50%);
-		width: auto;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		z-index: 200;
 		background: #1f2937; /* dark secondary */
-		border: 1px solid #374151;
-		border-radius: 12px;
+		border-top: 1px solid #374151;
+		border-left: none;
+		border-right: none;
+		border-bottom: none;
+		border-radius: 0;
 		padding: 8px 10px;
-		box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+		box-shadow: 0 -8px 16px rgba(0,0,0,0.25);
 	}
 
 	.mobile-bottom-nav .mobile-nav-button {
-		min-width: 150px;
+		flex: 1 1 0;
 		height: 40px;
 		display: inline-flex;
 		align-items: center;
@@ -42,6 +44,7 @@
 		cursor: pointer;
 		transition: all 0.2s ease;
 		padding: 0 12px;
+		margin: 0 6px;
 	}
 
 	.mobile-bottom-nav .mobile-nav-button:hover {
@@ -101,8 +104,9 @@
 
 	/* Reserve space for vertical dock */
 	.container {
-		padding-left: 0; /* no left dock */
-		padding-top: 60px; /* reserve space for top bar */
+		padding-left: 0;
+		padding-top: 0;
+		padding-bottom: 68px; /* reserve space for bottom nav bar */
 	}
 
 	/* Search area: align with content width */
