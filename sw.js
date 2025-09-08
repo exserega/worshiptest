@@ -1,5 +1,5 @@
-// Service Worker v6370 - Desktop: restore native key select arrow & visibility
-const CACHE_NAME = 'agape-worship-cache-v6370';
+// Service Worker v6371 - Desktop: fix side borders, split icon center, reduce song text spacing
+const CACHE_NAME = 'agape-worship-cache-v6371';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

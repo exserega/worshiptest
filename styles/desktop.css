@@ -382,6 +382,14 @@
 		justify-content: center;
 	}
 
+	/* Normalize split columns icon size and center */
+	#split-text-button i {
+		font-size: 1rem !important;
+		margin: 0 !important;
+		line-height: 1;
+		display: inline-block;
+	}
+
 	#chords-only-button .text-icon {
 		display: inline-block;
 		font-size: 1rem;
@@ -418,6 +426,14 @@
 	/* Slight left gap for key selector */
 	.key-group {
 		margin-left: 12px;
+	}
+
+	/* Remove decorative side borders around function buttons on desktop */
+	.function-buttons-group {
+		border-left: none !important;
+		border-right: none !important;
+		margin: 0 !important;
+		padding: 0 8px !important;
 	}
 
 	/* Dark-themed key select (desktop) */
@@ -496,6 +512,11 @@
 		display: grid;
 		grid-template-columns: 1fr auto;
 		align-items: center;
+	}
+
+	/* Reduce vertical spacing inside song text by ~40% */
+	#song-content pre {
+		line-height: 1.1; /* было 1.3 => -~40% вертикального интервала */
 	}
 }
 
