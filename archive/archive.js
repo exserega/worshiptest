@@ -304,6 +304,24 @@ async function updateSetlistCard(setlistId) {
         } else {
             logger.error('❌ Song count element not found');
         }
+
+        // Обновляем usageCount
+        const usageEl = cardElement.querySelector('.setlist-meta .usage-count .usage-value');
+        if (usageEl) {
+            const newUsage = setlist.usageCount || 0;
+            usageEl.textContent = newUsage;
+            logger.log(`📈 Updated usage count to ${newUsage}`);
+        } else {
+            // Фоллбек для старой разметки
+            const metaItems = cardElement.querySelectorAll('.setlist-meta .meta-item');
+            metaItems.forEach(mi => {
+                if (mi.textContent && mi.textContent.includes('Использований')) {
+                    const newUsage = setlist.usageCount || 0;
+                    mi.innerHTML = `<i class=\"fas fa-chart-line\"></i> Использований: <span class=\"usage-value\">${newUsage}</span>`;
+                    mi.classList.add('usage-count');
+                }
+            });
+        }
         
         logger.log('✅ Setlist card update completed');
     } catch (error) {
@@ -578,9 +596,9 @@ function createSetlistCard(setlist) {
                 <i class="fas fa-calendar"></i>
                 ${dateStr}
             </div>
-            <div class="meta-item">
+            <div class="meta-item usage-count">
                 <i class="fas fa-chart-line"></i>
-                Использований: ${usageCount}
+                Использований: <span class="usage-value">${usageCount}</span>
             </div>
         </div>
         
@@ -993,6 +1011,17 @@ async function handleCreateNewEvent(selectedDate, setlistData) {
             // Фиксируем использование архивного сет-листа
             if (setlistData?.id) {
                 incrementArchiveSetlistUsage(setlistData.id);
+                // Моментально обновляем UI счётчика
+                try {
+                    const cardEl = document.querySelector(`.archive-setlist-card[data-setlist-id="${setlistData.id}"]`);
+                    if (cardEl) {
+                        const valueEl = cardEl.querySelector('.setlist-meta .usage-count .usage-value');
+                        if (valueEl) {
+                            const current = parseInt(valueEl.textContent || '0', 10) || 0;
+                            valueEl.textContent = String(current + 1);
+                        }
+                    }
+                } catch (e) { /* ignore */ }
             }
         }, setlistData.id);
         
@@ -1018,6 +1047,17 @@ async function handleSingleEvent(event, setlistData, selectedDate) {
             // Фиксируем использование архивного сет-листа
             if (setlistData?.id) {
                 incrementArchiveSetlistUsage(setlistData.id);
+                // Моментально обновляем UI счётчика
+                try {
+                    const cardEl = document.querySelector(`.archive-setlist-card[data-setlist-id="${setlistData.id}"]`);
+                    if (cardEl) {
+                        const valueEl = cardEl.querySelector('.setlist-meta .usage-count .usage-value');
+                        if (valueEl) {
+                            const current = parseInt(valueEl.textContent || '0', 10) || 0;
+                            valueEl.textContent = String(current + 1);
+                        }
+                    }
+                } catch (e) { /* ignore */ }
             }
         } else if (action === 'create') {
             // Создаем новое событие

@@ -1,5 +1,5 @@
-// Service Worker v6375 - Archive: increment usageCount when added to calendar
-const CACHE_NAME = 'agape-worship-cache-v6375';
+// Service Worker v6376 - Archive: dynamic usageCount UI + cache bump
+const CACHE_NAME = 'agape-worship-cache-v6376';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
