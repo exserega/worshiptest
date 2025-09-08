@@ -16,6 +16,9 @@ class DatePickerModal {
         this.selectedDate = null;
         this.currentDate = new Date();
         this.today = new Date();
+        this.eventsByDate = {}; // { 'YYYY-MM-DD': [events] }
+        this.userParticipantDates = new Set();
+        this.loadedMonthKey = null; // `${year}-${month}`
     }
     
     /**
@@ -123,7 +126,7 @@ class DatePickerModal {
     /**
      * Отрисовка календаря
      */
-    renderCalendar() {
+    async renderCalendar() {
         const year = this.currentDate.getFullYear();
         const month = this.currentDate.getMonth();
         
@@ -133,6 +136,13 @@ class DatePickerModal {
         const monthTitle = this.modal.querySelector('#calendarMonth');
         monthTitle.textContent = `${monthNames[month]} ${year}`;
         
+        // Подгружаем события для текущего месяца (один раз на месяц)
+        const monthKey = `${year}-${month}`;
+        if (this.loadedMonthKey !== monthKey) {
+            await this.loadMonthData(year, month);
+            this.loadedMonthKey = monthKey;
+        }
+
         // Очищаем дни
         const calendarDays = this.modal.querySelector('#calendarDays');
         calendarDays.innerHTML = '';
@@ -157,7 +167,11 @@ class DatePickerModal {
         for (let day = 1; day <= lastDay.getDate(); day++) {
             const dayEl = document.createElement('div');
             dayEl.className = 'calendar-day';
-            dayEl.textContent = day;
+            // Внутренний номер дня как в events календаре
+            const num = document.createElement('div');
+            num.className = 'calendar-day-number';
+            num.textContent = day;
+            dayEl.appendChild(num);
             
             const date = new Date(year, month, day);
             
@@ -173,8 +187,91 @@ class DatePickerModal {
                 // Добавляем обработчик клика только для будущих дат
                 dayEl.addEventListener('click', () => this.selectDate(date));
             }
+
+            // Индикаторы событий и участие пользователя
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            const key = `${y}-${m}-${d}`;
+            const dayEvents = this.eventsByDate[key] || [];
+            if (dayEvents.length > 0) {
+                dayEl.classList.add('has-events');
+                const dots = document.createElement('div');
+                dots.className = 'calendar-day-events';
+                const dotsCount = Math.min(dayEvents.length, 3);
+                for (let i = 0; i < dotsCount; i++) {
+                    const dot = document.createElement('span');
+                    dot.className = 'calendar-event-dot';
+                    dots.appendChild(dot);
+                }
+                dayEl.appendChild(dots);
+            }
+
+            if (this.userParticipantDates.has(key)) {
+                dayEl.classList.add('user-participant');
+            }
             
             calendarDays.appendChild(dayEl);
+        }
+    }
+
+    /**
+     * Загрузка событий и отметок участия на текущий месяц
+     */
+    async loadMonthData(year, month) {
+        try {
+            const [{ getCurrentUser }, { getEventsByBranch }] = await Promise.all([
+                import('../auth/authCheck.js'),
+                import('../events/eventsApi.js')
+            ]);
+            const user = getCurrentUser && getCurrentUser();
+            const branchId = user?.branchId;
+            if (!branchId) {
+                this.eventsByDate = {};
+                this.userParticipantDates = new Set();
+                return;
+            }
+
+            const events = await getEventsByBranch(branchId);
+            const byDate = {};
+            const participantDates = new Set();
+
+            events.forEach(evt => {
+                // Нормализуем дату события
+                let eventDate;
+                if (evt?.date?.toDate) eventDate = evt.date.toDate();
+                else if (evt?.date?.seconds) eventDate = new Date(evt.date.seconds * 1000);
+                else if (typeof evt?.date === 'string') eventDate = new Date(evt.date);
+                else if (evt?.date instanceof Date) eventDate = evt.date;
+
+                if (!eventDate || isNaN(eventDate.getTime())) return;
+                if (eventDate.getFullYear() !== year || eventDate.getMonth() !== month) return;
+
+                const y = eventDate.getFullYear();
+                const m = String(eventDate.getMonth() + 1).padStart(2, '0');
+                const d = String(eventDate.getDate()).padStart(2, '0');
+                const key = `${y}-${m}-${d}`;
+
+                if (!byDate[key]) byDate[key] = [];
+                byDate[key].push(evt);
+
+                // Отметка участия текущего пользователя
+                const uid = user?.uid;
+                const isLeader = evt.leaderId && uid && evt.leaderId === uid;
+                const isParticipant = Array.isArray(evt.participants) && uid
+                    ? evt.participants.some(p => p.id === uid)
+                    : false;
+                if (isLeader || isParticipant) {
+                    participantDates.add(key);
+                }
+            });
+
+            this.eventsByDate = byDate;
+            this.userParticipantDates = participantDates;
+        } catch (e) {
+            logger.warn('📅 Не удалось загрузить события для модального календаря:', e);
+            this.eventsByDate = {};
+            this.userParticipantDates = new Set();
         }
     }
     
