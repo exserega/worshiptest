@@ -1,0 +1,79 @@
+1) UI: Header bell button
+- Add bell icon button left to the title in index.html header, symmetric to profile
+- Follow dark theme color rules; explicit colors for icon/text
+- Add badge indicator for unread count (0..99, 99+)
+- Add dropdown container anchored to bell for notifications list
+- Close dropdown on outside click and Escape
+
+2) Firestore data model
+- Create collection per user: users/{uid}/notifications/{notificationId}
+- Notification fields:
+  - type: 'event_participant_added'
+  - eventId: string
+  - eventName: string
+  - eventDate: Timestamp
+  - placements: array of { instrumentId, instrumentName }
+  - createdAt: serverTimestamp
+  - read: boolean (default false)
+  - branchId: string (for filtering)
+
+3) Client API utilities (v8)
+- Add utils module notificationsApi.js:
+  - subscribeToUserNotifications(uid, onChange)
+  - markNotificationRead(uid, notifId)
+  - markAllNotificationsRead(uid)
+  - createNotificationForUser(uid, payload)
+- Ensure v8 syntax, timestamps, serverTimestamp usage
+
+4) Client initialization
+- On auth ready in initialization.js, start subscription to current user notifications
+- Keep unread count in state/eventBus
+- Update badge on header bell accordingly
+
+5) Dropdown UI rendering
+- Render list items: "Вас добавили в событие: {eventName}" with date and placements list
+- Each item: click -> navigate to /public/event/?id={eventId}
+- Unread item style: bold text/indicator dot
+- Empty state when no notifications
+- Ensure mobile width constraints (<= 460px)
+
+6) Mark-as-read behavior
+- On item click: mark that notification read before navigation (best-effort)
+- Add 'Отметить все как прочитанными' action at top of dropdown
+
+7) Event hooks (creation/update)
+- In eventsApi.updateEvent and createEvent flows in client, after successful write, compute affected users and create notifications in their users/{uid}/notifications
+- Diffing for updateEvent:
+  - Load previous event doc (get before update if available in caller) or pass previous participants to API
+  - Determine newly added participants by userId (exclude custom_*)
+  - Group placements per user
+- For createEvent: notify all participants + leaderId (if not custom_*)
+- Debounce/guard: do not notify current user if he adds himself optionally (configurable)
+
+8) Security rules (design)
+- users/{uid}/notifications readable only by owner
+- writable by owner for read flag; creation by server/client allowed for now (later move to CF)
+- Update firestore.rules later; start with client-side only in dev
+
+9) Styling
+- Use dark background (#1a1f2e/#1f2937) and text colors (#e5e7eb titles, #9ca3af body)
+- Badge on blue backgrounds (#22d3ee) uses #111827 text
+- Ensure explicit color on every text/icon
+
+10) Progressive enhancement for future push
+- Abstract notification creation via notificationsApi.createNotificationForUser
+- Keep payload schema compatible with FCM data messages
+- Plan to move creation to Cloud Functions trigger on events in future
+
+11) QA checklist
+- Add participant to new event: all listed get unread notifications
+- Update event: only newly added users get notifications; removed users unaffected
+- Multiple placements for same user are listed together
+- Clicking item marks read and opens event page
+- Mark all as read updates badge to 0 and styles
+- Works offline gracefully (badge may show cached); updates on reconnect
+
+12) Performance
+- Limit subscription to unread count (where read==false) for badge
+- Load full list when dropdown opens (limit 50, orderBy createdAt desc)
+- Unsubscribe on logout
