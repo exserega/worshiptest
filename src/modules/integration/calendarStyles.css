@@ -48,6 +48,16 @@
     border-color: #22d3ee;
 }
 
+/* Светлые иконки-стрелки на темном фоне кнопки */
+.date-picker-modal .calendar-nav-btn i {
+    color: #e5e7eb !important; /* светлый цвет иконки */
+}
+
+/* На голубом фоне — темная иконка для контраста */
+.date-picker-modal .calendar-nav-btn:hover i {
+    color: #111827 !important;
+}
+
 /* Дни недели */
 .date-picker-modal .calendar-weekdays {
     display: grid;

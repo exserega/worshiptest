@@ -1,5 +1,5 @@
-// Service Worker v6353 - DatePickerModal visual enhancements, event indicators
-const CACHE_NAME = 'agape-worship-cache-v6353';
+// Service Worker v6354 - Fix nav arrow icon colors in modal calendar
+const CACHE_NAME = 'agape-worship-cache-v6354';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
