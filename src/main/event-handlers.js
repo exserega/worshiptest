@@ -95,14 +95,23 @@ export function setupEventListeners() {
         if (bellBtn && dropdown) {
             const toggleDropdown = (show) => {
                 if (show) {
-                    // Mobile-first: position dropdown fixed under the bell
+                    // Mobile-first: position dropdown fixed under the bell and keep within viewport
                     const rect = bellBtn.getBoundingClientRect();
+                    const vw = window.innerWidth || document.documentElement.clientWidth;
                     dropdown.style.position = 'fixed';
-                    dropdown.style.left = Math.max(8, Math.round(rect.left)) + 'px';
-                    dropdown.style.top = Math.round(rect.bottom + 8) + 'px';
-                    dropdown.style.zIndex = '1000002';
-                    dropdown.style.visibility = 'visible';
                     dropdown.style.display = 'block';
+                    dropdown.style.visibility = 'hidden';
+                    dropdown.style.zIndex = '1000002';
+                    // Calculate intended width (<= 92vw, cap at 320)
+                    const maxVwWidth = Math.floor(vw * 0.92);
+                    const targetWidth = Math.min(320, Math.max(240, maxVwWidth));
+                    dropdown.style.width = targetWidth + 'px';
+                    // Clamp left within viewport with 8px margin
+                    let left = Math.round(rect.left);
+                    left = Math.max(8, Math.min(left, vw - targetWidth - 8));
+                    dropdown.style.left = left + 'px';
+                    dropdown.style.top = Math.round(rect.bottom + 8) + 'px';
+                    dropdown.style.visibility = 'visible';
                 } else {
                     dropdown.style.display = 'none';
                     dropdown.style.visibility = 'hidden';
