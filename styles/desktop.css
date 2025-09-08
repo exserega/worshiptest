@@ -64,6 +64,62 @@
 		padding-bottom: 80px; /* reserve space for larger bottom nav */
 	}
 
+	/* ===================================== */
+	/* Stage 2: Overlays / Modals (desktop) */
+	/* ===================================== */
+
+	/* Branch selection modal */
+	#branch-selection-modal .modal-content.branch-selection-content {
+		max-width: 720px;
+		width: 90%;
+		margin: 48px auto;
+	}
+
+	/* Create setlist modal */
+	#create-setlist-modal .overlay-content.create-setlist-content {
+		max-width: 520px;
+		width: 90%;
+		margin: 48px auto;
+	}
+
+	/* Setlist select overlay */
+	#setlist-select-overlay .modal-content.setlist-select-modal.compact {
+		max-width: 720px;
+		width: 92%;
+		margin: 48px auto;
+	}
+
+	/* Song editor overlay */
+	#song-editor-overlay .song-editor-modal {
+		max-width: 960px;
+		width: 92%;
+		margin: 48px auto;
+		max-height: calc(100vh - 120px);
+	}
+
+	/* Key selection preview */
+	#key-selection-modal .fullscreen-content.song-preview-content {
+		max-width: 960px;
+		width: 92%;
+		margin: 24px auto;
+		height: calc(100vh - 140px);
+	}
+
+	/* Add songs fullscreen overlay */
+	#add-songs-overlay .fullscreen-content {
+		max-width: 1200px;
+		width: 96%;
+		margin: 0 auto;
+		height: calc(100vh - 100px);
+	}
+
+	/* Metronome overlay */
+	#metronome-overlay .metronome-modal {
+		max-width: 720px;
+		width: 92%;
+		margin: 48px auto;
+	}
+
 	/* Search area: align with content width */
 	.controls {
 		max-width: 1200px;
