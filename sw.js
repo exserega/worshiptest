@@ -1,5 +1,5 @@
-// Service Worker v6355 - Center nav arrow icons in modal calendar
-const CACHE_NAME = 'agape-worship-cache-v6355';
+// Service Worker v6356 - Remove Apple auth from login UI/logic
+const CACHE_NAME = 'agape-worship-cache-v6356';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -2,7 +2,7 @@
 // 🔐 LOGIN MODULE
 // ====================================
 // Модуль авторизации пользователей
-// Поддерживает: Email, Google, Apple, Guest
+// Поддерживает: Email, Google, Guest
 // Новые пользователи получают статус 'pending'
 // ====================================
 
@@ -22,7 +22,7 @@ const elements = {
     // Buttons
     googleBtn: document.getElementById('google-login-btn'),
     emailBtn: document.getElementById('email-login-btn'),
-    appleBtn: document.getElementById('apple-login-btn'),
+    // appleBtn удален по требованиям
     guestBtn: document.getElementById('guest-login-btn'),
     showRegisterBtn: document.getElementById('show-register'),
     backFromEmail: document.getElementById('back-from-email'),
@@ -160,32 +160,7 @@ async function handleGoogleLogin() {
     }
 }
 
-// Apple Login
-async function handleAppleLogin() {
-    showLoading();
-    
-    try {
-        const provider = new firebase.auth.OAuthProvider('apple.com');
-        provider.addScope('email');
-        provider.addScope('name');
-        if (isNativeWebView()) {
-            await auth.signInWithRedirect(provider);
-            return;
-        } else {
-            const result = await auth.signInWithPopup(provider);
-            await createOrUpdateUser(result.user);
-            logger.log('✅ Apple авторизация успешна');
-            showMessage('Вход выполнен успешно!', 'success');
-            setTimeout(() => { window.location.href = '/'; }, 1000);
-        }
-        
-    } catch (error) {
-        logger.error('❌ Apple login error:', error);
-        showMessage(getErrorMessage(error.code));
-    } finally {
-        showLoading(false);
-    }
-}
+// Apple login удален
 
 // Guest Login
 async function handleGuestLogin() {
@@ -327,10 +302,7 @@ function init() {
         elements.googleBtn.addEventListener('click', handleGoogleLogin);
     }
     
-    // Apple login
-    if (elements.appleBtn) {
-        elements.appleBtn.addEventListener('click', handleAppleLogin);
-    }
+    // Apple login удален
     
     // Guest login
     if (elements.guestBtn) {
