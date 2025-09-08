@@ -5,11 +5,91 @@
 
 import logger from '../../utils/logger.js';
 import { db } from '../../utils/firebase-v8-adapter.js';
+import { createNotificationForUser } from '../notifications/notificationsApi.js';
 import { auth } from '../../../firebase-init.js';
 import { getSetlistById, getSetlistSongCount } from '../../utils/setlistUtils.js';
 
 // Firebase v8 Timestamp
 const Timestamp = window.firebase.firestore.Timestamp;
+
+/**
+ * Собирает словарь userId -> [{ instrumentId, instrumentName }]
+ * из объекта участников события
+ */
+function buildUserPlacementsMap(participantsObj = {}) {
+    const userIdToPlacements = {};
+    Object.values(participantsObj || {}).forEach((p) => {
+        const userId = p?.userId;
+        if (!userId || String(userId).startsWith('custom_')) return;
+        if (!userIdToPlacements[userId]) userIdToPlacements[userId] = [];
+        userIdToPlacements[userId].push({
+            instrumentId: p.instrument || '',
+            instrumentName: p.instrumentName || ''
+        });
+    });
+    return userIdToPlacements;
+}
+
+/**
+ * Уведомления при создании события: всем указанным участникам
+ */
+async function notifyParticipantsOnCreateEvent(eventId, eventData) {
+    try {
+        const userPlacements = buildUserPlacementsMap(eventData.participants || {});
+        const tasks = [];
+        const eventDate = eventData.date || null;
+        const eventName = eventData.name || '';
+        const branchId = eventData.branchId || null;
+        Object.entries(userPlacements).forEach(([userId, placements]) => {
+            tasks.push(createNotificationForUser(userId, {
+                type: 'event_participant_added',
+                eventId,
+                eventName,
+                eventDate,
+                placements,
+                branchId
+            }));
+        });
+        await Promise.all(tasks);
+    } catch (e) {
+        logger.warn('notifyParticipantsOnCreateEvent failed:', e);
+    }
+}
+
+/**
+ * Уведомления при обновлении события: только для НОВЫХ назначений
+ */
+async function notifyParticipantsOnUpdateEvent(eventId, finalUpdates, prevParticipants, prevMeta) {
+    try {
+        const prevMap = buildUserPlacementsMap(prevParticipants || {});
+        const nextMap = buildUserPlacementsMap(finalUpdates.participants || {});
+        const tasks = [];
+        const eventDate = finalUpdates.date || prevMeta?.prevDate || null;
+        const eventName = finalUpdates.name || prevMeta?.prevName || '';
+        const branchId = finalUpdates.branchId || null;
+        Object.entries(nextMap).forEach(([userId, placements]) => {
+            const prevPlacements = prevMap[userId] || [];
+            // Вычисляем новые назначения (по instrumentId)
+            const prevSet = new Set(prevPlacements.map(p => p.instrumentId || p.instrument));
+            const newPlacements = placements.filter(p => !prevSet.has(p.instrumentId));
+            if (newPlacements.length > 0) {
+                tasks.push(createNotificationForUser(userId, {
+                    type: 'event_participant_added',
+                    eventId,
+                    eventName,
+                    eventDate,
+                    placements: newPlacements,
+                    branchId
+                }));
+            }
+        });
+        if (tasks.length > 0) {
+            await Promise.all(tasks);
+        }
+    } catch (e) {
+        logger.warn('notifyParticipantsOnUpdateEvent failed:', e);
+    }
+}
 
 /**
  * Получить события филиала
@@ -234,6 +314,11 @@ export async function createEvent(eventData) {
         
         const docRef = await db.collection('events').add(newEvent);
         logger.log(`✅ Событие создано с ID: ${docRef.id}`);
+        try {
+            await notifyParticipantsOnCreateEvent(docRef.id, newEvent);
+        } catch (e) {
+            logger.warn('⚠️ Не удалось создать уведомления для участников при создании события:', e);
+        }
         
         return docRef.id;
     } catch (error) {
@@ -275,7 +360,32 @@ export async function updateEvent(eventId, updates) {
         };
         
         const eventRef = db.collection('events').doc(eventId);
+        // Снимок до обновления, чтобы посчитать diff участников
+        let prevParticipants = {};
+        let prevName = null;
+        let prevDate = null;
+        try {
+            const prevSnap = await eventRef.get();
+            if (prevSnap.exists) {
+                const prevData = prevSnap.data() || {};
+                prevParticipants = prevData.participants || {};
+                prevName = prevData.name || null;
+                prevDate = prevData.date || null;
+            }
+        } catch (e) {
+            logger.warn('⚠️ Не удалось получить предыдущее состояние события для diff:', e);
+        }
+
         await eventRef.update(finalUpdates);
+        
+        // Создаем уведомления только если обновлялись участники
+        if (updates && updates.participants) {
+            try {
+                await notifyParticipantsOnUpdateEvent(eventId, finalUpdates, prevParticipants, { prevName, prevDate });
+            } catch (e) {
+                logger.warn('⚠️ Не удалось создать уведомления для участников при обновлении события:', e);
+            }
+        }
         
         logger.log(`✅ Событие ${eventId} обновлено`);
     } catch (error) {
