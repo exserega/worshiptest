@@ -1,5 +1,5 @@
-// Service Worker v6362 - Settings desktop polish (conditional desktop.css, wider layout)
-const CACHE_NAME = 'agape-worship-cache-v6362';
+// Service Worker v6363 - Desktop a11y: focus-visible outlines and hover contrast
+const CACHE_NAME = 'agape-worship-cache-v6363';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

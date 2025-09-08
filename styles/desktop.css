@@ -346,3 +346,40 @@
 		max-width: 560px;
 	}
 }
+
+/* ====================================== */
+/* Stage 6: Accessibility & contrast (desktop) */
+/* ====================================== */
+@media (min-width: 1280px) {
+	/* Focus-visible outlines for interactive elements */
+	.icon-button:focus-visible,
+	.btn:focus-visible,
+	.settings-link:focus-visible,
+	.action-button:focus-visible,
+	.logout-button:focus-visible,
+	.mobile-bottom-nav .mobile-nav-button:focus-visible,
+	.event-card:focus-within {
+		outline: 2px solid #22d3ee;
+		outline-offset: 2px;
+		box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.35);
+	}
+
+	/* Ensure dark text/icons on blue hover backgrounds (scoped) */
+	.events-page-container .icon-button:hover,
+	.settings-container .icon-button:hover,
+	.mobile-bottom-nav .mobile-nav-button:hover {
+		color: #111827 !important; /* dark text/icons on blue */
+	}
+
+	/* Bottom nav hover on desktop: blue bg with dark text */
+	.mobile-bottom-nav .mobile-nav-button:hover {
+		background: #22d3ee;
+		border-color: #22d3ee;
+	}
+
+	/* Emphasize keyboard focus on event cards */
+	.event-card:focus-within {
+		border-color: #22d3ee;
+		box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+	}
+}
