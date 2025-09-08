@@ -100,8 +100,9 @@ export function setupEventListeners() {
                     const vw = window.innerWidth || document.documentElement.clientWidth;
                     // Move dropdown to body to avoid transformed ancestor stacking/context issues
                     try {
-                        if (dropdown.parentElement !== document.body) {
-                            document.body.appendChild(dropdown);
+                        const portal = document.getElementById('notifications-portal') || document.body;
+                        if (dropdown.parentElement !== portal) {
+                            portal.appendChild(dropdown);
                         }
                     } catch (e) { /* ignore */ }
                     dropdown.style.position = 'fixed';
