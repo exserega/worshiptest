@@ -24,6 +24,20 @@
     
     <!-- Стили страницы событий -->
     <link rel="stylesheet" href="./events-page.css">
+    <script>
+        // Load desktop-only stylesheet only on widths >= 1280px
+        (function(){
+            try {
+                var mq = window.matchMedia && window.matchMedia('(min-width: 1280px)');
+                if (mq && mq.matches) {
+                    var l = document.createElement('link');
+                    l.rel = 'stylesheet';
+                    l.href = '../styles/desktop.css';
+                    document.head.appendChild(l);
+                }
+            } catch(e) {}
+        })();
+    </script>
     
     <!-- Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

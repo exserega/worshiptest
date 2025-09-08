@@ -1,5 +1,5 @@
-// Service Worker v6356 - Remove Apple auth from login UI/logic
-const CACHE_NAME = 'agape-worship-cache-v6356';
+// Service Worker v6357 - Desktop events layout and narrower main container
+const CACHE_NAME = 'agape-worship-cache-v6357';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
