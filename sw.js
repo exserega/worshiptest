@@ -1,5 +1,5 @@
-// Service Worker v6365 - Desktop main: larger songs button, icon-only toggles, grid overlay
-const CACHE_NAME = 'agape-worship-cache-v6365';
+// Service Worker v6366 - Main desktop tweaks: wider songs button; icon-only for split/copy; card-like list
+const CACHE_NAME = 'agape-worship-cache-v6366';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

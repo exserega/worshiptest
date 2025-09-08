@@ -340,6 +340,11 @@
 		background: #1a1f2e;
 		color: #e5e7eb;
 		border-radius: 10px;
+		min-width: 240px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
 	}
 
 	.songs-button-container .songs-overlay-button i {
@@ -359,12 +364,16 @@
 
 	/* 2) Кнопки режимов: иконки без текста на десктопе */
 	#toggle-chords-button .button-text,
-	#chords-only-button .button-text {
+	#chords-only-button .button-text,
+	#split-text-button .button-text,
+	#copy-text-button .button-text {
 		display: none !important;
 	}
 
 	#toggle-chords-button,
-	#chords-only-button {
+	#chords-only-button,
+	#split-text-button,
+	#copy-text-button {
 		width: 44px;
 		height: 44px;
 		padding: 0;
@@ -405,8 +414,8 @@
 	}
 
 	.songs-overlay .songs-list {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+		display: flex;
+		flex-direction: column;
 		gap: 8px;
 		overflow-y: auto;
 		padding-right: 4px;
@@ -428,12 +437,22 @@
 
 	.songs-overlay .song-name {
 		color: var(--text-primary);
+		font-size: 0.95rem;
+		line-height: 1.2;
+	}
+
+	/* Card-like row layout for song items */
+	.songs-overlay .song-item {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
 	}
 }
 
 @media (min-width: 1440px) {
-	.songs-overlay .songs-list {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+	/* Widen main 'Все песни' button on very wide screens */
+	.songs-button-container .songs-overlay-button {
+		min-width: 280px;
 	}
 }
 
