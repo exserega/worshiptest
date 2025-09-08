@@ -110,12 +110,17 @@ export function setupEventListeners() {
                     dropdown.style.zIndex = '1000002';
                     // Calculate intended width (<= 92vw, cap at 320)
                     const maxVwWidth = Math.floor(vw * 0.92);
-                    const targetWidth = Math.min(320, Math.max(240, maxVwWidth));
+                    let targetWidth = Math.min(320, Math.max(240, maxVwWidth));
+                    if (vw <= 480) {
+                        targetWidth = Math.max(240, vw - 16); // full width minus margins
+                        dropdown.style.left = '8px';
+                    } else {
+                        // Clamp left within viewport with 8px margin
+                        let left = Math.round(rect.left);
+                        left = Math.max(8, Math.min(left, vw - targetWidth - 8));
+                        dropdown.style.left = left + 'px';
+                    }
                     dropdown.style.width = targetWidth + 'px';
-                    // Clamp left within viewport with 8px margin
-                    let left = Math.round(rect.left);
-                    left = Math.max(8, Math.min(left, vw - targetWidth - 8));
-                    dropdown.style.left = left + 'px';
                     dropdown.style.top = Math.round(rect.bottom + 8) + 'px';
                     dropdown.style.visibility = 'visible';
                 } else {
