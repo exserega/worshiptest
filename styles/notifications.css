@@ -65,13 +65,13 @@
   gap: 6px;
   background: #1f2937;
   border: 1px solid #374151;
-  color: #9ca3af;
+  color: #e5e7eb; /* light text on dark background */
   border-radius: 8px;
   padding: 6px 8px;
   cursor: pointer;
 }
 
-.notifications-action i { color: #9ca3af; }
+.notifications-action i { color: #e5e7eb; }
 
 .notifications-list {
   max-height: 360px;
