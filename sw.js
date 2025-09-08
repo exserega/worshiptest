@@ -1,5 +1,5 @@
-// Service Worker v6374 - Archive key modal: select defaults to original key
-const CACHE_NAME = 'agape-worship-cache-v6374';
+// Service Worker v6375 - Archive: increment usageCount when added to calendar
+const CACHE_NAME = 'agape-worship-cache-v6375';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

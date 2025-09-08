@@ -10,7 +10,8 @@ import {
     createArchiveSetlist,
     updateArchiveSetlist,
     deleteArchiveSetlist,
-    addSongToArchiveSetlist
+    addSongToArchiveSetlist,
+    incrementArchiveSetlistUsage
 } from '../src/modules/archive/archiveApi.js';
 import archiveGroupsManager from '../src/modules/archive/archiveGroupsManager.js';
 
@@ -989,6 +990,10 @@ async function handleCreateNewEvent(selectedDate, setlistData) {
         newModal.open(new Date(selectedDate), async (eventId) => {
             console.log('✅ Событие создано:', eventId);
             showTemporaryNotification('✅ Событие успешно создано!');
+            // Фиксируем использование архивного сет-листа
+            if (setlistData?.id) {
+                incrementArchiveSetlistUsage(setlistData.id);
+            }
         }, setlistData.id);
         
     } catch (error) {
@@ -1010,6 +1015,10 @@ async function handleSingleEvent(event, setlistData, selectedDate) {
             const { updateEventSetlistApi } = await import('../src/modules/events/eventsApi.js');
             await updateEventSetlistApi(event.id, setlistData.id, setlistData.name);
             showTemporaryNotification('✅ Сет-лист события обновлен');
+            // Фиксируем использование архивного сет-листа
+            if (setlistData?.id) {
+                incrementArchiveSetlistUsage(setlistData.id);
+            }
         } else if (action === 'create') {
             // Создаем новое событие
             await handleCreateNewEvent(selectedDate, setlistData);

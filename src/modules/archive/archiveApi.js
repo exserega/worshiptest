@@ -265,3 +265,20 @@ export async function removeSongFromArchiveSetlist(setlistId, songId) {
         throw error;
     }
 }
+
+/**
+ * Инкрементирует счётчик использований архивного сет-листа
+ * @param {string} setlistId - ID сет-листа
+ * @returns {Promise<void>}
+ */
+export async function incrementArchiveSetlistUsage(setlistId) {
+    try {
+        await db.collection('archive_setlists').doc(setlistId).set({
+            usageCount: FieldValue.increment(1),
+            updatedAt: Timestamp.now()
+        }, { merge: true });
+    } catch (error) {
+        logger.error('❌ Error incrementing usageCount for archive setlist:', error);
+        // Не пробрасываем ошибку, чтобы не ломать основной поток добавления в календарь
+    }
+}
