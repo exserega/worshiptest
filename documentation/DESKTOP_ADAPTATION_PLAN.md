@@ -60,3 +60,33 @@ Rollback Plan
 Notes
 - This plan adds only media-query-scoped rules. Mobile remains the source of truth; desktop enhances layout and spacing without changing the design system or interactions.
 
+Scope Matrix (Pages & Overlays)
+
+Pages (Top-level)
+- [ ] Главная страница (root `index.html`)
+- [ ] Страница событий (`/events/index.html`, `events/events-page.css`, `events/events-calendar.js`)
+- [ ] Страница архива (`/archive/index.html`, `archive/archive-page.css`, `archive/archive.js`)
+- [ ] Страница настроек (`/settings.html`, `css/settings.css`)
+- [ ] Страница входа (`/public/login.html`, `css/auth.css`)
+
+Overlays / Modals (Global/UI)
+- [ ] Overlay добавления песен (`#add-songs-overlay`, styles in `styles/add-songs-overlay-compact.css`)
+- [ ] Overlay выбора сет-листа (`#setlist-select-overlay`)
+- [ ] Редактор песен (`#song-editor-overlay`)
+- [ ] Полноэкранный preview тональностей (`#key-selection-modal`)
+- [ ] Метроном (`#metronome-overlay`)
+- [ ] Глобальные оверлеи интеграции с событиями:
+  - [ ] Выбор даты (DatePickerModal) (`src/modules/integration/datePickerModal.js`, `src/modules/integration/calendarStyles.css`)
+  - [ ] Создание/редактирование события (`src/modules/events/eventCreationModal.js`, `styles/event-creation-modal-complete.css`)
+  - [ ] Выбор события (EventSelectorModal) (`src/modules/integration/eventSelectorModal.js`, `src/modules/integration/eventSelectorStyles.css`)
+  - [ ] Список/календарь событий в оверлее (`src/modules/events/eventsOverlay.js`, `styles/events-overlay.css`)
+
+Side Panels
+- [ ] `#setlists-panel` (панель сет-листов)
+- [ ] `#my-list-panel` (панель «Мои»)
+- [ ] `#repertoire-panel` (панель репертуара)
+
+Desktop-only Stylesheet
+- File: `styles/desktop.css`
+- Load strategy: conditional JS injection only when `(min-width: 1280px)` to avoid mobile downloads
+
