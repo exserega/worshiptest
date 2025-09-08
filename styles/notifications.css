@@ -71,7 +71,8 @@
   cursor: pointer;
 }
 
-.notifications-action i { color: #e5e7eb; }
+.notifications-action i { color: #e5e7eb !important; }
+.notifications-action span { color: #e5e7eb !important; }
 
 .notifications-list {
   max-height: 360px;
