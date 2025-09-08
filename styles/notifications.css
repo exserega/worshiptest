@@ -34,7 +34,7 @@
 .notifications-bell-container { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); display: inline-block; }
 
 .notifications-dropdown {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 44px;
   width: 320px;
@@ -43,7 +43,7 @@
   border: 1px solid #374151;
   border-radius: 10px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-  z-index: 10002; /* above global-fullscreen-overlay (999998) and modal-manager (10001) */
+  z-index: 1000002; /* above global overlays */
 }
 
 .notifications-header {

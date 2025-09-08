@@ -100,9 +100,12 @@ export function setupEventListeners() {
                     dropdown.style.position = 'fixed';
                     dropdown.style.left = Math.max(8, Math.round(rect.left)) + 'px';
                     dropdown.style.top = Math.round(rect.bottom + 8) + 'px';
+                    dropdown.style.zIndex = '1000002';
+                    dropdown.style.visibility = 'visible';
                     dropdown.style.display = 'block';
                 } else {
                     dropdown.style.display = 'none';
+                    dropdown.style.visibility = 'hidden';
                 }
                 bellBtn.classList.toggle('active', !!show);
             };
