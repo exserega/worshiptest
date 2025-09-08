@@ -185,6 +185,24 @@
 		margin-right: auto;
 	}
 
+	/* List view: hide calendar column and make list span the layout */
+	body:has(.events-list-view) .events-page-container {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas:
+			"top"
+			"list";
+	}
+
+	body:has(.events-list-view) .calendar-section {
+		display: none;
+	}
+
+	body:has(.events-list-view) .selected-date-events {
+		max-width: 920px; /* шире для списка */
+		padding-left: 1.5rem;
+		padding-right: 1.5rem;
+	}
+
 	/* Tighter paddings for desktop */
 	.calendar-grid {
 		padding: 0.5rem 1rem 1rem;

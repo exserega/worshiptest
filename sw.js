@@ -1,5 +1,5 @@
-// Service Worker v6358 - Events desktop refinements (sticky header, widths)
-const CACHE_NAME = 'agape-worship-cache-v6358';
+// Service Worker v6359 - Events list view desktop layout (hide calendar, widen list)
+const CACHE_NAME = 'agape-worship-cache-v6359';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
