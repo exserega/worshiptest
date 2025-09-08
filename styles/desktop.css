@@ -17,20 +17,25 @@
 		gap: 8px;
 		position: fixed;
 		top: 120px;
-		left: 20px;
-		z-index: 100;
+		left: 24px;
+		right: auto;
+		bottom: auto;
+		width: 220px; /* fixed width to avoid full-width bug */
+		z-index: 200;
 		background: #1a1f2e; /* dark tertiary */
 		border: 1px solid #374151;
 		border-radius: 12px;
-		padding: 8px;
+		padding: 10px;
+		box-shadow: 0 8px 16px rgba(0,0,0,0.35);
 	}
 
 	.mobile-bottom-nav .mobile-nav-button {
-		width: 44px;
+		width: 100%;
 		height: 44px;
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
+		gap: 10px;
 		background: #1a1f2e;
 		color: #9ca3af !important;
 		border: 1px solid #374151;
@@ -45,9 +50,21 @@
 		border-color: #22d3ee;
 	}
 
-	/* Hide labels in desktop dock to keep it compact */
+	/* Icon + label colors */
+	.mobile-bottom-nav .mobile-nav-button i {
+		color: inherit !important;
+		width: 18px;
+		height: 18px;
+	}
+
 	.mobile-bottom-nav .mobile-nav-button span {
-		display: none;
+		color: #9ca3af !important;
+		font-size: 0.9rem;
+	}
+
+	.mobile-bottom-nav .mobile-nav-button:hover span,
+	.mobile-bottom-nav .mobile-nav-button:hover i {
+		color: #111827 !important;
 	}
 
 	/* Side panels: define consistent desktop widths without altering visuals */
@@ -83,7 +100,7 @@
 
 	/* Reserve space for vertical dock */
 	.container {
-		padding-left: 76px;
+		padding-left: 280px; /* reserve space for nav dock */
 	}
 
 	/* Search area: align with content width */
