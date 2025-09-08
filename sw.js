@@ -1,5 +1,5 @@
-// Service Worker v6354 - Fix nav arrow icon colors in modal calendar
-const CACHE_NAME = 'agape-worship-cache-v6354';
+// Service Worker v6355 - Center nav arrow icons in modal calendar
+const CACHE_NAME = 'agape-worship-cache-v6355';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

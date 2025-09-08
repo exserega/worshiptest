@@ -40,6 +40,8 @@
     justify-content: center;
     transition: all 0.2s ease;
     font-size: 0.875rem;
+    padding: 0; /* исключаем смещение содержимого */
+    text-align: center;
 }
 
 .date-picker-modal .calendar-nav-btn:hover {
@@ -51,6 +53,8 @@
 /* Светлые иконки-стрелки на темном фоне кнопки */
 .date-picker-modal .calendar-nav-btn i {
     color: #e5e7eb !important; /* светлый цвет иконки */
+    line-height: 1; /* предотвращаем вертикальные смещения */
+    margin: 0; /* исключаем горизонтальные смещения */
 }
 
 /* На голубом фоне — темная иконка для контраста */
