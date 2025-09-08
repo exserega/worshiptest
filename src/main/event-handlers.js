@@ -113,6 +113,56 @@ export function setupEventListeners() {
                 e.stopPropagation();
                 const isOpen = dropdown.style.display === 'block';
                 toggleDropdown(!isOpen);
+                if (!isOpen) {
+                    // Lazy load notifications list on open
+                    (async () => {
+                        try {
+                            const { fetchNotifications, markNotificationRead, markAllNotificationsRead } = await import('../modules/notifications/notificationsApi.js');
+                            const listEl = document.getElementById('notifications-list');
+                            if (!listEl) return;
+                            listEl.innerHTML = '<div class="notifications-empty">Загрузка...</div>';
+                            const items = await fetchNotifications(50);
+                            if (!items || items.length === 0) {
+                                listEl.innerHTML = '<div class="notifications-empty">Пока нет уведомлений</div>';
+                                return;
+                            }
+                            listEl.innerHTML = items.map((n) => {
+                                const unreadClass = n.read ? '' : ' notification-unread';
+                                const dateStr = n.createdAt?.toDate ? n.createdAt.toDate().toLocaleString('ru-RU') : '';
+                                const placements = Array.isArray(n.placements) && n.placements.length > 0 ? n.placements.map(p => p.instrumentName).join(', ') : '';
+                                return `<div class="notification-item${unreadClass}" data-id="${n.id}" data-event="${n.eventId || ''}">
+                                    <div class="notification-title">Вас добавили в событие: ${n.eventName || ''}</div>
+                                    <div class="notification-meta">${dateStr}</div>
+                                    ${placements ? `<div class="notification-placements">${placements}</div>` : ''}
+                                </div>`;
+                            }).join('');
+                            // Click handlers for items
+                            listEl.querySelectorAll('.notification-item').forEach((item) => {
+                                item.addEventListener('click', async () => {
+                                    const id = item.getAttribute('data-id');
+                                    const ev = item.getAttribute('data-event');
+                                    try { await markNotificationRead(id); } catch (e) {}
+                                    if (ev) window.location.href = `/public/event/?id=${ev}`;
+                                });
+                            });
+                            // Mark all action
+                            const markAllBtn = document.getElementById('notifications-mark-all');
+                            if (markAllBtn) {
+                                markAllBtn.onclick = async (e2) => {
+                                    e2.stopPropagation();
+                                    try { await markAllNotificationsRead(); } catch (e) {}
+                                    const badge = document.getElementById('notifications-badge');
+                                    if (badge) badge.style.display = 'none';
+                                    const listEl2 = document.getElementById('notifications-list');
+                                    if (listEl2) listEl2.querySelectorAll('.notification-item').forEach(el => el.classList.remove('notification-unread'));
+                                };
+                            }
+                        } catch (e) {
+                            const listEl = document.getElementById('notifications-list');
+                            if (listEl) listEl.innerHTML = '<div class="notifications-empty">Не удалось загрузить уведомления</div>';
+                        }
+                    })();
+                }
             });
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('#notifications-dropdown') && !e.target.closest('#notifications-bell-button')) {

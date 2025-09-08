@@ -89,6 +89,24 @@ export async function initializeApp() {
         
         // Настройка обработчиков событий
         setupEventListeners();
+        // Неблокирующая инициализация: подписка на счетчик уведомлений
+        try {
+            setTimeout(async () => {
+                const { subscribeUnreadCount } = await import('../modules/notifications/notificationsApi.js');
+                const badge = document.getElementById('notifications-badge');
+                const unsub = subscribeUnreadCount((count) => {
+                    if (!badge) return;
+                    if (count > 0) {
+                        badge.textContent = count > 99 ? '99+' : String(count);
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                });
+                // Сохраняем отписку глобально
+                window.__unsubUnreadNotifications = unsub;
+            }, 0);
+        } catch (e) { /* ignore */ }
         
         // ПАНЕЛИ НАСТРАИВАЮТСЯ В script.js - НЕ ЗДЕСЬ!
         
