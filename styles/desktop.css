@@ -438,16 +438,16 @@
 
 	/* Dark-themed key select (desktop) */
 	#key-select {
-		background: #1f2937;
-		border: 1px solid #374151;
+		background: transparent;
+		border: none !important;
 		color: #e5e7eb;
-		padding: 8px 12px;
-		border-radius: 8px;
+		padding: 0 8px;
+		border-radius: 0;
 		appearance: auto;
-		background-image: none;
+		background-image: none !important;
 		display: inline-block;
 		min-width: 88px;
-		height: 40px;
+		height: 32px;
 		line-height: 1.2;
 		font-size: 0.95rem;
 		box-sizing: border-box;

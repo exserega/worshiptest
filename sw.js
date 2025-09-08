@@ -1,5 +1,5 @@
-// Service Worker v6371 - Desktop: fix side borders, split icon center, reduce song text spacing
-const CACHE_NAME = 'agape-worship-cache-v6371';
+// Service Worker v6372 - Desktop: remove double border on key select (transparent, no inner border)
+const CACHE_NAME = 'agape-worship-cache-v6372';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
