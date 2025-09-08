@@ -5,7 +5,7 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 8px;
+  border-radius: 50%;
   background: #1f2937;
   border: 1px solid #374151;
   cursor: pointer;
@@ -108,5 +108,14 @@
 @media (max-width: 480px) {
   .notifications-dropdown { width: 300px; max-width: 92vw; }
   .header-bell-button { width: 34px; height: 34px; }
+  .notifications-bell-container { position: absolute; left: 12px; top: 12px; }
 }
+
+/* Active/pressed state for visibility on dark background */
+.header-bell-button:active i,
+.header-bell-button.active i { color: #e5e7eb; }
+.notifications-action:active,
+.notifications-action:focus { color: #e5e7eb; }
+.notifications-action:active i,
+.notifications-action:focus i { color: #e5e7eb; }
 
