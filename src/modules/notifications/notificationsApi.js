@@ -3,7 +3,7 @@
  * Provides subscription to unread count, listing, and marking notifications as read
  */
 
-import { db, auth, firebase } from '../../js/firebase-config.js';
+import { db, auth, firebase } from '../../../js/firebase-config.js';
 
 /**
  * Subscribe to unread notifications count for current user
