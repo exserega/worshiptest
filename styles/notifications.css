@@ -33,28 +33,17 @@
 
 .notifications-bell-container { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); display: inline-block; }
 
-.notifications-portal, #notifications-portal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 0; /* only used as a positioning context */
-  z-index: 1000002;
-  pointer-events: none;
-}
-
 .notifications-dropdown {
-  position: fixed;
+  position: absolute;
   left: 0;
-  top: 44px;
-  width: 320px;
+  top: calc(100% + 8px);
+  min-width: 280px;
   max-width: 92vw;
   background: #1a1f2e;
   border: 1px solid #374151;
   border-radius: 10px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-  z-index: 1000002; /* above global overlays */
-  pointer-events: auto;
+  z-index: 2000;
 }
 
 .notifications-header {
@@ -112,7 +101,7 @@
 .notification-unread .notification-title { font-weight: 700; }
 
 @media (max-width: 480px) {
-  .notifications-dropdown { width: 92vw; max-width: 92vw; }
+  .notifications-dropdown { left: 0; right: auto; min-width: 260px; max-width: calc(100vw - 24px); }
   .header-bell-button { width: 34px; height: 34px; }
 }
 
