@@ -112,16 +112,22 @@ export function setupEventListeners() {
                     const maxVwWidth = Math.floor(vw * 0.92);
                     let targetWidth = Math.min(320, Math.max(240, maxVwWidth));
                     if (vw <= 480) {
-                        targetWidth = Math.max(240, vw - 16); // full width minus margins
+                        // Full-width style: stretch between 8px margins under header
+                        const headerEl = document.querySelector('header');
+                        const headerRect = headerEl ? headerEl.getBoundingClientRect() : { bottom: rect.bottom };
                         dropdown.style.left = '8px';
+                        dropdown.style.right = '8px';
+                        dropdown.style.width = 'auto';
+                        dropdown.style.top = Math.round((headerRect.bottom || rect.bottom) + 8) + 'px';
                     } else {
                         // Clamp left within viewport with 8px margin
                         let left = Math.round(rect.left);
                         left = Math.max(8, Math.min(left, vw - targetWidth - 8));
                         dropdown.style.left = left + 'px';
+                        dropdown.style.width = targetWidth + 'px';
+                        dropdown.style.top = Math.round(rect.bottom + 8) + 'px';
                     }
-                    dropdown.style.width = targetWidth + 'px';
-                    dropdown.style.top = Math.round(rect.bottom + 8) + 'px';
+                    
                     dropdown.style.visibility = 'visible';
                 } else {
                     dropdown.style.display = 'none';
