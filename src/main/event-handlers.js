@@ -192,7 +192,10 @@ export function setupEventListeners() {
                                     const badge = document.getElementById('notifications-badge');
                                     if (badge) badge.style.display = 'none';
                                     const listEl2 = document.getElementById('notifications-list');
-                                    if (listEl2) listEl2.querySelectorAll('.notification-item').forEach(el => el.classList.remove('notification-unread'));
+                                    if (listEl2) {
+                                        listEl2.querySelectorAll('.notification-item').forEach(el => el.classList.remove('notification-unread'));
+                                        listEl2.querySelectorAll('.notification-indicator').forEach(dot => dot.remove());
+                                    }
                                 };
                             }
                         } catch (e) {

@@ -1,5 +1,5 @@
-// Service Worker v6381 - Notifications dot indicator refinement + cache bump
-const CACHE_NAME = 'agape-worship-cache-v6381';
+// Service Worker v6382 - Mark-all UI sync for unread dots + cache bump
+const CACHE_NAME = 'agape-worship-cache-v6382';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
