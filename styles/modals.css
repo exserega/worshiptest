@@ -475,6 +475,7 @@
 .modal-header.compact {
     padding: 1rem 1.25rem;
     border-bottom: 1px solid var(--border-color);
+    position: relative; /* ensure absolute-positioned close button anchors to header */
 }
 
 .modal-header.compact h3 {

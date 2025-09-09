@@ -1,5 +1,5 @@
-// Service Worker v6390 - Safe header delay with state guard; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6390';
+// Service Worker v6391 - Fix setlist modal close button positioning; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6391';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

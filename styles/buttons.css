@@ -99,14 +99,9 @@ button:disabled { opacity: 0.5; cursor: not-allowed; background: color-mix(in sr
 }
 
 /* Позиционирование в оверлеях */
-.modal-header .icon-button-small,
+.modal-header .icon-button-small { position: absolute; right: 10px; top: 10px; transform: none; }
 .header-top .icon-button-small,
-.header-top-row .icon-button-small {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-}
+.header-top-row .icon-button-small { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
 
 /* Editor close button: pinned top-right, no movement */
 .song-editor-header #close-editor-button.icon-button-small {
