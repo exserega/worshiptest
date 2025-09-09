@@ -123,7 +123,7 @@
   align-items: center;
   background: #1f2937;
   border: 1px solid #374151;
-  color: #e5e7eb;
+  color: #e5e7eb !important;
   border-radius: 8px;
   padding: 4px 10px;
   height: 28px;
@@ -132,6 +132,12 @@
 }
 .notifications-footer { gap: 8px; }
 .notifications-none { color: #e5e7eb; font-size: 12px; align-self: center; }
+
+/* Ensure header not blocking clicks when panels are open: use via runtime toggle in JS */
+header.header-disabled { pointer-events: none; }
+header.header-disabled .notifications-bell-container { display: none; }
+header.header-disabled h1 { display: none; }
+header.header-disabled #profile-button { display: none; }
 
 @media (max-width: 480px) {
   .notifications-dropdown { left: 0; right: auto; min-width: 260px; max-width: calc(100vw - 24px); }

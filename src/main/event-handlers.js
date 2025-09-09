@@ -736,6 +736,18 @@ function setupSetlistEventHandlers() {
                 ui.toggleSetlistsButton.classList.add('loading');
                 try {
                     ui.setlistsPanel.classList.add('open');
+                    // Click outside to close
+                    const closeOnOutside = (e) => {
+                        if (!ui.setlistsPanel.contains(e.target)) {
+                            ui.setlistsPanel.classList.remove('open');
+                            document.removeEventListener('mousedown', closeOnOutside);
+                            document.removeEventListener('touchstart', closeOnOutside);
+                        }
+                    };
+                    setTimeout(() => {
+                        document.addEventListener('mousedown', closeOnOutside);
+                        document.addEventListener('touchstart', closeOnOutside, { passive: true });
+                    }, 0);
                     
                     // Скрываем нижнюю панель навигации
                     const bottomNav = document.querySelector('.mobile-bottom-nav');

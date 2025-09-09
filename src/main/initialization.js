@@ -132,9 +132,8 @@ export async function initializeApp() {
                 const anyOpenPanel = document.querySelector('.side-panel.open');
                 const anyOverlay = document.querySelector('.global-fullscreen-overlay.show');
                 const shouldHide = !!(anyOpenPanel || anyOverlay);
-                if (bellContainer) bellContainer.style.visibility = shouldHide ? 'hidden' : 'visible';
-                if (titleEl) titleEl.style.visibility = shouldHide ? 'hidden' : 'visible';
-                if (profileBtn) profileBtn.style.visibility = shouldHide ? 'hidden' : 'visible';
+                const headerEl = document.querySelector('header');
+                if (headerEl) headerEl.classList.toggle('header-disabled', shouldHide);
                 if (dropdown && shouldHide) dropdown.style.display = 'none';
             });
             observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });

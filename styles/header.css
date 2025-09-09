@@ -7,6 +7,7 @@ header {
     display: flex; justify-content: center; align-items: center;
     position: relative; padding: 8px 20px; margin-bottom: 8px;
     z-index: 1000001; /* keep header and its dropdown above content */
+    pointer-events: auto;
 }
 h1 {
     text-align: center; color: var(--text-color); margin: 0;

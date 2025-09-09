@@ -1,5 +1,5 @@
-// Service Worker v6384 - Single 'Показать больше' + hide header elements + cache bump
-const CACHE_NAME = 'agape-worship-cache-v6384';
+// Service Worker v6385 - Light text for button, header click-through fix, click-outside close; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6385';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
