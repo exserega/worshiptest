@@ -1,5 +1,5 @@
-// Service Worker v6393 - Add delayed header restore for editor; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6393';
+// Service Worker v6394 - Delay header restore only for side panel; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6394';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -154,7 +154,8 @@ export async function initializeApp() {
                     if (window.__headerEnableTimeout) {
                         clearTimeout(window.__headerEnableTimeout);
                     }
-                    const delay = cause === 'editor' ? 250 : 0;
+                    // Delay only for side panel; overlays/editor restore immediately
+                    const delay = cause === 'panel' ? 250 : 0;
                     if (delay > 0) {
                         window.__headerEnableTimeout = setTimeout(() => {
                             if (headerEl) headerEl.classList.remove('header-disabled');
