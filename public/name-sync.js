@@ -94,6 +94,39 @@ function initNameSync() {
         }
     }
     
+    async function syncUserNameInSetlists(userId, newName) {
+        try {
+            console.log('🔄 Синхронизация имени в сет-листах:', { userId, newName });
+            let totalUpdated = 0;
+            // Активные
+            const activeSnap = await db.collection('worship_setlists').where('createdBy', '==', userId).get();
+            if (!activeSnap.empty) {
+                const batch = db.batch();
+                activeSnap.forEach(doc => {
+                    batch.update(doc.ref, { createdByName: newName });
+                    totalUpdated++;
+                });
+                await batch.commit();
+                console.log(`📝 Обновлено активных сет-листов: ${activeSnap.size}`);
+            }
+            // Архивные
+            const archiveSnap = await db.collection('archive_setlists').where('createdBy', '==', userId).get();
+            if (!archiveSnap.empty) {
+                const batch2 = db.batch();
+                archiveSnap.forEach(doc => {
+                    batch2.update(doc.ref, { createdByName: newName });
+                    totalUpdated++;
+                });
+                await batch2.commit();
+                console.log(`📝 Обновлено архивных сет-листов: ${archiveSnap.size}`);
+            }
+            return totalUpdated;
+        } catch (e) {
+            console.error('❌ Ошибка синхронизации имен в сет-листах:', e);
+            throw e;
+        }
+    }
+    
     // Делаем функцию синхронизации глобальной
     window.syncUserNameInEvents = syncUserNameInEvents;
     
@@ -148,17 +181,15 @@ function initNameSync() {
                             console.log('📍 userId:', user.uid);
                             
                             try {
-                                const updateCount = await syncUserNameInEvents(user.uid, newName);
-                                console.log(`✅ Синхронизация завершена. Обновлено событий: ${updateCount}`);
-                                
-                                if (updateCount > 0) {
-                                    setTimeout(() => {
-                                        alert('✅ Имя успешно обновлено!');
-                                    }, 100);
+                                const updatedEvents = await syncUserNameInEvents(user.uid, newName);
+                                const updatedSetlists = await syncUserNameInSetlists(user.uid, newName);
+                                console.log(`✅ Синхронизация завершена. Событий: ${updatedEvents}, сет-листов: ${updatedSetlists}`);
+                                if (updatedEvents + updatedSetlists > 0) {
+                                    setTimeout(() => { alert('✅ Имя обновлено во всех данных'); }, 100);
                                 }
                             } catch (error) {
                                 console.error('❌ Ошибка синхронизации:', error);
-                                alert('⚠️ Профиль обновлен, но произошла ошибка при обновлении имени в событиях');
+                                alert('⚠️ Профиль обновлен, но произошла ошибка при обновлении имени в связанных данных');
                             }
                         }
                     }
