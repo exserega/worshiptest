@@ -130,6 +130,8 @@
   font-size: 12px;
   cursor: pointer;
 }
+.notifications-footer { gap: 8px; }
+.notifications-none { color: #e5e7eb; font-size: 12px; align-self: center; }
 
 @media (max-width: 480px) {
   .notifications-dropdown { left: 0; right: auto; min-width: 260px; max-width: calc(100vw - 24px); }

@@ -1,5 +1,5 @@
-// Service Worker v6382 - Mark-all UI sync for unread dots + cache bump
-const CACHE_NAME = 'agape-worship-cache-v6382';
+// Service Worker v6383 - Notifications footer buttons + bell hide on panels + cache bump
+const CACHE_NAME = 'agape-worship-cache-v6383';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

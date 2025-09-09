@@ -121,6 +121,21 @@ export async function initializeApp() {
         
         // Настройка мобильных оптимизаций
         setupMobileOptimizations();
+
+        // Скрывать колокол уведомлений поверх панелей/оверлеев
+        try {
+            const bellContainer = document.querySelector('.notifications-bell-container');
+            const dropdown = document.getElementById('notifications-dropdown');
+            const observer = new MutationObserver(() => {
+                const anyOpenPanel = document.querySelector('.side-panel.open');
+                const anyOverlay = document.querySelector('.global-fullscreen-overlay.show');
+                const shouldHide = !!(anyOpenPanel || anyOverlay);
+                if (bellContainer) bellContainer.style.visibility = shouldHide ? 'hidden' : 'visible';
+                if (dropdown && shouldHide) dropdown.style.display = 'none';
+            });
+            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+            window.__notificationsBellObserver = observer;
+        } catch (e) { /* ignore */ }
         
         console.log('✅ [Initialization] Инициализация приложения завершена');
         
