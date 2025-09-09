@@ -518,31 +518,44 @@ function setupMobileOptimizations() {
     
     console.log('📱 [Initialization] Применяем мобильные оптимизации');
     
-    // КРИТИЧЕСКАЯ ЗАЩИТА: принудительно исправляем размеры панелей на мобильных
+    // КРИТИЧЕСКАЯ ЗАЩИТА: принудительно исправляем размеры панелей на мобильных (с троттлингом)
+    let mobileOptimizeRaf = null;
     const observer = new MutationObserver(() => {
-        document.querySelectorAll('.side-panel').forEach(panel => {
-            if (panel.classList.contains('open')) {
-                // ПРИНУДИТЕЛЬНЫЕ РАЗМЕРЫ
-                const maxWidth = Math.min(280, window.innerWidth * 0.85);
-                panel.style.width = maxWidth + 'px';
-                panel.style.maxWidth = maxWidth + 'px';
-                
-                // ПРИНУДИТЕЛЬНОЕ ПОЗИЦИОНИРОВАНИЕ
-                panel.style.position = 'fixed';
-                panel.style.left = '0';
-                panel.style.top = '0';
-                panel.style.height = '100vh';
-                panel.style.zIndex = '9999';
-                
-                console.log('📱 [MobileOptimization] Исправлены размеры панели:', maxWidth + 'px');
-            }
+        if (mobileOptimizeRaf) return;
+        mobileOptimizeRaf = requestAnimationFrame(() => {
+            document.querySelectorAll('.side-panel').forEach(panel => {
+                const isOpen = panel.classList.contains('open');
+                if (isOpen) {
+                    const maxWidth = Math.min(280, window.innerWidth * 0.85);
+                    if (panel.dataset.moWidth !== String(maxWidth)) {
+                        panel.style.width = maxWidth + 'px';
+                        panel.style.maxWidth = maxWidth + 'px';
+                        panel.style.position = 'fixed';
+                        panel.style.left = '0';
+                        panel.style.top = '0';
+                        panel.style.height = '100vh';
+                        panel.style.zIndex = '1000002';
+                        panel.dataset.moWidth = String(maxWidth);
+                    }
+                } else if (panel.dataset.moWidth) {
+                    // Сброс принудительных стилей при закрытии
+                    panel.style.width = '';
+                    panel.style.maxWidth = '';
+                    panel.style.position = '';
+                    panel.style.left = '';
+                    panel.style.top = '';
+                    panel.style.height = '';
+                    panel.style.zIndex = '';
+                    delete panel.dataset.moWidth;
+                }
+            });
+            mobileOptimizeRaf = null;
         });
     });
-    
+
     observer.observe(document.body, {
-        childList: true,
-        subtree: true,
         attributes: true,
+        subtree: true,
         attributeFilter: ['class']
     });
     

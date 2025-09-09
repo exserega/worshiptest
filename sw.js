@@ -1,5 +1,5 @@
-// Service Worker v6387 - Delay header restore after panel close; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6387';
+// Service Worker v6388 - Throttle mobile panel optimizer to avoid loops; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6388';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
