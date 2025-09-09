@@ -131,7 +131,8 @@ export async function initializeApp() {
             const observer = new MutationObserver(() => {
                 const anyOpenPanel = document.querySelector('.side-panel.open');
                 const anyOverlay = document.querySelector('.global-fullscreen-overlay.show');
-                const shouldHide = !!(anyOpenPanel || anyOverlay);
+                const anySongEditor = document.querySelector('.song-editor-overlay.visible');
+                const shouldHide = !!(anyOpenPanel || anyOverlay || anySongEditor);
                 if (window.__headerShouldHide === shouldHide) {
                     return;
                 }

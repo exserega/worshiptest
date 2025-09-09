@@ -1,5 +1,5 @@
-// Service Worker v6391 - Fix setlist modal close button positioning; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6391';
+// Service Worker v6392 - Hide header on song editor overlay as well; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6392';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
