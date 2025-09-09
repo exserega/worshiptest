@@ -306,17 +306,14 @@ async function promptForFullNameIfNeeded() {
         if (!user) return;
         const userDoc = await db.collection('users').doc(user.uid).get();
         const data = userDoc.exists ? userDoc.data() : {};
-        const currentName = (data && (data.name || data.displayName || user.displayName || user.email)) || '';
-        const isValid = typeof currentName === 'string' && /\S+\s+\S+/.test(currentName);
-        if (isValid) {
-            // Ничего не делаем
-            return;
-        }
+        // Показываем окно всем пользователям, у кого отсутствует явное подтверждение имени
+        if (data && data.nameConfirmed === true) return;
         const modal = document.getElementById('name-prompt-modal');
         const input = document.getElementById('user-full-name-input');
         const saveBtn = document.getElementById('save-user-full-name');
         if (!modal || !input || !saveBtn) return;
-        input.value = '';
+        const suggested = (data && (data.name || data.displayName)) || user.displayName || (user.email ? user.email.split('@')[0] : '');
+        input.value = (suggested || '').trim();
         modal.classList.add('visible');
         input.focus();
         const handleSave = async () => {
@@ -330,6 +327,7 @@ async function promptForFullNameIfNeeded() {
             // Обновляем Firestore профиль
             await db.collection('users').doc(user.uid).update({
                 name: value,
+                nameConfirmed: true,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             // Также обновим displayName в auth (best-effort)

@@ -1,5 +1,5 @@
-// Service Worker v6395 - Add name prompt modal assets to cache bump trigger
-const CACHE_NAME = 'agape-worship-cache-v6395';
+// Service Worker v6396 - Name prompt logic tweak (always ask unless confirmed); cache bump
+const CACHE_NAME = 'agape-worship-cache-v6396';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
