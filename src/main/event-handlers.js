@@ -122,15 +122,14 @@ export function setupEventListeners() {
                             if (!listEl) return;
                             listEl.innerHTML = '<div class="notifications-empty">Загрузка...</div>';
 
-                            let showCount = 3;
-                            const render = async () => {
-                                const items = await fetchNotifications(10);
-                                const slice = (items || []).slice(0, showCount);
-                                if (!slice || slice.length === 0) {
+                            let loaded = [];
+                            let lastDoc = null;
+                            const render = (items) => {
+                                if (!items || items.length === 0) {
                                     listEl.innerHTML = '<div class="notifications-empty">Пока нет уведомлений</div>';
                                     return;
                                 }
-                                listEl.innerHTML = slice.map((n) => {
+                                listEl.innerHTML = items.map((n) => {
                                     const unreadClass = n.read ? '' : ' notification-unread';
                                     const dateStr = n.createdAt?.toDate ? n.createdAt.toDate().toLocaleString('ru-RU') : '';
                                     const placements = Array.isArray(n.placements) && n.placements.length > 0 ? n.placements.map(p => p.instrumentName).join(', ') : '';
@@ -138,6 +137,7 @@ export function setupEventListeners() {
                                         <div class="notification-title">Вас добавили в событие: ${n.eventName || ''}</div>
                                         <div class="notification-meta">${dateStr}</div>
                                         ${placements ? `<div class="notification-placements">${placements}</div>` : ''}
+                                        ${n.read ? '' : '<span class="notification-indicator" title="Непрочитано"><i class="fas fa-exclamation"></i></span>'}
                                     </div>`;
                                 }).join('');
 
@@ -152,24 +152,35 @@ export function setupEventListeners() {
                                 });
                             };
 
-                            await render();
+                            // Initial load: 3
+                            try {
+                                const first = await fetchNotifications(3);
+                                loaded = first;
+                                lastDoc = first.length > 0 ? first[first.length - 1]._doc : null;
+                                render(loaded);
+                            } catch (e) {
+                                listEl.innerHTML = '<div class="notifications-empty">Не удалось загрузить уведомления</div>';
+                            }
 
+                            // Load more (10 each click)
                             const toggleBtn = document.getElementById('notifications-toggle');
                             if (toggleBtn) {
+                                toggleBtn.textContent = 'Показать больше';
                                 toggleBtn.onclick = async (e3) => {
                                     e3.stopPropagation();
-                                    if (showCount === 3) {
-                                        showCount = 10;
-                                        toggleBtn.textContent = 'Показать 3';
-                                    } else {
-                                        showCount = 3;
-                                        toggleBtn.textContent = 'Показать 10';
-                                    }
-                                    await render();
+                                    try {
+                                        const more = await fetchNotifications(10, lastDoc);
+                                        if (more && more.length > 0) {
+                                            loaded = loaded.concat(more);
+                                            lastDoc = more[more.length - 1]._doc;
+                                            render(loaded);
+                                        } else {
+                                            // Нет больше данных — можно визуально показать
+                                            toggleBtn.textContent = 'Больше нет';
+                                            setTimeout(() => { toggleBtn.textContent = 'Показать больше'; }, 1500);
+                                        }
+                                    } catch (e) {}
                                 };
-                                // reset label on open
-                                showCount = 3;
-                                toggleBtn.textContent = 'Показать 10';
                             }
 
                             // Mark all action

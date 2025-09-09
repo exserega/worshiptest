@@ -93,6 +93,7 @@
   padding: 12px;
   border-bottom: 1px solid #374151;
   cursor: pointer;
+  position: relative;
 }
 
 .notification-item:hover { background: #1f2937; }
@@ -102,8 +103,23 @@
 .notification-placements { color: #9ca3af; font-size: 12px; }
 
 .notification-unread .notification-title { font-weight: 700; }
-.notification-unread { background: #1f2937; position: relative; }
-.notification-unread::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #22d3ee; }
+.notification-unread { background: #1f2937; }
+
+/* Unread indicator badge (top-right) */
+.notification-indicator {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #22d3ee; /* blue background */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #111827; /* dark border for contrast on blue */
+}
+.notification-indicator i { color: #111827; font-size: 11px; line-height: 1; }
 
 .notifications-footer { padding: 8px 12px; border-top: 1px solid #374151; display: flex; justify-content: center; }
 .notifications-toggle {

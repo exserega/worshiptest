@@ -30,15 +30,16 @@ export function subscribeUnreadCount(onChange) {
  * @param {number} limitCount
  * @returns {Promise<Array<object>>}
  */
-export async function fetchNotifications(limitCount = 50) {
+export async function fetchNotifications(limitCount = 50, afterDoc = null) {
   const user = auth?.currentUser;
   if (!user) return [];
-  const ref = db.collection('users').doc(user.uid).collection('notifications')
-    .orderBy('createdAt', 'desc')
-    .limit(limitCount);
+  let ref = db.collection('users').doc(user.uid).collection('notifications')
+    .orderBy('createdAt', 'desc');
+  if (afterDoc) ref = ref.startAfter(afterDoc);
+  ref = ref.limit(limitCount);
   const snap = await ref.get();
   const list = [];
-  snap.forEach((doc) => list.push({ id: doc.id, ...doc.data() }));
+  snap.forEach((doc) => list.push({ id: doc.id, _doc: doc, ...doc.data() }));
   return list;
 }
 
