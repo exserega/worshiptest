@@ -133,22 +133,7 @@ export async function initializeApp() {
                 const anyOverlay = document.querySelector('.global-fullscreen-overlay.show');
                 const shouldHide = !!(anyOpenPanel || anyOverlay);
                 const headerEl = document.querySelector('header');
-                if (shouldHide) {
-                    if (window.__headerEnableTimeout) {
-                        clearTimeout(window.__headerEnableTimeout);
-                        window.__headerEnableTimeout = null;
-                    }
-                    if (headerEl) headerEl.classList.add('header-disabled');
-                } else {
-                    if (window.__headerEnableTimeout) {
-                        clearTimeout(window.__headerEnableTimeout);
-                    }
-                    // Даем панели время плавно закрыться (совпадает с CSS transition ~300ms)
-                    window.__headerEnableTimeout = setTimeout(() => {
-                        if (headerEl) headerEl.classList.remove('header-disabled');
-                        window.__headerEnableTimeout = null;
-                    }, 300);
-                }
+                if (headerEl) headerEl.classList.toggle('header-disabled', shouldHide);
                 if (dropdown && shouldHide) dropdown.style.display = 'none';
             });
             observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });

@@ -1,5 +1,5 @@
-// Service Worker v6388 - Throttle mobile panel optimizer to avoid loops; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6388';
+// Service Worker v6389 - Revert header delay; keep throttled panel optimizer; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6389';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
