@@ -1,5 +1,5 @@
-// Service Worker v6385 - Light text for button, header click-through fix, click-outside close; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6385';
+// Service Worker v6386 - Restore bottom nav on outside-close of panel; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6386';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

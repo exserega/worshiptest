@@ -740,6 +740,11 @@ function setupSetlistEventHandlers() {
                     const closeOnOutside = (e) => {
                         if (!ui.setlistsPanel.contains(e.target)) {
                             ui.setlistsPanel.classList.remove('open');
+                            // Restore bottom nav on close (same as swipe/close button)
+                            const bottomNav2 = document.querySelector('.mobile-bottom-nav');
+                            if (bottomNav2) {
+                                bottomNav2.style.transform = 'translateY(0)';
+                            }
                             document.removeEventListener('mousedown', closeOnOutside);
                             document.removeEventListener('touchstart', closeOnOutside);
                         }
