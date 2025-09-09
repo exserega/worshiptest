@@ -1,5 +1,5 @@
-// Service Worker v6396 - Name prompt logic tweak (always ask unless confirmed); cache bump
-const CACHE_NAME = 'agape-worship-cache-v6396';
+// Service Worker v6397 - Mobile Capacitor guide added; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6397';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
