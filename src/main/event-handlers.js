@@ -137,7 +137,7 @@ export function setupEventListeners() {
                                         <div class="notification-title">Вас добавили в событие: ${n.eventName || ''}</div>
                                         <div class="notification-meta">${dateStr}</div>
                                         ${placements ? `<div class="notification-placements">${placements}</div>` : ''}
-                                        ${n.read ? '' : '<span class="notification-indicator" title="Непрочитано"><i class="fas fa-exclamation"></i></span>'}
+                                        ${n.read ? '' : '<span class="notification-indicator" title="Непрочитано"></span>'}
                                     </div>`;
                                 }).join('');
 

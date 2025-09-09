@@ -110,16 +110,12 @@
   position: absolute;
   right: 8px;
   top: 8px;
-  width: 18px;
-  height: 18px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: #22d3ee; /* blue background */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #111827; /* dark border for contrast on blue */
+  background: #22d3ee; /* blue dot */
+  border: 1px solid #111827; /* contrast on dark bg */
 }
-.notification-indicator i { color: #111827; font-size: 11px; line-height: 1; }
 
 .notifications-footer { padding: 8px 12px; border-top: 1px solid #374151; display: flex; justify-content: center; }
 .notifications-toggle {

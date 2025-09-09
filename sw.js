@@ -1,5 +1,5 @@
-// Service Worker v6380 - Notifications unread icon + load-more paging + cache bump
-const CACHE_NAME = 'agape-worship-cache-v6380';
+// Service Worker v6381 - Notifications dot indicator refinement + cache bump
+const CACHE_NAME = 'agape-worship-cache-v6381';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
