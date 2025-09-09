@@ -121,30 +121,57 @@ export function setupEventListeners() {
                             const listEl = document.getElementById('notifications-list');
                             if (!listEl) return;
                             listEl.innerHTML = '<div class="notifications-empty">Загрузка...</div>';
-                            const items = await fetchNotifications(50);
-                            if (!items || items.length === 0) {
-                                listEl.innerHTML = '<div class="notifications-empty">Пока нет уведомлений</div>';
-                                return;
-                            }
-                            listEl.innerHTML = items.map((n) => {
-                                const unreadClass = n.read ? '' : ' notification-unread';
-                                const dateStr = n.createdAt?.toDate ? n.createdAt.toDate().toLocaleString('ru-RU') : '';
-                                const placements = Array.isArray(n.placements) && n.placements.length > 0 ? n.placements.map(p => p.instrumentName).join(', ') : '';
-                                return `<div class="notification-item${unreadClass}" data-id="${n.id}" data-event="${n.eventId || ''}">
-                                    <div class="notification-title">Вас добавили в событие: ${n.eventName || ''}</div>
-                                    <div class="notification-meta">${dateStr}</div>
-                                    ${placements ? `<div class="notification-placements">${placements}</div>` : ''}
-                                </div>`;
-                            }).join('');
-                            // Click handlers for items
-                            listEl.querySelectorAll('.notification-item').forEach((item) => {
-                                item.addEventListener('click', async () => {
-                                    const id = item.getAttribute('data-id');
-                                    const ev = item.getAttribute('data-event');
-                                    try { await markNotificationRead(id); } catch (e) {}
-                                    if (ev) window.location.href = `/public/event/?id=${ev}`;
+
+                            let showCount = 3;
+                            const render = async () => {
+                                const items = await fetchNotifications(10);
+                                const slice = (items || []).slice(0, showCount);
+                                if (!slice || slice.length === 0) {
+                                    listEl.innerHTML = '<div class="notifications-empty">Пока нет уведомлений</div>';
+                                    return;
+                                }
+                                listEl.innerHTML = slice.map((n) => {
+                                    const unreadClass = n.read ? '' : ' notification-unread';
+                                    const dateStr = n.createdAt?.toDate ? n.createdAt.toDate().toLocaleString('ru-RU') : '';
+                                    const placements = Array.isArray(n.placements) && n.placements.length > 0 ? n.placements.map(p => p.instrumentName).join(', ') : '';
+                                    return `<div class="notification-item${unreadClass}" data-id="${n.id}" data-event="${n.eventId || ''}">
+                                        <div class="notification-title">Вас добавили в событие: ${n.eventName || ''}</div>
+                                        <div class="notification-meta">${dateStr}</div>
+                                        ${placements ? `<div class="notification-placements">${placements}</div>` : ''}
+                                    </div>`;
+                                }).join('');
+
+                                // Click handlers for items
+                                listEl.querySelectorAll('.notification-item').forEach((item) => {
+                                    item.addEventListener('click', async () => {
+                                        const id = item.getAttribute('data-id');
+                                        const ev = item.getAttribute('data-event');
+                                        try { await markNotificationRead(id); } catch (e) {}
+                                        if (ev) window.location.href = `/public/event/?id=${ev}`;
+                                    });
                                 });
-                            });
+                            };
+
+                            await render();
+
+                            const toggleBtn = document.getElementById('notifications-toggle');
+                            if (toggleBtn) {
+                                toggleBtn.onclick = async (e3) => {
+                                    e3.stopPropagation();
+                                    if (showCount === 3) {
+                                        showCount = 10;
+                                        toggleBtn.textContent = 'Показать 3';
+                                    } else {
+                                        showCount = 3;
+                                        toggleBtn.textContent = 'Показать 10';
+                                    }
+                                    await render();
+                                };
+                                // reset label on open
+                                showCount = 3;
+                                toggleBtn.textContent = 'Показать 10';
+                            }
+
                             // Mark all action
                             const markAllBtn = document.getElementById('notifications-mark-all');
                             if (markAllBtn) {

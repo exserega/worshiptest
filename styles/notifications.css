@@ -67,7 +67,9 @@
   border: 1px solid #374151;
   color: #e5e7eb; /* light text on dark background */
   border-radius: 8px;
-  padding: 6px 8px;
+  padding: 4px 8px;
+  height: 28px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -100,10 +102,28 @@
 .notification-placements { color: #9ca3af; font-size: 12px; }
 
 .notification-unread .notification-title { font-weight: 700; }
+.notification-unread { background: #1f2937; position: relative; }
+.notification-unread::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #22d3ee; }
+
+.notifications-footer { padding: 8px 12px; border-top: 1px solid #374151; display: flex; justify-content: center; }
+.notifications-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+  border-radius: 8px;
+  padding: 4px 10px;
+  height: 28px;
+  font-size: 12px;
+  cursor: pointer;
+}
 
 @media (max-width: 480px) {
   .notifications-dropdown { left: 0; right: auto; min-width: 260px; max-width: calc(100vw - 24px); }
   .header-bell-button { width: 34px; height: 34px; }
+  .notifications-action span { display: none; }
+  .notifications-action { padding: 4px; width: 28px; justify-content: center; }
 }
 
 /* Active/pressed state for visibility on dark background */
