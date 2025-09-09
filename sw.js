@@ -1,5 +1,5 @@
-// Service Worker v6392 - Hide header on song editor overlay as well; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6392';
+// Service Worker v6393 - Add delayed header restore for editor; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6393';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

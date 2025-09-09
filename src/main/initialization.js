@@ -133,12 +133,15 @@ export async function initializeApp() {
                 const anyOverlay = document.querySelector('.global-fullscreen-overlay.show');
                 const anySongEditor = document.querySelector('.song-editor-overlay.visible');
                 const shouldHide = !!(anyOpenPanel || anyOverlay || anySongEditor);
-                if (window.__headerShouldHide === shouldHide) {
+                // Determine cause
+                const hideCause = anySongEditor ? 'editor' : (anyOpenPanel ? 'panel' : (anyOverlay ? 'overlay' : null));
+                if (window.__headerShouldHide === shouldHide && window.__headerHideCause === hideCause) {
                     return;
                 }
                 window.__headerShouldHide = shouldHide;
                 const headerEl = document.querySelector('header');
                 if (shouldHide) {
+                    window.__headerHideCause = hideCause;
                     if (window.__headerEnableTimeout) {
                         clearTimeout(window.__headerEnableTimeout);
                         window.__headerEnableTimeout = null;
@@ -146,13 +149,20 @@ export async function initializeApp() {
                     if (headerEl) headerEl.classList.add('header-disabled');
                     if (dropdown) dropdown.style.display = 'none';
                 } else {
+                    const cause = window.__headerHideCause;
+                    window.__headerHideCause = null;
                     if (window.__headerEnableTimeout) {
                         clearTimeout(window.__headerEnableTimeout);
                     }
-                    window.__headerEnableTimeout = setTimeout(() => {
+                    const delay = cause === 'editor' ? 250 : 0;
+                    if (delay > 0) {
+                        window.__headerEnableTimeout = setTimeout(() => {
+                            if (headerEl) headerEl.classList.remove('header-disabled');
+                            window.__headerEnableTimeout = null;
+                        }, delay);
+                    } else {
                         if (headerEl) headerEl.classList.remove('header-disabled');
-                        window.__headerEnableTimeout = null;
-                    }, 250);
+                    }
                 }
             });
             observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
