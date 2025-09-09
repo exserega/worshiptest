@@ -1,5 +1,5 @@
-// Service Worker v6386 - Restore bottom nav on outside-close of panel; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6386';
+// Service Worker v6387 - Delay header restore after panel close; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6387';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
