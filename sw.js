@@ -1,5 +1,5 @@
-// Service Worker v6389 - Revert header delay; keep throttled panel optimizer; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6389';
+// Service Worker v6390 - Safe header delay with state guard; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6390';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

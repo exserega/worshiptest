@@ -132,9 +132,27 @@ export async function initializeApp() {
                 const anyOpenPanel = document.querySelector('.side-panel.open');
                 const anyOverlay = document.querySelector('.global-fullscreen-overlay.show');
                 const shouldHide = !!(anyOpenPanel || anyOverlay);
+                if (window.__headerShouldHide === shouldHide) {
+                    return;
+                }
+                window.__headerShouldHide = shouldHide;
                 const headerEl = document.querySelector('header');
-                if (headerEl) headerEl.classList.toggle('header-disabled', shouldHide);
-                if (dropdown && shouldHide) dropdown.style.display = 'none';
+                if (shouldHide) {
+                    if (window.__headerEnableTimeout) {
+                        clearTimeout(window.__headerEnableTimeout);
+                        window.__headerEnableTimeout = null;
+                    }
+                    if (headerEl) headerEl.classList.add('header-disabled');
+                    if (dropdown) dropdown.style.display = 'none';
+                } else {
+                    if (window.__headerEnableTimeout) {
+                        clearTimeout(window.__headerEnableTimeout);
+                    }
+                    window.__headerEnableTimeout = setTimeout(() => {
+                        if (headerEl) headerEl.classList.remove('header-disabled');
+                        window.__headerEnableTimeout = null;
+                    }, 250);
+                }
             });
             observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
             window.__notificationsBellObserver = observer;
