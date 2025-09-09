@@ -1,5 +1,5 @@
-// Service Worker v6383 - Notifications footer buttons + bell hide on panels + cache bump
-const CACHE_NAME = 'agape-worship-cache-v6383';
+// Service Worker v6384 - Single 'Показать больше' + hide header elements + cache bump
+const CACHE_NAME = 'agape-worship-cache-v6384';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

@@ -126,11 +126,15 @@ export async function initializeApp() {
         try {
             const bellContainer = document.querySelector('.notifications-bell-container');
             const dropdown = document.getElementById('notifications-dropdown');
+            const titleEl = document.querySelector('header h1');
+            const profileBtn = document.getElementById('profile-button');
             const observer = new MutationObserver(() => {
                 const anyOpenPanel = document.querySelector('.side-panel.open');
                 const anyOverlay = document.querySelector('.global-fullscreen-overlay.show');
                 const shouldHide = !!(anyOpenPanel || anyOverlay);
                 if (bellContainer) bellContainer.style.visibility = shouldHide ? 'hidden' : 'visible';
+                if (titleEl) titleEl.style.visibility = shouldHide ? 'hidden' : 'visible';
+                if (profileBtn) profileBtn.style.visibility = shouldHide ? 'hidden' : 'visible';
                 if (dropdown && shouldHide) dropdown.style.display = 'none';
             });
             observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });

@@ -162,9 +162,8 @@ export function setupEventListeners() {
                                 listEl.innerHTML = '<div class="notifications-empty">Не удалось загрузить уведомления</div>';
                             }
 
-                            // Load more (10 each click) and load all
+                            // Load more (10 each click)
                             const btnMore = document.getElementById('notifications-load-more');
-                            const btnAll = document.getElementById('notifications-load-all');
                             const noMore = document.getElementById('notifications-no-more');
                             if (btnMore) {
                                 btnMore.onclick = async (e3) => {
@@ -182,26 +181,6 @@ export function setupEventListeners() {
                                                 setTimeout(() => { noMore.style.display = 'none'; }, 1500);
                                             }
                                         }
-                                    } catch (e) {}
-                                };
-                            }
-                            if (btnAll) {
-                                btnAll.onclick = async (e4) => {
-                                    e4.stopPropagation();
-                                    try {
-                                        // Грузим до 100 за один раз (без бесконечного цикла)
-                                        let guard = 10; // 10 итераций по 10 = 100
-                                        while (guard-- > 0) {
-                                            const more = await fetchNotifications(10, lastDoc);
-                                            if (more && more.length > 0) {
-                                                loaded = loaded.concat(more);
-                                                lastDoc = more[more.length - 1]._doc;
-                                            } else {
-                                                break;
-                                            }
-                                        }
-                                        render(loaded);
-                                        if (noMore) noMore.style.display = 'none';
                                     } catch (e) {}
                                 };
                             }
