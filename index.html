@@ -404,6 +404,22 @@
         </div>
     </div>
 
+    <!-- Модальное окно ввода имени пользователя -->
+    <div id="name-prompt-modal" class="modal-overlay">
+        <div class="modal-content name-prompt-content">
+            <div class="modal-header compact">
+                <h3>Введите имя и фамилию</h3>
+            </div>
+            <div class="modal-body compact">
+                <input id="user-full-name-input" class="modern-input" type="text" placeholder="Имя Фамилия" autocomplete="name">
+                <p style="margin: 8px 0 12px; color: var(--text-tertiary); font-size: 0.85rem;">Это имя будет видно в сет-листах и событиях.</p>
+                <div class="modal-footer" style="padding-top: 0; border-top: none; justify-content: flex-end;">
+                    <button id="save-user-full-name" class="primary-button"><i class="fas fa-check"></i><span>Сохранить</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
      <section id="youtube-player-section" style="margin-top: 20px; display: none;">

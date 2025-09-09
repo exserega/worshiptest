@@ -226,11 +226,11 @@ async function confirmBranchSelection() {
         
         console.log('✅ Branch selected successfully');
         
-        // Скрываем модальное окно
+        // Скрываем модальное окно выбора филиала
         hideBranchSelection();
         
-        // Перезагружаем страницу для применения изменений
-        window.location.reload();
+        // После выбора филиала — требуем ввести имя/фамилию, если у пользователя нет валидного имени
+        await promptForFullNameIfNeeded();
         
     } catch (error) {
         console.error('Error selecting branch:', error);
@@ -296,3 +296,53 @@ export default {
     hideBranchSelection,
     checkAndShowBranchSelection
 };
+
+/**
+ * Показать обязательный ввод имени/фамилии, если у пользователя нет валидного имени
+ */
+async function promptForFullNameIfNeeded() {
+    try {
+        const user = auth.currentUser;
+        if (!user) return;
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        const data = userDoc.exists ? userDoc.data() : {};
+        const currentName = (data && (data.name || data.displayName || user.displayName || user.email)) || '';
+        const isValid = typeof currentName === 'string' && /\S+\s+\S+/.test(currentName);
+        if (isValid) {
+            // Ничего не делаем
+            return;
+        }
+        const modal = document.getElementById('name-prompt-modal');
+        const input = document.getElementById('user-full-name-input');
+        const saveBtn = document.getElementById('save-user-full-name');
+        if (!modal || !input || !saveBtn) return;
+        input.value = '';
+        modal.classList.add('visible');
+        input.focus();
+        const handleSave = async () => {
+            const value = (input.value || '').trim();
+            if (!/\S+\s+\S+/.test(value)) {
+                input.focus();
+                input.style.borderColor = '#ef4444';
+                setTimeout(() => (input.style.borderColor = ''), 1200);
+                return;
+            }
+            // Обновляем Firestore профиль
+            await db.collection('users').doc(user.uid).update({
+                name: value,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            // Также обновим displayName в auth (best-effort)
+            try { await user.updateProfile({ displayName: value }); } catch (e) {}
+            // Имя подтянется в события через существующий механизм name-sync (public/name-sync.js)
+            modal.classList.remove('visible');
+            // Обновим UI без полной перезагрузки
+            try { window.location.reload(); } catch (e) {}
+        };
+        const onKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } };
+        saveBtn.onclick = handleSave;
+        input.onkeydown = onKey;
+    } catch (e) {
+        console.error('promptForFullNameIfNeeded error:', e);
+    }
+}

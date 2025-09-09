@@ -1,5 +1,5 @@
-// Service Worker v6394 - Delay header restore only for side panel; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6394';
+// Service Worker v6395 - Add name prompt modal assets to cache bump trigger
+const CACHE_NAME = 'agape-worship-cache-v6395';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
