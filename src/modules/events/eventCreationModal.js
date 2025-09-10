@@ -584,20 +584,12 @@ class EventCreationModal {
     
     highlightMatch(text, query) {
         if (!query) return text;
-        
-        // Экранируем специальные символы в запросе
-        const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        
-        // Ищем позицию совпадения без учета регистра
-        const index = text.toLowerCase().indexOf(query.toLowerCase());
-        if (index === -1) return text;
-        
-        // Разбиваем текст на три части: до совпадения, совпадение, после совпадения
-        const before = text.substring(0, index);
-        const match = text.substring(index, index + query.length);
-        const after = text.substring(index + query.length);
-        
-        // Возвращаем с подсвеченной средней частью
+        const idx = text.toLowerCase().indexOf(query.toLowerCase());
+        if (idx === -1) return text;
+        const before = text.slice(0, idx);
+        const match = text.slice(idx, idx + query.length);
+        const after = text.slice(idx + query.length);
+        // Без дополнительных пробелов, чтобы не было разрывов типа "Сер гей"
         return `${before}<strong>${match}</strong>${after}`;
     }
     

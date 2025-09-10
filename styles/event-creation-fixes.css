@@ -12,6 +12,13 @@ body.hide-header header {
     pointer-events: none;
 }
 
+/* Подсветка совпадений в универсальных списках (оверлеи/дропдауны) */
+.participant-selector .user-item strong,
+.leader-dropdown .leader-item strong,
+.event-creation-modal .leader-item strong {
+    color: #00b2bc;
+}
+
 /* Основное модальное окно как оверлей */
 .event-modal {
     position: fixed;

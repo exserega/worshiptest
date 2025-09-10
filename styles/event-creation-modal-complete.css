@@ -453,6 +453,11 @@
     color: var(--primary-color);
 }
 
+/* Единый стиль подсветки совпадений в dropdown */
+.event-creation-modal .leader-item strong {
+    color: #00b2bc;
+}
+
 /* Светлая тема для dropdown ведущего */
 [data-theme="light"] .event-creation-modal .leader-dropdown {
     background: #ffffff;

@@ -1,5 +1,5 @@
-// Service Worker v6400 - Fix leader custom name saving (no auto-set creator)
-const CACHE_NAME = 'agape-worship-cache-v6400';
+// Service Worker v6401 - Unify dropdown highlight styles
+const CACHE_NAME = 'agape-worship-cache-v6401';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
