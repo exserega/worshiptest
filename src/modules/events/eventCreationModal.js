@@ -481,7 +481,8 @@ class EventCreationModal {
         
         // Обработчик ввода
         input.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
+            const originalQuery = e.target.value.trim();
+            const query = originalQuery.toLowerCase();
             
             if (query.length === 0) {
                 dropdown.style.display = 'none';
@@ -495,17 +496,18 @@ class EventCreationModal {
             );
             
             // Показываем результаты
-            this.showLeaderDropdown(filtered, query);
+            this.showLeaderDropdown(filtered, query, originalQuery);
         });
         
         // Обработчик фокуса
         input.addEventListener('focus', () => {
             if (input.value.trim().length > 0) {
-                const query = input.value.toLowerCase().trim();
+                const originalQuery = input.value.trim();
+                const query = originalQuery.toLowerCase();
                 const filtered = this.availableUsers.filter(user => 
                     user.name.toLowerCase().includes(query)
                 );
-                this.showLeaderDropdown(filtered, query);
+                this.showLeaderDropdown(filtered, query, originalQuery);
             }
         });
         
@@ -548,7 +550,7 @@ class EventCreationModal {
         });
     }
     
-    showLeaderDropdown(users, query) {
+    showLeaderDropdown(users, query, originalQuery = '') {
         const dropdown = document.getElementById('leaderDropdown');
         
         // Очищаем dropdown
@@ -570,8 +572,9 @@ class EventCreationModal {
             const createItem = document.createElement('div');
             createItem.className = 'leader-item create-new';
             if (users.length === 0) createItem.classList.add('active');
-            createItem.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${query}</strong>`;
-            createItem.onclick = () => this.selectLeader(null, query);
+            const displayName = originalQuery || query;
+            createItem.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${displayName}</strong>`;
+            createItem.onclick = () => this.selectLeader(null, displayName);
             dropdown.appendChild(createItem);
         }
         
@@ -614,6 +617,7 @@ class EventCreationModal {
         
         // Заполняем поля
         input.value = userName;
+        // Сохраняем имя в том виде, как ввёл пользователь
         hiddenInput.value = userId || `new:${userName}`;
         
         // Закрываем dropdown если он открыт
@@ -696,7 +700,7 @@ class EventCreationModal {
         });
     }
     
-    renderParticipantsList(users, query, instrumentId) {
+    renderParticipantsList(users, query, instrumentId, originalQuery = '') {
         if (users.length === 0 && !query) {
             return '<div class="empty-state">Нет доступных участников</div>';
         }
@@ -712,7 +716,8 @@ class EventCreationModal {
         if (query) {
             const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
             if (!exactMatch) {
-                html += `<div class="user-item create-new" data-query="${query}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${query}</strong></div>`;
+                const displayName = originalQuery || query;
+                html += `<div class="user-item create-new" data-query="${displayName}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${displayName}</strong></div>`;
             }
         }
         
@@ -748,7 +753,8 @@ class EventCreationModal {
         
         // Обработчик ввода
         input.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
+            const originalQuery = e.target.value.trim();
+            const query = originalQuery.toLowerCase();
             if (clearBtn) clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
             
             if (query.length === 0) {
@@ -777,8 +783,9 @@ class EventCreationModal {
                 if (!exactMatch) {
                     const createItem = document.createElement('div');
                     createItem.className = 'user-item create-new';
-                    createItem.dataset.query = query;
-                    createItem.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${query}</strong>`;
+                    const displayName = originalQuery || query;
+                    createItem.dataset.query = displayName;
+                    createItem.innerHTML = `<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" style=\"margin-right: 0.5rem;\"><path d=\"M12 5V19M5 12H19\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg>Создать: <strong>${displayName}</strong>`;
                     list.appendChild(createItem);
                 }
                 

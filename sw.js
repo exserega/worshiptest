@@ -1,5 +1,5 @@
-// Service Worker v6398 - Hide header on event modal; dropdown prep; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6398';
+// Service Worker v6399 - Case-preserve in create options; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6399';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
