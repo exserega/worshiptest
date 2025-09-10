@@ -292,12 +292,17 @@ export async function createEvent(eventData) {
         }
         
         // Получаем имя лидера
-        let leaderName = null;
-        if (eventData.leaderId) {
-            const userDoc = await db.collection('users').doc(eventData.leaderId).get();
-            if (userDoc.exists) {
-                const userData = userDoc.data();
-                leaderName = userData.name || userData.displayName || userData.email;
+        // Если имя передано явно (например, кастомный ведущий) — сохраняем как есть
+        let leaderName = eventData.leaderName || null;
+        if (!leaderName && eventData.leaderId && !String(eventData.leaderId).startsWith('custom_leader_')) {
+            try {
+                const userDoc = await db.collection('users').doc(eventData.leaderId).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    leaderName = userData.name || userData.displayName || userData.email;
+                }
+            } catch (e) {
+                // игнорируем, если не нашли пользователя по leaderId
             }
         }
         
@@ -341,12 +346,17 @@ export async function updateEvent(eventId, updates) {
         }
         
         // Получаем имя лидера
-        let leaderName = null;
-        if (updates.leaderId) {
-            const userDoc = await db.collection('users').doc(updates.leaderId).get();
-            if (userDoc.exists) {
-                const userData = userDoc.data();
-                leaderName = userData.name || userData.displayName || userData.email;
+        // Если имя передано явно (например, кастомный ведущий) — сохраняем как есть
+        let leaderName = updates.leaderName || null;
+        if (!leaderName && updates.leaderId && !String(updates.leaderId).startsWith('custom_leader_')) {
+            try {
+                const userDoc = await db.collection('users').doc(updates.leaderId).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    leaderName = userData.name || userData.displayName || userData.email;
+                }
+            } catch (e) {
+                // игнорируем, если не нашли пользователя по leaderId
             }
         }
         

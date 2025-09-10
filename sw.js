@@ -1,5 +1,5 @@
-// Service Worker v6399 - Case-preserve in create options; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6399';
+// Service Worker v6400 - Fix leader custom name saving (no auto-set creator)
+const CACHE_NAME = 'agape-worship-cache-v6400';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

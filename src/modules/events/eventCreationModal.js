@@ -962,17 +962,23 @@ class EventCreationModal {
             const setlistId = document.getElementById('eventSetlist').value;
             const comment = document.getElementById('eventComment').value;
             
-            // Обрабатываем ведущего
-            let leaderId = null;
-            let leaderData = null;
+            // Обрабатываем ведущего (с учетом кастомного имени и регистра)
+            let finalLeaderId = null;
+            let finalLeaderName = '';
             if (leaderValue) {
                 if (leaderValue.startsWith('new:')) {
-                    // Новый ведущий - будет создан как участник
-                    leaderId = 'custom_leader_' + Date.now();
-                    leaderData = { name: leaderName };
+                    // Новый (кастомный) ведущий — сохраняем введенное имя как есть
+                    finalLeaderId = 'custom_leader_' + Date.now();
+                    finalLeaderName = (leaderName || '').trim();
                 } else {
-                    leaderId = leaderValue;
+                    // Выбран существующий пользователь
+                    finalLeaderId = leaderValue;
+                    finalLeaderName = this.availableUsers.find(u => u.id === finalLeaderId)?.name || (leaderName || '').trim();
                 }
+            } else {
+                // Ведущий не выбран — ничего не подставляем
+                finalLeaderId = null;
+                finalLeaderName = (leaderName || '').trim();
             }
             
             if (!eventDate || !eventTime) {
@@ -1011,8 +1017,8 @@ class EventCreationModal {
             const eventData = {
                 name: eventName,
                 date: new Date(`${eventDate}T${eventTime}`),
-                leaderId: leaderId || user.uid,
-                leaderName: leaderId ? this.availableUsers.find(u => u.id === leaderId)?.name : user.name || user.email,
+                leaderId: finalLeaderId || null,
+                leaderName: finalLeaderName || null,
                 setlistId: setlistId || '',
                 participants: participantsObject, // Firebase хранит как объект
                 participantCount: Object.keys(participantsObject).length,
@@ -1134,7 +1140,7 @@ class EventCreationModal {
         }, 100);
     }
     
-    renderLeadersList(users, query) {
+    renderLeadersList(users, query, originalQuery = '') {
         if (users.length === 0 && !query) {
             return '<div class="empty-state">Нет доступных пользователей</div>';
         }
@@ -1150,7 +1156,8 @@ class EventCreationModal {
         if (query) {
             const exactMatch = users.some(u => u.name.toLowerCase() === query.toLowerCase());
             if (!exactMatch) {
-                html += `<div class="user-item create-new" data-query="${query}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${query}</strong></div>`;
+                const displayName = originalQuery || query;
+                html += `<div class="user-item create-new" data-query="${displayName}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Создать: <strong>${displayName}</strong></div>`;
             }
         }
         
@@ -1186,7 +1193,8 @@ class EventCreationModal {
         
         // Обработчик ввода
         input.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
+            const originalQuery = e.target.value.trim();
+            const query = originalQuery.toLowerCase();
             if (clearBtn) clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
             
             if (query.length === 0) {
@@ -1198,7 +1206,7 @@ class EventCreationModal {
                 );
                 
                 // Обновляем список
-                list.innerHTML = this.renderLeadersList(filtered, query);
+                list.innerHTML = this.renderLeadersList(filtered, query, originalQuery);
             }
         });
 
