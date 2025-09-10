@@ -1,5 +1,5 @@
-// Service Worker v6397 - Mobile Capacitor guide added; cache bump
-const CACHE_NAME = 'agape-worship-cache-v6397';
+// Service Worker v6398 - Hide header on event modal; dropdown prep; cache bump
+const CACHE_NAME = 'agape-worship-cache-v6398';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

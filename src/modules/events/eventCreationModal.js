@@ -1058,6 +1058,13 @@ class EventCreationModal {
         if (this.modal) {
             this.modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
+            // Скрываем верхнюю шапку ТОЛЬКО на главной странице
+            try {
+                const path = window.location?.pathname || '';
+                if (path === '/' || path === '/index.html') {
+                    document.body.classList.add('hide-header');
+                }
+            } catch (e) { /* noop */ }
         }
     }
     
@@ -1067,6 +1074,8 @@ class EventCreationModal {
             this.modal = null;
         }
         document.body.style.overflow = '';
+        // Возвращаем шапку если скрывали
+        try { document.body.classList.remove('hide-header'); } catch (e) { /* noop */ }
         window.eventCreationModal = null;
     }
 
