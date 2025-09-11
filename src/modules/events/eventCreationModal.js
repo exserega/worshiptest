@@ -586,9 +586,9 @@ class EventCreationModal {
         if (!query) return text;
         const idx = text.toLowerCase().indexOf(query.toLowerCase());
         if (idx === -1) return text;
-        const before = text.slice(0, idx);
+        const before = text.slice(0, idx).replace(/\s+/g, ' ');
         const match = text.slice(idx, idx + query.length);
-        const after = text.slice(idx + query.length);
+        const after = text.slice(idx + query.length).replace(/\s+/g, ' ');
         // Без дополнительных пробелов, чтобы не было разрывов типа "Сер гей"
         return `${before}<strong>${match}</strong>${after}`;
     }

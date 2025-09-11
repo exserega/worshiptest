@@ -16,7 +16,24 @@ body.hide-header header {
 .participant-selector .user-item strong,
 .leader-dropdown .leader-item strong,
 .event-creation-modal .leader-item strong {
-    color: #00b2bc;
+    color: #22d3ee !important;
+}
+
+/* Цвет для опции "Создать: ..." как на странице events */
+.leader-dropdown .leader-item.create-new,
+.participant-selector .user-item.create-new,
+.event-creation-modal .leader-item.create-new {
+    color: #22d3ee !important;
+    font-weight: 500;
+}
+
+/* Убираем возможные визуальные разрывы в тексте совпадений */
+.leader-dropdown .leader-item,
+.participant-selector .user-item,
+.event-creation-modal .leader-item {
+    letter-spacing: normal;
+    word-spacing: normal;
+    white-space: normal;
 }
 
 /* Основное модальное окно как оверлей */

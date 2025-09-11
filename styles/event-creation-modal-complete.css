@@ -454,9 +454,8 @@
 }
 
 /* Единый стиль подсветки совпадений в dropdown */
-.event-creation-modal .leader-item strong {
-    color: #00b2bc;
-}
+.event-creation-modal .leader-item strong { color: #22d3ee !important; }
+.event-creation-modal .leader-item.create-new { color: #22d3ee !important; font-weight: 500; }
 
 /* Светлая тема для dropdown ведущего */
 [data-theme="light"] .event-creation-modal .leader-dropdown {
