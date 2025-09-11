@@ -1,5 +1,5 @@
-// Service Worker v6405 - Leader overlay text wrapped in span.item-text
-const CACHE_NAME = 'agape-worship-cache-v6405';
+// Service Worker v6406 - Hide header for songs/repertoire overlays
+const CACHE_NAME = 'agape-worship-cache-v6406';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

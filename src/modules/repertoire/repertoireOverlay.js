@@ -513,6 +513,8 @@ class RepertoireOverlay {
         this.overlay.classList.add('visible');
         this.isOpen = true;
         document.addEventListener('keydown', this.escapeHandler);
+        // Скрываем шапку на время оверлея
+        try { document.body.classList.add('hide-header'); } catch(e) {}
         
         // Применяем сохраненные фильтры и обновляем данные при открытии
         this.loadPersistedState();
@@ -532,6 +534,8 @@ class RepertoireOverlay {
         document.removeEventListener('keydown', this.escapeHandler);
         // Сохраняем состояние при закрытии
         this.persistState();
+        // Возвращаем шапку без задержек
+        try { document.body.classList.remove('hide-header'); } catch(e) {}
     }
     
     /**

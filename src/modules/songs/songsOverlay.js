@@ -150,6 +150,8 @@ class SongsOverlay {
         this.isOpen = true;
         this.overlay.classList.add('visible');
         document.body.style.overflow = 'hidden';
+        // Скрываем шапку на главной как при других оверлеях/модалках
+        try { document.body.classList.add('hide-header'); } catch(e) {}
         
         // Загружаем песни из state и применяем сохраненные фильтры
         this.loadSongs();
@@ -168,6 +170,8 @@ class SongsOverlay {
         this.isOpen = false;
         this.overlay.classList.remove('visible');
         document.body.style.overflow = '';
+        // Мгновенно возвращаем шапку
+        try { document.body.classList.remove('hide-header'); } catch(e) {}
         logger.log('🎵 Songs overlay closed');
     }
     
