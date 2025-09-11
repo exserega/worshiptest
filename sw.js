@@ -1,5 +1,5 @@
-// Service Worker v6402 - Dropdown highlight color + spacing fix
-const CACHE_NAME = 'agape-worship-cache-v6402';
+// Service Worker v6403 - Dropdown text no-wrap to prevent split
+const CACHE_NAME = 'agape-worship-cache-v6403';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

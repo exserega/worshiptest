@@ -33,7 +33,15 @@ body.hide-header header {
 .event-creation-modal .leader-item {
     letter-spacing: normal;
     word-spacing: normal;
-    white-space: normal;
+    white-space: nowrap;
+}
+
+/* Текстовое содержимое держим цельным, чтобы не рвало слова */
+.leader-dropdown .leader-item .item-text,
+.participant-selector .user-item .item-text,
+.event-creation-modal .leader-item .item-text {
+    display: inline;
+    white-space: nowrap;
 }
 
 /* Основное модальное окно как оверлей */
