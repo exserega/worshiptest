@@ -1,5 +1,5 @@
-// Service Worker v6403 - Dropdown text no-wrap to prevent split
-const CACHE_NAME = 'agape-worship-cache-v6403';
+// Service Worker v6404 - Leader overlay unify markup & nowrap
+const CACHE_NAME = 'agape-worship-cache-v6404';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
