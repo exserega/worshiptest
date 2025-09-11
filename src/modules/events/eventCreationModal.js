@@ -1141,7 +1141,7 @@ class EventCreationModal {
         
         // Показываем отфильтрованных пользователей
         users.forEach((user) => {
-            html += `<div class="user-item" data-user-id="${user.id}" data-user-name="${user.name}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>${query ? this.highlightMatch(user.name, query) : user.name}</div>`;
+            html += `<div class="user-item" data-user-id="${user.id}" data-user-name="${user.name}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem; opacity: 0.5;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class=\"item-text\">${query ? this.highlightMatch(user.name, query) : user.name}</span></div>`;
         });
         
         // Если есть запрос и нет точного совпадения, показываем опцию создания

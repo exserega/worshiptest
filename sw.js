@@ -1,5 +1,5 @@
-// Service Worker v6404 - Leader overlay unify markup & nowrap
-const CACHE_NAME = 'agape-worship-cache-v6404';
+// Service Worker v6405 - Leader overlay text wrapped in span.item-text
+const CACHE_NAME = 'agape-worship-cache-v6405';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
