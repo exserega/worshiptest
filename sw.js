@@ -1,5 +1,5 @@
-// Service Worker v6410 - Lazy songs loading (defer heavy data on startup)
-const CACHE_NAME = 'agape-worship-cache-v6410';
+// Service Worker v6411 - Immediate name-sync init (mobile fix)
+const CACHE_NAME = 'agape-worship-cache-v6411';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

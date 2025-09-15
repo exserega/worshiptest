@@ -3,11 +3,8 @@
 let syncAttempts = 0;
 const MAX_ATTEMPTS = 10;
 
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        initNameSync();
-    }, 2000);
-});
+// Инициализируем сразу; функция сама повторит попытки, если зависимостей нет
+initNameSync();
 
 function initNameSync() {
     if (!window.firebase || !window.firebase.firestore) {
