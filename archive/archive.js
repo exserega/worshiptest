@@ -279,6 +279,8 @@ async function updateSetlistCard(setlistId) {
             await loadSetlistSongs(setlistId, songsContainer);
             songsContainer.dataset.loaded = 'true';
             logger.log('✅ Songs reloaded');
+            // Гарантируем, что карточка остаётся полностью видимой после обновления
+            ensureCardFullyVisible(cardElement);
         } else {
             logger.log('ℹ️ Card is not expanded or no songs container, skipping songs update');
         }
@@ -645,12 +647,19 @@ function createSetlistCard(setlist) {
             const isExpanding = !card.classList.contains('expanded');
             card.classList.toggle('expanded');
             
+            // При раскрытии гарантируем полную видимость карточки в зоне прокрутки
+            if (isExpanding) {
+                ensureCardFullyVisible(card);
+            }
+
             // Загружаем песни при первом развертывании
             if (isExpanding) {
                 const songsContainer = card.querySelector(`#songs-${setlist.id}`);
                 if (songsContainer && !songsContainer.dataset.loaded) {
                     await loadSetlistSongs(setlist.id, songsContainer);
                     songsContainer.dataset.loaded = 'true';
+                    // После загрузки песен высота карточки увеличилась — повторная проверка видимости
+                    ensureCardFullyVisible(card);
                 }
             }
         }
@@ -1439,6 +1448,41 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+/**
+ * Обеспечивает полную видимость развернутой карточки внутри контейнера прокрутки
+ * Прокручивает .archive-content при необходимости, чтобы низ/верх карточки был в зоне видимости
+ */
+function ensureCardFullyVisible(cardElement) {
+    try {
+        const scrollContainer = document.querySelector('.archive-content');
+        if (!scrollContainer || !cardElement) return;
+
+        const adjustScroll = () => {
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const cardRect = cardElement.getBoundingClientRect();
+
+            const overflowBottom = cardRect.bottom - containerRect.bottom;
+            const overflowTop = containerRect.top - cardRect.top;
+
+            let delta = 0;
+            if (overflowBottom > 0) {
+                delta = overflowBottom + 12; // небольшой запас
+            } else if (overflowTop > 0) {
+                delta = -overflowTop - 12;
+            }
+
+            if (delta !== 0) {
+                scrollContainer.scrollBy({ top: delta, behavior: 'smooth' });
+            }
+        };
+
+        // Сразу после изменения DOM
+        requestAnimationFrame(adjustScroll);
+        // Повтор после возможной анимации/подгрузки
+        setTimeout(adjustScroll, 350);
+    } catch (_) { /* noop */ }
 }
 
 /**
