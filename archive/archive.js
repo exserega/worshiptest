@@ -660,6 +660,18 @@ function createSetlistCard(setlist) {
                     songsContainer.dataset.loaded = 'true';
                     // После загрузки песен высота карточки увеличилась — повторная проверка видимости
                     ensureCardFullyVisible(card);
+                    // Убираем возможный временный спейсер, если он больше не нужен
+                    setTimeout(() => {
+                        const scrollContainer = document.querySelector('.archive-content');
+                        const spacer = document.getElementById('archive-tail-spacer');
+                        if (scrollContainer && spacer) {
+                            const contRect = scrollContainer.getBoundingClientRect();
+                            const cardRect = card.getBoundingClientRect();
+                            if (cardRect.bottom <= contRect.bottom) {
+                                spacer.style.height = '0px';
+                            }
+                        }
+                    }, 500);
                 }
             }
         }
@@ -1469,12 +1481,41 @@ function ensureCardFullyVisible(cardElement) {
             let delta = 0;
             if (overflowBottom > 0) {
                 delta = overflowBottom + 12; // небольшой запас
+                // Если некуда прокручивать (мы у нижней границы), добавим временный спейсер в конец списка
+                const listContainer = document.getElementById('archive-setlists');
+                if (listContainer) {
+                    let spacer = document.getElementById('archive-tail-spacer');
+                    if (!spacer) {
+                        spacer = document.createElement('div');
+                        spacer.id = 'archive-tail-spacer';
+                        spacer.style.width = '100%';
+                        spacer.style.flexShrink = '0';
+                        spacer.style.pointerEvents = 'none';
+                        listContainer.appendChild(spacer);
+                    }
+                    // Устанавливаем высоту спейсера так, чтобы стало куда прокрутить
+                    const extra = Math.max(overflowBottom + 24, 48);
+                    spacer.style.height = `${extra}px`;
+                }
             } else if (overflowTop > 0) {
                 delta = -overflowTop - 12;
             }
 
             if (delta !== 0) {
                 scrollContainer.scrollBy({ top: delta, behavior: 'smooth' });
+                // После прокрутки попробуем уменьшить/убрать спейсер, если он больше не нужен
+                setTimeout(() => {
+                    const listContainer = document.getElementById('archive-setlists');
+                    const spacer = document.getElementById('archive-tail-spacer');
+                    if (listContainer && spacer) {
+                        const contRect = scrollContainer.getBoundingClientRect();
+                        const cardR = cardElement.getBoundingClientRect();
+                        const stillOverflow = cardR.bottom - contRect.bottom;
+                        if (stillOverflow <= 0) {
+                            spacer.style.height = '0px';
+                        }
+                    }
+                }, 450);
             }
         };
 

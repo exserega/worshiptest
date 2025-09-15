@@ -1,5 +1,5 @@
-// Service Worker v6407 - Ensure expanded archive card visibility
-const CACHE_NAME = 'agape-worship-cache-v6407';
+// Service Worker v6408 - Add dynamic bottom spacer for archive expansion
+const CACHE_NAME = 'agape-worship-cache-v6408';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
