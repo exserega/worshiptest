@@ -13,6 +13,7 @@ html, body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100dvh; /* учитываем динамическую высоту в мобильных браузерах */
     background: var(--bg-primary, #111827);
     overflow: hidden;
     position: fixed;
@@ -491,6 +492,8 @@ html, body {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 1rem;
+    /* запас снизу, чтобы контент не перекрывался системными кнопками/полосой навигации */
+    padding-bottom: calc(1rem + max(24px, env(safe-area-inset-bottom)));
     background: var(--bg-primary, #111827);
     min-height: 0;
     -webkit-overflow-scrolling: touch;

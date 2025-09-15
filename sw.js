@@ -1,5 +1,5 @@
-// Service Worker v6408 - Add dynamic bottom spacer for archive expansion
-const CACHE_NAME = 'agape-worship-cache-v6408';
+// Service Worker v6409 - Account for mobile nav bar (100dvh, bottom padding)
+const CACHE_NAME = 'agape-worship-cache-v6409';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
