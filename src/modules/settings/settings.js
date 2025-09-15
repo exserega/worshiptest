@@ -173,6 +173,11 @@ async function updateUserProfile(updates) {
     }
 }
 
+// Экспортируем обновление профиля в глобальную область, чтобы вспомогательные
+// скрипты (например, public/name-sync.js) могли надёжно перехватывать вызов
+// даже в контексте ES-модуля
+window.updateUserProfile = updateUserProfile;
+
 // ====================================
 // REQUEST TRANSFER
 // ====================================

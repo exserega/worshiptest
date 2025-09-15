@@ -1,5 +1,5 @@
-// Service Worker v6411 - Immediate name-sync init (mobile fix)
-const CACHE_NAME = 'agape-worship-cache-v6411';
+// Service Worker v6412 - Hook updateUserProfile for name-sync on mobile
+const CACHE_NAME = 'agape-worship-cache-v6412';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
