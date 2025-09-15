@@ -114,13 +114,26 @@ export async function initializeApp() {
         setupSwipeToClose();
         
         // Параллельная инициализация: метроном и загрузка данных
-        await Promise.all([
-            initializeMetronome(),
-            loadInitialData()
-        ]);
+        await initializeMetronome();
+        // Не загружаем все песни на старте. Пусть интерфейс станет интерактивным быстрее.
+        // Данные загрузим лениво по первому обращению через ensureSongsLoaded().
+        // Для пользователей с тёплым кэшем — префетчим в idle.
         
         // Настройка мобильных оптимизаций
         setupMobileOptimizations();
+
+        // Мягкий префетч песен после первого кадра и в простое
+        try {
+            const prefetch = async () => {
+                const { ensureSongsLoaded } = await import('../api/index.js');
+                await ensureSongsLoaded();
+            };
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => requestAnimationFrame(prefetch), { timeout: 3000 });
+            } else {
+                setTimeout(() => requestAnimationFrame(prefetch), 1500);
+            }
+        } catch (e) { /* ignore */ }
 
         // Скрывать колокол уведомлений поверх панелей/оверлеев
         try {
@@ -453,9 +466,6 @@ async function loadInitialData() {
     console.log('📊 [Initialization] loadInitialData');
     
     try {
-        // Загружаем песни (с кэшем в сессии)
-        await api.loadAllSongsFromFirestore();
-        
         // Заполняем селекторы
         populateSelectors();
         

@@ -1352,7 +1352,14 @@ export function displaySelectedSetlist(setlist, onSongSelect, onSongRemove) {
         });
     }
 
-    renderCurrentSetlistSongs(setlist.songs || [], onSongSelect, onSongRemove);
+    (async () => {
+        try {
+            // Убеждаемся, что база песен загружена, прежде чем сопоставлять детали
+            const { ensureSongsLoaded } = await import('./src/api/index.js');
+            await ensureSongsLoaded();
+        } catch (e) { /* ignore */ }
+        renderCurrentSetlistSongs(setlist.songs || [], onSongSelect, onSongRemove);
+    })();
 }
 
 // Функция для правильного склонения слова "песня"

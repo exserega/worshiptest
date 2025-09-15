@@ -1,5 +1,5 @@
-// Service Worker v6409 - Account for mobile nav bar (100dvh, bottom padding)
-const CACHE_NAME = 'agape-worship-cache-v6409';
+// Service Worker v6410 - Lazy songs loading (defer heavy data on startup)
+const CACHE_NAME = 'agape-worship-cache-v6410';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

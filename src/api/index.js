@@ -174,6 +174,26 @@ export async function loadAllSongsFromFirestore() {
 }
 
 /**
+ * Ленивая гарантия: загружает все песни только один раз при первом запросе
+ */
+export async function ensureSongsLoaded() {
+    // Если уже есть песни в state — выходим
+    if (state.allSongs && state.allSongs.length > 0) {
+        return;
+    }
+    // Если другой поток уже начал загрузку — подождём её
+    if (window.__songsLoadingPromise) {
+        try { await window.__songsLoadingPromise; } catch(e) {}
+        return;
+    }
+    // Иначе запускаем загрузку и сохраняем промис на время
+    window.__songsLoadingPromise = loadAllSongsFromFirestore()
+        .catch(e => { console.warn('ensureSongsLoaded failed:', e); })
+        .finally(() => { window.__songsLoadingPromise = null; });
+    await window.__songsLoadingPromise;
+}
+
+/**
  * Получает песню по ID
  * @param {string} songId - ID песни
  * @returns {Promise<Object|null>} Данные песни или null

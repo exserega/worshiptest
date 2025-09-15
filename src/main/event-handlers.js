@@ -75,6 +75,8 @@ export function setupEventListeners() {
         openSongsOverlayBtn.addEventListener('click', async () => {
             console.log('🎵 [EventHandlers] Open songs overlay button clicked');
             try {
+                // Гарантируем, что песни загружены перед открытием оверлея
+                try { const { ensureSongsLoaded } = await import('../api/index.js'); await ensureSongsLoaded(); } catch(e) {}
                 const { openSongsOverlay } = await import('../modules/songs/songsOverlay.js');
                 openSongsOverlay();
             } catch (error) {
@@ -349,13 +351,15 @@ function setupSearchEventHandlers() {
         let searchTimeout;
         const clearMainBtn = document.getElementById('clear-main-search');
         
-        ui.searchInput.addEventListener('input', () => {
+        ui.searchInput.addEventListener('input', async () => {
             if (clearMainBtn) {
                 const hasValue = ui.searchInput.value && ui.searchInput.value.trim().length > 0;
                 clearMainBtn.style.display = hasValue ? 'inline-flex' : 'none';
             }
             clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
+            searchTimeout = setTimeout(async () => {
+                // Ленивая загрузка песен при первом поиске
+                try { const { ensureSongsLoaded } = await import('../api/index.js'); await ensureSongsLoaded(); } catch(e) {}
                 if (typeof window.handleMainSearch === 'function') {
                     window.handleMainSearch();
                 }
