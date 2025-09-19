@@ -1,5 +1,5 @@
-// Service Worker v6412 - Hook updateUserProfile for name-sync on mobile
-const CACHE_NAME = 'agape-worship-cache-v6412';
+// Service Worker v6413 - Initialize branch selector on startup fix
+const CACHE_NAME = 'agape-worship-cache-v6413';
 const urlsToCache = [
   './', // Главная страница
   './index.html',

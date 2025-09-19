@@ -89,6 +89,15 @@ export async function initializeApp() {
         
         // Настройка обработчиков событий
         setupEventListeners();
+
+        // Инициализация селектора филиалов (загрузка списка филиалов для панели сет-листов)
+        // Это гарантирует, что при нажатии на кнопку "Филиал" попап не останется в состоянии "Загрузка..."
+        try {
+            const { initBranchSelector } = await import('../modules/branches/branchSelector.js');
+            initBranchSelector();
+        } catch (e) {
+            console.error('❌ [Initialization] Не удалось инициализировать селектор филиалов:', e);
+        }
         // Неблокирующая инициализация: подписка на счетчик уведомлений
         try {
             setTimeout(async () => {
