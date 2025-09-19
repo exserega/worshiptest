@@ -395,11 +395,18 @@ export function initCardHandlers() {
     }
     
     if (branchBtn && branchPopup) {
-        branchBtn.addEventListener('click', (e) => {
+        branchBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
             branchPopup.style.display = branchPopup.style.display === 'none' ? 'block' : 'none';
             // Обновляем список филиалов при открытии
             if (branchPopup.style.display === 'block') {
+                // Страховка: гарантируем инициализацию загрузки филиалов перед обновлением селектора
+                try {
+                    const module = await import('../modules/branches/branchSelector.js');
+                    if (module && typeof module.initBranchSelector === 'function') {
+                        module.initBranchSelector();
+                    }
+                } catch (err) { /* ignore */ }
                 updateBranchSelector();
             }
         });

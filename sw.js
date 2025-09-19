@@ -1,5 +1,5 @@
-// Service Worker v6413 - Initialize branch selector on startup fix
-const CACHE_NAME = 'agape-worship-cache-v6413';
+// Service Worker v6414 - Ensure branch list loads in panel on demand
+const CACHE_NAME = 'agape-worship-cache-v6414';
 const urlsToCache = [
   './', // Главная страница
   './index.html',
