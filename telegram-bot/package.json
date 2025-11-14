@@ -1,0 +1,32 @@
+{
+  "name": "agape-worship-telegram-bot",
+  "version": "1.0.0",
+  "description": "Telegram бот для Agape Worship - быстрый доступ к PWA и уведомления",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js",
+    "dev": "nodemon src/bot.js",
+    "test": "echo \"Tests will be added later\" && exit 0"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "worship",
+    "church",
+    "firebase"
+  ],
+  "author": "Agape Worship Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0",
+    "firebase-admin": "^12.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

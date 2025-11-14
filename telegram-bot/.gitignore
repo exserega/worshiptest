@@ -1,0 +1,41 @@
+# Зависимости
+node_modules/
+package-lock.json
+yarn.lock
+
+# Переменные окружения
+.env
+.env.local
+.env.production
+
+# Firebase секреты
+serviceAccountKey.json
+firebase-adminsdk-*.json
+*-firebase-adminsdk-*.json
+
+# Логи
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Временные файлы
+temp/
+tmp/
+.cache/
+
+# Production
+dist/
+build/
